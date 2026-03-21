@@ -18,6 +18,8 @@ We welcome contributions! Join the [Discord](https://discord.gg/honk) if you wan
 
 Please follow the upstream [contribution guidelines](https://docs.spacestation14.com/en/general-development/codebase-info/pull-request-guidelines.html) for code style and PR expectations.
 
+All fork-specific commits must be prefixed with `honksquad:` (e.g., `honksquad: feat: add new feature`). This keeps our changes clearly separated from upstream when syncing.
+
 ## AI-assisted contributions
 
 AI-assisted contributions to code, YAML, and documentation are accepted, provided the contributor understands and can speak to the changes they submit. Low-effort, unreviewed dumps will be rejected like any other low-quality PR.
@@ -29,13 +31,13 @@ AI-generated artwork, sound files, and other creative assets are **not accepted*
 1. Clone this repo:
 
 ```shell
-git clone https://github.com/HellWatcher/space-station-14.git
+git clone https://github.com/HellWatcher/honksquad-ss14.git
 ```
 
 2. Initialize submodules and load the engine:
 
 ```shell
-cd space-station-14
+cd honksquad-ss14
 python RUN_THIS.py
 ```
 
