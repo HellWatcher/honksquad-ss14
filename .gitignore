@@ -309,3 +309,8 @@ Resources/MapImages
 
 # Direnv stuff
 .direnv/
+
+# AI tooling
+CLAUDE.md
+.serena/
+/docs/
