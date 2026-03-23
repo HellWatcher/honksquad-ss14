@@ -70,6 +70,7 @@ public sealed partial class SeedExtractorMenu : FancyWindow
             Text = $"{seed.Count}x {seed.DisplayName}",
             HorizontalExpand = true,
             ClipText = true,
+            Margin = new Thickness(0, 0, 16, 0),
         });
 
         row.AddChild(StatLabel(seed.Potency.ToString("0"), 50));
