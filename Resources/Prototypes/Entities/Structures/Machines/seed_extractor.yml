@@ -33,6 +33,9 @@
           True: { visible: true }
           False: { visible: false }
   - type: SeedExtractor
+    whitelist:
+      components:
+      - Seed
   - type: ActivatableUI
     key: enum.SeedExtractorUiKey.Key
   - type: ActivatableUIRequiresPower

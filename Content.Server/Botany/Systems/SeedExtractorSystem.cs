@@ -2,25 +2,24 @@ using Content.Server.Botany.Components;
 using Content.Server.Popups;
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Botany;
+using Content.Shared.Botany.Components;
+using Content.Shared.Botany.Systems;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
-using Content.Shared.Storage.Components;
 using Content.Shared.UserInterface;
-using Robust.Server.Containers;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
 using Robust.Shared.Random;
 
 namespace Content.Server.Botany.Systems;
 
-public sealed class SeedExtractorSystem : EntitySystem
+public sealed class SeedExtractorSystem : SharedSeedExtractorSystem
 {
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly PopupSystem _popupSystem = default!;
     [Dependency] private readonly BotanySystem _botanySystem = default!;
     [Dependency] private readonly UserInterfaceSystem _uiSys = default!;
-    [Dependency] private readonly ContainerSystem _container = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
 
     public override void Initialize()
@@ -30,8 +29,8 @@ public sealed class SeedExtractorSystem : EntitySystem
         SubscribeLocalEvent<SeedExtractorComponent, InteractUsingEvent>(OnInteractUsing);
         SubscribeLocalEvent<SeedExtractorComponent, BeforeActivatableUIOpenEvent>((u, c, _) => UpdateUserInterfaceState(u, c));
         SubscribeLocalEvent<SeedExtractorComponent, SeedExtractorTakeSeedMessage>(OnTakeSeedMessage);
-        SubscribeLocalEvent<SeedExtractorComponent, GetDumpableVerbEvent>(OnGetDumpableVerb);
-        SubscribeLocalEvent<SeedExtractorComponent, DumpEvent>(OnDump);
+        SubscribeLocalEvent<SeedExtractorComponent, EntInsertedIntoContainerMessage>(OnContainerChanged);
+        SubscribeLocalEvent<SeedExtractorComponent, EntRemovedFromContainerMessage>(OnContainerChanged);
     }
 
     /// <summary>
@@ -50,12 +49,9 @@ public sealed class SeedExtractorSystem : EntitySystem
         // Storing a seed packet in the extractor
         if (TryComp(args.Used, out SeedComponent? _))
         {
-            var seedContainer = _container.EnsureContainer<Container>(uid, seedExtractor.SeedContainerId);
-            if (_container.Insert(args.Used, seedContainer))
-            {
+            var seedContainer = Container.EnsureContainer<Container>(uid, seedExtractor.SeedContainerId);
+            if (Container.Insert(args.Used, seedContainer))
                 args.Handled = true;
-                UpdateUserInterfaceState(uid, seedExtractor);
-            }
             return;
         }
 
@@ -94,7 +90,7 @@ public sealed class SeedExtractorSystem : EntitySystem
     /// </summary>
     private void OnTakeSeedMessage(EntityUid uid, SeedExtractorComponent component, SeedExtractorTakeSeedMessage args)
     {
-        if (!_container.TryGetContainer(uid, component.SeedContainerId, out var seedContainer))
+        if (!Container.TryGetContainer(uid, component.SeedContainerId, out var seedContainer))
             return;
 
         foreach (var entity in seedContainer.ContainedEntities)
@@ -108,49 +104,25 @@ public sealed class SeedExtractorSystem : EntitySystem
             if (MakeGroupKey(seed) != args.GroupKey)
                 continue;
 
-            _container.Remove(entity, seedContainer);
+            Container.Remove(entity, seedContainer);
             _hands.TryPickupAnyHand(args.Actor, entity);
-            UpdateUserInterfaceState(uid, component);
             return;
         }
     }
 
-    private void OnGetDumpableVerb(EntityUid uid, SeedExtractorComponent component, ref GetDumpableVerbEvent args)
+    private void OnContainerChanged(EntityUid uid, SeedExtractorComponent component, ContainerModifiedMessage args)
     {
-        if (this.IsPowered(uid, EntityManager))
-            args.Verb = Loc.GetString("seed-extractor-dump-verb", ("unit", uid));
-    }
-
-    private void OnDump(EntityUid uid, SeedExtractorComponent component, ref DumpEvent args)
-    {
-        if (args.Handled)
+        if (args.Container.ID != component.SeedContainerId)
             return;
 
-        var seedContainer = _container.EnsureContainer<Container>(uid, component.SeedContainerId);
-        var inserted = false;
-
-        foreach (var entity in args.DumpQueue)
-        {
-            if (!HasComp<SeedComponent>(entity))
-                continue;
-
-            if (_container.Insert(entity, seedContainer))
-                inserted = true;
-        }
-
-        if (inserted)
-        {
-            args.Handled = true;
-            args.PlaySound = true;
-            UpdateUserInterfaceState(uid, component);
-        }
+        UpdateUserInterfaceState(uid, component);
     }
 
     private void UpdateUserInterfaceState(EntityUid uid, SeedExtractorComponent component)
     {
         var seedDataList = new List<SeedExtractorSeedData>();
 
-        if (_container.TryGetContainer(uid, component.SeedContainerId, out var seedContainer))
+        if (Container.TryGetContainer(uid, component.SeedContainerId, out var seedContainer))
         {
             var groups = new Dictionary<string, (SeedData data, string displayName, int count)>();
 
