@@ -1,19 +1,19 @@
-using Content.Server.Botany.Systems;
+using Content.Shared.Whitelist;
+using Robust.Shared.GameStates;
 
-namespace Content.Server.Botany.Components;
+namespace Content.Shared.Botany.Components;
 
-[RegisterComponent]
-[Access(typeof(SeedExtractorSystem))]
+[RegisterComponent, NetworkedComponent]
 public sealed partial class SeedExtractorComponent : Component
 {
     /// <summary>
-    /// The minimum amount of seed packets dropped.
+    /// The minimum amount of seed packets dropped when extracting from produce.
     /// </summary>
     [DataField("baseMinSeeds"), ViewVariables(VVAccess.ReadWrite)]
     public int BaseMinSeeds = 1;
 
     /// <summary>
-    /// The maximum amount of seed packets dropped.
+    /// The maximum amount of seed packets dropped when extracting from produce.
     /// </summary>
     [DataField("baseMaxSeeds"), ViewVariables(VVAccess.ReadWrite)]
     public int BaseMaxSeeds = 3;
@@ -23,4 +23,10 @@ public sealed partial class SeedExtractorComponent : Component
     /// </summary>
     [DataField]
     public string SeedContainerId = "seed_extractor_seeds";
+
+    /// <summary>
+    /// Whitelist controlling which items the extractor will accept.
+    /// </summary>
+    [DataField]
+    public EntityWhitelist? Whitelist;
 }
