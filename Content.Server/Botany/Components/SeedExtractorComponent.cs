@@ -17,4 +17,10 @@ public sealed partial class SeedExtractorComponent : Component
     /// </summary>
     [DataField("baseMaxSeeds"), ViewVariables(VVAccess.ReadWrite)]
     public int BaseMaxSeeds = 3;
+
+    /// <summary>
+    /// The ID of the container used to store seed packets placed inside the extractor.
+    /// </summary>
+    [DataField]
+    public string SeedContainerId = "seed_extractor_seeds";
 }
