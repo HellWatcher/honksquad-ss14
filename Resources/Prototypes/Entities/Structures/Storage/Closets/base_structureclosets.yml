@@ -45,6 +45,9 @@
             - MachineLayer
     - type: EntityStorage
       airtight: false
+      # HONK START - Lockers not airtight unless welded
+      airtight: false
+      # HONK END
     - type: ContainerContainer
       containers:
         entity_storage: !type:Container
@@ -140,6 +143,9 @@
           map: ["enum.WeldableLayers.BaseWelded"]
     - type: EntityStorage
       airtight: false
+      # HONK START - Wall closets not airtight unless welded
+      airtight: false
+      # HONK END
       isCollidableWhenOpen: true
       enteringOffset: 0, -0.6
       enteringRange: 0.03
