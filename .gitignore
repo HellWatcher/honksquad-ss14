@@ -310,7 +310,12 @@ Resources/MapImages
 # Direnv stuff
 .direnv/
 
+# HONK START - Fork-specific ignores
 # AI tooling
 CLAUDE.md
 .serena/
 /docs/
+
+# Deploy
+deploy.sh
+# HONK END
