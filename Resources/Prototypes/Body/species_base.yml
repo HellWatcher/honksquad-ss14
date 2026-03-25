@@ -133,6 +133,10 @@
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
   - type: Puller
+  # HONK START - Fireman carry
+  - type: Carrier
+  - type: Carriable
+  # HONK END
   - type: Speech
     speechSounds: Alto
   - type: DamageForceSay
