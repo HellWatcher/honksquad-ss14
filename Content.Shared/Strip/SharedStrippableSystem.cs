@@ -56,6 +56,8 @@ public abstract class SharedStrippableSystem : EntitySystem
         SubscribeLocalEvent<StrippingComponent, CanDropTargetEvent>(OnCanDropOn);
         SubscribeLocalEvent<StrippableComponent, CanDropDraggedEvent>(OnCanDrop);
         SubscribeLocalEvent<StrippableComponent, DragDropDraggedEvent>(OnDragDrop);
+        //HONK START - Removed click-to-strip (OnActivateInWorld subscription removed)
+        //HONK END
     }
 
     private void AddStripVerb(EntityUid uid, StrippableComponent component, GetVerbsEvent<Verb> args)
@@ -624,6 +626,9 @@ public abstract class SharedStrippableSystem : EntitySystem
                 StripRemoveHand((entity.Owner, entity.Comp), ev.Target.Value, ev.Used.Value, ev.SlotOrHandName, ev.Args.Hidden);
         }
     }
+
+    //HONK START - Removed click-to-strip (OnActivateInWorld method removed)
+    //HONK END
 
     /// <summary>
     /// Modify the strip time via events. Raised directed at the item being stripped, the player stripping someone and the player being stripped.
