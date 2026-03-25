@@ -1,9 +1,16 @@
-# Reporting a security vulnerability
-You can report a security vulnerability through Discord or through email.
+# Reporting a Security Vulnerability
 
-If you want to send an email, you can contact us at <support@spacestation14.com>.
-If you want to contact us through Discord, you can join [our server](https://discord.gg/MwDDf6t)
-and then **privately** message anyone with the `@Wizard` or `@SS14 Maintainer` role.
+Honksquad is a downstream fork of [Space Station 14](https://github.com/space-wizards/space-station-14) and shares its engine and core codebase.
 
-In either case, **do not publicly disclose the vulnerability until we explicitly give
-you permission to do so**.
+## Engine / upstream vulnerabilities
+
+Report security issues affecting the SS14 engine or upstream code to the Space Wizards team:
+
+- **Email:** <support@spacestation14.com>
+- **Discord:** Join the [SS14 Discord](https://discord.gg/MwDDf6t) and privately message anyone with the `@Wizard` or `@SS14 Maintainer` role.
+
+## Fork-specific vulnerabilities
+
+For issues that only affect Honksquad-specific code, reach out through the [Honksquad Discord](https://discord.gg/honk).
+
+In either case, **do not publicly disclose the vulnerability until you are explicitly given permission to do so**.
