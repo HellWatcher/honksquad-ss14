@@ -92,3 +92,10 @@
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
+  # HONK START - Adding spitting action to all humanoids
+  - type: ActionGun
+    action: ActionSpit
+    gunProto: SpitGun
+    popupText: spits
+    onShootSound: /Audio/@RussStation/Spit/russstation_sound_voice_spit_release.ogg
+  # HONK END
