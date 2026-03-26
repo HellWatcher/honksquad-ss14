@@ -1,0 +1,78 @@
+- type: entity
+  name: goblin
+  parent: [SimpleMobBase, BaseMobAnimal, MobCombat]
+  id: MobClownGoblin
+  description: Freakish little thing.
+  components:
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 5
+    baseSprintSpeed: 5
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: '@RussStation/Mobs/goblin.rsi'
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
+      state: goblin
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: goblin-moving
+    noMovementLayers:
+      movement:
+        state: goblin
+  - type: MobState
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      40: Dead
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: goblin
+      Critical:
+        Base: goblin
+      Dead:
+        Base: null
+  - type: Tag
+    tags:
+    - DoorBumpOpener
+    - FootstepSound
+  - type: Extractable
+    grindableSolutionName: food
+  - type: FootstepModifier
+    footstepSoundCollection:
+      collection: FootstepClownFast
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        reagents:
+        - ReagentId: UncookedAnimalProteins
+          Quantity: 20
+  - type: Butcherable
+    spawned:
+    - id: null
+  - type: Bloodstream
+    bloodReferenceSolution:
+      reagents:
+      - ReagentId: Laughter
+        Quantity: 25
+  - type: MobPrice
+    price: 10
+  - type: CombatMode
+  - type: MeleeWeapon
+    soundHit:
+      path: /Audio/Items/bikehorn.ogg
+    angle: 0
+    animation: WeaponArcBite
+    damage:
+      types:
+        Piercing: 5
+  - type: Speech
+    speechVerb: Cluwne
+  - type: HTN
+    rootTask:
+      task: SimpleHostileCompound
+  - type: NpcFactionMember
+    factions:
+    - SimpleHostile
+  - type: ZombieImmune
