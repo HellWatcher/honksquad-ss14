@@ -17,7 +17,7 @@ public sealed class ActionGunSystem : EntitySystem
     //HONK START
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
-    //HONK
+    //HONK END
 
     public override void Initialize()
     {
