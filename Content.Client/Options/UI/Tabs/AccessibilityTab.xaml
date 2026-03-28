@@ -18,6 +18,12 @@
                 <ui:OptionColorSlider Name="HighlightsColorSlider"
                     Title="{Loc 'ui-options-highlights-color'}"
                     Example="{Loc 'ui-options-highlights-color-example'}"/>
+                <!-- HONK START - Hover tooltip options -->
+                <Label Text="{Loc 'ui-options-header-hover-tooltip'}"
+                       StyleClasses="LabelKeyText"/>
+                <CheckBox Name="HoverTooltipEnabledCheckBox" Text="{Loc 'ui-options-hover-tooltip-enabled'}" />
+                <ui:OptionSlider Name="HoverTooltipDelaySlider" Title="{Loc 'ui-options-hover-tooltip-delay'}" />
+                <!-- HONK END -->
                 <Label Text="{Loc 'ui-options-accessability-header-content'}"
                        StyleClasses="LabelKeyText"/>
                 <CheckBox Name="CensorNudityCheckBox" Text="{Loc 'ui-options-censor-nudity'}" />
