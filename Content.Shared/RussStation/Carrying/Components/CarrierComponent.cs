@@ -13,15 +13,15 @@ public sealed partial class CarrierComponent : Component
     [AutoNetworkedField, DataField]
     public EntityUid? Carrying;
 
-    [DataField]
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WalkSpeedModifier = 0.75f;
 
-    [DataField]
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float SprintSpeedModifier = 0.6f;
 
     /// <summary>
     /// Y offset for the carried entity visual. Overridable per prototype for different species heights.
     /// </summary>
-    [DataField]
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float CarryOffset = 0.2f;
 }
