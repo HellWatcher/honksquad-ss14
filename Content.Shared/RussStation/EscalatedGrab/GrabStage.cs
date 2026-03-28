@@ -1,6 +1,6 @@
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.EscalatedGrab;
+namespace Content.Shared.RussStation.EscalatedGrab;
 
 /// <summary>
 /// Escalation level of a grab. Re-clicking pull advances to the next stage.

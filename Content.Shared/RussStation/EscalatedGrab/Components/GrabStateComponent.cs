@@ -1,7 +1,7 @@
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 
-namespace Content.Shared.EscalatedGrab.Components;
+namespace Content.Shared.RussStation.EscalatedGrab.Components;
 
 /// <summary>
 /// Added to a puller when their grab escalates beyond a standard pull.

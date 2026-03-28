@@ -1,11 +1,12 @@
-using Content.Shared.EscalatedGrab.Components;
+using Content.Shared.RussStation.EscalatedGrab.Components;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Events;
+using Content.Shared.RussStation.EscalatedGrab.Events;
 using Content.Shared.Popups;
 using Content.Shared.Pulling.Events;
 using Robust.Shared.Timing;
 
-namespace Content.Shared.EscalatedGrab.Systems;
+namespace Content.Shared.RussStation.EscalatedGrab.Systems;
 
 /// <summary>
 /// Manages grab escalation. Re-clicking pull on a target escalates the grab

@@ -7,7 +7,7 @@ using Content.Shared.Database;
 using Content.Shared.DoAfter;
 using Content.Shared.DragDrop;
 //HONK START - Escalated grab: skip strip during grab
-using Content.Shared.EscalatedGrab.Components;
+using Content.Shared.RussStation.EscalatedGrab.Components;
 //HONK END
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;

@@ -1,6 +1,6 @@
 using Robust.Shared.GameStates;
 
-namespace Content.Shared.Carrying.Components;
+namespace Content.Shared.RussStation.Carrying.Components;
 
 /// <summary>
 /// Active marker on an entity currently being carried.

@@ -21,6 +21,9 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Events;
+//HONK START - Escalated grab event
+using Content.Shared.RussStation.EscalatedGrab.Events;
+//HONK END
 using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Pulling.Events;

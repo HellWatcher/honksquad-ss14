@@ -1,6 +1,6 @@
 using Robust.Shared.GameObjects;
 
-namespace Content.Shared.Carrying.Events;
+namespace Content.Shared.RussStation.Carrying.Events;
 
 /// <summary>
 /// Raised on both carrier and target before carry starts. Can be cancelled.
