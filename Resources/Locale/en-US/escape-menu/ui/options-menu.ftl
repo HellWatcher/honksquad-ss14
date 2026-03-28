@@ -373,6 +373,11 @@ ui-options-speech-bubble-text-opacity = Speech bubble text opacity
 ui-options-speech-bubble-speaker-opacity = Speech bubble speaker opacity
 ui-options-speech-bubble-background-opacity = Speech bubble background opacity
 
+## Hover Tooltip
+ui-options-header-hover-tooltip = Hover Tooltip
+ui-options-hover-tooltip-enabled = Show entity name on hover
+ui-options-hover-tooltip-delay = Hover tooltip delay
+
 ui-options-censor-nudity = Censor character nudity
 
 ## Admin menu
