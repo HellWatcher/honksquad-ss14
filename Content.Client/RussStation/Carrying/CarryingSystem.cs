@@ -1,10 +1,10 @@
 using System.Numerics;
-using Content.Shared.Carrying.Components;
-using Content.Shared.Carrying.Systems;
+using Content.Shared.RussStation.Carrying.Components;
+using Content.Shared.RussStation.Carrying.Systems;
 using Robust.Client.GameObjects;
 using DrawDepth = Content.Shared.DrawDepth.DrawDepth;
 
-namespace Content.Client.Carrying;
+namespace Content.Client.RussStation.Carrying;
 
 internal sealed class CarryingSystem : SharedCarryingSystem
 {
