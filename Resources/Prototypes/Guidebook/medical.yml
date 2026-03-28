@@ -4,6 +4,9 @@
   text: "/ServerInfo/Guidebook/Medical/Medical.xml"
   children:
   - MedicalDoctor
+  # HONK START - Surgery guidebook entry
+  - Surgery
+  # HONK END
   - Chemist
   - Cloning
   - Cryogenics

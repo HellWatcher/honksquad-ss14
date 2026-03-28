@@ -1,0 +1,79 @@
+<Document>
+# Surgery
+Surgery is hands-on medical work: stitching up injuries and pulling out (or putting in) organs. You'll need a downed patient, a bedsheet, and the right surgical tools.
+
+## Requirements
+To begin surgery, you need:
+- A [color=#a4885c]downed patient[/color] (you cannot operate on standing or conscious patients)
+- A [color=#a4885c]bedsheet[/color] to drape the patient
+- The correct [color=#a4885c]surgical tools[/color] for each step
+
+You [color=#993333]cannot perform surgery on yourself[/color].
+
+## Surgical Tools
+<Box>
+<GuideEntityEmbed Entity="Scalpel"/>
+<GuideEntityEmbed Entity="Retractor"/>
+<GuideEntityEmbed Entity="Hemostat"/>
+<GuideEntityEmbed Entity="Saw" Caption="bone saw"/>
+<GuideEntityEmbed Entity="Cautery"/>
+</Box>
+
+## Starting Surgery
+1. Make sure your patient is [color=#a4885c]downed[/color] (in crit, stunned, etc.)
+2. Use a [color=#a4885c]bedsheet[/color] on the patient to open the procedure menu
+3. Select a procedure from the radial menu
+4. The patient is now draped and surgery begins
+
+The bedsheet is only consumed when you confirm a procedure. Cancelling the menu wastes nothing.
+
+## Surgery Surfaces
+Buckle your patient to a surgery surface before starting, and the procedure goes faster:
+<Box>
+<GuideEntityEmbed Entity="OperatingTable" Caption="operating table (0.5x)"/>
+<GuideEntityEmbed Entity="MedicalBed" Caption="medical bed (0.7x)"/>
+<GuideEntityEmbed Entity="RollerBed" Caption="roller bed (0.8x)"/>
+</Box>
+Operating without a proper surface uses the default speed (1.0x).
+
+## Performing Steps
+Each procedure is a sequence of tool steps. Use the [color=#a4885c]correct tool[/color] on the draped patient to advance. Using the wrong tool gives a warning popup.
+
+When all steps are done, use a [color=#a4885c]cautery[/color] on the patient to close the incision and finish the procedure. The cautery stops all bleeding and removes the drape.
+
+## Procedures
+
+### Tend Wounds (Brute)
+Repairs physical damage (blunt, slash, piercing).
+- [color=#a4885c]Scalpel[/color] - make incision
+- [color=#a4885c]Retractor[/color] - retract skin
+- [color=#a4885c]Hemostat[/color] - treat wounds (repeats automatically until healed)
+- [color=#a4885c]Cautery[/color] - close incision
+
+### Tend Wounds (Burn)
+Treats burn damage (heat, shock, cold, caustic).
+- [color=#a4885c]Scalpel[/color] - make incision
+- [color=#a4885c]Retractor[/color] - retract skin
+- [color=#a4885c]Hemostat[/color] - treat burns (repeats automatically until healed)
+- [color=#a4885c]Cautery[/color] - close incision
+
+### Organ Manipulation
+Open the body cavity to remove or insert organs.
+- [color=#a4885c]Scalpel[/color] - make incision
+- [color=#a4885c]Retractor[/color] - retract skin
+- [color=#a4885c]Hemostat[/color] - clamp vessels
+- [color=#a4885c]Bone saw[/color] - saw through bone
+- [color=#a4885c]Hemostat[/color] - select organ to remove (opens organ picker)
+- [color=#a4885c]Cautery[/color] - close incision
+
+To [color=#a4885c]insert[/color] an organ, hold it in your hand and use it on the draped patient during an active surgery.
+
+## Cancelling Surgery
+The patient can click the [color=#a4885c]drape alert[/color] on their HUD to remove the drape and cancel the procedure at any time.
+
+## Tips
+- Surgery causes some damage during the opening steps (incisions bleed, retractors bruise). Plan for this.
+- The hemostat heals a fixed total per repeat, split across whatever damage types the patient actually has.
+- Keep extra bedsheets handy. Each procedure uses one.
+- Medbay's operating table is the fastest surface available.
+</Document>

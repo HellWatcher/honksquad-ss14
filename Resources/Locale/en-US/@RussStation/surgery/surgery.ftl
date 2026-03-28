@@ -45,6 +45,9 @@ surgery-bedsheet-missing = The bedsheet is no longer available.
 surgery-procedure-invalid = The surgical procedure is no longer valid.
 surgery-busy = You are already doing something.
 
+## Guidebook
+guide-entry-surgery = Surgery
+
 ## Procedure Names
 surgery-procedure-tend-wounds-brute = Tend Wounds (Brute)
 surgery-procedure-tend-wounds-burn = Tend Wounds (Burn)
