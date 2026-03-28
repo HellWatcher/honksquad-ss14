@@ -45,9 +45,10 @@ public abstract class SharedCarryingSystem : EntitySystem
     [Dependency] private readonly SharedVirtualItemSystem _virtualItem = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
 
-    // Set during Carry()/Drop() to suppress VirtualItemDeleted cascading into another Drop().
-    // Stopping a pull deletes its virtual item, which would otherwise trigger OnVirtualItemDeleted.
-    private bool _isTransitioning;
+    // Tracks carrier EntityUids currently mid-transition (Carry/Drop/shutdown) to suppress
+    // VirtualItemDeleted cascading into another Drop(). Per-entity instead of a bare bool
+    // so nested or concurrent carries can't interfere with each other.
+    private readonly HashSet<EntityUid> _transitioning = new();
 
     public override void Initialize()
     {
@@ -233,9 +234,9 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (attempt.Cancelled)
             return;
 
-        // Stop pulls before setting carry state. _isTransitioning prevents the pull's
+        // Stop pulls before setting carry state. The _transitioning set prevents the pull's
         // virtual item cleanup from cascading into OnVirtualItemDeleted, which calls Drop().
-        _isTransitioning = true;
+        _transitioning.Add(carrier);
 
         if (TryComp<PullableComponent>(target, out var pullable) && pullable.Puller != null)
             _pulling.TryStopPull(target, pullable);
@@ -244,7 +245,7 @@ public abstract class SharedCarryingSystem : EntitySystem
             && TryComp<PullableComponent>(puller.Pulling.Value, out var pullerPullable))
             _pulling.TryStopPull(puller.Pulling.Value, pullerPullable);
 
-        _isTransitioning = false;
+        _transitioning.Remove(carrier);
 
         carrierComp.Carrying = target;
         carriableComp.CarriedBy = carrier;
@@ -373,7 +374,7 @@ public abstract class SharedCarryingSystem : EntitySystem
         Drop(uid);
     }
 
-    private void OnCarrierDowned(EntityUid uid, ActiveCarrierComponent component, DownedEvent args)
+    private void OnCarrierDowned(EntityUid uid, ActiveCarrierComponent component, ref DownedEvent args)
     {
         Drop(uid);
     }
@@ -400,7 +401,11 @@ public abstract class SharedCarryingSystem : EntitySystem
             carrierComp.Carrying = null;
             Dirty(carrier, carrierComp);
             RemCompDeferred<ActiveCarrierComponent>(carrier);
+
+            _transitioning.Add(carrier);
             _virtualItem.DeleteInHandsMatching(carrier, uid);
+            _transitioning.Remove(carrier);
+
             _movementSpeed.RefreshMovementSpeedModifiers(carrier);
         }
     }
@@ -423,7 +428,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     private void OnVirtualItemDeleted(EntityUid uid, CarrierComponent component, VirtualItemDeletedEvent args)
     {
-        if (!_isTransitioning && component.Carrying == args.BlockingEntity)
+        if (!_transitioning.Contains(uid) && component.Carrying == args.BlockingEntity)
             Drop(uid, component);
     }
 
