@@ -2,7 +2,6 @@
 
 ## Draping
 surgery-drape-patient = You drape {THE($target)} with the bedsheet.
-surgery-not-draped = {CAPITALIZE(THE($target))} needs to be draped with a bedsheet first.
 surgery-patient-not-down = The patient must be lying down for surgery.
 
 ## Procedure Selection
@@ -19,7 +18,6 @@ surgery-step-cauterize = {CAPITALIZE(THE($user))} cauterizes the wound on {THE($
 surgery-step-treat-brute = {CAPITALIZE(THE($user))} repairs physical damage on {THE($target)}.
 surgery-step-treat-burn = {CAPITALIZE(THE($user))} treats burn damage on {THE($target)}.
 surgery-step-remove-organ = {CAPITALIZE(THE($user))} carefully extracts an organ from {THE($target)}.
-surgery-step-insert-organ = {CAPITALIZE(THE($user))} carefully inserts an organ into {THE($target)}.
 
 ## Alerts
 alerts-surgery-draped-name = Surgical Drapes
@@ -37,7 +35,6 @@ surgery-step-repeat-done = The treatment has done all it can.
 surgery-organ-removed = {CAPITALIZE(THE($organ))} has been removed.
 surgery-organ-inserted = {CAPITALIZE(THE($organ))} has been inserted.
 surgery-organ-already-exists = The patient already has {THE($organ)}.
-surgery-no-organ-in-hand = You need to be holding an organ in your other hand.
 surgery-organ-insert-failed = The organ cannot be inserted.
 surgery-organ-remove-failed = The organ could not be removed.
 surgery-no-organs-to-remove = There are no removable organs.

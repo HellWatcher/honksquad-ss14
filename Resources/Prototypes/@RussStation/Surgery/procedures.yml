@@ -29,12 +29,6 @@
           Slash: 1
           Piercing: 1
       bleedModifier: -1.0
-    - tag: Cautery
-      duration: 2.0
-      popup: surgery-step-cauterize
-      damage:
-        types:
-          Heat: 2
 
 - type: surgeryProcedure
   id: TendWoundsBurn
@@ -66,12 +60,6 @@
           Cold: 1
           Caustic: 1
       bleedModifier: -1.0
-    - tag: Cautery
-      duration: 2.0
-      popup: surgery-step-cauterize
-      damage:
-        types:
-          Heat: 2
 
 - type: surgeryProcedure
   id: OrganManipulation

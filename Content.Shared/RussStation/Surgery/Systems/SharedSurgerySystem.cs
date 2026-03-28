@@ -9,7 +9,7 @@ namespace Content.Shared.RussStation.Surgery.Systems;
 
 public abstract partial class SharedSurgerySystem : EntitySystem
 {
-    [Dependency] private readonly AlertsSystem _alerts = default!;
+    [Dependency] protected readonly AlertsSystem _alerts = default!;
     [Dependency] private readonly TagSystem _tag = default!;
     [Dependency] protected readonly IPrototypeManager ProtoManager = default!;
 

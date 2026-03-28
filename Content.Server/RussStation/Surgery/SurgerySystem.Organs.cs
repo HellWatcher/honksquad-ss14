@@ -46,7 +46,7 @@ public sealed partial class SurgerySystem
         _container.Insert(organ, body.Organs, force: true);
         _popup.PopupEntity(
             Loc.GetString("surgery-organ-inserted", ("organ", MetaData(organ).EntityName)),
-            patient);
+            patient, surgeon);
     }
 
     private void OpenOrganRemovalMenu(EntityUid? surgeon, EntityUid patient)
@@ -124,7 +124,7 @@ public sealed partial class SurgerySystem
 
         _popup.PopupEntity(
             Loc.GetString("surgery-organ-removed", ("organ", MetaData(organ.Value).EntityName)),
-            patient.Value);
+            patient.Value, surgeon);
     }
 
     private static bool IsLimbCategory(ProtoId<OrganCategoryPrototype>? category)

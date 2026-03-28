@@ -1,4 +1,3 @@
-using Content.Shared.Alert;
 using Content.Shared.Body;
 using Content.Shared.Body.Systems;
 using Content.Shared.Damage.Systems;
@@ -26,8 +25,6 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     [Dependency] private readonly TagSystem _tags = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
-    [Dependency] private readonly AlertsSystem _alerts = default!;
-
     public override void Initialize()
     {
         base.Initialize();
@@ -126,7 +123,10 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
 
         if (procedures.Count == 0)
+        {
+            _popup.PopupEntity(Loc.GetString("surgery-no-procedures"), patient, surgeon);
             return;
+        }
 
         if (!TryComp<ActorComponent>(surgeon, out var actor))
             return;
