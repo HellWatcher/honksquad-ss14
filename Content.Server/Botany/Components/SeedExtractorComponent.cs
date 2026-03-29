@@ -2,7 +2,8 @@ using Content.Server.Botany.Systems;
 
 namespace Content.Server.Botany.Components;
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent]
+[Access(typeof(SeedExtractorSystem))]
 public sealed partial class SeedExtractorComponent : Component
 {
     /// <summary>
