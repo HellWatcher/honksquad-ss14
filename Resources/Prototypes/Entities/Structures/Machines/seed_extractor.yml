@@ -32,9 +32,12 @@
         enum.PowerDeviceVisualLayers.Powered:
           True: { visible: true }
           False: { visible: false }
+  - type: SeedExtractor
+  - type: Machine
+    board: SeedExtractorMachineCircuitboard
 
   # HONK START
-  - type: SeedExtractor
+  - type: SeedExtractorStorage
     whitelist:
       components:
       - Seed
@@ -49,6 +52,3 @@
     containers:
       seed_extractor_seeds: !type:Container {}
   # HONK END
-
-  - type: Machine
-    board: SeedExtractorMachineCircuitboard
