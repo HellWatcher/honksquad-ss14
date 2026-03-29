@@ -7,7 +7,7 @@ namespace Content.Shared.RussStation.Botany;
 /// Seeds with identical stats are grouped; Count reflects how many packets of that type are stored.
 /// </summary>
 [Serializable, NetSerializable]
-public sealed class SeedExtractorSeedData
+public sealed class SeedExtractorStorageSeedData
 {
     /// <summary>Localized plant display name, e.g. "orange".</summary>
     public string DisplayName = string.Empty;
@@ -33,11 +33,11 @@ public sealed class SeedExtractorSeedData
 }
 
 [Serializable, NetSerializable]
-public sealed class SeedExtractorUpdateState : BoundUserInterfaceState
+public sealed class SeedExtractorStorageUpdateState : BoundUserInterfaceState
 {
-    public List<SeedExtractorSeedData> Seeds;
+    public List<SeedExtractorStorageSeedData> Seeds;
 
-    public SeedExtractorUpdateState(List<SeedExtractorSeedData> seeds)
+    public SeedExtractorStorageUpdateState(List<SeedExtractorStorageSeedData> seeds)
     {
         Seeds = seeds;
     }
@@ -47,14 +47,14 @@ public sealed class SeedExtractorUpdateState : BoundUserInterfaceState
 /// Sent by the client to take one seed packet from the group identified by <see cref="GroupKey"/>.
 /// </summary>
 [Serializable, NetSerializable]
-public sealed class SeedExtractorTakeSeedMessage : BoundUserInterfaceMessage
+public sealed class SeedExtractorStorageTakeSeedMessage : BoundUserInterfaceMessage
 {
     /// <summary>
-    /// The group key from <see cref="SeedExtractorSeedData.GroupKey"/> that identifies which stats profile to take from.
+    /// The group key from <see cref="SeedExtractorStorageSeedData.GroupKey"/> that identifies which stats profile to take from.
     /// </summary>
     public string GroupKey = string.Empty;
 
-    public SeedExtractorTakeSeedMessage(string groupKey)
+    public SeedExtractorStorageTakeSeedMessage(string groupKey)
     {
         GroupKey = groupKey;
     }

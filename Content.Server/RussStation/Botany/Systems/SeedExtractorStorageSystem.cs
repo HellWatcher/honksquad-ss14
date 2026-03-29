@@ -31,7 +31,6 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
         SubscribeLocalEvent<SeedExtractorStorageComponent, EntRemovedFromContainerMessage>(OnContainerChanged);
     }
 
-    ///
     /// <summary>
     /// When the player uses an item on the extractor:
     /// - Produce → extract seeds as before (spawn packets, drop/hand to player).
@@ -54,7 +53,6 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
         }
     }
 
-    // HONK START
     /// <summary>
     /// Takes one seed packet from the group identified by <paramref name="args"/>.<see cref="SeedExtractorTakeSeedMessage.GroupKey"/>.
     /// </summary>
@@ -90,7 +88,7 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
 
     private void UpdateUserInterfaceState(EntityUid uid, SeedExtractorStorageComponent component)
     {
-        var seedDataList = new List<SeedExtractorSeedData>();
+        var seedDataList = new List<SeedExtractorStorageSeedData>();
 
         if (Container.TryGetContainer(uid, component.SeedContainerId, out var seedContainer))
         {
@@ -118,7 +116,7 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
 
             foreach (var (key, (data, displayName, count)) in groups)
             {
-                seedDataList.Add(new SeedExtractorSeedData
+                seedDataList.Add(new SeedExtractorStorageSeedData
                 {
                     DisplayName = displayName,
                     GroupKey = key,
@@ -134,7 +132,7 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
             }
         }
 
-        _uiSys.SetUiState(uid, SeedExtractorStorageUiKey.Key, new SeedExtractorUpdateState(seedDataList));
+        _uiSys.SetUiState(uid, SeedExtractorStorageUiKey.Key, new SeedExtractorStorageUpdateState(seedDataList));
     }
 
     /// <summary>

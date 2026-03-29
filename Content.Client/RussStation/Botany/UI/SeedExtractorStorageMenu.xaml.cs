@@ -15,7 +15,7 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
     public event Action<string>? OnTakePressed;
 
     private readonly SpriteSystem _spriteSystem;
-    private List<SeedExtractorSeedData> _seeds = new();
+    private List<SeedExtractorStorageSeedData> _seeds = new();
 
     public SeedExtractorStorageMenu()
     {
@@ -25,7 +25,7 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
         SearchBar.OnTextChanged += _ => RebuildList();
     }
 
-    public void Populate(List<SeedExtractorSeedData> seeds)
+    public void Populate(List<SeedExtractorStorageSeedData> seeds)
     {
         _seeds = seeds;
         RebuildList();
@@ -46,7 +46,7 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
         }
     }
 
-    private Control BuildRow(SeedExtractorSeedData seed)
+    private Control BuildRow(SeedExtractorStorageSeedData seed)
     {
         var row = new BoxContainer
         {

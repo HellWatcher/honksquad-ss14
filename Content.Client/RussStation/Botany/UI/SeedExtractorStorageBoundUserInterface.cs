@@ -28,7 +28,7 @@ public sealed class SeedExtractorStorageBoundUserInterface : BoundUserInterface
     {
         base.UpdateState(state);
 
-        if (state is SeedExtractorUpdateState seedState)
+        if (state is SeedExtractorStorageUpdateState seedState)
             _menu?.Populate(seedState.Seeds);
     }
 
