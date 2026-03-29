@@ -1,7 +1,12 @@
+// HONK START
+// This has been moved here from Content.Server/Botany/Components/SeedExtractorComponent.cs
+// This is necessary as the seed extractor needs to be a shared component to enable clients
+// to implement/predict certain behavior on the client-side. This avoids some graphical glitches.
+
 using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
 
-namespace Content.Shared.Botany.Components;
+namespace Content.Shared.RussStation.Botany.Components;
 
 [RegisterComponent, NetworkedComponent]
 public sealed partial class SeedExtractorComponent : Component
@@ -30,3 +35,5 @@ public sealed partial class SeedExtractorComponent : Component
     [DataField]
     public EntityWhitelist? Whitelist;
 }
+
+// HONK END

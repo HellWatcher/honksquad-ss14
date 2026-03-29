@@ -1,9 +1,9 @@
-using Content.Shared.Botany.Components;
+using Content.Shared.RussStation.Botany.Components;
 using Content.Shared.Storage.Components;
 using Content.Shared.Whitelist;
 using Robust.Shared.Containers;
 
-namespace Content.Shared.Botany.Systems;
+namespace Content.Shared.RussStation.Botany.Systems;
 
 public abstract class SharedSeedExtractorSystem : EntitySystem
 {
