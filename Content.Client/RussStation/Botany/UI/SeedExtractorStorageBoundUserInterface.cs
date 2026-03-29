@@ -5,11 +5,11 @@ using Robust.Client.UserInterface;
 namespace Content.Client.RussStation.Botany.UI;
 
 [UsedImplicitly]
-public sealed class SeedExtractorBoundUserInterface : BoundUserInterface
+public sealed class SeedExtractorStorageBoundUserInterface : BoundUserInterface
 {
-    private SeedExtractorMenu? _menu;
+    private SeedExtractorStorageMenu? _menu;
 
-    public SeedExtractorBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
+    public SeedExtractorStorageBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
     {
     }
 
@@ -17,7 +17,7 @@ public sealed class SeedExtractorBoundUserInterface : BoundUserInterface
     {
         base.Open();
 
-        _menu = this.CreateWindowCenteredRight<SeedExtractorMenu>();
+        _menu = this.CreateWindowCenteredRight<SeedExtractorStorageMenu>();
         _menu.OnTakePressed += groupKey =>
         {
             SendMessage(new SeedExtractorTakeSeedMessage(groupKey));

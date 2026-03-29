@@ -1,9 +1,11 @@
 using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
+using Content.Shared.RussStation.Botany.Systems;
 
 namespace Content.Shared.RussStation.Botany.Components;
 
 [RegisterComponent, NetworkedComponent]
+[Access(typeof(SharedSeedExtractorStorageSystem))]
 public sealed partial class SeedExtractorStorageComponent : Component
 {
     /// <summary>

@@ -10,14 +10,14 @@ using FancyWindow = Content.Client.UserInterface.Controls.FancyWindow;
 namespace Content.Client.RussStation.Botany.UI;
 
 [GenerateTypedNameReferences]
-public sealed partial class SeedExtractorMenu : FancyWindow
+public sealed partial class SeedExtractorStorageMenu : FancyWindow
 {
     public event Action<string>? OnTakePressed;
 
     private readonly SpriteSystem _spriteSystem;
     private List<SeedExtractorSeedData> _seeds = new();
 
-    public SeedExtractorMenu()
+    public SeedExtractorStorageMenu()
     {
         RobustXamlLoader.Load(this);
         _spriteSystem = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();

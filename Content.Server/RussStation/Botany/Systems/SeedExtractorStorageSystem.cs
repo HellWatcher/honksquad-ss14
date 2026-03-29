@@ -134,7 +134,7 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
             }
         }
 
-        _uiSys.SetUiState(uid, SeedExtractorUiKey.Key, new SeedExtractorUpdateState(seedDataList));
+        _uiSys.SetUiState(uid, SeedExtractorStorageUiKey.Key, new SeedExtractorUpdateState(seedDataList));
     }
 
     /// <summary>
