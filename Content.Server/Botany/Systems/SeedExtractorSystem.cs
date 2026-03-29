@@ -20,12 +20,6 @@ public sealed class SeedExtractorSystem : EntitySystem
         SubscribeLocalEvent<SeedExtractorComponent, InteractUsingEvent>(OnInteractUsing);
     }
 
-    ///
-    /// <summary>
-    /// When the player uses an item on the extractor:
-    /// - Produce → extract seeds as before (spawn packets, drop/hand to player).
-    /// - Seed packet → store the packet inside the extractor.
-    /// </summary>
     private void OnInteractUsing(EntityUid uid, SeedExtractorComponent seedExtractor, InteractUsingEvent args)
     {
         if (!this.IsPowered(uid, EntityManager))
@@ -33,7 +27,6 @@ public sealed class SeedExtractorSystem : EntitySystem
 
         if (!TryComp(args.Used, out ProduceComponent? produce))
             return;
-
         if (!_botanySystem.TryGetSeed(produce, out var seed) || seed.Seedless)
         {
             _popupSystem.PopupCursor(Loc.GetString("seed-extractor-component-no-seeds", ("name", args.Used)),
