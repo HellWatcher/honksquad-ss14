@@ -20,7 +20,7 @@ public sealed class SeedExtractorStorageBoundUserInterface : BoundUserInterface
         _menu = this.CreateWindowCenteredRight<SeedExtractorStorageMenu>();
         _menu.OnTakePressed += groupKey =>
         {
-            SendMessage(new SeedExtractorTakeSeedMessage(groupKey));
+            SendMessage(new SeedExtractorStorageTakeSeedMessage(groupKey));
         };
     }
 

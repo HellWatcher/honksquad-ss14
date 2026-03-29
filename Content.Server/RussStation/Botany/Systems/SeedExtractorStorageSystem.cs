@@ -26,7 +26,7 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
 
         SubscribeLocalEvent<SeedExtractorStorageComponent, InteractUsingEvent>(OnInteractUsing);
         SubscribeLocalEvent<SeedExtractorStorageComponent, BeforeActivatableUIOpenEvent>((u, c, _) => UpdateUserInterfaceState(u, c));
-        SubscribeLocalEvent<SeedExtractorStorageComponent, SeedExtractorTakeSeedMessage>(OnTakeSeedMessage);
+        SubscribeLocalEvent<SeedExtractorStorageComponent, SeedExtractorStorageTakeSeedMessage>(OnTakeSeedMessage);
         SubscribeLocalEvent<SeedExtractorStorageComponent, EntInsertedIntoContainerMessage>(OnContainerChanged);
         SubscribeLocalEvent<SeedExtractorStorageComponent, EntRemovedFromContainerMessage>(OnContainerChanged);
     }
@@ -54,9 +54,9 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
     }
 
     /// <summary>
-    /// Takes one seed packet from the group identified by <paramref name="args"/>.<see cref="SeedExtractorTakeSeedMessage.GroupKey"/>.
+    /// Takes one seed packet from the group identified by <paramref name="args"/>.<see cref="SeedExtractorStorageTakeSeedMessage.GroupKey"/>.
     /// </summary>
-    private void OnTakeSeedMessage(EntityUid uid, SeedExtractorStorageComponent component, SeedExtractorTakeSeedMessage args)
+    private void OnTakeSeedMessage(EntityUid uid, SeedExtractorStorageComponent component, SeedExtractorStorageTakeSeedMessage args)
     {
         if (!Container.TryGetContainer(uid, component.SeedContainerId, out var seedContainer))
             return;
