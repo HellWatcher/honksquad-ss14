@@ -17,7 +17,7 @@ public sealed class SeedExtractorStorageSeedData
 
     /// <summary>
     /// Opaque key that uniquely identifies this stats profile.
-    /// Sent back to the server in <see cref="SeedExtractorTakeSeedMessage"/> to identify which group to take from.
+    /// Sent back to the server in <see cref="SeedExtractorStorageTakeSeedMessage"/> to identify which group to take from.
     /// </summary>
     public string GroupKey = string.Empty;
 
