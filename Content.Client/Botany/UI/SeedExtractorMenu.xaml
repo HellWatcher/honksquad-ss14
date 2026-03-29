@@ -19,10 +19,10 @@
                 Text="{Loc 'seed-extractor-menu-header-name'}" />
             <Label MinWidth="50" HorizontalAlignment="Center" Text="PTN" />
             <Label MinWidth="50" HorizontalAlignment="Center" Text="YLD" />
-            <Label MinWidth="50" HorizontalAlignment="Center" Text="END" />
-            <Label MinWidth="50" HorizontalAlignment="Center" Text="LFS" />
             <Label MinWidth="50" HorizontalAlignment="Center" Text="MTR" />
             <Label MinWidth="50" HorizontalAlignment="Center" Text="PRD" />
+            <Label MinWidth="50" HorizontalAlignment="Center" Text="LFS" />
+            <Label MinWidth="50" HorizontalAlignment="Center" Text="END" />
             <Label MinWidth="65" Text="" />
         </BoxContainer>
 
