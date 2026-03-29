@@ -1,8 +1,8 @@
-using Content.Shared.Botany;
+using Content.Shared.RussStation.Botany;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 
-namespace Content.Client.Botany.UI;
+namespace Content.Client.RussStation.Botany.UI;
 
 [UsedImplicitly]
 public sealed class SeedExtractorBoundUserInterface : BoundUserInterface

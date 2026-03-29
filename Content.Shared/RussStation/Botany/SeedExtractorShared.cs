@@ -1,6 +1,6 @@
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Botany;
+namespace Content.Shared.RussStation.Botany;
 
 /// <summary>
 /// Stats for one group of seeds stored in the extractor, sent to the client for UI display.

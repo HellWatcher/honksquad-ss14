@@ -1,16 +1,19 @@
 using Content.Server.Botany.Components;
 using Content.Server.Popups;
 using Content.Server.Power.EntitySystems;
-using Content.Shared.Botany;
-using Content.Shared.Botany.Components;
-using Content.Shared.Botany.Systems;
-using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
+using Robust.Shared.Random;
+
+// HONK START
+using Content.Shared.RussStation.Botany;
+using Content.Shared.RussStation.Botany.Components;
+using Content.Shared.RussStation.Botany.Systems;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
-using Robust.Shared.Random;
+// HONK END
 
 namespace Content.Server.Botany.Systems;
 
@@ -19,20 +22,27 @@ public sealed class SeedExtractorSystem : SharedSeedExtractorSystem
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly PopupSystem _popupSystem = default!;
     [Dependency] private readonly BotanySystem _botanySystem = default!;
+
+    // HONK START
     [Dependency] private readonly UserInterfaceSystem _uiSys = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
+    // HONK END
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<SeedExtractorComponent, InteractUsingEvent>(OnInteractUsing);
+
+        // HONK START
         SubscribeLocalEvent<SeedExtractorComponent, BeforeActivatableUIOpenEvent>((u, c, _) => UpdateUserInterfaceState(u, c));
         SubscribeLocalEvent<SeedExtractorComponent, SeedExtractorTakeSeedMessage>(OnTakeSeedMessage);
         SubscribeLocalEvent<SeedExtractorComponent, EntInsertedIntoContainerMessage>(OnContainerChanged);
         SubscribeLocalEvent<SeedExtractorComponent, EntRemovedFromContainerMessage>(OnContainerChanged);
+        // HONK END
     }
 
+    ///
     /// <summary>
     /// When the player uses an item on the extractor:
     /// - Produce → extract seeds as before (spawn packets, drop/hand to player).
@@ -40,10 +50,11 @@ public sealed class SeedExtractorSystem : SharedSeedExtractorSystem
     /// </summary>
     private void OnInteractUsing(EntityUid uid, SeedExtractorComponent seedExtractor, InteractUsingEvent args)
     {
-        if (args.Handled)
+        if (!this.IsPowered(uid, EntityManager))
             return;
 
-        if (!this.IsPowered(uid, EntityManager))
+        // HONK START
+        if (args.Handled)
             return;
 
         // Storing a seed packet in the extractor
@@ -54,8 +65,8 @@ public sealed class SeedExtractorSystem : SharedSeedExtractorSystem
                 args.Handled = true;
             return;
         }
+        // HONK END
 
-        // Extracting seeds from produce (original behavior)
         if (!TryComp(args.Used, out ProduceComponent? produce))
             return;
 
@@ -85,6 +96,7 @@ public sealed class SeedExtractorSystem : SharedSeedExtractorSystem
         }
     }
 
+    // HONK START
     /// <summary>
     /// Takes one seed packet from the group identified by <paramref name="args"/>.<see cref="SeedExtractorTakeSeedMessage.GroupKey"/>.
     /// </summary>
@@ -175,4 +187,5 @@ public sealed class SeedExtractorSystem : SharedSeedExtractorSystem
     {
         return $"{seed.Name}|{seed.Potency:G}|{seed.Yield}|{seed.Endurance:G}|{seed.Lifespan:G}|{seed.Maturation:G}|{seed.Production:G}";
     }
+    // HONK END
 }
