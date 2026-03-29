@@ -61,7 +61,7 @@ public sealed class SeedExtractorTakeSeedMessage : BoundUserInterfaceMessage
 }
 
 [NetSerializable, Serializable]
-public enum SeedExtractorUiKey
+public enum SeedExtractorStorageUiKey
 {
     Key,
 }

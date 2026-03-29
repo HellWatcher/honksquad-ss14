@@ -42,12 +42,12 @@
       components:
       - Seed
   - type: ActivatableUI
-    key: enum.SeedExtractorUiKey.Key
+    key: enum.SeedExtractorStorageUiKey.Key
   - type: ActivatableUIRequiresPower
   - type: UserInterface
     interfaces:
-      enum.SeedExtractorUiKey.Key:
-        type: SeedExtractorBoundUserInterface
+      enum.SeedExtractorStorageUiKey.Key:
+        type: SeedExtractorStorageBoundUserInterface
   - type: ContainerContainer
     containers:
       seed_extractor_seeds: !type:Container {}
