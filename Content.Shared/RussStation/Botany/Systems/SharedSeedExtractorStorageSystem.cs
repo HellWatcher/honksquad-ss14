@@ -5,7 +5,7 @@ using Robust.Shared.Containers;
 
 namespace Content.Shared.RussStation.Botany.Systems;
 
-public abstract class SharedSeedExtractorSystem : EntitySystem
+public abstract class SharedSeedExtractorStorageSystem : EntitySystem
 {
     [Dependency] protected readonly SharedContainerSystem Container = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
@@ -13,16 +13,16 @@ public abstract class SharedSeedExtractorSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<SeedExtractorComponent, GetDumpableVerbEvent>(OnGetDumpableVerb);
-        SubscribeLocalEvent<SeedExtractorComponent, DumpEvent>(OnDump);
+        SubscribeLocalEvent<SeedExtractorStorageComponent, GetDumpableVerbEvent>(OnGetDumpableVerb);
+        SubscribeLocalEvent<SeedExtractorStorageComponent, DumpEvent>(OnDump);
     }
 
-    private void OnGetDumpableVerb(EntityUid uid, SeedExtractorComponent component, ref GetDumpableVerbEvent args)
+    private void OnGetDumpableVerb(EntityUid uid, SeedExtractorStorageComponent component, ref GetDumpableVerbEvent args)
     {
         args.Verb = Loc.GetString("seed-extractor-dump-verb", ("unit", uid));
     }
 
-    private void OnDump(EntityUid uid, SeedExtractorComponent component, ref DumpEvent args)
+    private void OnDump(EntityUid uid, SeedExtractorStorageComponent component, ref DumpEvent args)
     {
         if (args.Handled)
             return;
