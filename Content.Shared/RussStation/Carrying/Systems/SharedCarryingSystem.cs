@@ -1,4 +1,5 @@
 using Content.Shared.ActionBlocker;
+using Content.Shared.Buckle.Components;
 using Content.Shared.RussStation.Carrying.Components;
 using Content.Shared.RussStation.Carrying.Events;
 using Content.Shared.DoAfter;
@@ -67,6 +68,7 @@ public abstract class SharedCarryingSystem : EntitySystem
         // Auto-drop conditions
         SubscribeLocalEvent<BeingCarriedComponent, MobStateChangedEvent>(OnCarriedMobStateChanged);
         SubscribeLocalEvent<BeingCarriedComponent, StoodEvent>(OnCarriedStood);
+        SubscribeLocalEvent<BeingCarriedComponent, BuckledEvent>(OnCarriedBuckled);
         SubscribeLocalEvent<ActiveCarrierComponent, MobStateChangedEvent>(OnCarrierMobStateChanged);
         SubscribeLocalEvent<ActiveCarrierComponent, StunnedEvent>(OnCarrierStunned);
         SubscribeLocalEvent<ActiveCarrierComponent, DownedEvent>(OnCarrierDowned);
@@ -358,6 +360,12 @@ public abstract class SharedCarryingSystem : EntitySystem
     }
 
     private void OnCarriedStood(EntityUid uid, BeingCarriedComponent component, StoodEvent args)
+    {
+        if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
+            Drop(carrier);
+    }
+
+    private void OnCarriedBuckled(EntityUid uid, BeingCarriedComponent component, ref BuckledEvent args)
     {
         if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
             Drop(carrier);
