@@ -16,7 +16,6 @@ namespace Content.Server.RussStation.Botany.Systems;
 public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSystem
 {
     [Dependency] private readonly BotanySystem _botanySystem = default!;
-
     [Dependency] private readonly UserInterfaceSystem _uiSys = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
 
@@ -32,9 +31,7 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
     }
 
     /// <summary>
-    /// When the player uses an item on the extractor:
-    /// - Produce → extract seeds as before (spawn packets, drop/hand to player).
-    /// - Seed packet → store the packet inside the extractor.
+    /// When the player uses a seed packet on the extractor, store the packet inside the extractor.
     /// </summary>
     private void OnInteractUsing(EntityUid uid, SeedExtractorStorageComponent storage, InteractUsingEvent args)
     {
@@ -44,13 +41,11 @@ public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSyste
         if (!this.IsPowered(uid, EntityManager))
             return;
 
-        if (TryComp(args.Used, out SeedComponent? _))
-        {
-            var seedContainer = Container.EnsureContainer<Container>(uid, storage.SeedContainerId);
-            if (Container.Insert(args.Used, seedContainer))
-                args.Handled = true;
+        if (!TryComp(args.Used, out SeedComponent? _))
             return;
-        }
+
+        var seedContainer = Container.EnsureContainer<Container>(uid, storage.SeedContainerId);
+        args.Handled = Container.Insert(args.Used, seedContainer);
     }
 
     /// <summary>
