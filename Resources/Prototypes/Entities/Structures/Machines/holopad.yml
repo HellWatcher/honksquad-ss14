@@ -6,6 +6,13 @@
   components:
   - type: Transform
     anchored: true
+  # HONK START - Fix holopad blocking pulled entities (issue #30)
+  # Upstream bug: PR #34300 added Impassable+hard:true to fix wall clipping,
+  # PR #36341 partially cleaned up but left Impassable+hard:true intact.
+  # A floor-mounted device should not block movement or pulling.
+  # fix1: Impassable mask prevents clipping through walls; hard:false lets
+  #        mobs/objects walk and be pulled over it.
+  # fix2: MachineLayer so projectiles and interactions can still hit it.
   - type: Fixtures
     fixtures:
       fix1:
@@ -14,6 +21,15 @@
           radius: 0.25
         mask:
         - Impassable
+        hard: false
+      fix2:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.25
+        layer:
+        - MachineLayer
+        hard: false
+  # HONK END
   - type: ApcPowerReceiver
     powerLoad: 5
   - type: PowerState
