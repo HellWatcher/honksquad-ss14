@@ -74,7 +74,7 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
         });
 
         row.AddChild(StatLabel(seed.Potency.ToString("0"), 50));
-        row.AddChild(StatLabel(seed.Yield.ToString(), 50));
+        row.AddChild(StatLabel(seed.Yield.ToString("0"), 50));
         row.AddChild(StatLabel(seed.Maturation.ToString("0"), 50));
         row.AddChild(StatLabel(seed.Production.ToString("0"), 50));
         row.AddChild(StatLabel(seed.Lifespan.ToString("0"), 50));
