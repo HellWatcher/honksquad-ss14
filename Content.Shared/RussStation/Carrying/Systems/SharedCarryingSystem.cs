@@ -45,11 +45,14 @@ public abstract class SharedCarryingSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedVirtualItemSystem _virtualItem = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
-    // Tracks carrier EntityUids currently mid-transition (Carry/Drop/shutdown) to suppress
-    // VirtualItemDeleted cascading into another Drop(). Per-entity instead of a bare bool
-    // so nested or concurrent carries can't interfere with each other.
+    // Carriers currently setting up or tearing down a carry. While in this set,
+    // OnVirtualItemDeleted won't call Drop(), preventing double-drop cascades.
     private readonly HashSet<EntityUid> _transitioning = new();
+
+    private TimeSpan _nextValidation;
+    private static readonly TimeSpan ValidationInterval = TimeSpan.FromSeconds(1);
 
     public override void Initialize()
     {
@@ -74,6 +77,9 @@ public abstract class SharedCarryingSystem : EntitySystem
         SubscribeLocalEvent<ActiveCarrierComponent, DownedEvent>(OnCarrierDowned);
         SubscribeLocalEvent<BeingCarriedComponent, EntGotInsertedIntoContainerMessage>(OnCarriedInserted);
         SubscribeLocalEvent<ActiveCarrierComponent, EntGotInsertedIntoContainerMessage>(OnCarrierInserted);
+
+        // Drop carry when the carried entity gets buckled
+        SubscribeLocalEvent<BeingCarriedComponent, BuckleAttemptEvent>(OnCarriedBuckleAttempt);
 
         // Cleanup
         SubscribeLocalEvent<BeingCarriedComponent, ComponentShutdown>(OnBeingCarriedShutdown);
@@ -178,6 +184,9 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (!_mobState.IsIncapacitated(target))
             return false;
 
+        if (TryComp<BuckleComponent>(target, out var buckle) && buckle.Buckled)
+            return false;
+
         if (!_actionBlocker.CanInteract(carrier, target))
             return false;
 
@@ -236,8 +245,9 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (attempt.Cancelled)
             return;
 
-        // Stop pulls before setting carry state. The _transitioning set prevents the pull's
-        // virtual item cleanup from cascading into OnVirtualItemDeleted, which calls Drop().
+        // Mark as transitioning for the full setup. The reparent below can trigger
+        // other systems (like buckle) which may delete virtual items. Without this
+        // guard, those deletions would call Drop() while we're still setting up.
         _transitioning.Add(carrier);
 
         if (TryComp<PullableComponent>(target, out var pullable) && pullable.Puller != null)
@@ -246,8 +256,6 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (TryComp<PullerComponent>(carrier, out var puller) && puller.Pulling != null
             && TryComp<PullableComponent>(puller.Pulling.Value, out var pullerPullable))
             _pulling.TryStopPull(puller.Pulling.Value, pullerPullable);
-
-        _transitioning.Remove(carrier);
 
         carrierComp.Carrying = target;
         carriableComp.CarriedBy = carrier;
@@ -262,10 +270,23 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (!_virtualItem.TrySpawnVirtualItemInHand(target, carrier))
             Log.Warning($"Failed to spawn second carry virtual item on {ToPrettyString(carrier)}");
 
-        // Parent to carrier at origin — client FrameUpdate handles the visual offset
+        // Parent target to carrier. The client's FrameUpdate handles the visual offset.
         var xform = Transform(target);
         var coords = new EntityCoordinates(carrier, System.Numerics.Vector2.Zero);
         _transform.SetCoordinates(target, xform, coords, rotation: Angle.Zero);
+
+        _transitioning.Remove(carrier);
+
+        // The reparent above can cause other systems to move the target back (e.g.
+        // buckle detecting a parent change and unbuckling). If that happened, clean
+        // up instead of continuing with a half-built carry.
+        if (carrierComp.Carrying != target || Transform(target).ParentUid != carrier)
+        {
+            Log.Warning($"Carry disrupted during setup: {ToPrettyString(carrier)} -> {ToPrettyString(target)}");
+            CleanOrphanedCarryState(carrier, carrierComp);
+            return;
+        }
+
         _joints.SetRelay(target, carrier);
 
         _standing.Down(target, playSound: false, dropHeldItems: false, force: true);
@@ -297,8 +318,8 @@ public abstract class SharedCarryingSystem : EntitySystem
         Dirty(carrier, carrierComp);
         Dirty(target, carriableComp);
 
-        // Remove immediately (not deferred) so event handlers like OnCarriedCanMove
-        // and OnCarriedStood don't fire after the drop is complete.
+        // Remove immediately so carried-entity event handlers (like OnCarriedCanMove
+        // and OnCarriedStood) don't fire after the drop.
         RemComp<BeingCarriedComponent>(target);
         RemComp<ActiveCarrierComponent>(carrier);
 
@@ -438,6 +459,96 @@ public abstract class SharedCarryingSystem : EntitySystem
     {
         if (!_transitioning.Contains(uid) && component.Carrying == args.BlockingEntity)
             Drop(uid, component);
+    }
+
+    private void OnCarriedBuckleAttempt(EntityUid uid, BeingCarriedComponent component, ref BuckleAttemptEvent args)
+    {
+        if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
+            Drop(carrier);
+    }
+
+    #endregion
+
+    #region State Validation
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        if (_timing.CurTime < _nextValidation)
+            return;
+        _nextValidation = _timing.CurTime + ValidationInterval;
+
+        var query = EntityQueryEnumerator<ActiveCarrierComponent, CarrierComponent>();
+        while (query.MoveNext(out var uid, out _, out var carrier))
+        {
+            if (_transitioning.Contains(uid))
+                continue;
+
+            if (carrier.Carrying is not { } target || !Exists(target) || Terminating(target))
+            {
+                CleanOrphanedCarryState(uid, carrier);
+                continue;
+            }
+
+            if (Transform(target).ParentUid != uid)
+            {
+                // Target escaped the carrier. Try a normal Drop first, then
+                // fall back to orphan cleanup if Drop couldn't fully resolve it.
+                Drop(uid, carrier);
+                if (HasComp<ActiveCarrierComponent>(uid))
+                    CleanOrphanedCarryState(uid, carrier);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Fallback cleanup for when <see cref="Drop"/> can't fully resolve a broken carry,
+    /// such as when the target no longer exists or Carrying was already nulled but
+    /// marker components and virtual items are still hanging around.
+    /// </summary>
+    private void CleanOrphanedCarryState(EntityUid uid, CarrierComponent carrier)
+    {
+        var target = carrier.Carrying;
+
+        carrier.Carrying = null;
+        Dirty(uid, carrier);
+
+        if (target != null && Exists(target.Value) && !Terminating(target.Value))
+        {
+            if (TryComp<CarriableComponent>(target.Value, out var carriable))
+            {
+                carriable.CarriedBy = null;
+                Dirty(target.Value, carriable);
+            }
+
+            RemCompDeferred<BeingCarriedComponent>(target.Value);
+
+            _transitioning.Add(uid);
+            _virtualItem.DeleteInHandsMatching(uid, target.Value);
+            _transitioning.Remove(uid);
+
+            if (!Terminating(uid))
+            {
+                var xform = Transform(target.Value);
+                if (xform.ParentUid == uid)
+                {
+                    _transform.PlaceNextTo((target.Value, xform), (uid, Transform(uid)));
+                    xform.ActivelyLerping = false;
+                }
+            }
+
+            _joints.RefreshRelay(target.Value);
+            _actionBlocker.UpdateCanMove(target.Value);
+
+            if (!_mobState.IsIncapacitated(target.Value) && !HasComp<KnockedDownComponent>(target.Value))
+                _standing.Stand(target.Value);
+        }
+
+        RemComp<ActiveCarrierComponent>(uid);
+        _movementSpeed.RefreshMovementSpeedModifiers(uid);
+
+        Log.Warning($"Cleaned orphaned carry state on {ToPrettyString(uid)}");
     }
 
     #endregion
