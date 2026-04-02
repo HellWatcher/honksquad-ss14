@@ -57,6 +57,8 @@ tool-quality-cauterizing-name = Cauterizing
 tool-quality-cauterizing-tool-name = Cautery
 tool-quality-drilling-name = Drilling
 tool-quality-drilling-tool-name = Drill
+tool-quality-bonesetting-name = Bone Setting
+tool-quality-bonesetting-tool-name = Bone Setter
 tool-quality-draping-name = Draping
 tool-quality-draping-tool-name = Drape
 
