@@ -11,11 +11,15 @@ using Content.Shared.Standing;
 using Content.Shared.Tag;
 using Robust.Shared.Containers;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.RussStation.Surgery;
 
 public sealed partial class SurgerySystem : SharedSurgerySystem
 {
+    private static readonly ProtoId<TagPrototype> BedsheetTag = "Bedsheet";
+    private static readonly ProtoId<TagPrototype> SurgeryToolTag = "SurgeryTool";
+
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly SharedBloodstreamSystem _bloodstream = default!;
@@ -54,7 +58,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             return;
 
         // Bedsheet on non-draped patient -> open procedure selection
-        if (_tags.HasTag(used, "Bedsheet") && !HasComp<SurgeryDrapedComponent>(target))
+        if (_tags.HasTag(used, BedsheetTag) && !HasComp<SurgeryDrapedComponent>(target))
         {
             if (!_standing.IsDown(target.Owner))
             {
@@ -79,7 +83,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
 
         // Must be a surgical tool on a draped patient from here
-        if (!_tags.HasTag(used, "SurgeryTool") || !HasComp<SurgeryDrapedComponent>(target))
+        if (!_tags.HasTag(used, SurgeryToolTag) || !HasComp<SurgeryDrapedComponent>(target))
             return;
 
         // Cautery universal close on active surgery
@@ -171,7 +175,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
 
         // Validate: bedsheet must still exist and have the Bedsheet tag
-        if (!Exists(bedsheet.Value) || !_tags.HasTag(bedsheet.Value, "Bedsheet"))
+        if (!Exists(bedsheet.Value) || !_tags.HasTag(bedsheet.Value, BedsheetTag))
         {
             _popup.PopupEntity(Loc.GetString("surgery-bedsheet-missing"), target.Value, surgeon);
             return;
