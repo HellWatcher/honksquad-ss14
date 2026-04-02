@@ -47,7 +47,7 @@ public sealed class ActionGunSystem : EntitySystem
     {
         //HONK START
         if (ent.Comp.PopupText != null)
-            _popup.PopupPredicted(EntityManager.GetComponent<MetaDataComponent>(ent).EntityName + " " + ent.Comp.PopupText + "!", ent, ent, type: PopupType.Small);
+            _popup.PopupPredicted(Comp<MetaDataComponent>(ent).EntityName + " " + ent.Comp.PopupText + "!", ent, ent, type: PopupType.Small);
 
         if (TryComp<GunComponent>(ent.Comp.Gun, out var gun))
         {

@@ -9,6 +9,8 @@ namespace Content.Shared.RussStation.Surgery.Systems;
 
 public abstract partial class SharedSurgerySystem : EntitySystem
 {
+    private static readonly ProtoId<TagPrototype> CauteryTag = "Cautery";
+
     [Dependency] protected readonly AlertsSystem _alerts = default!;
     [Dependency] private readonly TagSystem _tag = default!;
     [Dependency] protected readonly IPrototypeManager ProtoManager = default!;
@@ -85,6 +87,6 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     /// </summary>
     public bool IsCauteryTool(EntityUid tool)
     {
-        return _tag.HasTag(tool, "Cautery");
+        return _tag.HasTag(tool, CauteryTag);
     }
 }

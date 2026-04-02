@@ -28,7 +28,7 @@
     storedRotation: 90
   - type: MeleeWeapon
     damage:
-       types:
+      types:
         Heat: 5
     soundHit:
       path: /Audio/Effects/lightburn.ogg
