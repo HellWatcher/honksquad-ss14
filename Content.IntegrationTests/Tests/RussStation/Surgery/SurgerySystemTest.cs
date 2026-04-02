@@ -3,7 +3,7 @@ using Content.Shared.Buckle.Components;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Systems;
-using Content.Shared.Tag;
+using Content.Shared.Tools;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
@@ -14,6 +14,7 @@ namespace Content.IntegrationTests.Tests.RussStation.Surgery;
 public sealed class SurgerySystemTest
 {
     private const string TestProcedureId = "SurgeryTestProcedure";
+    private const string TestProcedureMajorId = "SurgeryTestProcedureMajor";
 
     [TestPrototypes]
     private const string Prototypes = @"
@@ -22,12 +23,23 @@ public sealed class SurgerySystemTest
   name: Test Procedure
   description: A test procedure.
   steps:
-    - tag: Scalpel
+    - quality: Slicing
       duration: 1.0
       popup: surgery-step-incision
-    - tag: Retractor
+    - quality: Retracting
       duration: 1.0
       popup: surgery-step-retract
+
+- type: surgeryProcedure
+  id: SurgeryTestProcedureMajor
+  name: Test Major Procedure
+  description: A major test procedure.
+  difficulty: Major
+  steps:
+    - quality: Slicing
+      popup: surgery-step-incision
+    - quality: Clamping
+      popup: surgery-step-clamp
 
 - type: entity
   id: SurgeryTestPatient
@@ -47,31 +59,37 @@ public sealed class SurgerySystemTest
   components:
   - type: Tag
     tags:
-    - SurgeryTool
-    - Scalpel
+    - TierStandard
+  - type: Tool
+    qualities:
+    - Slicing
 
 - type: entity
   id: SurgeryTestRetractor
   components:
   - type: Tag
     tags:
-    - SurgeryTool
-    - Retractor
+    - TierStandard
+  - type: Tool
+    qualities:
+    - Retracting
 
 - type: entity
   id: SurgeryTestCautery
   components:
   - type: Tag
     tags:
-    - SurgeryTool
-    - Cautery
+    - TierStandard
+  - type: Tool
+    qualities:
+    - Cauterizing
 
 - type: entity
   id: SurgeryTestNonTool
   components:
-  - type: Tag
-    tags:
-    - Scalpel
+  - type: Tool
+    qualities:
+    - Slicing
 
 - type: entity
   id: SurgeryTestOperatingTable
@@ -91,6 +109,23 @@ public sealed class SurgerySystemTest
   id: SurgeryTestChair
   components:
   - type: Strap
+
+- type: entity
+  id: SurgeryTestSurgicalDrape
+  components:
+  - type: Tag
+    tags:
+    - TierStandard
+  - type: Tool
+    qualities:
+    - Draping
+
+- type: entity
+  id: SurgeryTestBedsheet
+  components:
+  - type: Tool
+    qualities:
+    - Draping
 ";
 
     /// <summary>
@@ -107,8 +142,8 @@ public sealed class SurgerySystemTest
         {
             Assert.That(protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureId, out var proto), Is.True);
             Assert.That(proto!.Steps.Count, Is.EqualTo(2));
-            Assert.That(proto.Steps[0].Tag.Id, Is.EqualTo("Scalpel"));
-            Assert.That(proto.Steps[1].Tag.Id, Is.EqualTo("Retractor"));
+            Assert.That(proto.Steps[0].Quality.Id, Is.EqualTo("Slicing"));
+            Assert.That(proto.Steps[1].Quality.Id, Is.EqualTo("Retracting"));
         });
 
         await pair.CleanReturnAsync();
@@ -116,7 +151,7 @@ public sealed class SurgerySystemTest
 
     /// <summary>
     /// Verifies that all game-defined surgery procedure prototypes have at least one step
-    /// and reference valid tag prototypes.
+    /// and reference valid tool quality prototypes.
     /// </summary>
     [Test]
     public async Task AllProcedurePrototypesValidTest()
@@ -135,9 +170,11 @@ public sealed class SurgerySystemTest
                 for (var i = 0; i < proto.Steps.Count; i++)
                 {
                     var step = proto.Steps[i];
-                    Assert.That(protoManager.HasIndex<TagPrototype>(step.Tag),
-                        $"Procedure '{proto.ID}' step {i} references unknown tag '{step.Tag}'.");
-                    Assert.That(step.Duration, Is.GreaterThan(0f),
+                    Assert.That(protoManager.HasIndex<ToolQualityPrototype>(step.Quality),
+                        $"Procedure '{proto.ID}' step {i} references unknown quality '{step.Quality}'.");
+
+                    var baseDuration = SharedSurgerySystem.GetBaseStepDuration(step);
+                    Assert.That(baseDuration, Is.GreaterThan(0f),
                         $"Procedure '{proto.ID}' step {i} has non-positive duration.");
                 }
             }
@@ -147,7 +184,7 @@ public sealed class SurgerySystemTest
     }
 
     /// <summary>
-    /// Verifies that ToolMatchesStep correctly matches tool tags to step requirements.
+    /// Verifies that ToolMatchesStep correctly matches tool qualities to step requirements.
     /// </summary>
     [Test]
     public async Task ToolMatchesStepTest()
@@ -167,11 +204,11 @@ public sealed class SurgerySystemTest
             var scalpel = entityManager.SpawnEntity("SurgeryTestScalpel", mapData.GridCoords);
             var retractor = entityManager.SpawnEntity("SurgeryTestRetractor", mapData.GridCoords);
 
-            // Scalpel matches step 0 (Scalpel), not step 1 (Retractor)
+            // Scalpel matches step 0 (Slicing), not step 1 (Retracting)
             Assert.That(surgerySystem.ToolMatchesStep(scalpel, proto!.Steps[0]), Is.True);
             Assert.That(surgerySystem.ToolMatchesStep(scalpel, proto.Steps[1]), Is.False);
 
-            // Retractor matches step 1 (Retractor), not step 0 (Scalpel)
+            // Retractor matches step 1 (Retracting), not step 0 (Slicing)
             Assert.That(surgerySystem.ToolMatchesStep(retractor, proto.Steps[0]), Is.False);
             Assert.That(surgerySystem.ToolMatchesStep(retractor, proto.Steps[1]), Is.True);
         });
@@ -180,12 +217,11 @@ public sealed class SurgerySystemTest
     }
 
     /// <summary>
-    /// Verifies that an entity with the correct tag but without the SurgeryTool tag
-    /// still matches the step (ToolMatchesStep only checks the step tag, not SurgeryTool).
-    /// The SurgeryTool gate is in the server's OnAfterInteract, not in ToolMatchesStep.
+    /// Verifies that a tool with the correct quality but without a tier tag
+    /// still matches the step. Tier tags affect duration, not step matching.
     /// </summary>
     [Test]
-    public async Task ToolMatchesStepIgnoresSurgeryToolTagTest()
+    public async Task ToolMatchesStepIgnoresTierTagTest()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
@@ -199,10 +235,10 @@ public sealed class SurgerySystemTest
             var surgerySystem = entityManager.System<SharedSurgerySystem>();
             protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureId, out var proto);
 
-            // Entity has Scalpel tag but NOT SurgeryTool tag
+            // Entity has Slicing quality but no tier tag (improvised)
             var nonTool = entityManager.SpawnEntity("SurgeryTestNonTool", mapData.GridCoords);
 
-            // ToolMatchesStep only checks the step's required tag, so this matches
+            // ToolMatchesStep only checks the quality, so this matches
             Assert.That(surgerySystem.ToolMatchesStep(nonTool, proto!.Steps[0]), Is.True);
         });
 
@@ -236,7 +272,7 @@ public sealed class SurgerySystemTest
     }
 
     /// <summary>
-    /// Verifies that GetSurfaceSpeedModifier returns 1.0 for unbuckled patients
+    /// Verifies that GetSurfaceSpeedModifier returns 2.0 for unbuckled patients
     /// and the configured modifier when buckled to a surgery surface.
     /// </summary>
     [Test]
@@ -269,43 +305,7 @@ public sealed class SurgerySystemTest
     }
 
     /// <summary>
-    /// Verifies that GetStepDuration correctly multiplies step duration by surface speed modifier.
-    /// </summary>
-    [Test]
-    public async Task StepDurationAppliesSurfaceModifierTest()
-    {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
-
-        var entityManager = server.ResolveDependency<IEntityManager>();
-        var protoManager = server.ResolveDependency<IPrototypeManager>();
-        var mapData = await pair.CreateTestMap();
-
-        await server.WaitAssertion(() =>
-        {
-            var surgerySystem = entityManager.System<SharedSurgerySystem>();
-            var buckleSystem = entityManager.System<SharedBuckleSystem>();
-
-            protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureId, out var proto);
-            var step = proto!.Steps[0]; // duration: 1.0
-
-            var patient = entityManager.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
-            var table = entityManager.SpawnEntity("SurgeryTestOperatingTable", mapData.GridCoords);
-
-            // Unbuckled (floor surgery): duration * 2.0
-            Assert.That(surgerySystem.GetStepDuration(step, patient), Is.EqualTo(TimeSpan.FromSeconds(2.0)));
-
-            // Buckled to operating table: duration * 1.0
-            var buckle = entityManager.GetComponent<BuckleComponent>(patient);
-            Assert.That(buckleSystem.TryBuckle(patient, patient, table, buckleComp: buckle), Is.True);
-            Assert.That(surgerySystem.GetStepDuration(step, patient), Is.EqualTo(TimeSpan.FromSeconds(1.0)));
-        });
-
-        await pair.CleanReturnAsync();
-    }
-
-    /// <summary>
-    /// Verifies that GetSurfaceSpeedModifier returns 1.0 when buckled to an entity
+    /// Verifies that GetSurfaceSpeedModifier returns 2.0 when buckled to an entity
     /// that has a Strap component but no SurgerySurface component (e.g. a regular chair).
     /// </summary>
     [Test]
@@ -330,6 +330,150 @@ public sealed class SurgerySystemTest
             var buckle = entityManager.GetComponent<BuckleComponent>(patient);
             Assert.That(buckleSystem.TryBuckle(patient, patient, chair, buckleComp: buckle), Is.True);
             Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(2f));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Verifies that GetDrapeSpeedModifier returns the correct multiplier.
+    /// No drape component = 1.0 (no penalty), default drape = 1.5 (bedsheet improvised penalty).
+    /// Surgical drape stamping (1.0x) is tested server-side via the draping interaction.
+    /// </summary>
+    [Test]
+    public async Task DrapeSpeedModifierTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var surgerySystem = entityManager.System<SharedSurgerySystem>();
+
+            var patient = entityManager.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
+
+            // No drape -> 1.0 (no penalty from drape layer)
+            Assert.That(surgerySystem.GetDrapeSpeedModifier(patient), Is.EqualTo(1f));
+
+            // Add SurgeryDrapedComponent with default (bedsheet improvised penalty)
+            entityManager.AddComponent<SurgeryDrapedComponent>(patient);
+            Assert.That(surgerySystem.GetDrapeSpeedModifier(patient), Is.EqualTo(1.5f));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Verifies that GetDifficultyModifier returns the correct multiplier for each tier.
+    /// </summary>
+    [Test]
+    public async Task DifficultyModifierTest()
+    {
+        Assert.That(SharedSurgerySystem.GetDifficultyModifier(SurgeryDifficulty.Minor), Is.EqualTo(0.8f));
+        Assert.That(SharedSurgerySystem.GetDifficultyModifier(SurgeryDifficulty.Standard), Is.EqualTo(1.0f));
+        Assert.That(SharedSurgerySystem.GetDifficultyModifier(SurgeryDifficulty.Major), Is.EqualTo(1.3f));
+        Assert.That(SharedSurgerySystem.GetDifficultyModifier(SurgeryDifficulty.Critical), Is.EqualTo(1.5f));
+    }
+
+    /// <summary>
+    /// Verifies that GetBaseStepDuration returns the explicit override when set,
+    /// and falls back to the centralized default for the quality when null.
+    /// </summary>
+    [Test]
+    public async Task BaseStepDurationFallbackTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoManager = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            // Test procedure has explicit duration: 1.0 on a Slicing step
+            protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureId, out var proto);
+            Assert.That(SharedSurgerySystem.GetBaseStepDuration(proto!.Steps[0]), Is.EqualTo(1.0f));
+
+            // Major procedure has no explicit duration on Slicing -> centralized default (2.0)
+            protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureMajorId, out var majorProto);
+            Assert.That(SharedSurgerySystem.GetBaseStepDuration(majorProto!.Steps[0]), Is.EqualTo(2.0f));
+
+            // Clamping step also uses centralized default (2.0)
+            Assert.That(SharedSurgerySystem.GetBaseStepDuration(majorProto.Steps[1]), Is.EqualTo(2.0f));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Verifies that GetStepDuration correctly combines surface, drape, and difficulty modifiers.
+    /// </summary>
+    [Test]
+    public async Task StepDurationCombinesAllModifiersTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var protoManager = server.ResolveDependency<IPrototypeManager>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var surgerySystem = entityManager.System<SharedSurgerySystem>();
+            var buckleSystem = entityManager.System<SharedBuckleSystem>();
+
+            protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureId, out var proto);
+            var step = proto!.Steps[0]; // duration: 1.0
+
+            var patient = entityManager.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
+            var table = entityManager.SpawnEntity("SurgeryTestOperatingTable", mapData.GridCoords);
+
+            // Floor surgery, no drape, standard difficulty:
+            // 1.0 * 2.0 (surface) * 1.0 (no drape comp) * 1.0 (standard) = 2.0
+            Assert.That(surgerySystem.GetStepDuration(step, patient, SurgeryDifficulty.Standard),
+                Is.EqualTo(TimeSpan.FromSeconds(2.0)));
+
+            // Buckle to table, no drape, standard:
+            // 1.0 * 1.0 (surface) * 1.0 (no drape comp) * 1.0 (standard) = 1.0
+            var buckle = entityManager.GetComponent<BuckleComponent>(patient);
+            Assert.That(buckleSystem.TryBuckle(patient, patient, table, buckleComp: buckle), Is.True);
+            Assert.That(surgerySystem.GetStepDuration(step, patient, SurgeryDifficulty.Standard),
+                Is.EqualTo(TimeSpan.FromSeconds(1.0)));
+
+            // Add bedsheet drape (1.5x), major difficulty (1.3x):
+            // 1.0 * 1.0 (surface) * 1.5 (bedsheet) * 1.3 (major) = 1.95
+            entityManager.AddComponent<SurgeryDrapedComponent>(patient);
+            Assert.That(surgerySystem.GetStepDuration(step, patient, SurgeryDifficulty.Major).TotalSeconds,
+                Is.EqualTo(1.95).Within(0.001));
+
+            // Same bedsheet drape (1.5x), minor difficulty (0.8x):
+            // 1.0 * 1.0 (surface) * 1.5 (bedsheet) * 0.8 (minor) = 1.2
+            Assert.That(surgerySystem.GetStepDuration(step, patient, SurgeryDifficulty.Minor).TotalSeconds,
+                Is.EqualTo(1.2).Within(0.001));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Verifies that the major test procedure loads with the correct difficulty.
+    /// </summary>
+    [Test]
+    public async Task ProcedureDifficultyLoadsTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoManager = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureId, out var standard);
+            Assert.That(standard!.Difficulty, Is.EqualTo(SurgeryDifficulty.Standard));
+
+            protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureMajorId, out var major);
+            Assert.That(major!.Difficulty, Is.EqualTo(SurgeryDifficulty.Major));
         });
 
         await pair.CleanReturnAsync();

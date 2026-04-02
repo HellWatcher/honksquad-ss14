@@ -7,4 +7,6 @@
   - Retractor
   - Hemostat
   - SawAdvanced
-# - Drapes
+  # HONK START - Surgical drape
+  - SurgicalDrape
+  # HONK END

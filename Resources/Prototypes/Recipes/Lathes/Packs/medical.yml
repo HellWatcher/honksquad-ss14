@@ -36,6 +36,9 @@
   - Drill
   - Saw
   - Hemostat
+  # HONK START - Surgical drape recipe
+  - SurgicalDrape
+  # HONK END
 
 - type: latheRecipePack
   id: MedicalStatic

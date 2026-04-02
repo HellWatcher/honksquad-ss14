@@ -1,0 +1,25 @@
+- type: entity
+  parent: BaseItem
+  id: SurgicalDrape
+  name: surgical drape
+  description: A sterile surgical drape used to prepare a patient for surgery. More effective than a bedsheet.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Medical/surgicaldrape.rsi"
+      state: drape
+    - type: Item
+      size: Small
+      sprite: "@RussStation/Objects/Medical/surgicaldrape.rsi"
+    - type: Clothing
+      quickEquip: true
+      slots:
+        - neck
+    - type: StaticPrice
+      price: 25
+    - type: Tag
+      tags:
+        - SurgeryTool
+        - TierStandard
+    - type: Tool
+      qualities:
+        - Draping

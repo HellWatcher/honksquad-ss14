@@ -1421,6 +1421,17 @@
 - type: Tag
   id: SurgeryTool # Storage whitelist: ClothingBeltMedical
 
+# HONK START - Tool tier tags
+- type: Tag
+  id: TierStandard
+
+- type: Tag
+  id: TierAdvanced
+
+- type: Tag
+  id: TierExperimental
+# HONK END
+
 - type: Tag
   id: SurveillanceCameraMonitorCircuitboard # ConstructionGraph: WallmountTelescreen
 

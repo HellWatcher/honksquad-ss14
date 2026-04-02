@@ -1,6 +1,6 @@
 using Content.Shared.Damage;
 using Content.Shared.RussStation.Surgery.Effects;
-using Content.Shared.Tag;
+using Content.Shared.Tools;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager.Attributes;
 
@@ -13,16 +13,17 @@ namespace Content.Shared.RussStation.Surgery;
 public sealed partial class SurgeryStep
 {
     /// <summary>
-    /// Tag the held tool must have to perform this step.
+    /// Tool quality the held tool must have to perform this step.
     /// </summary>
     [DataField(required: true)]
-    public ProtoId<TagPrototype> Tag;
+    public ProtoId<ToolQualityPrototype> Quality;
 
     /// <summary>
     /// How long the DoAfter takes in seconds (before speed modifiers).
+    /// If null, uses the centralized default duration for this quality.
     /// </summary>
     [DataField]
-    public float Duration = 2f;
+    public float? Duration;
 
     /// <summary>
     /// Locale string for the popup shown on step completion.
@@ -102,4 +103,10 @@ public sealed partial class SurgeryProcedurePrototype : IPrototype
 
     [DataField(required: true)]
     public List<SurgeryStep> Steps = new();
+
+    /// <summary>
+    /// Difficulty tier that multiplies all step durations for this procedure.
+    /// </summary>
+    [DataField]
+    public SurgeryDifficulty Difficulty = SurgeryDifficulty.Standard;
 }

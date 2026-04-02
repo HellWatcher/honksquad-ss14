@@ -9,6 +9,8 @@ using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Systems;
 using Content.Shared.Standing;
 using Content.Shared.Tag;
+using Content.Shared.Tools;
+using Content.Shared.Tools.Components;
 using Robust.Shared.Containers;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
@@ -17,8 +19,11 @@ namespace Content.Server.RussStation.Surgery;
 
 public sealed partial class SurgerySystem : SharedSurgerySystem
 {
-    private static readonly ProtoId<TagPrototype> BedsheetTag = "Bedsheet";
-    private static readonly ProtoId<TagPrototype> SurgeryToolTag = "SurgeryTool";
+    private static readonly ProtoId<ToolQualityPrototype> DrapingQuality = "Draping";
+
+    private static readonly ProtoId<TagPrototype> TierStandardTag = "TierStandard";
+    private static readonly ProtoId<TagPrototype> TierAdvancedTag = "TierAdvanced";
+    private static readonly ProtoId<TagPrototype> TierExperimentalTag = "TierExperimental";
 
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
@@ -29,6 +34,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     [Dependency] private readonly TagSystem _tags = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -57,8 +63,9 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         if (user == target.Owner)
             return;
 
-        // Bedsheet on non-draped patient -> open procedure selection
-        if (_tags.HasTag(used, BedsheetTag) && !HasComp<SurgeryDrapedComponent>(target))
+        // Draping tool on non-draped patient -> open procedure selection
+        if (_tool.HasQuality(used, DrapingQuality)
+            && !HasComp<SurgeryDrapedComponent>(target))
         {
             if (!_standing.IsDown(target.Owner))
             {
@@ -82,8 +89,8 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             return;
         }
 
-        // Must be a surgical tool on a draped patient from here
-        if (!_tags.HasTag(used, SurgeryToolTag) || !HasComp<SurgeryDrapedComponent>(target))
+        // Tool used on draped patient -> surgery interaction
+        if (!HasComp<ToolComponent>(used) || !HasComp<SurgeryDrapedComponent>(target))
             return;
 
         // Cautery universal close on active surgery
@@ -174,16 +181,20 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             return;
         }
 
-        // Validate: bedsheet must still exist and have the Bedsheet tag
-        if (!Exists(bedsheet.Value) || !_tags.HasTag(bedsheet.Value, BedsheetTag))
+        // Validate: drape item must still exist and have Draping quality
+        if (!Exists(bedsheet.Value) || !_tool.HasQuality(bedsheet.Value, DrapingQuality))
         {
-            _popup.PopupEntity(Loc.GetString("surgery-bedsheet-missing"), target.Value, surgeon);
+            _popup.PopupEntity(Loc.GetString("surgery-drape-missing"), target.Value, surgeon);
             return;
         }
 
-        // Now drape the patient and take the bedsheet
+        // Now drape the patient and take the bedsheet/drape
         var draped = EnsureComp<SurgeryDrapedComponent>(target.Value);
         draped.Bedsheet = bedsheet.Value;
+
+        // Derive drape speed modifier from tier (standard = 1.0, no tier = 1.5 improvised)
+        draped.DrapeSpeedModifier = GetToolTierModifier(bedsheet.Value);
+
         Dirty(target.Value, draped);
 
         var drapeContainer = _container.EnsureContainer<Container>(target.Value, "surgery_drape");
@@ -226,7 +237,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         // Tool matches current step
         if (ToolMatchesStep(tool, currentStep))
         {
-            StartStepDoAfter(surgeon, patient, tool, currentStep);
+            StartStepDoAfter(surgeon, patient, tool, currentStep, proto.Difficulty);
             return;
         }
 
@@ -238,7 +249,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             {
                 active.CurrentStep++;
                 Dirty(patient, active);
-                StartStepDoAfter(surgeon, patient, tool, nextStep);
+                StartStepDoAfter(surgeon, patient, tool, nextStep, proto.Difficulty);
                 return;
             }
         }
@@ -246,9 +257,11 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         _popup.PopupEntity(Loc.GetString("surgery-wrong-tool"), patient, surgeon);
     }
 
-    private void StartStepDoAfter(EntityUid surgeon, EntityUid patient, EntityUid tool, SurgeryStep step)
+    private void StartStepDoAfter(EntityUid surgeon, EntityUid patient, EntityUid tool, SurgeryStep step, SurgeryDifficulty difficulty)
     {
-        var duration = GetStepDuration(step, patient);
+        var duration = TimeSpan.FromSeconds(
+            (float) GetStepDuration(step, patient, difficulty).TotalSeconds
+            * GetToolTierModifier(tool));
 
         var doAfterArgs = new DoAfterArgs(
             EntityManager,
@@ -270,7 +283,10 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
     private void StartCauteryClose(EntityUid surgeon, EntityUid patient, EntityUid tool)
     {
-        var duration = TimeSpan.FromSeconds(2f * GetSurfaceSpeedModifier(patient));
+        var duration = TimeSpan.FromSeconds(2f
+            * GetSurfaceSpeedModifier(patient)
+            * GetDrapeSpeedModifier(patient)
+            * GetToolTierModifier(tool));
 
         var doAfterArgs = new DoAfterArgs(
             EntityManager,
@@ -356,4 +372,21 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         ApplyCauteryClose(ent.Owner, args.User);
     }
 
+    /// <summary>
+    /// Returns a speed multiplier based on the tool's tier tag.
+    /// No tier tag = improvised (1.5x).
+    /// </summary>
+    private float GetToolTierModifier(EntityUid tool)
+    {
+        if (_tags.HasTag(tool, TierExperimentalTag))
+            return 0.7f;
+
+        if (_tags.HasTag(tool, TierAdvancedTag))
+            return 0.8f;
+
+        if (_tags.HasTag(tool, TierStandardTag))
+            return 1.0f;
+
+        return 1.5f; // no tier tag = improvised
+    }
 }
