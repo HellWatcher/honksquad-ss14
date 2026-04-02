@@ -1,0 +1,108 @@
+name: Check Upstream Stable
+
+on:
+  schedule:
+    # Runs daily at 06:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add wizden remote and fetch
+        run: |
+          git remote add wizden https://github.com/space-wizards/space-station-14.git
+          git fetch wizden stable
+          git fetch origin upstream/stable
+
+      - name: Compare branches
+        id: compare
+        run: |
+          LOCAL_SHA=$(git rev-parse origin/upstream/stable)
+          REMOTE_SHA=$(git rev-parse wizden/stable)
+
+          if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+          else
+            BEHIND_COUNT=$(git rev-list --count origin/upstream/stable..wizden/stable)
+            LATEST_COMMITS=$(git log --oneline origin/upstream/stable..wizden/stable | head -20)
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+            echo "behind_count=$BEHIND_COUNT" >> "$GITHUB_OUTPUT"
+            echo "local_sha=$LOCAL_SHA" >> "$GITHUB_OUTPUT"
+            echo "remote_sha=$REMOTE_SHA" >> "$GITHUB_OUTPUT"
+            {
+              echo "latest_commits<<COMMITS_EOF"
+              echo "$LATEST_COMMITS"
+              echo "COMMITS_EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check for existing open issue
+        if: steps.compare.outputs.up_to_date == 'false'
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --label "upstream-sync" --state open --json number --jq '.[0].number // empty')
+          echo "issue_number=$ISSUE" >> "$GITHUB_OUTPUT"
+
+      - name: Create or update issue
+        if: steps.compare.outputs.up_to_date == 'false' && steps.existing.outputs.issue_number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Upstream stable has ${{ steps.compare.outputs.behind_count }} new commits" \
+            --label "upstream-sync" \
+            --body "$(cat <<'EOF'
+          Wizden \`stable\` has moved ahead of our \`upstream/stable\` branch.
+
+          **Behind by:** ${{ steps.compare.outputs.behind_count }} commits
+          **Our SHA:** \`${{ steps.compare.outputs.local_sha }}\`
+          **Wizden SHA:** \`${{ steps.compare.outputs.remote_sha }}\`
+
+          ### Recent upstream commits
+          ```
+          ${{ steps.compare.outputs.latest_commits }}
+          ```
+
+          ### To sync
+          ```bash
+          git fetch wizden stable
+          git checkout upstream/stable
+          git reset --hard wizden/stable
+          git push --force origin upstream/stable
+
+          git checkout release
+          git merge upstream/stable
+          # resolve conflicts
+          git push origin release
+          ```
+
+          This issue was created automatically by the [Check Upstream Stable](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
+          EOF
+          )"
+
+      - name: Update existing issue
+        if: steps.compare.outputs.up_to_date == 'false' && steps.existing.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ steps.existing.outputs.issue_number }} \
+            --body "$(cat <<'EOF'
+          Still behind — now **${{ steps.compare.outputs.behind_count }} commits** behind wizden/stable.
+
+          **Wizden SHA:** \`${{ steps.compare.outputs.remote_sha }}\`
+
+          ### Latest upstream commits
+          ```
+          ${{ steps.compare.outputs.latest_commits }}
+          ```
+          EOF
+          )"
