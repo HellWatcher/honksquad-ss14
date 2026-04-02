@@ -296,7 +296,10 @@
   mutationPrototypes:
     - extradimensionalOrange
     - lemon
-    - lime
+    # HONK START - adds whtie mutation and removes lime as 4 mutations on one plant is a bit much
+    #- lime
+    - white
+    # HONK END
   harvestRepeat: Repeat
   lifespan: 55
   maturation: 6

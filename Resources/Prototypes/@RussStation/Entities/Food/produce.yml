@@ -1,0 +1,36 @@
+
+- type: entity
+  name: white
+  parent: FoodOrange
+  id: FoodWhite
+  description: White as a ghost.
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 24
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 5
+        - ReagentId: Laughter
+          Quantity: 15
+        - ReagentId: Vitamin
+          Quantity: 4
+  - type: FlavorProfile
+    flavors:
+      - funny
+      - sour
+  - type: Sprite
+    sprite: '@RussStation/Objects/Hydroponics/white.rsi'
+  - type: Item
+    heldPrefix: produce
+  - type: Produce
+    seedId: white
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Laughter
+        Quantity: 10
+  - type: Tag
+    tags:
+    - Fruit
