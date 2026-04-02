@@ -314,6 +314,8 @@ Resources/MapImages
 # AI tooling
 CLAUDE.md
 .serena/
+.prettierignore
+ci-local.sh
 /docs/
 
 # Deploy

@@ -51,4 +51,6 @@
   - type: ContainerContainer
     containers:
       seed_extractor_seeds: !type:Container {}
+      machine_board: !type:Container {}
+      machine_parts: !type:Container {}
   # HONK END

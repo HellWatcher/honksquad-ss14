@@ -1,0 +1,4 @@
+# Upstream YAML files use non-standard indentation that prettier destroys.
+# Only format our fork-specific @RussStation directories.
+Resources/Prototypes/**/*.yml
+!Resources/Prototypes/@RussStation/**/*.yml
