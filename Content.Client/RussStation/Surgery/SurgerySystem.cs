@@ -36,15 +36,18 @@ public sealed class SurgerySystem : SharedSurgerySystem
             var target = ev.Target;
             var bedsheet = ev.Bedsheet;
 
+            var icon = proto.Icon != null
+                ? (SpriteSpecifier) new SpriteSpecifier.EntityPrototype(proto.Icon)
+                : new SpriteSpecifier.Rsi(
+                    new ResPath("Objects/Specific/Medical/Surgery/scalpel.rsi"),
+                    "scalpel");
+
             buttons.Add(new RadialMenuActionOption<string>(
                 _ => OnProcedureSelected(target, bedsheet, id),
                 id)
             {
                 ToolTip = Loc.GetString(proto.Name),
-                IconSpecifier = RadialMenuIconSpecifier.With(
-                    new SpriteSpecifier.Rsi(
-                        new ResPath("Objects/Specific/Medical/Surgery/scalpel.rsi"),
-                        "scalpel")),
+                IconSpecifier = RadialMenuIconSpecifier.With(icon),
             });
         }
 

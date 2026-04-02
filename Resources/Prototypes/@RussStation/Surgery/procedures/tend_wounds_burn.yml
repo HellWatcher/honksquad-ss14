@@ -2,6 +2,7 @@
   id: TendWoundsBurn
   name: surgery-procedure-tend-wounds-burn
   description: Treat burn damage through surgery.
+  icon: MedkitBurn
   steps:
     - tag: Scalpel
       duration: 2.0

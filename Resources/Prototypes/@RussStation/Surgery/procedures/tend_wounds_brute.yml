@@ -2,6 +2,7 @@
   id: TendWoundsBrute
   name: surgery-procedure-tend-wounds-brute
   description: Repair physical damage through surgery.
+  icon: MedkitBrute
   steps:
     - tag: Scalpel
       duration: 2.0

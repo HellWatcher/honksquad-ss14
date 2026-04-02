@@ -2,6 +2,7 @@
   id: OrganManipulation
   name: surgery-procedure-organ-manipulation
   description: Open the body cavity to remove or insert organs.
+  icon: OrganHumanLungs
   steps:
     - tag: Scalpel
       duration: 2.0

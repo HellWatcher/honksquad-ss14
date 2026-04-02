@@ -93,6 +93,13 @@ public sealed partial class SurgeryProcedurePrototype : IPrototype
     [DataField]
     public string Description = string.Empty;
 
+    /// <summary>
+    /// Entity prototype ID whose sprite is used as the radial menu icon.
+    /// Falls back to a scalpel icon when null.
+    /// </summary>
+    [DataField]
+    public EntProtoId? Icon;
+
     [DataField(required: true)]
     public List<SurgeryStep> Steps = new();
 }
