@@ -23,6 +23,11 @@
   - type: Tag
     tags:
     - Bedsheet
+  # HONK START - Draping quality for surgery system
+  - type: Tool
+    qualities:
+    - Draping
+  # HONK END
 
 - type: entity
   id: BedsheetBlack

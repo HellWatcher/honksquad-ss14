@@ -1,7 +1,7 @@
 # Surgery System
 
 ## Draping
-surgery-drape-patient = You drape {THE($target)} with the bedsheet.
+surgery-drape-patient = You drape {THE($target)} for surgery.
 surgery-patient-not-down = The patient must be lying down for surgery.
 
 ## Procedure Selection
@@ -25,7 +25,7 @@ alerts-surgery-draped-desc = You are draped for surgery. Click to remove the dra
 
 ## Examine
 surgery-examine-active = [color=cyan]{CAPITALIZE(SUBJECT($target))} {CONJUGATE-BE($target)} undergoing {$procedure}.[/color]
-surgery-examine-draped = [color=cyan]{CAPITALIZE(SUBJECT($target))} {CONJUGATE-BE($target)} draped with a bedsheet, prepared for surgery.[/color]
+surgery-examine-draped = [color=cyan]{CAPITALIZE(SUBJECT($target))} {CONJUGATE-BE($target)} draped and prepared for surgery.[/color]
 
 ## Tool Feedback
 surgery-wrong-tool = That's not the right tool for this step.
@@ -41,12 +41,24 @@ surgery-no-organs-to-remove = There are no removable organs.
 
 ## Validation
 surgery-already-draped = The patient is already draped for surgery.
-surgery-bedsheet-missing = The bedsheet is no longer available.
+surgery-drape-missing = The surgical drape is no longer available.
 surgery-procedure-invalid = The surgical procedure is no longer valid.
 surgery-busy = You are already doing something.
 
 ## Guidebook
 guide-entry-surgery = Surgery
+
+## Tool Qualities
+tool-quality-retracting-name = Retracting
+tool-quality-retracting-tool-name = Retractor
+tool-quality-clamping-name = Clamping
+tool-quality-clamping-tool-name = Hemostat
+tool-quality-cauterizing-name = Cauterizing
+tool-quality-cauterizing-tool-name = Cautery
+tool-quality-drilling-name = Drilling
+tool-quality-drilling-tool-name = Drill
+tool-quality-draping-name = Draping
+tool-quality-draping-tool-name = Drape
 
 ## Procedure Names
 surgery-procedure-tend-wounds-brute = Tend Wounds (Brute)

@@ -1,0 +1,6 @@
+- type: latheRecipe
+  id: SurgicalDrape
+  result: SurgicalDrape
+  completetime: 2
+  materials:
+    Cloth: 200

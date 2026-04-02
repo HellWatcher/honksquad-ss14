@@ -76,6 +76,10 @@
         - id: Saw
         - id: Hemostat
         - id: ClothingMaskSterile
+        # HONK START - Surgical drapes in surgery crate
+        - id: SurgicalDrape
+        - id: SurgicalDrape
+        # HONK END
 
 - type: entity
   parent: CrateMedical

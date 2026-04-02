@@ -1,0 +1,34 @@
+- type: tool
+  id: Retracting
+  name: tool-quality-retracting-name
+  toolName: tool-quality-retracting-tool-name
+  spawn: Retractor
+  icon: { sprite: Objects/Specific/Medical/Surgery/scissors.rsi, state: retractor }
+
+- type: tool
+  id: Clamping
+  name: tool-quality-clamping-name
+  toolName: tool-quality-clamping-tool-name
+  spawn: Hemostat
+  icon: { sprite: Objects/Specific/Medical/Surgery/scissors.rsi, state: hemostat }
+
+- type: tool
+  id: Cauterizing
+  name: tool-quality-cauterizing-name
+  toolName: tool-quality-cauterizing-tool-name
+  spawn: Cautery
+  icon: { sprite: Objects/Specific/Medical/Surgery/cautery.rsi, state: cautery }
+
+- type: tool
+  id: Drilling
+  name: tool-quality-drilling-name
+  toolName: tool-quality-drilling-tool-name
+  spawn: Drill
+  icon: { sprite: Objects/Specific/Medical/Surgery/drill.rsi, state: drill }
+
+- type: tool
+  id: Draping
+  name: tool-quality-draping-name
+  toolName: tool-quality-draping-tool-name
+  spawn: SurgicalDrape
+  icon: { sprite: "@RussStation/Objects/Medical/surgicaldrape.rsi", state: drape }

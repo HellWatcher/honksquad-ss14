@@ -3,32 +3,28 @@
   name: surgery-procedure-organ-manipulation
   description: Open the body cavity to remove or insert organs.
   icon: OrganHumanLungs
+  difficulty: Major
   steps:
-    - tag: Scalpel
-      duration: 2.0
+    - quality: Slicing
       popup: surgery-step-incision
       damage:
         types:
           Slash: 5
       bleedModifier: 3.0
-    - tag: Retractor
-      duration: 1.5
+    - quality: Retracting
       popup: surgery-step-retract
       damage:
         types:
           Blunt: 2
-    - tag: Hemostat
-      duration: 2.0
+    - quality: Clamping
       popup: surgery-step-clamp
       bleedModifier: -3.0
-    - tag: BoneSaw
-      duration: 3.0
+    - quality: Sawing
       popup: surgery-step-saw
       damage:
         types:
           Slash: 3
-    - tag: Hemostat
-      duration: 2.0
+    - quality: Clamping
       popup: surgery-step-remove-organ
       repeatable: true
       effect: !type:RemoveOrganEffect {}
