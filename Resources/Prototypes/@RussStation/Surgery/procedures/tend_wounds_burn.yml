@@ -1,0 +1,31 @@
+- type: surgeryProcedure
+  id: TendWoundsBurn
+  name: surgery-procedure-tend-wounds-burn
+  description: Treat burn damage through surgery.
+  steps:
+    - tag: Scalpel
+      duration: 2.0
+      popup: surgery-step-incision
+      damage:
+        types:
+          Slash: 5
+      bleedModifier: 3.0
+    - tag: Retractor
+      duration: 1.5
+      popup: surgery-step-retract
+      damage:
+        types:
+          Blunt: 2
+    - tag: Hemostat
+      duration: 2.5
+      popup: surgery-step-treat-burn
+      repeatable: true
+      healingFlat: 5
+      healingMultiplier: 0.07
+      healing:
+        types:
+          Heat: 1
+          Shock: 1
+          Cold: 1
+          Caustic: 1
+      bleedModifier: -1.0

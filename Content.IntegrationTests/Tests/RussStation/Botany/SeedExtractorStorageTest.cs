@@ -23,7 +23,7 @@ public sealed class SeedExtractorStorageTest
   id: SeedStorageTestSeed
   components:
   - type: Seed
-    seedId: Tomato
+    seedId: tomato
   - type: Item
 ";
 

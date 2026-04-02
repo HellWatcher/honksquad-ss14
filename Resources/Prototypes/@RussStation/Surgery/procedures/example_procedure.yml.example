@@ -1,0 +1,47 @@
+# example_procedure.yml.example
+#
+# TEMPLATE: Copy this file to create a new surgery procedure.
+# Rename it to your_procedure_name.yml (remove the .example extension).
+#
+# Files in this directory are automatically loaded as prototypes.
+# The .example extension prevents the engine from parsing this file.
+#
+# ---- Field Reference ----
+#
+# type:           Always "surgeryProcedure"
+# id:             Unique PascalCase identifier (e.g. TendWoundsBrute)
+# name:           Locale key for the procedure name shown in the radial menu
+# description:    Short English description (not localized)
+#
+# steps:          Ordered list of surgical steps. Each step has:
+#   tag:          Tool tag required (must exist in tags.yml)
+#   duration:     Time in seconds to complete
+#   popup:        Locale key for the popup shown to nearby players
+#   damage:       (optional) Damage dealt to the patient during this step
+#     types:      Map of damage type to amount (e.g. Slash: 5)
+#   healing:      (optional) Damage healed per repeat cycle
+#     types:      Map of damage type to amount
+#   healingTotal: (optional) Total healing before step auto-completes
+#   bleedModifier:(optional) Positive = adds bleeding, negative = reduces
+#   repeatable:   (optional) If true, step repeats until healingTotal reached
+#   effect:       (optional) Special effect on completion
+#                 e.g. !type:RemoveOrganEffect {}
+
+- type: surgeryProcedure
+  id: ExampleProcedure
+  name: surgery-procedure-example
+  description: A template procedure. Copy and modify this.
+  steps:
+    - tag: Scalpel
+      duration: 2.0
+      popup: surgery-step-incision
+      damage:
+        types:
+          Slash: 5
+      bleedModifier: 3.0
+    - tag: Retractor
+      duration: 1.5
+      popup: surgery-step-retract
+      damage:
+        types:
+          Blunt: 2
