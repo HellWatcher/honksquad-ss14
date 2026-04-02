@@ -13,6 +13,8 @@ namespace Content.IntegrationTests.Tests.RussStation.Surgery;
 [TestOf(typeof(SharedSurgerySystem))]
 public sealed class SurgerySystemTest
 {
+    private static readonly ProtoId<SurgeryProcedurePrototype> TestProcedureId = "SurgeryTestProcedure";
+
     [TestPrototypes]
     private const string Prototypes = @"
 - type: surgeryProcedure
@@ -103,7 +105,7 @@ public sealed class SurgerySystemTest
 
         await server.WaitAssertion(() =>
         {
-            Assert.That(protoManager.TryIndex<SurgeryProcedurePrototype>("SurgeryTestProcedure", out var proto), Is.True);
+            Assert.That(protoManager.TryIndex(TestProcedureId, out var proto), Is.True);
             Assert.That(proto!.Steps.Count, Is.EqualTo(2));
             Assert.That(proto.Steps[0].Tag.Id, Is.EqualTo("Scalpel"));
             Assert.That(proto.Steps[1].Tag.Id, Is.EqualTo("Retractor"));
@@ -160,7 +162,7 @@ public sealed class SurgerySystemTest
         await server.WaitAssertion(() =>
         {
             var surgerySystem = entityManager.System<SharedSurgerySystem>();
-            protoManager.TryIndex<SurgeryProcedurePrototype>("SurgeryTestProcedure", out var proto);
+            protoManager.TryIndex(TestProcedureId, out var proto);
 
             var scalpel = entityManager.SpawnEntity("SurgeryTestScalpel", mapData.GridCoords);
             var retractor = entityManager.SpawnEntity("SurgeryTestRetractor", mapData.GridCoords);
@@ -195,7 +197,7 @@ public sealed class SurgerySystemTest
         await server.WaitAssertion(() =>
         {
             var surgerySystem = entityManager.System<SharedSurgerySystem>();
-            protoManager.TryIndex<SurgeryProcedurePrototype>("SurgeryTestProcedure", out var proto);
+            protoManager.TryIndex(TestProcedureId, out var proto);
 
             // Entity has Scalpel tag but NOT SurgeryTool tag
             var nonTool = entityManager.SpawnEntity("SurgeryTestNonTool", mapData.GridCoords);
@@ -284,7 +286,7 @@ public sealed class SurgerySystemTest
             var surgerySystem = entityManager.System<SharedSurgerySystem>();
             var buckleSystem = entityManager.System<SharedBuckleSystem>();
 
-            protoManager.TryIndex<SurgeryProcedurePrototype>("SurgeryTestProcedure", out var proto);
+            protoManager.TryIndex(TestProcedureId, out var proto);
             var step = proto!.Steps[0]; // duration: 1.0
 
             var patient = entityManager.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
