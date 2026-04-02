@@ -235,12 +235,27 @@
     - Clamping
   # HONK END
 
-  # - type: entity
-  #   name: bone setter
-  #   id: BoneSetter
-  #   parent: Retractor
-  #   description: A surgical tool used for setting bones.
-  #   components:
+- type: entity
+  name: bone setter
+  id: BoneSetter
+  parent: Retractor
+  description: A surgical tool used for setting bones.
+  components:
+  - type: Sprite
+    state: setter
+  - type: Item
+    heldPrefix: setter
+    storedRotation: 90
+  # HONK START - Surgery tool quality + tier
+  - type: Tag
+    tags:
+    - SurgeryTool
+    - TierStandard
+  - type: Tool
+    qualities:
+    - BoneSetting
+  # HONK END
+
 # Saws
 
 - type: entity

@@ -22,6 +22,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
         { "Clamping", 2.0f },
         { "Sawing", 3.0f },
         { "Drilling", 2.0f },
+        { "BoneSetting", 3.0f },
         { "Cauterizing", 2.0f },
     };
 

@@ -27,6 +27,13 @@
   icon: { sprite: Objects/Specific/Medical/Surgery/drill.rsi, state: drill }
 
 - type: tool
+  id: BoneSetting
+  name: tool-quality-bonesetting-name
+  toolName: tool-quality-bonesetting-tool-name
+  spawn: BoneSetter
+  icon: { sprite: Objects/Specific/Medical/Surgery/scissors.rsi, state: setter }
+
+- type: tool
   id: Draping
   name: tool-quality-draping-name
   toolName: tool-quality-draping-tool-name
