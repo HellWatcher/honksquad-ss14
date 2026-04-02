@@ -17,10 +17,10 @@ public sealed partial class SurgerySystem
 
         if (step.Healing != null)
         {
-            if (step.HealingTotal > 0 && TryComp<DamageableComponent>(patient, out var damageable))
+            if ((step.HealingFlat > 0 || step.HealingMultiplier > 0) &&
+                TryComp<DamageableComponent>(patient, out var damageable))
             {
-                // Distribute a fixed healing budget proportionally across actual damage
-                var budget = FixedPoint2.New(step.HealingTotal);
+                // Calculate healing budget: flat + (total_eligible_damage * multiplier)
                 var currentDamage = _damageable.GetPositiveDamage((patient, damageable));
                 var totalDamage = FixedPoint2.Zero;
 
@@ -32,6 +32,9 @@ public sealed partial class SurgerySystem
 
                 if (totalDamage > 0)
                 {
+                    var budget = FixedPoint2.New(step.HealingFlat + (float) totalDamage * step.HealingMultiplier);
+
+                    // Distribute proportionally across eligible damage types
                     var healSpec = new DamageSpecifier();
                     foreach (var type in step.Healing.DamageDict.Keys)
                     {
@@ -47,7 +50,7 @@ public sealed partial class SurgerySystem
             }
             else
             {
-                // No budget cap: heal each type independently
+                // No formula: heal each type independently by listed amount
                 var negated = new DamageSpecifier(step.Healing);
                 foreach (var key in negated.DamageDict.Keys.ToList())
                 {
@@ -110,7 +113,7 @@ public sealed partial class SurgerySystem
 
     private bool StepCanStillHeal(EntityUid patient, SurgeryStep step)
     {
-        if (step.Healing == null || step.HealingTotal <= 0)
+        if (step.Healing == null || (step.HealingFlat <= 0 && step.HealingMultiplier <= 0))
             return false;
 
         if (!TryComp<DamageableComponent>(patient, out var damageable))

@@ -78,14 +78,14 @@ public sealed class SurgerySystemTest
   components:
   - type: Strap
   - type: SurgerySurface
-    speedModifier: 0.5
+    speedModifier: 1.0
 
 - type: entity
   id: SurgeryTestMedicalBed
   components:
   - type: Strap
   - type: SurgerySurface
-    speedModifier: 0.7
+    speedModifier: 1.5
 
 - type: entity
   id: SurgeryTestChair
@@ -256,13 +256,13 @@ public sealed class SurgerySystemTest
             var patient = entityManager.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
             var table = entityManager.SpawnEntity("SurgeryTestOperatingTable", mapData.GridCoords);
 
-            // Unbuckled patient should return default modifier of 1.0
-            Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(1f));
+            // Unbuckled patient should return floor penalty of 2.0
+            Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(2f));
 
-            // Buckle to operating table -> 0.5x modifier
+            // Buckle to operating table -> 1.0x modifier
             var buckle = entityManager.GetComponent<BuckleComponent>(patient);
             Assert.That(buckleSystem.TryBuckle(patient, patient, table, buckleComp: buckle), Is.True);
-            Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(0.5f));
+            Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(1f));
         });
 
         await pair.CleanReturnAsync();
@@ -292,13 +292,13 @@ public sealed class SurgerySystemTest
             var patient = entityManager.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
             var table = entityManager.SpawnEntity("SurgeryTestOperatingTable", mapData.GridCoords);
 
-            // Unbuckled: duration * 1.0
-            Assert.That(surgerySystem.GetStepDuration(step, patient), Is.EqualTo(TimeSpan.FromSeconds(1.0)));
+            // Unbuckled (floor surgery): duration * 2.0
+            Assert.That(surgerySystem.GetStepDuration(step, patient), Is.EqualTo(TimeSpan.FromSeconds(2.0)));
 
-            // Buckled to operating table: duration * 0.5
+            // Buckled to operating table: duration * 1.0
             var buckle = entityManager.GetComponent<BuckleComponent>(patient);
             Assert.That(buckleSystem.TryBuckle(patient, patient, table, buckleComp: buckle), Is.True);
-            Assert.That(surgerySystem.GetStepDuration(step, patient), Is.EqualTo(TimeSpan.FromSeconds(0.5)));
+            Assert.That(surgerySystem.GetStepDuration(step, patient), Is.EqualTo(TimeSpan.FromSeconds(1.0)));
         });
 
         await pair.CleanReturnAsync();
@@ -329,7 +329,7 @@ public sealed class SurgerySystemTest
 
             var buckle = entityManager.GetComponent<BuckleComponent>(patient);
             Assert.That(buckleSystem.TryBuckle(patient, patient, chair, buckleComp: buckle), Is.True);
-            Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(1f));
+            Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(2f));
         });
 
         await pair.CleanReturnAsync();

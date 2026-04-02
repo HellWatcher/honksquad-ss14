@@ -66,10 +66,10 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     public float GetSurfaceSpeedModifier(EntityUid patient)
     {
         if (!TryComp<BuckleComponent>(patient, out var buckle) || buckle.BuckledTo is not { } strap)
-            return 1f;
+            return 2f;
 
         if (!TryComp<SurgerySurfaceComponent>(strap, out var surface))
-            return 1f;
+            return 2f;
 
         return surface.SpeedModifier;
     }

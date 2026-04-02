@@ -82,7 +82,7 @@
       price: 120
     # HONK START - Surgery surface speed modifier
     - type: SurgerySurface
-      speedModifier: 0.8
+      speedModifier: 1.5
     # HONK END
 
 - type: entity

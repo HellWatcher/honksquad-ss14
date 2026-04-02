@@ -46,11 +46,18 @@ public sealed partial class SurgeryStep
     public DamageSpecifier? Healing;
 
     /// <summary>
-    /// If non-zero, caps the total healing across all types listed in <see cref="Healing"/>.
-    /// The budget is distributed proportionally based on the patient's current damage.
+    /// Flat healing amount per step. Combined with <see cref="HealingMultiplier"/>:
+    /// budget = flat + (total_eligible_damage * multiplier).
+    /// Budget is distributed proportionally across types in <see cref="Healing"/>.
     /// </summary>
     [DataField]
-    public float HealingTotal;
+    public float HealingFlat;
+
+    /// <summary>
+    /// Fraction of current eligible damage added to the healing budget (e.g. 0.07 = 7%).
+    /// </summary>
+    [DataField]
+    public float HealingMultiplier;
 
     /// <summary>
     /// Modifier to the patient's bleed amount. Positive adds bleeding, negative reduces it.

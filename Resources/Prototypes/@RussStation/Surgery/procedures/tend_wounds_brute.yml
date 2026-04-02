@@ -17,10 +17,11 @@
         types:
           Blunt: 2
     - tag: Hemostat
-      duration: 2.0
+      duration: 2.5
       popup: surgery-step-treat-brute
       repeatable: true
-      healingTotal: 10
+      healingFlat: 5
+      healingMultiplier: 0.07
       healing:
         types:
           Blunt: 1
