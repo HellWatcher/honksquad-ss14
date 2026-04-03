@@ -14,14 +14,8 @@ public sealed partial class PlayerBalanceComponent : Component
     public int Balance;
 
     /// <summary>
-    /// Unique account number assigned at spawn. Used by ID cards and ATMs to reference this balance.
+    /// Unique hex account number assigned at spawn. Used by ID cards to reference this balance.
     /// </summary>
     [DataField, AutoNetworkedField]
     public string AccountNumber = string.Empty;
-
-    /// <summary>
-    /// PIN for ATM access. Only known to the owning player via the Memories panel.
-    /// </summary>
-    [DataField]
-    public string Pin = string.Empty;
 }

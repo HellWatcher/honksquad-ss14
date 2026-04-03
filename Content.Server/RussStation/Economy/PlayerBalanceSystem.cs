@@ -22,7 +22,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
     /// Index of account numbers to their owning entity for fast lookups.
     /// Rebuilt each round as players spawn.
     /// </summary>
-    private readonly Dictionary<string, EntityUid> _accountIndex = new();
+    private readonly Dictionary<string, EntityUid> _accountIndex = new(StringComparer.OrdinalIgnoreCase);
 
     public override void Initialize()
     {
@@ -42,9 +42,8 @@ public sealed class PlayerBalanceSystem : EntitySystem
         var comp = EnsureComp<PlayerBalanceComponent>(args.Mob);
         comp.Balance = _defaultStartingBalance;
 
-        // Generate unique account number and PIN.
+        // Generate unique hex account number.
         comp.AccountNumber = GenerateAccountNumber();
-        comp.Pin = GeneratePin();
         _accountIndex[comp.AccountNumber] = args.Mob;
 
         Dirty(args.Mob, comp);
@@ -57,9 +56,8 @@ public sealed class PlayerBalanceSystem : EntitySystem
             Dirty(idCard, idComp);
         }
 
-        // Register account info in the player's memories.
+        // Register account number in the player's memories.
         _memories.AddMemory(args.Mob, "memories-key-account-number", comp.AccountNumber);
-        _memories.AddMemory(args.Mob, "memories-key-pin", comp.Pin);
     }
 
     private void OnRemove(EntityUid uid, PlayerBalanceComponent comp, ComponentRemove args)
@@ -116,25 +114,17 @@ public sealed class PlayerBalanceSystem : EntitySystem
     }
 
     /// <summary>
-    /// Generate an 8-digit account number, ensuring uniqueness within the round.
+    /// Generate an 8-character hex account number, ensuring uniqueness within the round.
     /// </summary>
     private string GenerateAccountNumber()
     {
         string number;
         do
         {
-            number = _random.Next(10000000, 99999999).ToString();
+            number = _random.Next(0x10000000, int.MaxValue).ToString("X8");
         }
         while (_accountIndex.ContainsKey(number));
 
         return number;
-    }
-
-    /// <summary>
-    /// Generate a 4-digit PIN.
-    /// </summary>
-    private string GeneratePin()
-    {
-        return _random.Next(0, 9999).ToString("D4");
     }
 }
