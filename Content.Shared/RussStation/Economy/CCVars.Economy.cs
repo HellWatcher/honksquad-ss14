@@ -34,4 +34,10 @@ public sealed class EconomyCCVars
     /// </summary>
     public static readonly CVarDef<int> WageCommand =
         CVarDef.Create("economy.wage_command", 100, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Flat cost per vending machine purchase (in spesos). Set to 0 to disable payment.
+    /// </summary>
+    public static readonly CVarDef<int> VendPrice =
+        CVarDef.Create("economy.vend_price", 5, CVar.SERVERONLY);
 }
