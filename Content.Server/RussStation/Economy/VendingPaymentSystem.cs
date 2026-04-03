@@ -34,10 +34,10 @@ public sealed class VendingPaymentSystem : EntitySystem
         Subs.CVar(_cfg, EconomyCCVars.VendMinPrice, v => _vendMinPrice = v, true);
 
         SubscribeLocalEvent<VendingMachineComponent, BeforeVendEvent>(OnBeforeVend);
-        SubscribeLocalEvent<VendingMachineComponent, ComponentStartup>(OnStartup);
+        SubscribeLocalEvent<VendingMachineComponent, BoundUIOpenedEvent>(OnUIOpened);
     }
 
-    private void OnStartup(EntityUid uid, VendingMachineComponent comp, ComponentStartup args)
+    private void OnUIOpened(EntityUid uid, VendingMachineComponent comp, BoundUIOpenedEvent args)
     {
         UpdatePrices(uid, comp);
     }
