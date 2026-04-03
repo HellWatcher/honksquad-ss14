@@ -64,4 +64,13 @@ public sealed partial class IdCardComponent : Component
 
     [DataField]
     public bool CanMicrowave = true;
+
+    //HONK START - Bank account number for economy system (#163)
+    /// <summary>
+    /// Bank account number linked to the player's balance. Set at spawn, can be manually set on new IDs.
+    /// </summary>
+    [DataField]
+    [AutoNetworkedField]
+    public string? AccountNumber;
+    //HONK END
 }

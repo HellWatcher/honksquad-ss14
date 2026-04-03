@@ -1,0 +1,16 @@
+- type: entity
+  parent: BasePDACartridge
+  id: BalanceCartridge
+  name: wallet cartridge
+  description: A program that displays your current speso balance.
+  components:
+    - type: Sprite
+      state: cart-c
+    - type: UIFragment
+      ui: !type:BalanceCartridgeUi
+    - type: Cartridge
+      programName: balance-cartridge-program-name
+      icon:
+        sprite: Objects/Economy/cash.rsi
+        state: cash
+    - type: BalanceCartridge

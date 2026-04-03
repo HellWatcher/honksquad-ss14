@@ -1,0 +1,29 @@
+<Document>
+# Economy
+
+The station runs on [color=#a4885c]spesos[/color]. You need them for vending machines and can trade them with other crew.
+
+## Bank accounts
+
+You get a [color=#a4885c]bank account[/color] when you spawn. It has a unique hex number, and your starting ID is already linked to it.
+
+Your account number is private. Check your [textlink="Memories" link="Memories"] panel ([color=yellow][bold][keybind="OpenCharacterMenu"][/bold][/color]) if you forget it.
+
+## Checking your balance
+
+[color=#a4885c]Examine your ID card[/color] to see how many spesos are on the account, or open the [color=#a4885c]Wallet[/color] app on your PDA.
+
+## Withdrawing and depositing
+
+Hold your ID in hand and [color=#a4885c]alt-click[/color] it to withdraw spesos. They go into your other hand.
+
+To deposit, use physical spesos on your [color=#a4885c]ID card[/color] or [color=#a4885c]PDA[/color] (if it has an ID inside).
+
+## New ID cards
+
+Lost your ID? Alt-click a blank one while holding it to link your account number. Be careful, once an account is set on an ID it [bold]cannot be changed[/bold].
+
+## Paychecks
+
+You get paid automatically every few minutes. Command staff earn the most, regular crew earn a standard wage, and assistants get the least.
+</Document>
