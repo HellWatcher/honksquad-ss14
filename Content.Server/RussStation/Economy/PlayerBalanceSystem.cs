@@ -133,6 +133,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
     /// Create a new bank account for a mob. If the mob already has an account,
     /// the old account is invalidated (removed from the index, balance wiped).
     /// Any ID cards with the old account number become dead cards.
+    /// New accounts start with zero balance.
     /// Returns the new account number.
     /// </summary>
     public string CreateAccount(EntityUid uid)
@@ -143,7 +144,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
         if (!string.IsNullOrEmpty(comp.AccountNumber))
             _accountIndex.Remove(comp.AccountNumber);
 
-        comp.Balance = _defaultStartingBalance;
+        comp.Balance = 0;
         comp.AccountNumber = GenerateAccountNumber();
         _accountIndex[comp.AccountNumber] = uid;
         Dirty(uid, comp);

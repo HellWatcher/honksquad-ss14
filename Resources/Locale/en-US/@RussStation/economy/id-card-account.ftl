@@ -13,9 +13,12 @@ id-card-withdraw-success = Withdrew {$amount} spesos.
 id-card-deposit-success = Deposited {$amount} spesos.
 
 id-card-create-account-verb = Create Account
+id-card-create-account-title = Create Bank Account
+id-card-create-account-confirm = This will create a new bank account. If you already have one, your old account and its balance will be permanently lost. Are you sure? Type YES to confirm:
 id-card-create-account-success = New bank account created and linked.
 
-id-card-account-invalid = [color=red]Error: account invalid.[/color]
+id-card-account-invalid = Error: account invalid.
+id-card-account-invalid-examine = [color=red]Error: account invalid.[/color]
 
 id-card-account-locked = This ID's account is already set.
 id-card-examine-balance = It has [color=green]{$balance} spesos[/color] linked.
