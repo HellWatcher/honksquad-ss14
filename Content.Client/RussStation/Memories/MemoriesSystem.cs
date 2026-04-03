@@ -44,7 +44,8 @@ public sealed class MemoriesSystem : EntitySystem
         foreach (var (key, value) in memories.Memories)
         {
             var entry = new RichTextLabel();
-            entry.SetMarkup(Loc.GetString("memories-panel-entry", ("key", key), ("value", value)));
+            var localizedKey = Loc.GetString(key);
+            entry.SetMarkup(Loc.GetString("memories-panel-entry", ("key", localizedKey), ("value", value)));
             box.AddChild(entry);
         }
 

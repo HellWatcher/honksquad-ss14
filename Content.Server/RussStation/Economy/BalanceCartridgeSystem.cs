@@ -24,9 +24,14 @@ public sealed class BalanceCartridgeSystem : EntitySystem
     {
         // The loader (PDA) is held by the mob, which is its transform parent.
         var holder = Transform(loaderUid).ParentUid;
-        var balance = CompOrNull<PlayerBalanceComponent>(holder)?.Balance ?? 0;
+        var comp = CompOrNull<PlayerBalanceComponent>(holder);
+        var balance = comp?.Balance ?? 0;
+        var accountNumber = comp?.AccountNumber ?? string.Empty;
+        var suffix = accountNumber.Length >= 4
+            ? accountNumber[^4..]
+            : accountNumber;
 
-        var state = new BalanceCartridgeUiState(balance);
+        var state = new BalanceCartridgeUiState(balance, suffix);
         _cartridgeLoader?.UpdateCartridgeUiState(loaderUid, state);
     }
 }

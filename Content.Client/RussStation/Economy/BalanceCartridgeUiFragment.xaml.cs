@@ -13,8 +13,11 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
         Orientation = LayoutOrientation.Vertical;
     }
 
-    public void UpdateState(int balance)
+    public void UpdateState(int balance, string accountSuffix)
     {
         BalanceLabel.Text = balance.ToString();
+        AccountLabel.Text = string.IsNullOrEmpty(accountSuffix)
+            ? ""
+            : Loc.GetString("balance-cartridge-account-suffix", ("suffix", accountSuffix));
     }
 }
