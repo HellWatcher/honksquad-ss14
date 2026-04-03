@@ -1,0 +1,15 @@
+<Document>
+# Memories
+
+Your character knows things that you, the player, might forget. The [color=#a4885c]Memories[/color] panel keeps track of private info like bank account numbers, codes, or anything else your character picked up during the round.
+
+## How to check
+
+Press [color=yellow][bold][keybind="OpenCharacterMenu"][/bold][/color] to open your character info. Memories show up as their own section if you have any.
+
+Nobody else can see your memories. If you want someone to know your account number, you have to tell them yourself.
+
+## What shows up here
+
+Memories get added as the round goes on. Your bank account number, for example, gets stored here at spawn so you can look it up later without having to write it down.
+</Document>
