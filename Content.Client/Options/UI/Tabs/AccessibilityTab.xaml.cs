@@ -76,13 +76,19 @@ public sealed partial class AccessibilityTab : Control
     // HONK START - Font customization helpers
     private static List<OptionDropDownCVar<string>.ValueOption> BuildFontOptions(FontCustomizationManager fontManager)
     {
-        return fontManager.AvailableFonts.Keys
-            .OrderBy(n => n)
-            .Select(name =>
+        return fontManager.AvailableFonts.Values
+            .OrderBy(f => f.Name == "NotoSans" ? 0 : f.IsUserFont ? 2 : 1)
+            .ThenBy(f => f.Name)
+            .Select(f =>
             {
-                var info = fontManager.AvailableFonts[name];
-                var label = info.IsUserFont ? $"{name} (custom)" : name;
-                return new OptionDropDownCVar<string>.ValueOption(name, label);
+                string label;
+                if (f.Name == "NotoSans")
+                    label = $"{f.Name} (default)";
+                else if (f.IsUserFont)
+                    label = $"{f.Name} (custom)";
+                else
+                    label = f.Name;
+                return new OptionDropDownCVar<string>.ValueOption(f.Name, label);
             })
             .ToList();
     }
