@@ -378,6 +378,13 @@ ui-options-header-hover-tooltip = Hover Tooltip
 ui-options-hover-tooltip-enabled = Show entity name on hover
 ui-options-hover-tooltip-delay = Hover tooltip delay
 
+## Font Customization
+ui-options-header-font = Font
+ui-options-font-family = Font family
+ui-options-font-size = Font size
+ui-options-open-fonts-folder = Open Fonts Folder
+ui-options-rescan-fonts = Rescan Fonts
+
 ui-options-censor-nudity = Censor character nudity
 
 ## Admin menu
