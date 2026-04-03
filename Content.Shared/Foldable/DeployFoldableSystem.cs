@@ -23,6 +23,11 @@ public sealed class DeployFoldableSystem : EntitySystem
         SubscribeLocalEvent<DeployFoldableComponent, CanDragEvent>(OnCanDrag);
         SubscribeLocalEvent<DeployFoldableComponent, DragDropDraggedEvent>(OnDragDropDragged);
         SubscribeLocalEvent<DeployFoldableComponent, CanDropDraggedEvent>(OnCanDropDragged);
+
+        //HONK START - Drag-drop foldable onto self to fold and pick up
+        SubscribeLocalEvent<HandsComponent, CanDropTargetEvent>(OnCanDropTarget);
+        SubscribeLocalEvent<HandsComponent, DragDropTargetEvent>(OnDropTarget);
+        //HONK END
     }
 
     private void OnCanDropDragged(Entity<DeployFoldableComponent> ent, ref CanDropDraggedEvent args)
@@ -53,6 +58,36 @@ public sealed class DeployFoldableSystem : EntitySystem
 
         args.Handled = true;
     }
+
+    //HONK START - Drag-drop foldable onto self to fold and pick up
+    private void OnCanDropTarget(EntityUid uid, HandsComponent component, ref CanDropTargetEvent args)
+    {
+        if (args.User != uid)
+            return;
+
+        if (!HasComp<DeployFoldableComponent>(args.Dragged))
+            return;
+
+        if (!TryComp<FoldableComponent>(args.Dragged, out var foldable) || foldable.IsFolded)
+            return;
+
+        args.Handled = true;
+        args.CanDrop = true;
+    }
+
+    private void OnDropTarget(EntityUid uid, HandsComponent component, ref DragDropTargetEvent args)
+    {
+        if (args.User != uid)
+            return;
+
+        if (!TryComp<FoldableComponent>(args.Dragged, out var foldable)
+            || !_foldable.TrySetFolded(args.Dragged, foldable, true, args.User))
+            return;
+
+        _hands.PickupOrDrop(args.User, args.Dragged);
+        args.Handled = true;
+    }
+    //HONK END
 
     private void OnAfterInteract(Entity<DeployFoldableComponent> ent, ref AfterInteractEvent args)
     {

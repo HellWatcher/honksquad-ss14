@@ -3,21 +3,20 @@
   name: surgery-procedure-tend-wounds-burn
   description: Treat burn damage through surgery.
   icon: MedkitBurn
+  difficulty: Minor
   steps:
-    - tag: Scalpel
-      duration: 2.0
+    - quality: Slicing
       popup: surgery-step-incision
       damage:
         types:
           Slash: 5
       bleedModifier: 3.0
-    - tag: Retractor
-      duration: 1.5
+    - quality: Retracting
       popup: surgery-step-retract
       damage:
         types:
           Blunt: 2
-    - tag: Hemostat
+    - quality: Clamping
       duration: 2.5
       popup: surgery-step-treat-burn
       repeatable: true

@@ -12,8 +12,15 @@ namespace Content.Shared.RussStation.Surgery.Components;
 public sealed partial class SurgeryDrapedComponent : Component
 {
     /// <summary>
-    /// The bedsheet entity that was used to drape this patient.
+    /// The bedsheet or drape entity that was used to drape this patient.
     /// </summary>
     [AutoNetworkedField, DataField]
     public EntityUid? Bedsheet;
+
+    /// <summary>
+    /// Speed modifier from the draping material. Multiplies all surgery step durations.
+    /// 1.0 for surgical drapes (standard), 1.5 for bedsheets (improvised penalty).
+    /// </summary>
+    [AutoNetworkedField, DataField]
+    public float DrapeSpeedModifier = 1.5f;
 }

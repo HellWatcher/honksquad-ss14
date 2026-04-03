@@ -32,11 +32,15 @@
         Heat: 5
     soundHit:
       path: /Audio/Effects/lightburn.ogg
-  # HONK START - Surgery tool tag
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
-    - Cautery
+    - TierStandard
+    - SurgeryCautery
+  - type: Tool
+    qualities:
+    - Cauterizing
   # HONK END
 
 # Drill
@@ -63,11 +67,15 @@
       path: /Audio/Items/drill_hit.ogg
   - type: StaticPrice
     price: 40
-  # HONK START - Surgery tool tag
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
-    - Drill
+    - TierStandard
+    - SurgeryDrill
+  - type: Tool
+    qualities:
+    - Drilling
   # HONK END
 
 # Scalpel
@@ -102,11 +110,12 @@
         Slash: 8
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
-  # HONK START - Surgery tool tag
+  # HONK START - Surgery tool tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
-    - Scalpel
+    - TierStandard
+    - SurgeryScalpel
   # HONK END
 
 - type: entity
@@ -119,6 +128,10 @@
     state: shiv
   - type: Item
     heldPrefix: shiv
+  # HONK START - No SurgeryTool tag, treated as improvised
+  - type: Tag
+    tags: []
+  # HONK END
   - type: Fixtures
     fixtures:
       fix1:
@@ -141,6 +154,13 @@
     state: advanced
   - type: Item
     heldPrefix: advanced
+  # HONK START - Advanced tier + type tag
+  - type: Tag
+    tags:
+    - SurgeryTool
+    - TierAdvanced
+    - SurgeryScalpel
+  # HONK END
   - type: MeleeWeapon
     damage:
       types:
@@ -156,6 +176,25 @@
     state: laser
   - type: Item
     heldPrefix: laser
+  # HONK START - Experimental tier + MultipleTool toggle (Slicing/Cauterizing)
+  - type: Tag
+    tags:
+    - SurgeryTool
+    - TierExperimental
+    - SurgeryScalpel
+    - SurgeryCautery
+  - type: MultipleTool
+    statusShowBehavior: true
+    entries:
+    - behavior: Slicing
+      sprite:
+        sprite: Objects/Specific/Medical/Surgery/scalpel.rsi
+        state: laser
+    - behavior: Cauterizing
+      sprite:
+        sprite: Objects/Specific/Medical/Surgery/scalpel.rsi
+        state: laser
+  # HONK END
 
 # Scissors
 
@@ -171,11 +210,15 @@
   - type: Item
     sprite: Objects/Specific/Medical/Surgery/scissors.rsi
     storedRotation: 90
-  # HONK START - Surgery tool tag
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
-    - Retractor
+    - TierStandard
+    - SurgeryRetractor
+  - type: Tool
+    qualities:
+    - Retracting
   # HONK END
 
 - type: entity
@@ -189,19 +232,39 @@
   - type: Item
     heldPrefix: hemostat
     storedRotation: 90
-  # HONK START - Surgery tool tag
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
-    - Hemostat
+    - TierStandard
+    - SurgeryHemostat
+  - type: Tool
+    qualities:
+    - Clamping
   # HONK END
 
-  # - type: entity
-  #   name: bone setter
-  #   id: BoneSetter
-  #   parent: Retractor
-  #   description: A surgical tool used for setting bones.
-  #   components:
+- type: entity
+  name: bone setter
+  id: BoneSetter
+  parent: Retractor
+  description: A surgical tool used for setting bones.
+  components:
+  - type: Sprite
+    state: setter
+  - type: Item
+    heldPrefix: setter
+    storedRotation: 90
+  # HONK START - Surgery tool quality + tier + type tag
+  - type: Tag
+    tags:
+    - SurgeryTool
+    - TierStandard
+    - SurgeryBoneSetter
+  - type: Tool
+    qualities:
+    - BoneSetting
+  # HONK END
+
 # Saws
 
 - type: entity
@@ -224,11 +287,12 @@
   - type: Tool
     qualities:
       - Sawing
-  # HONK START - Surgery tool tag
+  # HONK START - Surgery tool tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
-    - BoneSaw
+    - TierStandard
+    - SurgerySaw
   # HONK END
 # No melee for regular saw because have you ever seen someone use a band saw as a weapon? It's dumb.
 
@@ -243,6 +307,10 @@
   - type: Item
     size: Small
     heldPrefix: improv
+  # HONK START - No SurgeryTool tag, treated as improvised
+  - type: Tag
+    tags: []
+  # HONK END
   - type: MeleeWeapon
     damage:
       types:
@@ -262,6 +330,13 @@
     state: electric
   - type: Item
     heldPrefix: electric
+  # HONK START - Advanced tier + type tag
+  - type: Tag
+    tags:
+    - SurgeryTool
+    - TierAdvanced
+    - SurgerySaw
+  # HONK END
   - type: MeleeWeapon
     damage:
       types:
@@ -281,6 +356,13 @@
     state: advanced
   - type: Item
     heldPrefix: advanced
+  # HONK START - Experimental tier + type tag
+  - type: Tag
+    tags:
+    - SurgeryTool
+    - TierExperimental
+    - SurgerySaw
+  # HONK END
   - type: MeleeWeapon
     attackRate: 1.5
   - type: Tool
