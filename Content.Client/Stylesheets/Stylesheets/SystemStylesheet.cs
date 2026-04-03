@@ -27,7 +27,7 @@ public partial class SystemStylesheet : CommonStylesheet
     // for some GOD FORSAKEN REASON if I use a collection expression here it throws a sandbox error
     // Thanks ReSharper, this was very fun to find in the ~40 files I last committed
     // ReSharper disable once UseCollectionExpression
-    private readonly List<(string?, int)> _commonFontSizes = new()
+    private List<(string?, int)> _commonFontSizes = new()
     {
         (null, PrimaryFontSize),
         (StyleClass.FontSmall, PrimaryFontSize - FontSizeStep),
@@ -37,6 +37,24 @@ public partial class SystemStylesheet : CommonStylesheet
     public SystemStylesheet(object config, StylesheetManager man) : base(config)
     {
         BaseFont = new NotoFontFamilyStack(ResCache);
+
+        // HONK START - Font customization
+        var fontTemplate = man.FontManager.GetFontPathTemplate();
+        var fontKinds = man.FontManager.GetAvailableKinds();
+        BaseFont.SetPrimaryFont(fontTemplate, fontKinds);
+
+        var customSize = man.FontManager.CurrentSize;
+        if (customSize != PrimaryFontSize)
+        {
+            _commonFontSizes = new List<(string?, int)>
+            {
+                (null, customSize),
+                (StyleClass.FontSmall, customSize - FontSizeStep),
+                (StyleClass.FontLarge, customSize + FontSizeStep),
+            };
+        }
+        // HONK END
+
         var rules = new[]
         {
             // Set up important rules that need to go first.
@@ -44,7 +62,7 @@ public partial class SystemStylesheet : CommonStylesheet
             // Set up our core rules.
             [
                 // Declare the default font.
-                Element().Prop(Label.StylePropertyFont, BaseFont.GetFont(PrimaryFontSize)),
+                Element().Prop(Label.StylePropertyFont, BaseFont.GetFont(customSize)),
             ],
             // Finally, load all the other sheetlets.
             GetAllSheetletRules<PalettedStylesheet, CommonSheetletAttribute>(man),

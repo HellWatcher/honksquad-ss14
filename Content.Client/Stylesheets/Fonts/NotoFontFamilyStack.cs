@@ -42,6 +42,18 @@ public sealed class NotoFontFamilyStack(IResourceCache resCache, string variant 
 
     public HashSet<FontKind> AvailableKinds = [FontKind.Regular, FontKind.Bold, FontKind.Italic, FontKind.BoldItalic];
 
+    // HONK START - Font customization
+    /// <summary>
+    ///     Replaces the primary font path template. Use {0} for kind, {1} for simplified kind, {2} for bold-or-regular.
+    /// </summary>
+    public void SetPrimaryFont(string pathTemplate, HashSet<FontKind>? availableKinds = null)
+    {
+        _fontPrimary = pathTemplate;
+        if (availableKinds != null)
+            AvailableKinds = availableKinds;
+    }
+    // HONK END
+
     /// <summary>
     ///     This should return the paths of every font in this stack given the abstract members.
     /// </summary>

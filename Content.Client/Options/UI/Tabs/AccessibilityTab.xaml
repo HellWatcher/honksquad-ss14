@@ -24,6 +24,16 @@
                 <CheckBox Name="HoverTooltipEnabledCheckBox" Text="{Loc 'ui-options-hover-tooltip-enabled'}" />
                 <ui:OptionSlider Name="HoverTooltipDelaySlider" Title="{Loc 'ui-options-hover-tooltip-delay'}" />
                 <!-- HONK END -->
+                <!-- HONK START - Font customization -->
+                <Label Text="{Loc 'ui-options-header-font'}"
+                       StyleClasses="LabelKeyText"/>
+                <ui:OptionDropDown Name="FontFamilyDropDown" Title="{Loc 'ui-options-font-family'}" />
+                <ui:OptionSlider Name="FontSizeSlider" Title="{Loc 'ui-options-font-size'}" />
+                <BoxContainer Orientation="Horizontal">
+                    <Button Name="OpenFontsFolderButton" Text="{Loc 'ui-options-open-fonts-folder'}" />
+                    <Button Name="RescanFontsButton" Text="{Loc 'ui-options-rescan-fonts'}" />
+                </BoxContainer>
+                <!-- HONK END -->
                 <Label Text="{Loc 'ui-options-accessability-header-content'}"
                        StyleClasses="LabelKeyText"/>
                 <CheckBox Name="CensorNudityCheckBox" Text="{Loc 'ui-options-censor-nudity'}" />
