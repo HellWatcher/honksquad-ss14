@@ -105,6 +105,14 @@ public sealed class VendingInteractionTest : InteractionTest
     [Test]
     public async Task DispenseItemTest()
     {
+        //HONK START - Give test mob funds so the payment system doesn't block the vend
+        await Server.WaitPost(() =>
+        {
+            var comp = SEntMan.EnsureComponent<Content.Shared.RussStation.Economy.Components.PlayerBalanceComponent>(SPlayer);
+            comp.Balance = 99999;
+        });
+        //HONK END
+
         await SpawnTarget(VendingMachineProtoId);
         var vendorEnt = SEntMan.GetEntity(Target.Value);
 

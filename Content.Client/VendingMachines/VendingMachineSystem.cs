@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Shared.RussStation.Economy.Components; //HONK
 using Content.Shared.VendingMachines;
 using Robust.Client.Animations;
 using Robust.Client.GameObjects;
@@ -19,7 +20,18 @@ public sealed class VendingMachineSystem : SharedVendingMachineSystem
         SubscribeLocalEvent<VendingMachineComponent, AppearanceChangeEvent>(OnAppearanceChange);
         SubscribeLocalEvent<VendingMachineComponent, AnimationCompletedEvent>(OnAnimationCompleted);
         SubscribeLocalEvent<VendingMachineComponent, ComponentHandleState>(OnVendingHandleState);
+        //HONK START - Refresh UI when prices sync from server
+        SubscribeLocalEvent<VendingPricesComponent, AfterAutoHandleStateEvent>(OnPricesStateChanged);
+        //HONK END
     }
+
+    //HONK START
+    private void OnPricesStateChanged(EntityUid uid, VendingPricesComponent comp, ref AfterAutoHandleStateEvent args)
+    {
+        if (UISystem.TryGetOpenUi<VendingMachineBoundUserInterface>(uid, VendingMachineUiKey.Key, out var bui))
+            bui.Refresh();
+    }
+    //HONK END
 
     private void OnVendingHandleState(Entity<VendingMachineComponent> entity, ref ComponentHandleState args)
     {

@@ -30,6 +30,11 @@ public sealed class IdCardAccountSystem : EntitySystem
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     private static readonly ProtoId<StackPrototype> CreditStack = "Credit";
 
+    /// <summary>
+    /// Sessions that currently have a dialog open. Prevents stacking dialogs on repeated alt-click.
+    /// </summary>
+    private readonly HashSet<ICommonSession> _pendingDialogs = new();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -60,13 +65,18 @@ public sealed class IdCardAccountSystem : EntitySystem
                 Text = Loc.GetString("id-card-set-account-verb"),
                 Act = () =>
                 {
+                    if (!_pendingDialogs.Add(actor.PlayerSession))
+                        return;
+
                     _quickDialog.OpenDialog(actor.PlayerSession,
                         Loc.GetString("id-card-set-account-title"),
                         Loc.GetString("id-card-set-account-prompt"),
                         (string accountNumber) =>
                         {
+                            _pendingDialogs.Remove(actor.PlayerSession);
                             OnAccountEntered(uid, args.User, actor.PlayerSession, accountNumber);
-                        });
+                        },
+                        () => _pendingDialogs.Remove(actor.PlayerSession));
                 },
                 Impact = LogImpact.Low,
             });
@@ -79,13 +89,18 @@ public sealed class IdCardAccountSystem : EntitySystem
                 Text = Loc.GetString("id-card-withdraw-verb"),
                 Act = () =>
                 {
+                    if (!_pendingDialogs.Add(actor.PlayerSession))
+                        return;
+
                     _quickDialog.OpenDialog(actor.PlayerSession,
                         Loc.GetString("id-card-withdraw-title"),
                         Loc.GetString("id-card-withdraw-prompt"),
                         (int amount) =>
                         {
+                            _pendingDialogs.Remove(actor.PlayerSession);
                             OnWithdraw(uid, args.User, actor.PlayerSession, amount);
-                        });
+                        },
+                        () => _pendingDialogs.Remove(actor.PlayerSession));
                 },
                 Impact = LogImpact.Low,
             });
