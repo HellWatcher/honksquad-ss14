@@ -13,9 +13,15 @@ public sealed class BalanceCartridgeSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeUiReadyEvent>(OnUiReady);
+        SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeActivatedEvent>(OnActivated);
     }
 
     private void OnUiReady(EntityUid uid, BalanceCartridgeComponent component, CartridgeUiReadyEvent args)
+    {
+        UpdateUiState(uid, args.Loader);
+    }
+
+    private void OnActivated(EntityUid uid, BalanceCartridgeComponent component, CartridgeActivatedEvent args)
     {
         UpdateUiState(uid, args.Loader);
     }

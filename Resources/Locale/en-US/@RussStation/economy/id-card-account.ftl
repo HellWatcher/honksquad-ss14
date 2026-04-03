@@ -11,3 +11,6 @@ id-card-withdraw-insufficient = Insufficient funds.
 id-card-withdraw-success = Withdrew {$amount} spesos.
 
 id-card-deposit-success = Deposited {$amount} spesos.
+
+id-card-account-locked = This ID's account is already set.
+id-card-examine-balance = It has [color=green]{$balance} spesos[/color] linked.
