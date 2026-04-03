@@ -18,6 +18,14 @@ public abstract partial class UIFragment
 {
     public abstract Control GetUIFragmentRoot();
 
+    /// <summary>
+    /// Called when the cartridge UI is activated. May be called multiple times for the
+    /// same program (e.g. PdaUpdateState inherits CartridgeLoaderUiState, so any PDA
+    /// UI refresh re-triggers this). Implementations must be idempotent: use
+    /// <c>_fragment ??= new MyFragment()</c>, not <c>_fragment = new MyFragment()</c>.
+    /// Creating a new control here without re-attaching it to the UI tree causes the
+    /// displayed fragment and the updated fragment to diverge silently.
+    /// </summary>
     public abstract void Setup(BoundUserInterface userInterface, EntityUid? fragmentOwner);
 
     public abstract void UpdateState(BoundUserInterfaceState state);

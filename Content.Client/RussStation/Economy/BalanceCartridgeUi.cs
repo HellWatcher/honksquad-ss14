@@ -14,7 +14,7 @@ public sealed partial class BalanceCartridgeUi : UIFragment
 
     public override void Setup(BoundUserInterface userInterface, EntityUid? fragmentOwner)
     {
-        _fragment = new BalanceCartridgeUiFragment();
+        _fragment ??= new BalanceCartridgeUiFragment();
     }
 
     public override void UpdateState(BoundUserInterfaceState state)
