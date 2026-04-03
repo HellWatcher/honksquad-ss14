@@ -36,8 +36,16 @@ public sealed class EconomyCCVars
         CVarDef.Create("economy.wage_command", 100, CVar.SERVERONLY);
 
     /// <summary>
-    /// Flat cost per vending machine purchase (in spesos). Set to 0 to disable payment.
+    /// Markup multiplier applied to an item's estimated cargo value for vending price.
+    /// E.g. 1.5 means items cost 50% more than their cargo value. Set to 0 to disable payment.
     /// </summary>
-    public static readonly CVarDef<int> VendPrice =
-        CVarDef.Create("economy.vend_price", 5, CVar.SERVERONLY);
+    public static readonly CVarDef<float> VendMarkup =
+        CVarDef.Create("economy.vend_markup", 1.5f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Minimum vending price in spesos. Items with zero or very low estimated value
+    /// will cost at least this much. Set to 0 to allow free items.
+    /// </summary>
+    public static readonly CVarDef<int> VendMinPrice =
+        CVarDef.Create("economy.vend_min_price", 1, CVar.SERVERONLY);
 }
