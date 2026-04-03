@@ -7,11 +7,8 @@
     - type: Transform
       noRot: true
     - type: Item
-      size: Normal
-      shape:
-        - 0,0,5,1
+      size: Huge
       sprite: "@RussStation/Structures/Medical/surgical_tray.rsi"
-      heldPrefix: inhand
     - type: Sprite
       sprite: "@RussStation/Structures/Medical/surgical_tray.rsi"
       noRot: true

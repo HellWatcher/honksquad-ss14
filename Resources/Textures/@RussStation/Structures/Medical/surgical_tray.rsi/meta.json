@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-4.0",
-  "copyright": "Katyes. tray_scalpel, tray_cautery, tray_hemostat, tray_retractor, tray_setter, tray_drill, tray_saw derived from Space Station 14 surgical tool sprites (CC-BY-SA-3.0)",
+  "copyright": "tray_base, tray_wheels, tray_drape, inhand-left, and inhand-right are all made by Katyes for SS14; tray_scalpel, tray_cautery, tray_hemostat, tray_retractor, tray_setter, tray_drill, tray_saw derived from Space Station 14 surgical tool sprites (CC-BY-SA-3.0)",
   "size": {
     "x": 32,
     "y": 32
@@ -48,11 +48,11 @@
       "directions": 1
     },
     {
-      "name": "inhand_left",
+      "name": "inhand-left",
       "directions": 4
     },
     {
-      "name": "inhand_right",
+      "name": "inhand-right",
       "directions": 4
     }
   ]
