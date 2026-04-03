@@ -2,7 +2,9 @@ using System.Linq;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.RussStation.Economy;
 using Content.Server.VendingMachines;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.RussStation.Economy.Components;
+using Content.Shared.Stacks;
 using Content.Shared.VendingMachines;
 
 namespace Content.IntegrationTests.Tests.RussStation.Economy;
@@ -36,10 +38,10 @@ public sealed class VendingPaymentTest : InteractionTest
 ";
 
     /// <summary>
-    /// Mobs without PlayerBalanceComponent should vend for free.
+    /// Mobs without balance or cash are not economy participants and vend for free.
     /// </summary>
     [Test]
-    public async Task NoBalanceVendsFreeTest()
+    public async Task NonParticipantVendsFreeTest()
     {
         await SpawnTarget(VendingMachineProtoId);
         var vendorEnt = SEntMan.GetEntity(Target.Value);
@@ -50,17 +52,16 @@ public sealed class VendingPaymentTest : InteractionTest
         Assert.That(items, Is.Not.Empty);
         Assert.That(items.First().Amount, Is.EqualTo(5));
 
-        // Power and open
+        // Power and open (no balance, no ID, no cash)
         await SpawnEntity("APCBasic", SEntMan.GetCoordinates(TargetCoords));
         await RunTicks(1);
         await Activate();
         Assert.That(IsUiOpen(VendingMachineUiKey.Key), "BUI failed to open.");
 
-        // Dispense without any balance component
         var ev = new VendingMachineEjectMessage(InventoryType.Regular, VendedItemProtoId);
         await SendBui(VendingMachineUiKey.Key, ev);
 
-        Assert.That(items.First().Amount, Is.EqualTo(4), "Mob without balance should vend for free.");
+        Assert.That(items.First().Amount, Is.EqualTo(4), "Non-participant should vend for free.");
     }
 
     /// <summary>
@@ -136,5 +137,41 @@ public sealed class VendingPaymentTest : InteractionTest
             var comp = SEntMan.GetComponent<PlayerBalanceComponent>(SPlayer);
             Assert.That(comp.Balance, Is.LessThan(10000), "Balance should decrease after purchase.");
         });
+    }
+
+    /// <summary>
+    /// Mobs holding physical spesos should be able to pay with them.
+    /// </summary>
+    [Test]
+    public async Task CashPaymentTest()
+    {
+        await SpawnTarget(VendingMachineProtoId);
+        var vendorEnt = SEntMan.GetEntity(Target.Value);
+
+        var vendingSystem = SEntMan.System<VendingMachineSystem>();
+        var items = vendingSystem.GetAllInventory(vendorEnt);
+
+        Assert.That(items.First().Amount, Is.EqualTo(5));
+
+        // Put spesos in the player's hand
+        var spesos = await SpawnEntity("SpaceCash100", SEntMan.GetCoordinates(PlayerCoords));
+        await Server.WaitPost(() =>
+        {
+            var hands = SEntMan.System<SharedHandsSystem>();
+            hands.TryPickupAnyHand(SPlayer, spesos, checkActionBlocker: false);
+        });
+        await RunTicks(1);
+
+        // Power and open
+        await SpawnEntity("APCBasic", SEntMan.GetCoordinates(TargetCoords));
+        await RunTicks(1);
+        await Activate();
+        Assert.That(IsUiOpen(VendingMachineUiKey.Key), "BUI failed to open.");
+
+        // Dispense
+        var ev = new VendingMachineEjectMessage(InventoryType.Regular, VendedItemProtoId);
+        await SendBui(VendingMachineUiKey.Key, ev);
+
+        Assert.That(items.First().Amount, Is.EqualTo(4), "Cash payment should allow vending.");
     }
 }
