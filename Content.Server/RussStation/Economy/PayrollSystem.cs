@@ -1,5 +1,4 @@
 using Content.Shared.Roles;
-using Content.Shared.Roles.Jobs;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Robust.Shared.Configuration;
@@ -18,7 +17,8 @@ public sealed class PayrollSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly PlayerBalanceSystem _balance = default!;
-    [Dependency] private readonly SharedJobSystem _job = default!;
+
+    private static readonly ProtoId<DepartmentPrototype> CommandDepartment = "Command";
 
     private float _payrollInterval;
     private int _wageLower;
@@ -34,6 +34,11 @@ public sealed class PayrollSystem : EntitySystem
     {
         "Passenger",
         "Visitor",
+        "MedicalIntern",
+        "TechnicalAssistant",
+        "ResearchAssistant",
+        "SecurityCadet",
+        "ServiceWorker",
     };
 
     public override void Initialize()
@@ -91,7 +96,7 @@ public sealed class PayrollSystem : EntitySystem
 
     private bool IsCommandJob(string jobId)
     {
-        if (!_proto.TryIndex<DepartmentPrototype>("Command", out var command))
+        if (!_proto.TryIndex(CommandDepartment, out var command))
             return false;
 
         return command.Roles.Contains(jobId);
