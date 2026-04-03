@@ -54,6 +54,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         var comp = EnsureComp<PlayerBalanceComponent>(args.Mob);
         comp.Balance = _defaultStartingBalance;
+        comp.JobId = args.JobId;
 
         // Generate unique hex account number.
         comp.AccountNumber = GenerateAccountNumber();
