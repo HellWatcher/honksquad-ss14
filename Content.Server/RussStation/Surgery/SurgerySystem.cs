@@ -376,7 +376,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     /// Returns a speed multiplier based on the tool's tier tag.
     /// No tier tag = improvised (1.5x).
     /// </summary>
-    private float GetToolTierModifier(EntityUid tool)
+    public float GetToolTierModifier(EntityUid tool)
     {
         if (_tags.HasTag(tool, TierExperimentalTag))
             return 0.7f;
