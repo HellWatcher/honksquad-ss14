@@ -1421,7 +1421,7 @@
 - type: Tag
   id: SurgeryTool # Storage whitelist: ClothingBeltMedical
 
-# HONK START - Tool tier tags
+# HONK START - Tool tier and type tags
 - type: Tag
   id: TierStandard
 
@@ -1430,6 +1430,30 @@
 
 - type: Tag
   id: TierExperimental
+
+- type: Tag
+  id: SurgeryScalpel
+
+- type: Tag
+  id: SurgerySaw
+
+- type: Tag
+  id: SurgeryRetractor
+
+- type: Tag
+  id: SurgeryHemostat
+
+- type: Tag
+  id: SurgeryBoneSetter
+
+- type: Tag
+  id: SurgeryCautery
+
+- type: Tag
+  id: SurgeryDrill
+
+- type: Tag
+  id: SurgeryDrape
 # HONK END
 
 - type: Tag

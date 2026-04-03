@@ -20,6 +20,7 @@
       tags:
         - SurgeryTool
         - TierStandard
+        - SurgeryDrape
     - type: Tool
       qualities:
         - Draping
