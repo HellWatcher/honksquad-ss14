@@ -13,8 +13,8 @@ id-card-withdraw-success = Withdrew {$amount} spesos.
 id-card-deposit-success = Deposited {$amount} spesos.
 
 id-card-create-account-verb = Create Account
-id-card-create-account-title = WARNING: Old account will be lost!
-id-card-create-account-confirm = Type YES to create a new account:
+id-card-create-account-title = Old account will be lost!
+id-card-create-account-confirm = Type YES:
 id-card-create-account-success = New bank account created and linked.
 
 id-card-account-invalid = Error: account invalid.
