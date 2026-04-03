@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-4.0",
+  "copyright": "Katyes. tray_scalpel, tray_cautery, tray_hemostat, tray_retractor, tray_setter, tray_drill, tray_saw derived from Space Station 14 surgical tool sprites (CC-BY-SA-3.0)",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "tray_base",
+      "directions": 1
+    },
+    {
+      "name": "tray_wheels",
+      "directions": 1
+    },
+    {
+      "name": "tray_drape",
+      "directions": 1
+    },
+    {
+      "name": "tray_scalpel",
+      "directions": 1
+    },
+    {
+      "name": "tray_cautery",
+      "directions": 1
+    },
+    {
+      "name": "tray_hemostat",
+      "directions": 1
+    },
+    {
+      "name": "tray_retractor",
+      "directions": 1
+    },
+    {
+      "name": "tray_setter",
+      "directions": 1
+    },
+    {
+      "name": "tray_drill",
+      "directions": 1
+    },
+    {
+      "name": "tray_saw",
+      "directions": 1
+    },
+    {
+      "name": "inhand_left",
+      "directions": 4
+    },
+    {
+      "name": "inhand_right",
+      "directions": 4
+    }
+  ]
+}

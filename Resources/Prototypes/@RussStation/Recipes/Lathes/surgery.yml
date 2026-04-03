@@ -4,3 +4,11 @@
   completetime: 2
   materials:
     Cloth: 200
+
+- type: latheRecipe
+  id: SurgicalTray
+  result: SurgicalTray
+  completetime: 5
+  materials:
+    Steel: 500
+    Plastic: 100

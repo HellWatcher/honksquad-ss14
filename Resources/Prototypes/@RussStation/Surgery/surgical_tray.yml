@@ -1,0 +1,157 @@
+- type: entity
+  id: SurgicalTray
+  parent: [BaseItem, BaseDeployFoldable]
+  name: surgical tray
+  description: A wheeled instrument tray for organizing surgical tools. Fold it to carry, deploy it to use.
+  components:
+    - type: Transform
+      noRot: true
+    - type: Item
+      size: Normal
+      shape:
+        - 0,0,5,1
+      sprite: "@RussStation/Structures/Medical/surgical_tray.rsi"
+      heldPrefix: inhand
+    - type: Sprite
+      sprite: "@RussStation/Structures/Medical/surgical_tray.rsi"
+      noRot: true
+      layers:
+        - state: tray_base
+          map: ["tray_base"]
+        - state: tray_wheels
+          map: ["tray_wheels"]
+        - state: tray_drape
+          map: ["tray_drape"]
+          visible: false
+        - state: tray_scalpel
+          map: ["tray_scalpel"]
+          visible: false
+        - state: tray_saw
+          map: ["tray_saw"]
+          visible: false
+        - state: tray_retractor
+          map: ["tray_retractor"]
+          visible: false
+        - state: tray_hemostat
+          map: ["tray_hemostat"]
+          visible: false
+        - state: tray_setter
+          map: ["tray_setter"]
+          visible: false
+        - state: tray_cautery
+          map: ["tray_cautery"]
+          visible: false
+        - state: tray_drill
+          map: ["tray_drill"]
+          visible: false
+    - type: Foldable
+      unfoldVerbText: unfold-verb
+      foldVerbText: fold-verb
+    - type: GenericVisualizer
+      visuals:
+        enum.FoldedVisuals.State:
+          tray_wheels:
+            True: { visible: false }
+            False: { visible: true }
+    - type: InteractionOutline
+    - type: MovedByPressure
+    - type: Physics
+      bodyType: Dynamic
+    - type: Fixtures
+      fixtures:
+        fix1:
+          shape: !type:PhysShapeCircle
+            radius: 0.35
+          density: 20
+          mask:
+            - MobMask
+          layer:
+            - MobLayer
+    - type: Pullable
+    - type: Storage
+      maxItemSize: Normal
+      grid:
+        - 0,0,7,3
+      whitelist:
+        tags:
+          - SurgeryTool
+      storageInsertSound:
+        path: /Audio/Items/toolbox_drop.ogg
+    - type: ContainerContainer
+      containers:
+        storagebase: !type:Container
+    - type: UserInterface
+      interfaces:
+        enum.StorageUiKey.Key:
+          type: StorageBoundUserInterface
+    - type: ItemMapper
+      mapLayers:
+        tray_scalpel:
+          whitelist:
+            tags:
+              - SurgeryScalpel
+        tray_saw:
+          whitelist:
+            tags:
+              - SurgerySaw
+        tray_retractor:
+          whitelist:
+            tags:
+              - SurgeryRetractor
+        tray_hemostat:
+          whitelist:
+            tags:
+              - SurgeryHemostat
+        tray_setter:
+          whitelist:
+            tags:
+              - SurgeryBoneSetter
+        tray_cautery:
+          whitelist:
+            tags:
+              - SurgeryCautery
+        tray_drill:
+          whitelist:
+            tags:
+              - SurgeryDrill
+        tray_drape:
+          whitelist:
+            tags:
+              - SurgeryDrape
+    - type: Appearance
+    - type: Damageable
+    - type: Destructible
+      thresholds:
+        - trigger: !type:DamageTrigger
+            damage: 80
+          behaviors:
+            - !type:EmptyAllContainersBehaviour
+            - !type:DoActsBehavior
+              acts: ["Destruction"]
+            - !type:PlaySoundBehavior
+              sound:
+                collection: MetalBreak
+    - type: SurgicalTray
+      foldedFriction: 0.8
+      unfoldedFriction: 0.4
+    - type: TileFrictionModifier
+      modifier: 0.4
+    - type: StaticPrice
+      price: 150
+
+- type: entity
+  id: SurgicalTrayFilled
+  parent: SurgicalTray
+  suffix: Filled
+  components:
+    - type: ContainerFill
+      containers:
+        storagebase:
+          - Scalpel
+          - Saw
+          - Retractor
+          - Hemostat
+          - BoneSetter
+          - Cautery
+          - Drill
+          - SurgicalDrape

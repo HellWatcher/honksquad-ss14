@@ -32,11 +32,12 @@
         Heat: 5
     soundHit:
       path: /Audio/Effects/lightburn.ogg
-  # HONK START - Surgery tool quality + tier
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierStandard
+    - SurgeryCautery
   - type: Tool
     qualities:
     - Cauterizing
@@ -66,11 +67,12 @@
       path: /Audio/Items/drill_hit.ogg
   - type: StaticPrice
     price: 40
-  # HONK START - Surgery tool quality + tier
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierStandard
+    - SurgeryDrill
   - type: Tool
     qualities:
     - Drilling
@@ -108,11 +110,12 @@
         Slash: 8
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
-  # HONK START - Surgery tool tier
+  # HONK START - Surgery tool tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierStandard
+    - SurgeryScalpel
   # HONK END
 
 - type: entity
@@ -151,11 +154,12 @@
     state: advanced
   - type: Item
     heldPrefix: advanced
-  # HONK START - Advanced tier
+  # HONK START - Advanced tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierAdvanced
+    - SurgeryScalpel
   # HONK END
   - type: MeleeWeapon
     damage:
@@ -177,6 +181,8 @@
     tags:
     - SurgeryTool
     - TierExperimental
+    - SurgeryScalpel
+    - SurgeryCautery
   - type: MultipleTool
     statusShowBehavior: true
     entries:
@@ -204,11 +210,12 @@
   - type: Item
     sprite: Objects/Specific/Medical/Surgery/scissors.rsi
     storedRotation: 90
-  # HONK START - Surgery tool quality + tier
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierStandard
+    - SurgeryRetractor
   - type: Tool
     qualities:
     - Retracting
@@ -225,11 +232,12 @@
   - type: Item
     heldPrefix: hemostat
     storedRotation: 90
-  # HONK START - Surgery tool quality + tier
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierStandard
+    - SurgeryHemostat
   - type: Tool
     qualities:
     - Clamping
@@ -246,11 +254,12 @@
   - type: Item
     heldPrefix: setter
     storedRotation: 90
-  # HONK START - Surgery tool quality + tier
+  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierStandard
+    - SurgeryBoneSetter
   - type: Tool
     qualities:
     - BoneSetting
@@ -278,11 +287,12 @@
   - type: Tool
     qualities:
       - Sawing
-  # HONK START - Surgery tool tier
+  # HONK START - Surgery tool tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierStandard
+    - SurgerySaw
   # HONK END
 # No melee for regular saw because have you ever seen someone use a band saw as a weapon? It's dumb.
 
@@ -320,11 +330,12 @@
     state: electric
   - type: Item
     heldPrefix: electric
-  # HONK START - Advanced tier
+  # HONK START - Advanced tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierAdvanced
+    - SurgerySaw
   # HONK END
   - type: MeleeWeapon
     damage:
@@ -345,11 +356,12 @@
     state: advanced
   - type: Item
     heldPrefix: advanced
-  # HONK START - Experimental tier
+  # HONK START - Experimental tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
     - TierExperimental
+    - SurgerySaw
   # HONK END
   - type: MeleeWeapon
     attackRate: 1.5
