@@ -17,6 +17,9 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+//HONK START
+using Content.Shared.RussStation.Economy;
+//HONK END
 using Robust.Shared.Timing;
 
 namespace Content.Shared.VendingMachines;
@@ -313,6 +316,15 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
     {
         if (IsAuthorized(uid, sender, component))
         {
+            //HONK START - raise cancellable event for payment systems (#162)
+            var ev = new BeforeVendEvent(uid, sender, itemId);
+            RaiseLocalEvent(uid, ref ev);
+            if (ev.Cancelled)
+            {
+                Deny((uid, component), sender);
+                return;
+            }
+            //HONK END
             TryEjectVendorItem(uid, type, itemId, component.CanShoot, sender, component);
         }
     }
