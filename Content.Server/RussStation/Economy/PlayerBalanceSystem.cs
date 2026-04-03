@@ -130,6 +130,31 @@ public sealed class PlayerBalanceSystem : EntitySystem
     }
 
     /// <summary>
+    /// Create a new bank account for a mob. If the mob already has an account,
+    /// the old account is invalidated (removed from the index, balance wiped).
+    /// Any ID cards with the old account number become dead cards.
+    /// Returns the new account number.
+    /// </summary>
+    public string CreateAccount(EntityUid uid)
+    {
+        var comp = EnsureComp<PlayerBalanceComponent>(uid);
+
+        // Invalidate old account if one exists.
+        if (!string.IsNullOrEmpty(comp.AccountNumber))
+            _accountIndex.Remove(comp.AccountNumber);
+
+        comp.Balance = _defaultStartingBalance;
+        comp.AccountNumber = GenerateAccountNumber();
+        _accountIndex[comp.AccountNumber] = uid;
+        Dirty(uid, comp);
+
+        _memories.AddMemory(uid, "memories-key-account-number", comp.AccountNumber);
+        RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
+
+        return comp.AccountNumber;
+    }
+
+    /// <summary>
     /// Generate an 8-character hex account number, ensuring uniqueness within the round.
     /// </summary>
     private string GenerateAccountNumber()
