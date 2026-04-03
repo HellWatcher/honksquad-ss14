@@ -84,7 +84,29 @@ public sealed partial class QuickDialogSystem : EntitySystem
         _openDialogsByUser.Remove(user);
     }
 
-    private void OpenDialogInternal(ICommonSession session, string title, List<QuickDialogEntry> entries, QuickDialogButtonFlag buttons, Action<QuickDialogResponseEvent> okAction, Action cancelAction)
+    // HONK START - Server-side dialog close
+    /// <summary>
+    /// Close all open dialogs for a session from the server side.
+    /// Invokes each dialog's cancel action and tells the client to close the windows.
+    /// </summary>
+    public void CloseAllDialogs(ICommonSession session)
+    {
+        if (!_openDialogsByUser.TryGetValue(session.UserId, out var list))
+            return;
+
+        foreach (var dialogId in list)
+        {
+            _openDialogs[dialogId].cancelAction.Invoke();
+            _openDialogs.Remove(dialogId);
+            RaiseNetworkEvent(new QuickDialogCloseEvent(dialogId), session);
+        }
+
+        list.Clear();
+    }
+    // HONK END
+
+    // HONK - changed return type from void to int for dialog ID tracking
+    private int OpenDialogInternal(ICommonSession session, string title, List<QuickDialogEntry> entries, QuickDialogButtonFlag buttons, Action<QuickDialogResponseEvent> okAction, Action cancelAction)
     {
         var did = GetDialogId();
         RaiseNetworkEvent(
@@ -101,6 +123,8 @@ public sealed partial class QuickDialogSystem : EntitySystem
             _openDialogsByUser.Add(session.UserId, new List<int>());
 
         _openDialogsByUser[session.UserId].Add(did);
+
+        return did; // HONK
     }
 
     private bool TryParseQuickDialog<T>(QuickDialogEntryType entryType, string input, [NotNullWhen(true)] out T? output)
