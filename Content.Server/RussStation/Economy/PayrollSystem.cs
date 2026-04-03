@@ -1,6 +1,10 @@
+using Content.Shared.CartridgeLoader;
+using Content.Shared.Popups;
 using Content.Shared.Roles;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
@@ -17,6 +21,8 @@ public sealed class PayrollSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly PlayerBalanceSystem _balance = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly SharedPopupSystem _popup = default!;
 
     private static readonly ProtoId<DepartmentPrototype> CommandDepartment = "Command";
 
@@ -62,6 +68,9 @@ public sealed class PayrollSystem : EntitySystem
         IssuePayday();
     }
 
+    private static readonly SoundSpecifier PaycheckSound =
+        new SoundPathSpecifier("/Audio/Machines/chime.ogg", AudioParams.Default.WithVolume(-4f));
+
     private void IssuePayday()
     {
         var query = EntityQueryEnumerator<PlayerBalanceComponent>();
@@ -72,7 +81,25 @@ public sealed class PayrollSystem : EntitySystem
                 continue;
 
             _balance.AddBalance(uid, wage, comp);
+            var newBalance = _balance.GetBalance(uid, comp);
+            _popup.PopupEntity(Loc.GetString("payroll-received", ("wage", wage), ("balance", newBalance)), uid, uid);
+            PlayPdaChime(uid);
         }
+    }
+
+    private void PlayPdaChime(EntityUid mob)
+    {
+        // Find a PDA held by this mob and play the sound from it.
+        var pdaQuery = EntityQueryEnumerator<CartridgeLoaderComponent>();
+        while (pdaQuery.MoveNext(out var loaderUid, out _))
+        {
+            if (Transform(loaderUid).ParentUid == mob)
+            {
+                _audio.PlayPvs(PaycheckSound, loaderUid);
+                return;
+            }
+        }
+
     }
 
     /// <summary>
