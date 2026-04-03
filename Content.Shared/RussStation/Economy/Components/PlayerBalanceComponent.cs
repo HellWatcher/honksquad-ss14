@@ -18,4 +18,10 @@ public sealed partial class PlayerBalanceComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public string AccountNumber = string.Empty;
+
+    /// <summary>
+    /// The job prototype ID this player spawned with. Used by the payroll system to determine wage tier.
+    /// </summary>
+    [DataField]
+    public string? JobId;
 }
