@@ -1,0 +1,13 @@
+<economy:BalanceCartridgeUiFragment xmlns:economy="clr-namespace:Content.Client.RussStation.Economy"
+                                    xmlns="https://spacestation14.io" Margin="1 0 2 0">
+    <PanelContainer StyleClasses="BackgroundDark" />
+    <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True" Margin="8 8 8 8">
+        <Label Text="Account Balance" StyleClasses="LabelHeadingBigger" HorizontalAlignment="Center" Margin="0 0 0 8" />
+        <PanelContainer StyleClasses="BackgroundLight" HorizontalExpand="True" Margin="0 4 0 4">
+            <BoxContainer Orientation="Horizontal" HorizontalAlignment="Center" Margin="8 12 8 12">
+                <Label Name="BalanceLabel" Text="0" StyleClasses="LabelHeadingBigger" />
+                <Label Text=" spesos" StyleClasses="LabelSubText" Margin="4 0 0 0" />
+            </BoxContainer>
+        </PanelContainer>
+    </BoxContainer>
+</economy:BalanceCartridgeUiFragment>

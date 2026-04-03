@@ -84,6 +84,9 @@
       - NotekeeperCartridge
       - NanoTaskCartridge
       - NewsReaderCartridge
+      # HONK START - wallet app for economy system (#162)
+      - BalanceCartridge
+      # HONK END
     cartridgeSlot:
       priority: -1
       name: device-pda-slot-component-slot-name-cartridge
