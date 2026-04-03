@@ -85,13 +85,23 @@ public sealed class IdCardAccountSystem : EntitySystem
             args.Verbs.Add(new AlternativeVerb
             {
                 Text = Loc.GetString("id-card-create-account-verb"),
-                Act = () => OnCreateAccount(uid, args.User, actor.PlayerSession),
+                Act = () =>
+                {
+                    _quickDialog.OpenDialog(actor.PlayerSession,
+                        Loc.GetString("id-card-create-account-title"),
+                        Loc.GetString("id-card-create-account-confirm"),
+                        (string confirmation) =>
+                        {
+                            if (confirmation.Trim().Equals("YES", StringComparison.OrdinalIgnoreCase))
+                                OnCreateAccount(uid, args.User, actor.PlayerSession);
+                        });
+                },
                 Impact = LogImpact.Low,
             });
         }
-        else
+        else if (_balance.TryGetByAccount(comp.AccountNumber, out _))
         {
-            // Account linked: offer to withdraw.
+            // Account linked and valid: offer to withdraw.
             args.Verbs.Add(new AlternativeVerb
             {
                 Text = Loc.GetString("id-card-withdraw-verb"),
@@ -125,7 +135,7 @@ public sealed class IdCardAccountSystem : EntitySystem
             if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner)
                 || !TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
             {
-                args.PushMarkup(Loc.GetString("id-card-account-invalid"));
+                args.PushMarkup(Loc.GetString("id-card-account-invalid-examine"));
                 return;
             }
 
@@ -172,7 +182,7 @@ public sealed class IdCardAccountSystem : EntitySystem
 
         if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
         {
-            _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, user);
+            _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, user, PopupType.MediumCaution);
             return true; // handled, just rejected
         }
 

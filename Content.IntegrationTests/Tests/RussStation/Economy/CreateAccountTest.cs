@@ -36,7 +36,7 @@ public sealed class CreateAccountTest : InteractionTest
             // Player should now have a balance component with the account.
             var balanceComp = SEntMan.GetComponent<PlayerBalanceComponent>(SPlayer);
             Assert.That(balanceComp.AccountNumber, Is.EqualTo(accountNumber));
-            Assert.That(balanceComp.Balance, Is.GreaterThan(0), "New account should have starting balance.");
+            Assert.That(balanceComp.Balance, Is.EqualTo(0), "New account should start with zero balance.");
         });
     }
 
@@ -75,8 +75,7 @@ public sealed class CreateAccountTest : InteractionTest
     }
 
     /// <summary>
-    /// Creating a new account should wipe the old balance.
-    /// The player gets a fresh starting balance.
+    /// Creating a new account should wipe the old balance to zero.
     /// </summary>
     [Test]
     public async Task CreateAccountWipesBalanceTest()
@@ -91,14 +90,12 @@ public sealed class CreateAccountTest : InteractionTest
             balanceSys.CreateAccount(SPlayer);
             balanceSys.AddBalance(SPlayer, 5000);
             var balanceComp = SEntMan.GetComponent<PlayerBalanceComponent>(SPlayer);
-            var oldBalance = balanceComp.Balance;
-            Assert.That(oldBalance, Is.GreaterThan(5000));
+            Assert.That(balanceComp.Balance, Is.EqualTo(5000));
 
-            // Create new account, balance should reset to starting amount.
+            // Create new account, balance should reset to zero.
             balanceSys.CreateAccount(SPlayer);
-            var newBalance = balanceComp.Balance;
-            Assert.That(newBalance, Is.LessThan(oldBalance),
-                "New account should reset balance, wiping old funds.");
+            Assert.That(balanceComp.Balance, Is.EqualTo(0),
+                "New account should wipe balance to zero.");
         });
     }
 
