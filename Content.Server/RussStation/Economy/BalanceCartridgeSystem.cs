@@ -14,6 +14,7 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         base.Initialize();
         SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeUiReadyEvent>(OnUiReady);
         SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeActivatedEvent>(OnActivated);
+        SubscribeLocalEvent<PlayerBalanceComponent, BalanceChangedEvent>(OnBalanceChanged);
     }
 
     private void OnUiReady(EntityUid uid, BalanceCartridgeComponent component, CartridgeUiReadyEvent args)
@@ -24,6 +25,17 @@ public sealed class BalanceCartridgeSystem : EntitySystem
     private void OnActivated(EntityUid uid, BalanceCartridgeComponent component, CartridgeActivatedEvent args)
     {
         UpdateUiState(uid, args.Loader);
+    }
+
+    private void OnBalanceChanged(EntityUid uid, PlayerBalanceComponent component, BalanceChangedEvent args)
+    {
+        // Find any PDA cartridge loaders held by this mob and push updated state.
+        var query = EntityQueryEnumerator<CartridgeLoaderComponent>();
+        while (query.MoveNext(out var loaderUid, out _))
+        {
+            if (Transform(loaderUid).ParentUid == uid)
+                UpdateUiState(default, loaderUid);
+        }
     }
 
     private void UpdateUiState(EntityUid uid, EntityUid loaderUid)

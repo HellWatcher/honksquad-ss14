@@ -4,6 +4,7 @@ using Content.Server.Stack;
 using Content.Shared.Access.Components;
 using Content.Shared.Database;
 using Content.Shared.Examine;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.PDA;
 using Content.Shared.Popups;
@@ -26,6 +27,7 @@ public sealed class IdCardAccountSystem : EntitySystem
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly PlayerBalanceSystem _balance = default!;
     [Dependency] private readonly StackSystem _stack = default!;
+    [Dependency] private readonly SharedHandsSystem _hands = default!;
     private static readonly ProtoId<StackPrototype> CreditStack = "Credit";
 
     public override void Initialize()
@@ -207,7 +209,8 @@ public sealed class IdCardAccountSystem : EntitySystem
             return;
         }
 
-        _stack.SpawnNextToOrDrop(amount, CreditStack, user);
+        var spawned = _stack.SpawnNextToOrDrop(amount, CreditStack, user);
+        _hands.TryPickupAnyHand(user, spawned, checkActionBlocker: false);
 
         _popup.PopupEntity(
             Loc.GetString("id-card-withdraw-success", ("amount", amount)),

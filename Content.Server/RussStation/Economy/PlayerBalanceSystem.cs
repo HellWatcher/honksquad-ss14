@@ -9,6 +9,19 @@ using Robust.Shared.Random;
 
 namespace Content.Server.RussStation.Economy;
 
+/// <summary>
+/// Raised on the mob entity when its balance changes.
+/// </summary>
+public sealed class BalanceChangedEvent : EntityEventArgs
+{
+    public EntityUid Mob;
+
+    public BalanceChangedEvent(EntityUid mob)
+    {
+        Mob = mob;
+    }
+}
+
 public sealed class PlayerBalanceSystem : EntitySystem
 {
     [Dependency] private readonly IConfigurationManager _cfg = default!;
@@ -87,6 +100,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         comp.Balance -= amount;
         Dirty(uid, comp);
+        RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
         return true;
     }
 
@@ -100,6 +114,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         comp.Balance += amount;
         Dirty(uid, comp);
+        RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
     }
 
     /// <summary>
