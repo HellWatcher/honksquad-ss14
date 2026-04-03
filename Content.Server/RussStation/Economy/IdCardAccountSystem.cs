@@ -80,6 +80,14 @@ public sealed class IdCardAccountSystem : EntitySystem
                 },
                 Impact = LogImpact.Low,
             });
+
+            // Offer to create a brand new account.
+            args.Verbs.Add(new AlternativeVerb
+            {
+                Text = Loc.GetString("id-card-create-account-verb"),
+                Act = () => OnCreateAccount(uid, args.User, actor.PlayerSession),
+                Impact = LogImpact.Low,
+            });
         }
         else
         {
@@ -112,14 +120,15 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (string.IsNullOrEmpty(comp.AccountNumber))
             return;
 
-        if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
-            return;
-
-        if (!TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
-            return;
-
         using (args.PushGroup(nameof(IdCardAccountSystem)))
         {
+            if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner)
+                || !TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
+            {
+                args.PushMarkup(Loc.GetString("id-card-account-invalid"));
+                return;
+            }
+
             args.PushMarkup(Loc.GetString("id-card-examine-balance", ("balance", balanceComp.Balance)));
         }
     }
@@ -162,7 +171,10 @@ public sealed class IdCardAccountSystem : EntitySystem
             return false;
 
         if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
-            return false;
+        {
+            _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, user);
+            return true; // handled, just rejected
+        }
 
         var amount = stack.Count;
         if (amount <= 0)
@@ -177,6 +189,26 @@ public sealed class IdCardAccountSystem : EntitySystem
             user);
 
         return true;
+    }
+
+    private void OnCreateAccount(EntityUid idCard, EntityUid user, ICommonSession session)
+    {
+        if (!TryComp<IdCardComponent>(idCard, out var comp))
+            return;
+
+        if (!string.IsNullOrEmpty(comp.AccountNumber))
+        {
+            _popup.PopupEntity(Loc.GetString("id-card-account-locked"), idCard, session, PopupType.MediumCaution);
+            return;
+        }
+
+        // Creates a new account (or replaces the old one, invalidating any stolen IDs).
+        var accountNumber = _balance.CreateAccount(user);
+
+        comp.AccountNumber = accountNumber;
+        Dirty(idCard, comp);
+
+        _popup.PopupEntity(Loc.GetString("id-card-create-account-success"), idCard, session, PopupType.Medium);
     }
 
     private void OnAccountEntered(EntityUid idCard, EntityUid user, ICommonSession session, string accountNumber)
@@ -220,7 +252,10 @@ public sealed class IdCardAccountSystem : EntitySystem
             return;
 
         if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
+        {
+            _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, session, PopupType.MediumCaution);
             return;
+        }
 
         if (!_balance.TryDeduct(owner, amount))
         {
