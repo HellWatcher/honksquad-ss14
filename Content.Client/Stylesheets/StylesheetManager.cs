@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Client.Stylesheets.Fonts;
 using Content.Client.Stylesheets.Stylesheets;
 using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface;
@@ -29,6 +30,10 @@ namespace Content.Client.Stylesheets
 
         private Dictionary<string, Stylesheet> Stylesheets { get; set; } = default!;
 
+        // HONK START - Font customization
+        public FontCustomizationManager FontManager { get; private set; } = default!;
+        // HONK END
+
         public bool TryGetStylesheet(string name, [MaybeNullWhen(false)] out Stylesheet stylesheet)
         {
             return Stylesheets.TryGetValue(name, out stylesheet);
@@ -41,6 +46,13 @@ namespace Content.Client.Stylesheets
             var sawmill = _logManager.GetSawmill("style");
             sawmill.Debug("Initializing Stylesheets...");
             var sw = Stopwatch.StartNew();
+
+            // HONK START - Font customization
+            FontManager = new FontCustomizationManager();
+            IoCManager.InjectDependencies(FontManager);
+            FontManager.Initialize();
+            FontManager.FontsChanged += RebuildStylesheets;
+            // HONK END
 
             // add all sheetlets to the hashset
             var tys = _reflection.FindTypesWithAttribute<CommonSheetletAttribute>();
@@ -66,6 +78,33 @@ namespace Content.Client.Stylesheets
 
             sawmill.Debug($"Initialized {_styleRuleCount} style rules in {sw.Elapsed}");
         }
+
+        // HONK START - Font customization
+        /// <summary>
+        ///     Rebuilds all stylesheets with current font settings and reassigns to the UI manager.
+        /// </summary>
+        private void RebuildStylesheets()
+        {
+            var sawmill = _logManager.GetSawmill("style");
+            sawmill.Debug("Rebuilding stylesheets for font change...");
+            var sw = Stopwatch.StartNew();
+
+            var tys = _reflection.FindTypesWithAttribute<CommonSheetletAttribute>();
+            UnusedSheetlets = [..tys];
+
+            Stylesheets.Clear();
+            _styleRuleCount = 0;
+
+            SheetNanotrasen = Init(new NanotrasenStylesheet(new BaseStylesheet.NoConfig(), this));
+            SheetSystem = Init(new SystemStylesheet(new BaseStylesheet.NoConfig(), this));
+            SheetNano = new StyleNano(_resCache).Stylesheet;
+            SheetSpace = new StyleSpace(_resCache).Stylesheet;
+
+            _userInterfaceManager.Stylesheet = SheetNanotrasen;
+
+            sawmill.Debug($"Rebuilt {_styleRuleCount} style rules in {sw.Elapsed}");
+        }
+        // HONK END
 
         private int _styleRuleCount;
 

@@ -1,5 +1,7 @@
 using System.Numerics;
 using Content.Client.Resources;
+using Content.Client.Stylesheets;
+using Content.Client.Stylesheets.Fonts;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
 using Robust.Shared.Enums;
@@ -8,7 +10,8 @@ namespace Content.Client.RussStation.HoverTooltip;
 
 public sealed class EntityHoverTooltipOverlay : Overlay
 {
-    private readonly Font _font;
+    private Font _font;
+    private readonly FontCustomizationManager? _fontManager;
 
     public override OverlaySpace Space => OverlaySpace.ScreenSpace;
 
@@ -22,7 +25,20 @@ public sealed class EntityHoverTooltipOverlay : Overlay
 
     public EntityHoverTooltipOverlay(IResourceCache resourceCache)
     {
-        _font = resourceCache.GetFont("/Fonts/NotoSans/NotoSans-Regular.ttf", 12);
+        // HONK START - Font customization
+        var stylesheetMan = IoCManager.Resolve<IStylesheetManager>() as StylesheetManager;
+        _fontManager = stylesheetMan?.FontManager;
+
+        if (_fontManager != null)
+        {
+            _font = _fontManager.GetCurrentFont(12);
+            _fontManager.FontsChanged += () => _font = _fontManager.GetCurrentFont(12);
+        }
+        else
+        {
+            _font = resourceCache.GetFont("/Fonts/NotoSans/NotoSans-Regular.ttf", 12);
+        }
+        // HONK END
     }
 
     protected override bool BeforeDraw(in OverlayDrawArgs args)
