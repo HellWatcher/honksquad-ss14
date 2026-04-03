@@ -1,0 +1,61 @@
+
+- type: seed
+  id: white
+  name: white
+  noun: seeds-noun-seeds
+  displayName: white
+  plantRsi: '@RussStation/Objects/Hydroponics/white.rsi'
+  packetPrototype: WhiteSeeds
+  productPrototypes:
+    - FoodWhite
+  mutationPrototypes:
+   - gnorange
+  harvestRepeat: Repeat
+  lifespan: 55
+  maturation: 6
+  production: 6
+  yield: 3
+  potency: 10
+  idealLight: 8
+  chemicals:
+    Nutriment:
+      Min: 1
+      Max: 5
+      PotencyDivisor: 10
+    Laughter:
+      Min: 1
+      Max: 10
+      PotencyDivisor: 15
+
+- type: seed
+  id: gnorange
+  name: gnorange
+  noun: seeds-noun-seeds
+  displayName: gnorange
+  plantRsi: '@RussStation/Objects/Hydroponics/gnorange.rsi'
+  plantLogImpact: High
+  harvestLogImpact: High
+  packetPrototype: GnorangeSeeds
+  productPrototypes:
+    - MobClownGoblin
+  harvestRepeat: Repeat
+  lifespan: 30
+  maturation: 13
+  production: 6
+  yield: 2
+  potency: 10
+  idealLight: 8
+  growthStages: 3
+  chemicals:
+    JuiceBanana:
+      Min: 1
+      Max: 5
+      PotencyDivisor: 15
+    Blood:
+      Min: 1
+      Max: 15
+      PotencyDivisor: 25
+    Laughter:
+      Min: 1
+      Max: 15
+      PotencyDivisor: 20
