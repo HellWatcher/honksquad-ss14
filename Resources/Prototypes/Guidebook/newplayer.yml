@@ -6,6 +6,9 @@
   children:
   - Controls
   - CharacterCreation
+  # HONK START - Memories guidebook entry (#252)
+  - Memories
+  # HONK END
 
 - type: guideEntry
   id: Controls
