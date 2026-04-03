@@ -75,15 +75,9 @@ public sealed class VendingPaymentSystem : EntitySystem
             return;
 
         // Resolve buyer's balance via their ID card's account number.
+        // If the buyer has no balance at all (not a player), let them vend for free.
         if (!TryGetBuyerBalance(args.User, out var owner, out var balanceComp))
-        {
-            _popup.PopupEntity(
-                Loc.GetString("vending-machine-no-account"),
-                uid,
-                args.User);
-            args.Cancelled = true;
             return;
-        }
 
         if (!_balance.TryDeduct(owner, price, balanceComp))
         {
