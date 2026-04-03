@@ -111,6 +111,22 @@ public enum QuickDialogButtonFlag
     CancelButton = 2,
 }
 
+// HONK START - Server-side dialog close support
+/// <summary>
+/// Sent from the server to tell the client to close a specific dialog.
+/// </summary>
+[Serializable, NetSerializable]
+public sealed class QuickDialogCloseEvent : EntityEventArgs
+{
+    public int DialogId;
+
+    public QuickDialogCloseEvent(int dialogId)
+    {
+        DialogId = dialogId;
+    }
+}
+// HONK END
+
 /// <summary>
 /// The entry types for a quick dialog.
 /// </summary>
