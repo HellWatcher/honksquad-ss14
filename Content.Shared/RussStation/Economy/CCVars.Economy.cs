@@ -37,15 +37,22 @@ public sealed class EconomyCCVars
 
     /// <summary>
     /// Markup multiplier applied to an item's estimated cargo value for vending price.
-    /// E.g. 1.5 means items cost 50% more than their cargo value. Set to 0 to disable payment.
+    /// E.g. 1.5 means items cost 50% more than their cargo value.
     /// </summary>
-    public static readonly CVarDef<float> VendMarkup =
-        CVarDef.Create("economy.vend_markup", 1.5f, CVar.SERVERONLY);
+    public static readonly CVarDef<float> VendCargoMarkup =
+        CVarDef.Create("economy.vend_cargo_markup", 1.5f, CVar.SERVERONLY);
 
     /// <summary>
-    /// Minimum vending price in spesos. Items with zero or very low estimated value
-    /// will cost at least this much. Set to 0 to allow free items.
+    /// Markup multiplier applied to recipe material cost for vending price.
+    /// E.g. 0.5 means items cost half their raw material value.
+    /// </summary>
+    public static readonly CVarDef<float> VendMaterialMarkup =
+        CVarDef.Create("economy.vend_material_markup", 0.5f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Absolute minimum vending price in spesos. Only used as a last resort
+    /// when a vendor has no items with a calculable price.
     /// </summary>
     public static readonly CVarDef<int> VendMinPrice =
-        CVarDef.Create("economy.vend_min_price", 1, CVar.SERVERONLY);
+        CVarDef.Create("economy.vend_min_price", 5, CVar.SERVERONLY);
 }
