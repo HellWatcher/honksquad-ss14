@@ -48,6 +48,10 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (!args.CanInteract || !args.CanAccess)
             return;
 
+        // ID must be in the user's hand.
+        if (!_hands.IsHolding(args.User, uid))
+            return;
+
         if (string.IsNullOrEmpty(comp.AccountNumber))
         {
             // No account linked: offer to set one.
