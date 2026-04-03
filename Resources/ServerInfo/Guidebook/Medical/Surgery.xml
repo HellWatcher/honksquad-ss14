@@ -1,11 +1,11 @@
 <Document>
 # Surgery
-Surgery is hands-on medical work: stitching up injuries and pulling out (or putting in) organs. You'll need a downed patient, a bedsheet, and the right surgical tools.
+Surgery is hands-on medical work: stitching up injuries and pulling out (or putting in) organs. You need a patient lying down, a drape, and the right tools.
 
 ## Requirements
 To begin surgery, you need:
-- A [color=#a4885c]downed patient[/color] (you cannot operate on standing or conscious patients)
-- A [color=#a4885c]bedsheet[/color] to drape the patient
+- A [color=#a4885c]patient lying down[/color] (you can't operate on standing patients)
+- A [color=#a4885c]surgical drape[/color] or [color=#a4885c]bedsheet[/color] to drape the patient
 - The correct [color=#a4885c]surgical tools[/color] for each step
 
 You [color=#993333]cannot perform surgery on yourself[/color].
@@ -19,27 +19,46 @@ You [color=#993333]cannot perform surgery on yourself[/color].
 <GuideEntityEmbed Entity="Cautery"/>
 </Box>
 
-## Starting Surgery
-1. Make sure your patient is [color=#a4885c]downed[/color] (in crit, stunned, etc.)
-2. Use a [color=#a4885c]bedsheet[/color] on the patient to open the procedure menu
-3. Select a procedure from the radial menu
-4. The patient is now draped and surgery begins
+## Tool Tiers
+Better tools mean faster work:
 
-The bedsheet is only consumed when you confirm a procedure. Cancelling the menu wastes nothing.
+- [color=#a4885c]Improvised[/color] (no tier) - 1.5x duration
+- [color=#a4885c]Standard[/color] - normal speed (1.0x)
+- [color=#a4885c]Advanced[/color] (e.g. advanced scalpel, electric saw) - 0.8x duration
+- [color=#a4885c]Experimental[/color] (e.g. laser scalpel, advanced saw) - 0.7x duration
+
+## Draping
+Use a [color=#a4885c]surgical drape[/color] or [color=#a4885c]bedsheet[/color] on a patient to open the procedure menu. Surgical drapes work at normal speed (1.0x). Bedsheets work in a pinch but take [color=#993333]1.5x as long[/color].
+
+<Box>
+<GuideEntityEmbed Entity="SurgicalDrape" Caption="surgical drape (1.0x)"/>
+</Box>
+
+You can find surgical drapes in medical vendors, medical crates, or craft them at a lathe.
 
 ## Surgery Surfaces
-Buckle your patient to a surgery surface before starting, and the procedure goes faster:
+Buckle your patient to a surgery surface before starting and things go faster:
 <Box>
-<GuideEntityEmbed Entity="OperatingTable" Caption="operating table (0.5x)"/>
-<GuideEntityEmbed Entity="MedicalBed" Caption="medical bed (0.7x)"/>
-<GuideEntityEmbed Entity="RollerBed" Caption="roller bed (0.8x)"/>
+<GuideEntityEmbed Entity="OperatingTable" Caption="operating table (1.0x)"/>
+<GuideEntityEmbed Entity="StasisBed" Caption="stasis bed (1.25x)"/>
+<GuideEntityEmbed Entity="MedicalBed" Caption="medical bed (1.5x)"/>
+<GuideEntityEmbed Entity="RollerBed" Caption="roller bed (1.5x)"/>
 </Box>
-Operating without a proper surface uses the default speed (1.0x).
+Operating on the [color=#993333]floor without a surface takes 2.0x as long[/color].
 
 ## Performing Steps
-Each procedure is a sequence of tool steps. Use the [color=#a4885c]correct tool[/color] on the draped patient to advance. Using the wrong tool gives a warning popup.
+Each procedure is a sequence of tool steps. Use the [color=#a4885c]right tool[/color] on the draped patient to advance. Wrong tool gives a warning popup.
 
-When all steps are done, use a [color=#a4885c]cautery[/color] on the patient to close the incision and finish the procedure. The cautery stops all bleeding and removes the drape.
+How long each step takes depends on: [color=#a4885c]base time x surface x drape x tool tier[/color]. A doctor with experimental tools on an operating table with a surgical drape finishes way faster than someone improvising on the floor with a bedsheet.
+
+When all steps are done, use a [color=#a4885c]cautery[/color] to close the incision and finish. The cautery stops bleeding and removes the drape.
+
+## Surgical Tray
+<Box>
+<GuideEntityEmbed Entity="SurgicalTray" Caption="surgical tray"/>
+</Box>
+
+The surgical tray is a wheeled cart for organizing your tools. It shows each tool you store inside as a sprite. Fold it to carry, unfold it to wheel around. Drag-drop it onto yourself to fold and pick it up.
 
 ## Procedures
 
@@ -63,17 +82,16 @@ Open the body cavity to remove or insert organs.
 - [color=#a4885c]Retractor[/color] - retract skin
 - [color=#a4885c]Hemostat[/color] - clamp vessels
 - [color=#a4885c]Bone saw[/color] - saw through bone
-- [color=#a4885c]Hemostat[/color] - select organ to remove (opens organ picker)
+- [color=#a4885c]Hemostat[/color] - select organ to remove (opens organ picker), or use an organ in your hand on the patient to insert it
 - [color=#a4885c]Cautery[/color] - close incision
-
-To [color=#a4885c]insert[/color] an organ, hold it in your hand and use it on the draped patient during an active surgery.
 
 ## Cancelling Surgery
 The patient can click the [color=#a4885c]drape alert[/color] on their HUD to remove the drape and cancel the procedure at any time.
 
 ## Tips
-- Surgery causes some damage during the opening steps (incisions bleed, retractors bruise). Plan for this.
-- The hemostat heals a fixed total per repeat, split across whatever damage types the patient actually has.
-- Keep extra bedsheets handy. Each procedure uses one.
-- Medbay's operating table is the fastest surface available.
+- Opening steps do some damage (incisions bleed, retractors bruise), so plan for that.
+- The hemostat heals a fixed amount per repeat, split across whatever damage the patient actually has.
+- Keep spare drapes around, each procedure uses one.
+- The operating table is the fastest surface in medbay.
+- Upgrade your tools when you can, experimental-tier gear with an operating table and surgical drape is roughly 4x faster than improvising.
 </Document>
