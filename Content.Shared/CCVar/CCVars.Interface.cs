@@ -34,6 +34,21 @@ public sealed partial class CCVars
     public static readonly CVarDef<string> SeparatedScreenChatSize =
         CVarDef.Create("ui.separated_chat_size", "0.6,0", CVar.CLIENTONLY | CVar.ARCHIVE);
 
+    // HONK START - Font customization
+    /// <summary>
+    /// The font family used for UI text. "NotoSans" is the default.
+    /// User-provided fonts can be placed in the UserData/fonts/ directory.
+    /// </summary>
+    public static readonly CVarDef<string> UIFontFamily =
+        CVarDef.Create("ui.font_family", "NotoSans", CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// Base font size for UI text.
+    /// </summary>
+    public static readonly CVarDef<int> UIFontSize =
+        CVarDef.Create("ui.font_size", 12, CVar.CLIENTONLY | CVar.ARCHIVE);
+    // HONK END
+
     public static readonly CVarDef<bool> OutlineEnabled =
         CVarDef.Create("outline.enabled", true, CVar.CLIENTONLY);
 

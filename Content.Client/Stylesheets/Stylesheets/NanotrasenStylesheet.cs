@@ -28,7 +28,7 @@ public partial class NanotrasenStylesheet : CommonStylesheet
 
     // why? see InterfaceStylesheet.cs
     // ReSharper disable once UseCollectionExpression
-    private readonly List<(string?, int)> _commonFontSizes = new()
+    private List<(string?, int)> _commonFontSizes = new()
     {
         (null, PrimaryFontSize),
         (StyleClass.FontSmall, PrimaryFontSize - FontSizeStep),
@@ -38,6 +38,24 @@ public partial class NanotrasenStylesheet : CommonStylesheet
     public NanotrasenStylesheet(object config, StylesheetManager man) : base(config)
     {
         BaseFont = new NotoFontFamilyStack(ResCache);
+
+        // HONK START - Font customization
+        var fontTemplate = man.FontManager.GetFontPathTemplate();
+        var fontKinds = man.FontManager.GetAvailableKinds();
+        BaseFont.SetPrimaryFont(fontTemplate, fontKinds);
+
+        var customSize = man.FontManager.CurrentSize;
+        if (customSize != PrimaryFontSize)
+        {
+            _commonFontSizes = new List<(string?, int)>
+            {
+                (null, customSize),
+                (StyleClass.FontSmall, customSize - FontSizeStep),
+                (StyleClass.FontLarge, customSize + FontSizeStep),
+            };
+        }
+        // HONK END
+
         var rules = new[]
         {
             // Set up important rules that need to go first.
@@ -45,7 +63,7 @@ public partial class NanotrasenStylesheet : CommonStylesheet
             // Set up our core rules.
             [
                 // Declare the default font.
-                Element().Prop(Label.StylePropertyFont, BaseFont.GetFont(PrimaryFontSize)),
+                Element().Prop(Label.StylePropertyFont, BaseFont.GetFont(customSize)),
                 // Branding.
                 Element<TextureRect>()
                     .Class("NTLogoDark")
