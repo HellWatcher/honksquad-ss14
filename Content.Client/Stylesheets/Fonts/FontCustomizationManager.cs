@@ -51,9 +51,17 @@ public sealed class FontCustomizationManager
     {
         _sawmill = Logger.GetSawmill("font");
 
-        _resManager.UserData.CreateDir(UserFontsDir);
+        try
+        {
+            _resManager.UserData.CreateDir(UserFontsDir);
+            LoadUserFonts();
+        }
+        catch (NotImplementedException)
+        {
+            // VirtualWritableDirProvider in test/linter environments doesn't support Find()
+            _sawmill.Debug("User font loading skipped (virtual filesystem)");
+        }
 
-        LoadUserFonts();
         DiscoverFonts();
         SetupFontHijack();
 
