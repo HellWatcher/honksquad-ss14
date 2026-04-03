@@ -25,6 +25,10 @@ namespace Content.Client.VendingMachines.UI
         private readonly Dictionary<EntProtoId, (ListContainerButton Button, VendingMachineItem Item)> _listItems = new();
         private readonly Dictionary<EntProtoId, uint> _amounts = new();
 
+        //HONK START - Vending prices display
+        private Dictionary<string, int>? _prices;
+        //HONK END
+
         /// <summary>
         /// Whether the vending machine is able to be interacted with or not.
         /// </summary>
@@ -87,9 +91,11 @@ namespace Content.Client.VendingMachines.UI
         /// Populates the list of available items on the vending machine interface
         /// and sets icons based on their prototypes
         /// </summary>
-        public void Populate(List<VendingMachineInventoryEntry> inventory, bool enabled)
+        //HONK - Added prices parameter
+        public void Populate(List<VendingMachineInventoryEntry> inventory, bool enabled, Dictionary<string, int>? prices = null)
         {
             _enabled = enabled;
+            _prices = prices; //HONK
             _listItems.Clear();
             _amounts.Clear();
 
@@ -134,7 +140,12 @@ namespace Content.Client.VendingMachines.UI
                 }
 
                 var itemName = Identity.Name(dummy, _entityManager);
-                var itemText = $"{itemName} [{entry.Amount}]";
+                //HONK START - Show item price
+                var priceText = _prices != null && _prices.TryGetValue(entry.ID, out var price) && price > 0
+                    ? $" - {price}$"
+                    : "";
+                var itemText = $"{itemName} [{entry.Amount}]{priceText}";
+                //HONK END
                 _amounts[entry.ID] = entry.Amount;
 
                 if (itemText.Length > longestEntry.Length)
@@ -154,9 +165,11 @@ namespace Content.Client.VendingMachines.UI
         /// <summary>
         /// Updates text entries for vending data in place without modifying the list controls.
         /// </summary>
-        public void UpdateAmounts(List<VendingMachineInventoryEntry> cachedInventory, bool enabled)
+        //HONK - Added prices parameter
+        public void UpdateAmounts(List<VendingMachineInventoryEntry> cachedInventory, bool enabled, Dictionary<string, int>? prices = null)
         {
             _enabled = enabled;
+            _prices = prices; //HONK
 
             foreach (var proto in _dummies.Keys)
             {
@@ -168,17 +181,22 @@ namespace Content.Client.VendingMachines.UI
                     continue;
                 var amount = entry.Amount;
                 // Could be better? Problem is all inventory entries get squashed.
-                var text = GetItemText(dummy, amount);
+                var text = GetItemText(dummy, amount, proto);
 
                 button.Item.SetText(text);
                 button.Button.Disabled = !enabled || amount == 0;
             }
         }
 
-        private string GetItemText(EntityUid dummy, uint amount)
+        private string GetItemText(EntityUid dummy, uint amount, string? protoId = null)
         {
             var itemName = Identity.Name(dummy, _entityManager);
-            return $"{itemName} [{amount}]";
+            //HONK START - Show item price
+            var priceText = protoId != null && _prices != null && _prices.TryGetValue(protoId, out var price) && price > 0
+                ? $" - {price}$"
+                : "";
+            return $"{itemName} [{amount}]{priceText}";
+            //HONK END
         }
 
         private void SetSizeAfterUpdate(int longestEntryLength, int contentCount)

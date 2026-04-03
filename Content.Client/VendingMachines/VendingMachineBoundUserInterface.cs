@@ -1,5 +1,6 @@
 using Content.Client.UserInterface.Controls;
 using Content.Client.VendingMachines.UI;
+using Content.Shared.RussStation.Economy.Components; //HONK
 using Content.Shared.VendingMachines;
 using Robust.Client.UserInterface;
 using Robust.Shared.Input;
@@ -36,7 +37,12 @@ namespace Content.Client.VendingMachines
             var system = EntMan.System<VendingMachineSystem>();
             _cachedInventory = system.GetAllInventory(Owner);
 
-            _menu?.Populate(_cachedInventory, enabled);
+            //HONK START - Pass item prices to vending UI
+            var prices = EntMan.TryGetComponent(Owner, out VendingPricesComponent? pricesComp)
+                ? pricesComp.Prices
+                : null;
+            _menu?.Populate(_cachedInventory, enabled, prices);
+            //HONK END
         }
 
         public void UpdateAmounts()
@@ -45,7 +51,12 @@ namespace Content.Client.VendingMachines
 
             var system = EntMan.System<VendingMachineSystem>();
             _cachedInventory = system.GetAllInventory(Owner);
-            _menu?.UpdateAmounts(_cachedInventory, enabled);
+            //HONK START - Pass item prices to vending UI
+            var prices = EntMan.TryGetComponent(Owner, out VendingPricesComponent? pricesComp)
+                ? pricesComp.Prices
+                : null;
+            _menu?.UpdateAmounts(_cachedInventory, enabled, prices);
+            //HONK END
         }
 
         private void OnItemSelected(GUIBoundKeyEventArgs args, ListData data)
