@@ -1,6 +1,8 @@
 using Content.Server.CartridgeLoader;
 using Content.Shared.CartridgeLoader;
+using Content.Shared.Access.Components;
 using Content.Shared.PDA;
+using Robust.Shared.Containers;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 
@@ -17,6 +19,15 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeActivatedEvent>(OnActivated);
         SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeMessageEvent>(OnUiMessage);
         SubscribeLocalEvent<PlayerBalanceComponent, BalanceChangedEvent>(OnBalanceChanged);
+        SubscribeLocalEvent<IdCardComponent, EntGotInsertedIntoContainerMessage>(OnIdContainerChanged);
+        SubscribeLocalEvent<IdCardComponent, EntGotRemovedFromContainerMessage>(OnIdContainerChanged);
+    }
+
+    private void OnIdContainerChanged(EntityUid uid, IdCardComponent comp, ContainerModifiedMessage args)
+    {
+        // The container owner is the PDA (if this ID was inserted/removed from one).
+        if (TryComp<PdaComponent>(args.Container.Owner, out _))
+            UpdateUiState(default, args.Container.Owner);
     }
 
     private void OnUiReady(EntityUid uid, BalanceCartridgeComponent component, CartridgeUiReadyEvent args)
