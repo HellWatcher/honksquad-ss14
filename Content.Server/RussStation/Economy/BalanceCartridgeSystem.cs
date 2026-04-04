@@ -1,5 +1,6 @@
 using Content.Server.CartridgeLoader;
 using Content.Shared.CartridgeLoader;
+using Content.Shared.PDA;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 
@@ -34,6 +35,9 @@ public sealed class BalanceCartridgeSystem : EntitySystem
             return;
 
         var loaderUid = GetEntity(args.LoaderUid);
+        if (!TryComp<PdaComponent>(loaderUid, out var pda) || pda.ContainedId == null)
+            return;
+
         var holder = Transform(loaderUid).ParentUid;
         if (!TryComp<PlayerBalanceComponent>(holder, out var balance))
             return;
@@ -56,7 +60,14 @@ public sealed class BalanceCartridgeSystem : EntitySystem
 
     private void UpdateUiState(EntityUid uid, EntityUid loaderUid)
     {
-        // The loader (PDA) is held by the mob, which is its transform parent.
+        // Require an ID card to be inserted to show wallet data.
+        if (!TryComp<PdaComponent>(loaderUid, out var pda) || pda.ContainedId == null)
+        {
+            var empty = new BalanceCartridgeUiState(0, string.Empty, false, new List<TransactionRecord>(), false);
+            _cartridgeLoader?.UpdateCartridgeUiState(loaderUid, empty);
+            return;
+        }
+
         var holder = Transform(loaderUid).ParentUid;
         var comp = CompOrNull<PlayerBalanceComponent>(holder);
         var balance = comp?.Balance ?? 0;
@@ -67,7 +78,7 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         var muted = comp?.PaycheckMuted ?? false;
         var transactions = comp?.Transactions ?? new List<TransactionRecord>();
 
-        var state = new BalanceCartridgeUiState(balance, suffix, muted, transactions);
+        var state = new BalanceCartridgeUiState(balance, suffix, muted, transactions, true);
         _cartridgeLoader?.UpdateCartridgeUiState(loaderUid, state);
     }
 }
