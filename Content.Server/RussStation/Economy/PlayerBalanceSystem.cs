@@ -94,11 +94,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
         if (!string.IsNullOrEmpty(idComp.AccountNumber))
             return;
 
-        var accountNumber = CreateAccount(args.Entity);
-        var balanceComp = Comp<PlayerBalanceComponent>(args.Entity);
-        balanceComp.Balance = _defaultStartingBalance;
-        Dirty(args.Entity, balanceComp);
-
+        var accountNumber = CreateAccount(args.Entity, _defaultStartingBalance);
         idComp.AccountNumber = accountNumber;
         Dirty(idCard, idComp);
     }
@@ -170,15 +166,16 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
     /// <summary>
     /// Create a new bank account for an entity, invalidating any previous account.
+    /// Balance defaults to 0 unless overridden.
     /// </summary>
-    public string CreateAccount(EntityUid uid)
+    public string CreateAccount(EntityUid uid, int startingBalance = 0)
     {
         var comp = EnsureComp<PlayerBalanceComponent>(uid);
 
         if (!string.IsNullOrEmpty(comp.AccountNumber))
             _accountIndex.Remove(comp.AccountNumber);
 
-        comp.Balance = 0;
+        comp.Balance = startingBalance;
         comp.AccountNumber = GenerateAccountNumber();
         _accountIndex[comp.AccountNumber] = uid;
         Dirty(uid, comp);
