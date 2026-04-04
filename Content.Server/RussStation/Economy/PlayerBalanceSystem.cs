@@ -6,6 +6,7 @@ using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Robust.Shared.Configuration;
 using Robust.Shared.Random;
+using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Economy;
 
@@ -26,6 +27,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
 {
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedIdCardSystem _idCard = default!;
     [Dependency] private readonly MemoriesSystem _memories = default!;
 
@@ -91,7 +93,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
     /// <summary>
     /// Try to deduct an amount from a player's balance. Returns false if insufficient funds.
     /// </summary>
-    public bool TryDeduct(EntityUid uid, int amount, PlayerBalanceComponent? comp = null)
+    public bool TryDeduct(EntityUid uid, int amount, PlayerBalanceComponent? comp = null, string? description = null)
     {
         if (!Resolve(uid, ref comp, false))
             return false;
@@ -100,6 +102,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
             return false;
 
         comp.Balance -= amount;
+        RecordTransaction(comp, -amount, description ?? "Debit");
         Dirty(uid, comp);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
         return true;
@@ -108,14 +111,23 @@ public sealed class PlayerBalanceSystem : EntitySystem
     /// <summary>
     /// Add funds to a player's balance.
     /// </summary>
-    public void AddBalance(EntityUid uid, int amount, PlayerBalanceComponent? comp = null)
+    public void AddBalance(EntityUid uid, int amount, PlayerBalanceComponent? comp = null, string? description = null)
     {
         if (!Resolve(uid, ref comp, false))
             return;
 
         comp.Balance += amount;
+        RecordTransaction(comp, amount, description ?? "Credit");
         Dirty(uid, comp);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
+    }
+
+    private void RecordTransaction(PlayerBalanceComponent comp, int amount, string description)
+    {
+        comp.Transactions.Add(new TransactionRecord(amount, description, _timing.CurTime));
+
+        if (comp.Transactions.Count > PlayerBalanceComponent.MaxTransactions)
+            comp.Transactions.RemoveAt(0);
     }
 
     /// <summary>

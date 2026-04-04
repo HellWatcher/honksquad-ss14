@@ -168,7 +168,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (amount <= 0)
             return false;
 
-        _balance.AddBalance(owner, amount);
+        _balance.AddBalance(owner, amount, description: Loc.GetString("transaction-deposit"));
         QueueDel(cash);
 
         _popup.PopupEntity(
@@ -222,7 +222,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
             return;
 
-        if (!_balance.TryDeduct(owner, amount))
+        if (!_balance.TryDeduct(owner, amount, description: Loc.GetString("transaction-withdraw")))
         {
             _popup.PopupEntity(Loc.GetString("id-card-withdraw-insufficient"), idCard, session, PopupType.MediumCaution);
             return;

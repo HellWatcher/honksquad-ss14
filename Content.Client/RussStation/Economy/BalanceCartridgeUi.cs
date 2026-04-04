@@ -14,7 +14,15 @@ public sealed partial class BalanceCartridgeUi : UIFragment
 
     public override void Setup(BoundUserInterface userInterface, EntityUid? fragmentOwner)
     {
-        _fragment ??= new BalanceCartridgeUiFragment();
+        if (_fragment is { Disposed: false })
+            return;
+
+        _fragment = new BalanceCartridgeUiFragment();
+        _fragment.OnMuteToggled += () =>
+        {
+            var message = new CartridgeUiMessage(new TogglePaycheckMuteMessage());
+            userInterface.SendMessage(message);
+        };
     }
 
     public override void UpdateState(BoundUserInterfaceState state)
@@ -22,6 +30,6 @@ public sealed partial class BalanceCartridgeUi : UIFragment
         if (state is not BalanceCartridgeUiState balanceState)
             return;
 
-        _fragment?.UpdateState(balanceState.Balance, balanceState.AccountSuffix);
+        _fragment?.UpdateState(balanceState.Balance, balanceState.AccountSuffix, balanceState.PaycheckMuted, balanceState.Transactions);
     }
 }
