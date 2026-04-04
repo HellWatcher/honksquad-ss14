@@ -5,6 +5,7 @@ using Content.Shared.GameTicking;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Robust.Shared.Configuration;
+using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
@@ -46,6 +47,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
         Subs.CVar(_cfg, EconomyCCVars.DefaultStartingBalance, v => _defaultStartingBalance = v, true);
 
         SubscribeLocalEvent<PlayerSpawnCompleteEvent>(OnPlayerSpawn);
+        SubscribeLocalEvent<PlayerAttachedEvent>(OnPlayerAttached);
         SubscribeLocalEvent<PlayerBalanceComponent, ComponentRemove>(OnRemove);
     }
 
@@ -74,6 +76,27 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         // Register account number in the player's memories.
         _memories.AddMemory(args.Mob, "memories-key-account-number", comp.AccountNumber);
+    }
+
+    /// <summary>
+    /// When a player takes over a mob that has no account and is holding a blank ID, auto-create one.
+    /// Skips if the mob already has any account (even with a blank ID in hand).
+    /// </summary>
+    private void OnPlayerAttached(PlayerAttachedEvent args)
+    {
+        if (HasComp<PlayerBalanceComponent>(args.Entity))
+            return;
+
+        if (!_idCard.TryFindIdCard(args.Entity, out var idCard))
+            return;
+
+        var idComp = Comp<IdCardComponent>(idCard);
+        if (!string.IsNullOrEmpty(idComp.AccountNumber))
+            return;
+
+        var accountNumber = CreateAccount(args.Entity);
+        idComp.AccountNumber = accountNumber;
+        Dirty(idCard, idComp);
     }
 
     private void OnRemove(EntityUid uid, PlayerBalanceComponent comp, ComponentRemove args)
