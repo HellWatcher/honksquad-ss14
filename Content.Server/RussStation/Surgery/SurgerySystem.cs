@@ -201,6 +201,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         if (!_container.Insert(bedsheet.Value, drapeContainer))
         {
             Log.Warning($"Failed to insert bedsheet {ToPrettyString(bedsheet.Value)} into surgery drape container on {ToPrettyString(target.Value)}");
+            RemComp<SurgeryDrapedComponent>(target.Value);
             return;
         }
 
