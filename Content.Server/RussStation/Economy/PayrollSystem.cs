@@ -7,6 +7,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Economy;
@@ -20,6 +21,7 @@ public sealed class PayrollSystem : EntitySystem
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly PlayerBalanceSystem _balance = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
@@ -30,8 +32,6 @@ public sealed class PayrollSystem : EntitySystem
     private int _wageLower;
     private int _wageCrew;
     private int _wageCommand;
-
-    private TimeSpan _nextPayroll;
 
     /// <summary>
     /// Jobs that receive lower-tier wages.
@@ -55,37 +55,47 @@ public sealed class PayrollSystem : EntitySystem
         Subs.CVar(_cfg, EconomyCCVars.WageLower, v => _wageLower = v, true);
         Subs.CVar(_cfg, EconomyCCVars.WageCrew, v => _wageCrew = v, true);
         Subs.CVar(_cfg, EconomyCCVars.WageCommand, v => _wageCommand = v, true);
+
+        SubscribeLocalEvent<PlayerBalanceComponent, ComponentStartup>(OnBalanceStartup);
+    }
+
+    private void OnBalanceStartup(EntityUid uid, PlayerBalanceComponent comp, ComponentStartup args)
+    {
+        // First paycheck after one full interval, staggered +/- 60s so not everyone pays at once.
+        var offset = _payrollInterval + _random.NextFloat(-60f, 60f);
+        comp.NextPayroll = _timing.CurTime + TimeSpan.FromSeconds(offset);
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
-        if (_timing.CurTime < _nextPayroll)
-            return;
-
-        _nextPayroll = _timing.CurTime + TimeSpan.FromSeconds(_payrollInterval);
-        IssuePayday();
-    }
-
-    private static readonly SoundSpecifier PaycheckSound =
-        new SoundPathSpecifier("/Audio/Machines/chime.ogg", AudioParams.Default.WithVolume(-4f));
-
-    private void IssuePayday()
-    {
+        var now = _timing.CurTime;
+        var interval = TimeSpan.FromSeconds(_payrollInterval);
         var query = EntityQueryEnumerator<PlayerBalanceComponent>();
+
         while (query.MoveNext(out var uid, out var comp))
         {
+            if (now < comp.NextPayroll)
+                continue;
+
+            comp.NextPayroll = now + interval;
+
             var wage = GetWage(comp.JobId);
             if (wage <= 0)
                 continue;
 
-            _balance.AddBalance(uid, wage, comp);
+            _balance.AddBalance(uid, wage, comp, Loc.GetString("transaction-payroll"));
             var newBalance = _balance.GetBalance(uid, comp);
             _popup.PopupEntity(Loc.GetString("payroll-received", ("wage", wage), ("balance", newBalance)), uid, uid);
-            PlayPdaChime(uid);
+
+            if (!comp.PaycheckMuted)
+                PlayPdaChime(uid);
         }
     }
+
+    private static readonly SoundSpecifier PaycheckSound =
+        new SoundPathSpecifier("/Audio/Machines/chime.ogg", AudioParams.Default.WithVolume(-4f));
 
     private void PlayPdaChime(EntityUid mob)
     {

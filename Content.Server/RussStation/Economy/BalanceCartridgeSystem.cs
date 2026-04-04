@@ -14,6 +14,7 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         base.Initialize();
         SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeUiReadyEvent>(OnUiReady);
         SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeActivatedEvent>(OnActivated);
+        SubscribeLocalEvent<BalanceCartridgeComponent, CartridgeMessageEvent>(OnUiMessage);
         SubscribeLocalEvent<PlayerBalanceComponent, BalanceChangedEvent>(OnBalanceChanged);
     }
 
@@ -25,6 +26,21 @@ public sealed class BalanceCartridgeSystem : EntitySystem
     private void OnActivated(EntityUid uid, BalanceCartridgeComponent component, CartridgeActivatedEvent args)
     {
         UpdateUiState(uid, args.Loader);
+    }
+
+    private void OnUiMessage(EntityUid uid, BalanceCartridgeComponent component, CartridgeMessageEvent args)
+    {
+        if (args is not TogglePaycheckMuteMessage)
+            return;
+
+        var loaderUid = GetEntity(args.LoaderUid);
+        var holder = Transform(loaderUid).ParentUid;
+        if (!TryComp<PlayerBalanceComponent>(holder, out var balance))
+            return;
+
+        balance.PaycheckMuted = !balance.PaycheckMuted;
+        Dirty(holder, balance);
+        UpdateUiState(uid, loaderUid);
     }
 
     private void OnBalanceChanged(EntityUid uid, PlayerBalanceComponent component, BalanceChangedEvent args)
@@ -48,8 +64,10 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         var suffix = accountNumber.Length >= 4
             ? accountNumber[^4..]
             : accountNumber;
+        var muted = comp?.PaycheckMuted ?? false;
+        var transactions = comp?.Transactions ?? new List<TransactionRecord>();
 
-        var state = new BalanceCartridgeUiState(balance, suffix);
+        var state = new BalanceCartridgeUiState(balance, suffix, muted, transactions);
         _cartridgeLoader?.UpdateCartridgeUiState(loaderUid, state);
     }
 }
