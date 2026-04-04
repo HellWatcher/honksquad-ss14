@@ -3,6 +3,7 @@ balance-cartridge-account-suffix = Account: ****{$suffix}
 balance-cartridge-mute = Mute Notifications
 balance-cartridge-unmute = Unmute Notifications
 balance-cartridge-no-transactions = No transactions yet
+balance-cartridge-tx-header = Recent Transactions
 
 transaction-payroll = Payroll
 transaction-vending = Vending purchase

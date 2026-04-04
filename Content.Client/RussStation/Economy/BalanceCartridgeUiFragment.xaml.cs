@@ -10,12 +10,57 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
 {
     public event Action? OnMuteToggled;
 
+    private readonly Button _muteButton;
+    private readonly BoxContainer _transactionList;
+
     public BalanceCartridgeUiFragment()
     {
         RobustXamlLoader.Load(this);
         Orientation = LayoutOrientation.Vertical;
 
-        MuteButton.OnPressed += _ => OnMuteToggled?.Invoke();
+        // Built in code to avoid XAML name-scope issues on fragment recreation.
+        _muteButton = new Button
+        {
+            ToggleMode = true,
+            Text = Loc.GetString("balance-cartridge-mute"),
+            StyleClasses = { "OpenBoth" },
+        };
+        _muteButton.OnPressed += _ => OnMuteToggled?.Invoke();
+
+        var muteRow = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            HorizontalAlignment = HAlignment.Center,
+            Margin = new Thickness(0, 8, 0, 0),
+        };
+        muteRow.AddChild(_muteButton);
+
+        var txHeader = new Label
+        {
+            Text = Loc.GetString("balance-cartridge-tx-header"),
+            StyleClasses = { "LabelHeading" },
+            HorizontalAlignment = HAlignment.Center,
+            Margin = new Thickness(0, 12, 0, 4),
+        };
+
+        _transactionList = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Vertical,
+            HorizontalExpand = true,
+        };
+
+        var scroll = new ScrollContainer
+        {
+            VerticalExpand = true,
+            HorizontalExpand = true,
+        };
+        scroll.AddChild(_transactionList);
+
+        // The XAML BoxContainer is the second child (index 1) of the root.
+        var content = (BoxContainer) GetChild(1);
+        content.AddChild(muteRow);
+        content.AddChild(txHeader);
+        content.AddChild(scroll);
     }
 
     public void UpdateState(int balance, string accountSuffix, bool paycheckMuted, List<TransactionRecord> transactions)
@@ -25,16 +70,16 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
             ? ""
             : Loc.GetString("balance-cartridge-account-suffix", ("suffix", accountSuffix));
 
-        MuteButton.Pressed = paycheckMuted;
-        MuteButton.Text = Loc.GetString(paycheckMuted
+        _muteButton.Pressed = paycheckMuted;
+        _muteButton.Text = Loc.GetString(paycheckMuted
             ? "balance-cartridge-unmute"
             : "balance-cartridge-mute");
 
-        TransactionList.RemoveAllChildren();
+        _transactionList.RemoveAllChildren();
 
         if (transactions.Count == 0)
         {
-            TransactionList.AddChild(new Label
+            _transactionList.AddChild(new Label
             {
                 Text = Loc.GetString("balance-cartridge-no-transactions"),
                 StyleClasses = { "LabelSubText" },
@@ -67,7 +112,7 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
                 HorizontalExpand = true,
             });
 
-            TransactionList.AddChild(row);
+            _transactionList.AddChild(row);
         }
     }
 }

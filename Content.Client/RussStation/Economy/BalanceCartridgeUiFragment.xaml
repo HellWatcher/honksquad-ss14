@@ -3,7 +3,7 @@
                                     VerticalExpand="True" HorizontalExpand="True">
     <PanelContainer StyleClasses="BackgroundDark" />
     <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True" Margin="8 8 8 8">
-        <Label Text="Account Balance" StyleClasses="LabelHeadingBigger" HorizontalAlignment="Center" Margin="0 0 0 8" />
+        <Label Name="BalanceHeader" Text="Account Balance" StyleClasses="LabelHeadingBigger" HorizontalAlignment="Center" Margin="0 0 0 8" />
         <Label Name="AccountLabel" Text="" StyleClasses="LabelSubText" HorizontalAlignment="Center" Margin="0 0 0 4" />
         <PanelContainer StyleClasses="BackgroundLight" HorizontalExpand="True" Margin="0 4 0 4">
             <BoxContainer Orientation="Horizontal" HorizontalAlignment="Center" Margin="8 12 8 12">
@@ -11,12 +11,5 @@
                 <Label Text=" spesos" StyleClasses="LabelSubText" Margin="4 0 0 0" />
             </BoxContainer>
         </PanelContainer>
-        <BoxContainer Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 8 0 0">
-            <Button Name="MuteButton" Text="Mute Notifications" ToggleMode="True" StyleClasses="OpenBoth" />
-        </BoxContainer>
-        <Label Text="Recent Transactions" StyleClasses="LabelHeading" HorizontalAlignment="Center" Margin="0 12 0 4" />
-        <ScrollContainer VerticalExpand="True" HorizontalExpand="True">
-            <BoxContainer Name="TransactionList" Orientation="Vertical" HorizontalExpand="True" />
-        </ScrollContainer>
     </BoxContainer>
 </economy:BalanceCartridgeUiFragment>
