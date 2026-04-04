@@ -202,12 +202,12 @@ public sealed class VendingPaymentSystem : EntitySystem
             && _balance.TryGetByAccount(id.AccountNumber, out var owner)
             && TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
         {
-            return _balance.TryDeduct(owner, price, balanceComp);
+            return _balance.TryDeduct(owner, price, balanceComp, Loc.GetString("transaction-vending"));
         }
 
         // Fallback: direct mob lookup (mob has balance but no ID).
         if (TryComp<PlayerBalanceComponent>(buyer, out var directBalance))
-            return _balance.TryDeduct(buyer, price, directBalance);
+            return _balance.TryDeduct(buyer, price, directBalance, Loc.GetString("transaction-vending"));
 
         return false;
     }
