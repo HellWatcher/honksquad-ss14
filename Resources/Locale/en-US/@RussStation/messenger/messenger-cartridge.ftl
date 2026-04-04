@@ -1,0 +1,8 @@
+messenger-program-name = Messenger
+messenger-back = Back
+messenger-send = Send
+messenger-placeholder = Type a message...
+messenger-no-contacts = No crew found
+messenger-no-messages = No messages yet
+messenger-mute = Mute Notifications
+messenger-unmute = Unmute Notifications

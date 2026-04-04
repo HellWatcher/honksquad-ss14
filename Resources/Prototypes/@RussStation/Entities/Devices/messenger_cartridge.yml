@@ -1,0 +1,16 @@
+- type: entity
+  parent: BasePDACartridge
+  id: MessengerCartridge
+  name: messenger cartridge
+  description: A program for sending direct messages to other crew members.
+  components:
+    - type: Sprite
+      state: cart-c
+    - type: UIFragment
+      ui: !type:MessengerCartridgeUi
+    - type: Cartridge
+      programName: messenger-program-name
+      icon:
+        sprite: Objects/Devices/cartridge.rsi
+        state: cart-c
+    - type: MessengerCartridge

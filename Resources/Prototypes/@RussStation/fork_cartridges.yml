@@ -2,3 +2,4 @@
   id: GlobalCartridges
   cartridges:
     - BalanceCartridge
+    - MessengerCartridge
