@@ -30,6 +30,6 @@ public sealed partial class BalanceCartridgeUi : UIFragment
         if (state is not BalanceCartridgeUiState balanceState)
             return;
 
-        _fragment?.UpdateState(balanceState.Balance, balanceState.AccountSuffix, balanceState.PaycheckMuted, balanceState.Transactions);
+        _fragment?.UpdateState(balanceState.Balance, balanceState.AccountSuffix, balanceState.PaycheckMuted, balanceState.Transactions, balanceState.HasId);
     }
 }

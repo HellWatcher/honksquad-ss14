@@ -63,8 +63,18 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
         content.AddChild(scroll);
     }
 
-    public void UpdateState(int balance, string accountSuffix, bool paycheckMuted, List<TransactionRecord> transactions)
+    public void UpdateState(int balance, string accountSuffix, bool paycheckMuted, List<TransactionRecord> transactions, bool hasId)
     {
+        _muteButton.Visible = hasId;
+
+        if (!hasId)
+        {
+            BalanceLabel.Text = "-";
+            AccountLabel.Text = Loc.GetString("balance-cartridge-no-id");
+            _transactionList.RemoveAllChildren();
+            return;
+        }
+
         BalanceLabel.Text = balance.ToString();
         AccountLabel.Text = string.IsNullOrEmpty(accountSuffix)
             ? ""
