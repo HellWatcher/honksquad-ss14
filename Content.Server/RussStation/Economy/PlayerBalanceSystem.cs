@@ -95,6 +95,10 @@ public sealed class PlayerBalanceSystem : EntitySystem
             return;
 
         var accountNumber = CreateAccount(args.Entity);
+        var balanceComp = Comp<PlayerBalanceComponent>(args.Entity);
+        balanceComp.Balance = _defaultStartingBalance;
+        Dirty(args.Entity, balanceComp);
+
         idComp.AccountNumber = accountNumber;
         Dirty(idCard, idComp);
     }
