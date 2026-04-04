@@ -74,7 +74,7 @@ public sealed partial class QuickDialogSystem : EntitySystem
         if (!_openDialogsByUser.TryGetValue(session.UserId, out var dialogIds))
             return;
 
-        foreach (var dialogId in dialogIds)
+        foreach (var dialogId in new List<int>(dialogIds))
         {
             if (_openDialogs.Remove(dialogId, out var actions))
             {

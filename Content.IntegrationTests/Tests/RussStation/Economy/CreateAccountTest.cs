@@ -130,8 +130,8 @@ public sealed class CreateAccountTest : InteractionTest
     }
 
     /// <summary>
-    /// An ID card that already has an account number set should be locked.
-    /// The account number cannot be overwritten.
+    /// An ID card that already has an account number set should not be overwritten
+    /// by creating a new account. The old account number persists on the ID.
     /// </summary>
     [Test]
     public async Task LockedIdCannotBeOverwrittenTest()
@@ -141,15 +141,25 @@ public sealed class CreateAccountTest : InteractionTest
 
         await Server.WaitPost(() =>
         {
+            var balanceSys = SEntMan.System<PlayerBalanceSystem>();
             var idComp = SEntMan.GetComponent<IdCardComponent>(idEnt);
 
-            // Set an account number on the ID.
-            idComp.AccountNumber = "DEADBEEF";
+            // Create an account and stamp it on the ID (simulates normal spawn).
+            var firstAccount = balanceSys.CreateAccount(SPlayer);
+            idComp.AccountNumber = firstAccount;
 
-            // The ID is now locked. Verify the account number persists.
-            Assert.That(idComp.AccountNumber, Is.EqualTo("DEADBEEF"));
-            Assert.That(string.IsNullOrEmpty(idComp.AccountNumber), Is.False,
-                "ID with account set should be considered locked.");
+            // Create a second account (simulates "Create Account" verb).
+            // The mob gets a new account, but the ID should still have the old number.
+            var secondAccount = balanceSys.CreateAccount(SPlayer);
+            Assert.That(secondAccount, Is.Not.EqualTo(firstAccount));
+
+            // ID still has the first account number (locked).
+            Assert.That(idComp.AccountNumber, Is.EqualTo(firstAccount),
+                "ID with account set should not be overwritten by creating a new account.");
+
+            // The old account on the ID is now invalid (invalidated by second create).
+            Assert.That(balanceSys.TryGetByAccount(firstAccount, out _), Is.False,
+                "Old account should be invalidated after creating a new one.");
         });
     }
 }
