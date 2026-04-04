@@ -20,6 +20,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
     private readonly Button _sendButton;
     private readonly Button _backButton;
     private readonly Button _muteButton;
+    private readonly Label _addressLabel;
 
     private NetEntity? _activeTarget;
 
@@ -115,13 +116,31 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         };
         _muteButton.OnPressed += _ => OnMuteToggled?.Invoke();
 
-        content.AddChild(_muteButton);
-        content.AddChild(contactScroll);
-        content.AddChild(_chatView);
+        _addressLabel = new Label
+        {
+            StyleClasses = { "LabelSubText" },
+            HorizontalAlignment = HAlignment.Right,
+            Margin = new Thickness(0, 2, 4, 0),
+        };
+
+        var body = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Vertical,
+            VerticalExpand = true,
+            HorizontalExpand = true,
+        };
+        body.AddChild(_muteButton);
+        body.AddChild(contactScroll);
+        body.AddChild(_chatView);
+
+        content.AddChild(body);
+        content.AddChild(_addressLabel);
     }
 
     public void UpdateState(MessengerUiState state)
     {
+        _addressLabel.Text = state.Address;
+
         if (state.ActiveConversation != null)
         {
             ShowChatView(state);
@@ -145,6 +164,19 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         HeaderLabel.Text = Loc.GetString("messenger-program-name");
 
         _contactList.RemoveAllChildren();
+
+        if (!state.HasId)
+        {
+            _contactList.AddChild(new Label
+            {
+                Text = Loc.GetString("messenger-no-id"),
+                StyleClasses = { "LabelSubText" },
+                HorizontalAlignment = HAlignment.Center,
+            });
+
+            if (state.Contacts.Count == 0)
+                return;
+        }
 
         if (state.Contacts.Count == 0)
         {
@@ -201,7 +233,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
 
             row.AddChild(rowContent);
 
-            var target = contact.Owner;
+            var target = contact.Cartridge;
             row.OnPressed += _ => OnContactSelected?.Invoke(target);
 
             _contactList.AddChild(row);
@@ -220,7 +252,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         var readOnly = false;
         foreach (var contact in state.Contacts)
         {
-            if (contact.Owner == state.ActiveConversation)
+            if (contact.Cartridge == state.ActiveConversation)
             {
                 contactName = contact.Name;
                 readOnly = contact.ReadOnly;
@@ -230,8 +262,9 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
 
         HeaderLabel.Text = contactName;
 
-        _messageInput.Visible = !readOnly;
-        _sendButton.Visible = !readOnly;
+        var canSend = !readOnly && state.HasId;
+        _messageInput.Visible = canSend;
+        _sendButton.Visible = canSend;
 
         _messageList.RemoveAllChildren();
 

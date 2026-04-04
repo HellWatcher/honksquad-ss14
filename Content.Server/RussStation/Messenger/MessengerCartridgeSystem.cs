@@ -34,7 +34,6 @@ public sealed class MessengerCartridgeSystem : EntitySystem
     private void OnUiMessage(EntityUid uid, MessengerCartridgeComponent component, CartridgeMessageEvent args)
     {
         var loaderUid = GetEntity(args.LoaderUid);
-        var mob = Transform(loaderUid).ParentUid;
 
         switch (args)
         {
@@ -44,19 +43,19 @@ public sealed class MessengerCartridgeSystem : EntitySystem
 
             case MessengerOpenConversationMessage open:
                 component.ActiveConversation = GetEntity(open.Target);
-                _messenger.MarkRead(mob, component.ActiveConversation.Value);
+                _messenger.MarkRead(uid, component.ActiveConversation.Value);
                 break;
 
             case MessengerSendMessage send:
             {
-                var target = GetEntity(send.Target);
-                if (_messenger.IsContactReadOnly(mob, target))
+                var targetCart = GetEntity(send.Target);
+                if (_messenger.IsContactReadOnly(targetCart))
                     break;
-                if (_messenger.SendMessage(mob, target, send.Text))
+                if (_messenger.SendMessage(uid, targetCart, send.Text))
                 {
-                    component.ActiveConversation = target;
-                    _messenger.MarkRead(mob, target);
-                    NotifyRecipient(target);
+                    component.ActiveConversation = targetCart;
+                    _messenger.MarkRead(uid, targetCart);
+                    NotifyRecipient(targetCart);
                 }
                 break;
             }
@@ -72,8 +71,8 @@ public sealed class MessengerCartridgeSystem : EntitySystem
 
     private void UpdateUiState(EntityUid uid, EntityUid loaderUid, MessengerCartridgeComponent component)
     {
-        var mob = Transform(loaderUid).ParentUid;
-        var contacts = _messenger.GetContacts(mob);
+        var hasId = _messenger.HasIdCard(uid);
+        var contacts = _messenger.GetContacts(uid);
 
         List<MessengerMessageEntry>? messages = null;
         NetEntity? activeNet = null;
@@ -81,37 +80,28 @@ public sealed class MessengerCartridgeSystem : EntitySystem
         if (component.ActiveConversation != null && Exists(component.ActiveConversation.Value))
         {
             activeNet = GetNetEntity(component.ActiveConversation.Value);
-            messages = _messenger.GetConversation(mob, component.ActiveConversation.Value);
+            messages = _messenger.GetConversation(uid, component.ActiveConversation.Value);
         }
 
-        var state = new MessengerUiState(contacts, activeNet, messages, component.Muted);
+        var state = new MessengerUiState(contacts, activeNet, messages, component.Muted, hasId, component.Address);
         _cartridgeLoader.UpdateCartridgeUiState(loaderUid, state);
     }
 
     /// <summary>
-    /// Push updated state to the recipient and play their ringtone if not muted.
+    /// Push updated state to the recipient cartridge and play their PDA's ringtone if not muted.
     /// </summary>
-    private void NotifyRecipient(EntityUid recipient)
+    private void NotifyRecipient(EntityUid recipientCart)
     {
-        var query = EntityQueryEnumerator<CartridgeLoaderComponent>();
-        while (query.MoveNext(out var loaderUid, out _))
-        {
-            if (Transform(loaderUid).ParentUid != recipient)
-                continue;
+        if (!TryComp<MessengerCartridgeComponent>(recipientCart, out var cartComp))
+            return;
 
-            var cartridgeQuery = EntityQueryEnumerator<MessengerCartridgeComponent>();
-            while (cartridgeQuery.MoveNext(out var cartUid, out var cartComp))
-            {
-                if (Transform(cartUid).ParentUid != loaderUid)
-                    continue;
+        var loaderUid = Transform(recipientCart).ParentUid;
+        if (!HasComp<CartridgeLoaderComponent>(loaderUid))
+            return;
 
-                UpdateUiState(cartUid, loaderUid, cartComp);
+        UpdateUiState(recipientCart, loaderUid, cartComp);
 
-                if (!cartComp.Muted && TryComp<RingerComponent>(loaderUid, out var ringer))
-                    _ringer.RingerPlayRingtone((loaderUid, ringer));
-
-                return;
-            }
-        }
+        if (!cartComp.Muted && TryComp<RingerComponent>(loaderUid, out var ringer))
+            _ringer.RingerPlayRingtone((loaderUid, ringer));
     }
 }

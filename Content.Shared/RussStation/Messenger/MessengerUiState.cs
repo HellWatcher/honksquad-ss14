@@ -25,12 +25,18 @@ public sealed class MessengerUiState : BoundUserInterfaceState
 
     public bool Muted;
 
-    public MessengerUiState(List<MessengerContact> contacts, NetEntity? activeConversation, List<MessengerMessageEntry>? messages, bool muted)
+    public bool HasId;
+
+    public string Address;
+
+    public MessengerUiState(List<MessengerContact> contacts, NetEntity? activeConversation, List<MessengerMessageEntry>? messages, bool muted, bool hasId, string address)
     {
         Contacts = contacts;
         ActiveConversation = activeConversation;
         Messages = messages;
         Muted = muted;
+        HasId = hasId;
+        Address = address;
     }
 }
 
