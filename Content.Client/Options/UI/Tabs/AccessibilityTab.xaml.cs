@@ -39,7 +39,7 @@ public sealed partial class AccessibilityTab : Control
             0f,
             20f,
             0.1f,
-            (_, value) => $"{value * 0.1f:F1}s"));
+            (_, value) => $"{value:F1}s"));
 
         // Font customization
         var cfg = IoCManager.Resolve<IConfigurationManager>();
