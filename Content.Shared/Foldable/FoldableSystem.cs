@@ -91,8 +91,9 @@ public sealed class FoldableSystem : EntitySystem
         _appearance.SetData(uid, FoldedVisuals.State, folded);
         _buckle.StrapSetEnabled(uid, !component.IsFolded);
 
-        //HONK START - Play buckle sound on fold/unfold
-        _audio.PlayPredicted(new Robust.Shared.Audio.SoundPathSpecifier("/Audio/Effects/buckle.ogg"), uid, user);
+        //HONK START - Play buckle sound on fold/unfold (only when a user triggers it)
+        if (user != null)
+            _audio.PlayPredicted(new Robust.Shared.Audio.SoundPathSpecifier("/Audio/Effects/buckle.ogg"), uid, user);
         //HONK END
 
         var ev = new FoldedEvent(folded, user);
