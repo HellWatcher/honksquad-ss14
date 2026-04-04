@@ -46,9 +46,15 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         Subs.CVar(_cfg, EconomyCCVars.DefaultStartingBalance, v => _defaultStartingBalance = v, true);
 
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
         SubscribeLocalEvent<PlayerSpawnCompleteEvent>(OnPlayerSpawn);
         SubscribeLocalEvent<PlayerAttachedEvent>(OnPlayerAttached);
         SubscribeLocalEvent<PlayerBalanceComponent, ComponentRemove>(OnRemove);
+    }
+
+    private void OnRoundRestart(RoundRestartCleanupEvent ev)
+    {
+        _accountIndex.Clear();
     }
 
     private void OnPlayerSpawn(PlayerSpawnCompleteEvent args)
