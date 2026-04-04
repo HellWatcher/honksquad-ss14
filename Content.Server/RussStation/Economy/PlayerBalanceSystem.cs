@@ -5,6 +5,7 @@ using Content.Shared.GameTicking;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Robust.Shared.Configuration;
+using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
@@ -46,6 +47,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
         Subs.CVar(_cfg, EconomyCCVars.DefaultStartingBalance, v => _defaultStartingBalance = v, true);
 
         SubscribeLocalEvent<PlayerSpawnCompleteEvent>(OnPlayerSpawn);
+        SubscribeLocalEvent<PlayerAttachedEvent>(OnPlayerAttached);
         SubscribeLocalEvent<PlayerBalanceComponent, ComponentRemove>(OnRemove);
     }
 
@@ -74,6 +76,27 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         // Register account number in the player's memories.
         _memories.AddMemory(args.Mob, "memories-key-account-number", comp.AccountNumber);
+    }
+
+    /// <summary>
+    /// When a player takes over a mob that has no account and is holding a blank ID, auto-create one.
+    /// Skips if the mob already has any account (even with a blank ID in hand).
+    /// </summary>
+    private void OnPlayerAttached(PlayerAttachedEvent args)
+    {
+        if (HasComp<PlayerBalanceComponent>(args.Entity))
+            return;
+
+        if (!_idCard.TryFindIdCard(args.Entity, out var idCard))
+            return;
+
+        var idComp = Comp<IdCardComponent>(idCard);
+        if (!string.IsNullOrEmpty(idComp.AccountNumber))
+            return;
+
+        var accountNumber = CreateAccount(args.Entity, _defaultStartingBalance);
+        idComp.AccountNumber = accountNumber;
+        Dirty(idCard, idComp);
     }
 
     private void OnRemove(EntityUid uid, PlayerBalanceComponent comp, ComponentRemove args)
@@ -139,6 +162,28 @@ public sealed class PlayerBalanceSystem : EntitySystem
             return 0;
 
         return comp.Balance;
+    }
+
+    /// <summary>
+    /// Create a new bank account for an entity, invalidating any previous account.
+    /// Balance defaults to 0 unless overridden.
+    /// </summary>
+    public string CreateAccount(EntityUid uid, int startingBalance = 0)
+    {
+        var comp = EnsureComp<PlayerBalanceComponent>(uid);
+
+        if (!string.IsNullOrEmpty(comp.AccountNumber))
+            _accountIndex.Remove(comp.AccountNumber);
+
+        comp.Balance = startingBalance;
+        comp.AccountNumber = GenerateAccountNumber();
+        _accountIndex[comp.AccountNumber] = uid;
+        Dirty(uid, comp);
+
+        _memories.AddMemory(uid, "memories-key-account-number", comp.AccountNumber);
+        RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
+
+        return comp.AccountNumber;
     }
 
     /// <summary>
