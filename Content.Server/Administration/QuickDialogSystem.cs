@@ -65,6 +65,28 @@ public sealed partial class QuickDialogSystem : EntitySystem
         return _nextDialogId++;
     }
 
+    // HONK START - Close all dialogs for a session (#163)
+    /// <summary>
+    /// Close all open quick dialogs for the given session, invoking cancel callbacks.
+    /// </summary>
+    public void CloseAllDialogs(ICommonSession session)
+    {
+        if (!_openDialogsByUser.TryGetValue(session.UserId, out var dialogIds))
+            return;
+
+        foreach (var dialogId in dialogIds)
+        {
+            if (_openDialogs.Remove(dialogId, out var actions))
+            {
+                actions.cancelAction.Invoke();
+                RaiseNetworkEvent(new QuickDialogCloseEvent(dialogId), session);
+            }
+        }
+
+        _openDialogsByUser.Remove(session.UserId);
+    }
+    // HONK END
+
     private void PlayerManagerOnPlayerStatusChanged(object? sender, SessionStatusEventArgs e)
     {
         if (e.NewStatus != SessionStatus.Disconnected && e.NewStatus != SessionStatus.Zombie)
