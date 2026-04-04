@@ -330,6 +330,9 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
         var step = proto.Steps[active.CurrentStep];
 
+        // Snapshot damage before healing so we can detect zero-effect iterations.
+        var damageBefore = _damageable.GetTotalDamage((patient, null));
+
         // Apply side effects
         ApplyStepEffects(patient, step);
 
@@ -351,8 +354,11 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
         else if (step.Effect == null)
         {
-            // Auto-repeat if the step can still heal something
-            args.Repeat = StepCanStillHeal(patient, step);
+            var damageAfter = _damageable.GetTotalDamage((patient, null));
+            var healedSomething = damageAfter < damageBefore;
+
+            // Auto-repeat only if healing actually reduced damage.
+            args.Repeat = healedSomething && StepCanStillHeal(patient, step);
 
             if (!args.Repeat)
                 _popup.PopupEntity(Loc.GetString("surgery-step-repeat-done"), patient);
