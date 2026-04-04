@@ -230,25 +230,26 @@ public sealed class VendingPaymentSystem : EntitySystem
 
     /// <summary>
     /// Calculate the raw vending price for an item (before per-vendor minimum).
-    /// Uses max of: recipe material cost × material markup, cargo value × cargo markup.
+    /// Prefers recipe material cost when a recipe exists; falls back to cargo value.
     /// Result is rounded up to nearest 5.
     /// </summary>
     private int GetRawItemPrice(string itemId)
     {
-        var materialPrice = 0.0;
-        var cargoPrice = 0.0;
-
         // Primary: recipe material cost.
         if (_recipeMaterialCosts.TryGetValue(itemId, out var materialCost))
-            materialPrice = materialCost * _vendMaterialMarkup;
+        {
+            var materialPrice = materialCost * _vendMaterialMarkup;
+            return RoundUpTo5((int) Math.Ceiling(materialPrice));
+        }
 
-        // Secondary: cargo estimated value.
+        // Fallback: cargo estimated value.
         if (_proto.TryIndex<EntityPrototype>(itemId, out var proto))
-            cargoPrice = _pricing.GetEstimatedPrice(proto) * _vendCargoMarkup;
+        {
+            var cargoPrice = _pricing.GetEstimatedPrice(proto) * _vendCargoMarkup;
+            return RoundUpTo5((int) Math.Ceiling(cargoPrice));
+        }
 
-        var rawPrice = Math.Max(materialPrice, cargoPrice);
-
-        return RoundUpTo5((int) Math.Ceiling(rawPrice));
+        return 0;
     }
 
     private static int RoundUpTo5(int value)
