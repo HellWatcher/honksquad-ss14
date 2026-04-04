@@ -1,4 +1,5 @@
 using Content.Shared.CartridgeLoader;
+using Content.Shared.PDA;
 using Content.Shared.Popups;
 using Content.Shared.Roles;
 using Content.Shared.RussStation.Economy;
@@ -99,17 +100,16 @@ public sealed class PayrollSystem : EntitySystem
 
     private void PlayPdaChime(EntityUid mob)
     {
-        // Find a PDA held by this mob and play the sound from it.
-        var pdaQuery = EntityQueryEnumerator<CartridgeLoaderComponent>();
-        while (pdaQuery.MoveNext(out var loaderUid, out _))
+        // Find a PDA held by this mob with an ID inserted and play the sound from it.
+        var pdaQuery = EntityQueryEnumerator<PdaComponent, CartridgeLoaderComponent>();
+        while (pdaQuery.MoveNext(out var loaderUid, out var pda, out _))
         {
-            if (Transform(loaderUid).ParentUid == mob)
+            if (Transform(loaderUid).ParentUid == mob && pda.ContainedId != null)
             {
                 _audio.PlayPvs(PaycheckSound, loaderUid);
                 return;
             }
         }
-
     }
 
     /// <summary>
