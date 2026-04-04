@@ -5,6 +5,7 @@ using Content.Shared.Access.Components;
 using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Hands;
 using Content.Shared.Interaction;
 using Content.Shared.PDA;
 using Content.Shared.Popups;
@@ -17,8 +18,9 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.RussStation.Economy;
 
 /// <summary>
-/// Handles bank account interactions on ID cards: set account, withdraw spesos, deposit spesos.
+/// Handles bank account interactions on ID cards: set account, create account, withdraw, deposit.
 /// Alt-click on an ID: prompts to set account (if none) or withdraw (if linked).
+/// Right-click on an ID: create a new account (if none linked).
 /// Use spesos on an ID or PDA (with ID inside) to deposit.
 /// </summary>
 public sealed class IdCardAccountSystem : EntitySystem
@@ -31,18 +33,32 @@ public sealed class IdCardAccountSystem : EntitySystem
     private static readonly ProtoId<StackPrototype> CreditStack = "Credit";
 
     /// <summary>
-    /// Sessions that currently have a dialog open. Prevents stacking dialogs on repeated alt-click.
+    /// Tracks which sessions have an open ID-card dialog.
+    /// Prevents stacking dialogs on repeated alt-click and allows cancel on drop.
     /// </summary>
-    private readonly HashSet<ICommonSession> _pendingDialogs = new();
+    private readonly HashSet<ICommonSession> _pendingDialogSessions = new();
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<IdCardComponent, GetVerbsEvent<AlternativeVerb>>(OnGetAltVerbs);
+        SubscribeLocalEvent<IdCardComponent, GetVerbsEvent<ActivationVerb>>(OnGetActivationVerbs);
         SubscribeLocalEvent<IdCardComponent, InteractUsingEvent>(OnInteractUsing);
         SubscribeLocalEvent<IdCardComponent, ExaminedEvent>(OnExamine);
         SubscribeLocalEvent<PdaComponent, InteractUsingEvent>(OnPdaInteractUsing);
+        SubscribeLocalEvent<IdCardComponent, GotUnequippedHandEvent>(OnIdDropped);
+    }
+
+    private void OnIdDropped(EntityUid uid, IdCardComponent comp, GotUnequippedHandEvent args)
+    {
+        if (!TryComp(args.User, out ActorComponent? actor))
+            return;
+
+        if (!_pendingDialogSessions.Remove(actor.PlayerSession))
+            return;
+
+        _quickDialog.CloseAllDialogs(actor.PlayerSession);
     }
 
     private void OnGetAltVerbs(EntityUid uid, IdCardComponent comp, GetVerbsEvent<AlternativeVerb> args)
@@ -53,19 +69,17 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (!args.CanInteract || !args.CanAccess)
             return;
 
-        // ID must be in the user's hand.
         if (!_hands.IsHolding(args.User, uid))
             return;
 
         if (string.IsNullOrEmpty(comp.AccountNumber))
         {
-            // No account linked: offer to set one.
             args.Verbs.Add(new AlternativeVerb
             {
                 Text = Loc.GetString("id-card-set-account-verb"),
                 Act = () =>
                 {
-                    if (!_pendingDialogs.Add(actor.PlayerSession))
+                    if (!_pendingDialogSessions.Add(actor.PlayerSession))
                         return;
 
                     _quickDialog.OpenDialog(actor.PlayerSession,
@@ -73,23 +87,22 @@ public sealed class IdCardAccountSystem : EntitySystem
                         Loc.GetString("id-card-set-account-prompt"),
                         (string accountNumber) =>
                         {
-                            _pendingDialogs.Remove(actor.PlayerSession);
+                            _pendingDialogSessions.Remove(actor.PlayerSession);
                             OnAccountEntered(uid, args.User, actor.PlayerSession, accountNumber);
                         },
-                        () => _pendingDialogs.Remove(actor.PlayerSession));
+                        () => _pendingDialogSessions.Remove(actor.PlayerSession));
                 },
                 Impact = LogImpact.Low,
             });
         }
-        else
+        else if (_balance.TryGetByAccount(comp.AccountNumber, out _))
         {
-            // Account linked: offer to withdraw.
             args.Verbs.Add(new AlternativeVerb
             {
                 Text = Loc.GetString("id-card-withdraw-verb"),
                 Act = () =>
                 {
-                    if (!_pendingDialogs.Add(actor.PlayerSession))
+                    if (!_pendingDialogSessions.Add(actor.PlayerSession))
                         return;
 
                     _quickDialog.OpenDialog(actor.PlayerSession,
@@ -97,14 +110,51 @@ public sealed class IdCardAccountSystem : EntitySystem
                         Loc.GetString("id-card-withdraw-prompt"),
                         (int amount) =>
                         {
-                            _pendingDialogs.Remove(actor.PlayerSession);
+                            _pendingDialogSessions.Remove(actor.PlayerSession);
                             OnWithdraw(uid, args.User, actor.PlayerSession, amount);
                         },
-                        () => _pendingDialogs.Remove(actor.PlayerSession));
+                        () => _pendingDialogSessions.Remove(actor.PlayerSession));
                 },
                 Impact = LogImpact.Low,
             });
         }
+    }
+
+    private void OnGetActivationVerbs(EntityUid uid, IdCardComponent comp, GetVerbsEvent<ActivationVerb> args)
+    {
+        if (!TryComp(args.User, out ActorComponent? actor))
+            return;
+
+        if (!args.CanInteract || !args.CanAccess)
+            return;
+
+        if (!_hands.IsHolding(args.User, uid))
+            return;
+
+        if (!string.IsNullOrEmpty(comp.AccountNumber))
+            return;
+
+        args.Verbs.Add(new ActivationVerb
+        {
+            Text = Loc.GetString("id-card-create-account-verb"),
+            Act = () =>
+            {
+                if (!_pendingDialogSessions.Add(actor.PlayerSession))
+                    return;
+
+                _quickDialog.OpenDialog(actor.PlayerSession,
+                    Loc.GetString("id-card-create-account-title"),
+                    Loc.GetString("id-card-create-account-confirm"),
+                    (string confirmation) =>
+                    {
+                        _pendingDialogSessions.Remove(actor.PlayerSession);
+                        if (confirmation.Trim().Equals("YES", StringComparison.OrdinalIgnoreCase))
+                            OnCreateAccount(uid, args.User, actor.PlayerSession);
+                    },
+                    () => _pendingDialogSessions.Remove(actor.PlayerSession));
+            },
+            Impact = LogImpact.Low,
+        });
     }
 
     private void OnExamine(EntityUid uid, IdCardComponent comp, ExaminedEvent args)
@@ -112,14 +162,15 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (string.IsNullOrEmpty(comp.AccountNumber))
             return;
 
-        if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
-            return;
-
-        if (!TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
-            return;
-
         using (args.PushGroup(nameof(IdCardAccountSystem)))
         {
+            if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner)
+                || !TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
+            {
+                args.PushMarkup(Loc.GetString("id-card-account-invalid-examine"));
+                return;
+            }
+
             args.PushMarkup(Loc.GetString("id-card-examine-balance", ("balance", balanceComp.Balance)));
         }
     }
@@ -162,7 +213,10 @@ public sealed class IdCardAccountSystem : EntitySystem
             return false;
 
         if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
-            return false;
+        {
+            _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, user, PopupType.MediumCaution);
+            return true;
+        }
 
         var amount = stack.Count;
         if (amount <= 0)
@@ -179,12 +233,30 @@ public sealed class IdCardAccountSystem : EntitySystem
         return true;
     }
 
+    private void OnCreateAccount(EntityUid idCard, EntityUid user, ICommonSession session)
+    {
+        if (!TryComp<IdCardComponent>(idCard, out var comp))
+            return;
+
+        if (!string.IsNullOrEmpty(comp.AccountNumber))
+        {
+            _popup.PopupEntity(Loc.GetString("id-card-account-locked"), idCard, session, PopupType.MediumCaution);
+            return;
+        }
+
+        var accountNumber = _balance.CreateAccount(user);
+
+        comp.AccountNumber = accountNumber;
+        Dirty(idCard, comp);
+
+        _popup.PopupEntity(Loc.GetString("id-card-create-account-success"), idCard, session, PopupType.Medium);
+    }
+
     private void OnAccountEntered(EntityUid idCard, EntityUid user, ICommonSession session, string accountNumber)
     {
         if (!TryComp<IdCardComponent>(idCard, out var comp))
             return;
 
-        // Account is locked once set.
         if (!string.IsNullOrEmpty(comp.AccountNumber))
         {
             _popup.PopupEntity(Loc.GetString("id-card-account-locked"), idCard, session, PopupType.MediumCaution);
@@ -220,7 +292,10 @@ public sealed class IdCardAccountSystem : EntitySystem
             return;
 
         if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
+        {
+            _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, session, PopupType.MediumCaution);
             return;
+        }
 
         if (!_balance.TryDeduct(owner, amount, description: Loc.GetString("transaction-withdraw")))
         {

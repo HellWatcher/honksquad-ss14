@@ -142,6 +142,27 @@ public sealed class PlayerBalanceSystem : EntitySystem
     }
 
     /// <summary>
+    /// Create a new bank account for an entity, invalidating any previous account.
+    /// </summary>
+    public string CreateAccount(EntityUid uid)
+    {
+        var comp = EnsureComp<PlayerBalanceComponent>(uid);
+
+        if (!string.IsNullOrEmpty(comp.AccountNumber))
+            _accountIndex.Remove(comp.AccountNumber);
+
+        comp.Balance = 0;
+        comp.AccountNumber = GenerateAccountNumber();
+        _accountIndex[comp.AccountNumber] = uid;
+        Dirty(uid, comp);
+
+        _memories.AddMemory(uid, "memories-key-account-number", comp.AccountNumber);
+        RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
+
+        return comp.AccountNumber;
+    }
+
+    /// <summary>
     /// Generate an 8-character hex account number, ensuring uniqueness within the round.
     /// </summary>
     private string GenerateAccountNumber()
