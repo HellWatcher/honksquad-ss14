@@ -1,0 +1,113 @@
+# Lowpop antag rules for ~10-15 player servers.
+# These inherit from upstream rules and only override minPlayers + antag ratios.
+
+- type: entity
+  parent: Traitor
+  id: LowpopTraitor
+  components:
+    - type: GameRule
+      minPlayers: 5
+    - type: AntagSelection
+      selectionTime: IntraPlayerSpawn
+      definitions:
+        - prefRoles: [Traitor]
+          max: 5
+          playerRatio: 4
+          blacklist:
+            components:
+              - AntagImmune
+          lateJoinAdditional: false
+          mindRoles:
+            - MindRoleTraitor
+
+- type: entity
+  parent: Revolutionary
+  id: LowpopRevolutionary
+  components:
+    - type: GameRule
+      minPlayers: 8
+    - type: AntagSelection
+      selectionTime: IntraPlayerSpawn
+      definitions:
+        - prefRoles: [HeadRev]
+          max: 2
+          playerRatio: 10
+          briefing:
+            text: head-rev-role-greeting
+            color: CornflowerBlue
+            sound: "/Audio/Ambience/Antag/headrev_start.ogg"
+          startingGear: HeadRevGear
+          components:
+            - type: Revolutionary
+            - type: HeadRevolutionary
+          mindRoles:
+            - MindRoleHeadRevolutionary
+
+- type: entity
+  parent: Changeling
+  id: LowpopChangeling
+  components:
+    - type: GameRule
+      minPlayers: 10
+    - type: AntagSelection
+      agentName: changeling-round-end-agent-name
+      selectionTime: IntraPlayerSpawn
+      definitions:
+        - prefRoles: [Changeling]
+          max: 2
+          playerRatio: 10
+          briefing:
+            text: changeling-role-greeting
+            color: Red
+            sound: /Audio/Ambience/Antag/changeling_start.ogg
+          components:
+            - type: ChangelingDevour
+            - type: ChangelingIdentity
+            - type: ChangelingTransform
+            - type: ActionGrant
+              actions:
+                - ActionChangelingStore
+            - type: Store
+              name: store-preset-name-changeling
+              categories:
+                - ChangelingAbilities
+              currencyWhitelist:
+                - ChangelingDNA
+              balance:
+                ChangelingDNA: 50
+            - type: UserInterface
+              interfaces:
+                enum.StoreUiKey.Key:
+                  type: StoreBoundUserInterface
+                  requireInputValidation: false
+          mindRoles:
+            - MindRoleChangeling
+
+- type: entity
+  parent: Zombie
+  id: LowpopZombie
+  components:
+    - type: GameRule
+      minPlayers: 10
+    - type: AntagSelection
+      agentName: zombie-round-end-agent-name
+      selectionTime: IntraPlayerSpawn
+      definitions:
+        - prefRoles: [InitialInfected]
+          max: 3
+          playerRatio: 10
+          blacklist:
+            components:
+              - ZombieImmune
+              - AntagImmune
+          briefing:
+            text: zombie-patientzero-role-greeting
+            color: Plum
+            sound: "/Audio/Ambience/Antag/zombie_start.ogg"
+          components:
+            - type: PendingZombie
+            - type: ZombifyOnDeath
+            - type: IncurableZombie
+            - type: InitialInfected
+          mindRoles:
+            - MindRoleInitialInfected
