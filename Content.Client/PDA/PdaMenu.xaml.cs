@@ -202,6 +202,13 @@ namespace Content.Client.PDA
         {
             ProgramList.RemoveAllChildren();
 
+            // HONK START - Sort programs alphabetically by display name
+            programs.Sort((a, b) => string.Compare(
+                Loc.GetString(a.Item2.ProgramName),
+                Loc.GetString(b.Item2.ProgramName),
+                StringComparison.CurrentCultureIgnoreCase));
+            // HONK END
+
             if (programs.Count == 0)
             {
                 ProgramList.AddChild(new Label()
