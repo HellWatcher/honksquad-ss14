@@ -2,7 +2,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared.RussStation.CartridgeLoader;
 
-[Prototype("forkCartridgeSet")]
+[Prototype]
 public sealed partial class ForkCartridgeSetPrototype : IPrototype
 {
     [IdDataField] public string ID { get; private set; } = default!;
