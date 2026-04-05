@@ -1,7 +1,8 @@
+using System.Linq;
 using Content.Server.CartridgeLoader;
 using Content.Shared.CartridgeLoader;
+using Content.Shared.PDA;
 using Content.Shared.RussStation.CartridgeLoader;
-using System.Linq;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
@@ -21,12 +22,15 @@ public sealed class PdaCartridgeInstallerSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<CartridgeLoaderComponent, MapInitEvent>(OnMapInit,
+        SubscribeLocalEvent<PdaComponent, MapInitEvent>(OnMapInit,
             after: [typeof(CartridgeLoaderSystem)]);
     }
 
-    private void OnMapInit(EntityUid uid, CartridgeLoaderComponent loader, MapInitEvent args)
+    private void OnMapInit(EntityUid uid, PdaComponent pda, MapInitEvent args)
     {
+        if (!TryComp<CartridgeLoaderComponent>(uid, out var loader))
+            return;
+
         var installed = _cartridgeLoader.GetInstalled(uid);
         var existing = new HashSet<string>();
         foreach (var prog in installed)
