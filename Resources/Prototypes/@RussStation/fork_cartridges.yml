@@ -1,0 +1,4 @@
+- type: forkCartridgeSet
+  id: GlobalCartridges
+  cartridges:
+    - BalanceCartridge
