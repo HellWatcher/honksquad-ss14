@@ -1,0 +1,13 @@
+<DefaultWindow xmlns="https://spacestation14.io"
+               MinSize="250 120" Title="{Loc portable-scrubber-ui-title}">
+
+    <BoxContainer Orientation="Vertical" Margin="5 5 5 5" SeparationOverride="5">
+
+        <BoxContainer Orientation="Horizontal" SeparationOverride="5">
+            <Label Text="{Loc portable-scrubber-ui-filter-label}" />
+        </BoxContainer>
+
+        <GridContainer Name="GasContainer" Access="Public" Columns="3" />
+
+    </BoxContainer>
+</DefaultWindow>

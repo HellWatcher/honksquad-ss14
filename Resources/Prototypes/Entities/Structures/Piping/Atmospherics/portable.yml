@@ -98,6 +98,15 @@
   - type: GuideHelp
     guides:
     - PortableScrubber
+  # HONK START - Portable scrubber filter UI
+  - type: UserInterface
+    interfaces:
+      enum.PortableScrubberUiKey.Key:
+        type: PortableScrubberBoundUserInterface
+  - type: ActivatableUI
+    inHandsOnly: false
+    key: enum.PortableScrubberUiKey.Key
+  # HONK END
 
 - type: entity
   id: SpaceHeater
