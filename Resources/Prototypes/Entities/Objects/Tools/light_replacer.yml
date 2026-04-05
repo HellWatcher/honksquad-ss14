@@ -23,6 +23,16 @@
   - type: Tag
     tags:
     - LightReplacer
+  # HONK START - Light replacer recycler
+  - type: LightReplacerRecycler
+  - type: UserInterface
+    interfaces:
+      enum.LightReplacerRecyclerUiKey.Key:
+        type: LightReplacerRecyclerBoundUserInterface
+  - type: ActivatableUI
+    inHandsOnly: true
+    key: enum.LightReplacerRecyclerUiKey.Key
+  # HONK END
 
 - type: entity
   parent: LightReplacer

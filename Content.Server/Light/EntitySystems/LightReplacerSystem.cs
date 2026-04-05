@@ -10,6 +10,9 @@ using JetBrains.Annotations;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
+//HONK START - Light replacer recycler
+using Content.Shared.RussStation.Light;
+//HONK END
 
 namespace Content.Server.Light.EntitySystems;
 
@@ -162,6 +165,14 @@ public sealed class LightReplacerSystem : SharedLightReplacerSystem
         if (wasReplaced)
         {
             _audio.PlayPvs(replacer.Sound, replacerUid);
+
+            //HONK START - Light replacer recycler: let recycler consume the broken bulb
+            if (fixtureBulbUid != null && userUid != null)
+            {
+                var ev = new LightReplacerBulbReplacedEvent(fixtureBulbUid.Value, userUid.Value);
+                RaiseLocalEvent(replacerUid, ev);
+            }
+            //HONK END
         }
 
         return wasReplaced;
