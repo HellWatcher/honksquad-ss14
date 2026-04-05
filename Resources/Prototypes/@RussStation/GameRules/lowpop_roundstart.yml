@@ -90,7 +90,6 @@
     - type: GameRule
       minPlayers: 10
     - type: AntagSelection
-      agentName: zombie-round-end-agent-name
       selectionTime: IntraPlayerSpawn
       definitions:
         - prefRoles: [InitialInfected]
