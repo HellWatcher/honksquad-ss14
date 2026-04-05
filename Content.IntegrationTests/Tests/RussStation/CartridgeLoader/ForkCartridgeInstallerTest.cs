@@ -19,19 +19,19 @@ public sealed class ForkCartridgeInstallerTest : InteractionTest
   id: ForkTestCartridgeA
   components:
   - type: Cartridge
-    programName: fork-test-a
+    programName: notekeeper-program-name
 
 - type: entity
   id: ForkTestCartridgeB
   components:
   - type: Cartridge
-    programName: fork-test-b
+    programName: nano-task-program-name
 
 - type: entity
   id: ForkTestCartridgeC
   components:
   - type: Cartridge
-    programName: fork-test-c
+    programName: news-read-program-name
 
 - type: entity
   id: ForkTestPdaBasic
