@@ -1,0 +1,73 @@
+# Lowpop game presets for ~10-15 player servers.
+# Use by setting the CVar: game.secret_weight_prototype = LowpopSecret
+
+- type: gamePreset
+  id: LowpopTraitor
+  alias:
+    - lowpoptraitor
+  name: traitor-title
+  description: traitor-description
+  showInVote: false
+  rules:
+    - DummyNonAntagChance
+    - LowpopTraitor
+    - SubGamemodesRuleNoWizard
+    - LowpopBasicStationEventScheduler
+    - MeteorSwarmMildScheduler
+    - SpaceTrafficControlEventScheduler
+    - BasicRoundstartVariation
+
+- type: gamePreset
+  id: LowpopRevolutionary
+  alias:
+    - lowpoprev
+  name: rev-title
+  description: rev-description
+  showInVote: false
+  rules:
+    - DummyNonAntagChance
+    - LowpopRevolutionary
+    - SubGamemodesRuleNoWizard
+    - LowpopBasicStationEventScheduler
+    - MeteorSwarmMildScheduler
+    - SpaceTrafficControlEventScheduler
+    - BasicRoundstartVariation
+
+- type: gamePreset
+  id: LowpopChangeling
+  alias:
+    - lowpopchangeling
+  name: changeling-title
+  description: changeling-description
+  showInVote: false
+  rules:
+    - DummyNonAntagChance
+    - LowpopChangeling
+    - SubGamemodesRuleNoWizard
+    - LowpopBasicStationEventScheduler
+    - MeteorSwarmMildScheduler
+    - SpaceTrafficControlEventScheduler
+    - BasicRoundstartVariation
+
+- type: gamePreset
+  id: LowpopZombie
+  alias:
+    - lowpopzombie
+  name: zombie-title
+  description: zombie-description
+  showInVote: false
+  rules:
+    - LowpopZombie
+    - LowpopBasicStationEventScheduler
+    - MeteorSwarmMildScheduler
+    - SpaceTrafficControlEventScheduler
+    - BasicRoundstartVariation
+
+- type: weightedRandom
+  id: LowpopSecret
+  weights:
+    LowpopTraitor: 0.55
+    LowpopRevolutionary: 0.15
+    LowpopChangeling: 0.10
+    LowpopZombie: 0.10
+    Survival: 0.10
