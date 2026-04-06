@@ -20,6 +20,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Players;
 using Content.Shared.Players.RateLimiting;
 using Content.Shared.Radio;
+using Content.Shared.RussStation.Hearing; //HONK
 using Content.Shared.Station.Components;
 using Content.Shared.Whitelist;
 using Robust.Server.Player;
@@ -496,6 +497,14 @@ public sealed partial class ChatSystem : SharedChatSystem
             if (MessageRangeCheck(session, data, range) != MessageRangeCheckResult.Full)
                 continue; // Won't get logged to chat, and ghosts are too far away to see the pop-up, so we just won't send it to them.
 
+            //HONK START - Deafness: deaf listeners can't make out whispers at all
+            if (TryComp<DeafableComponent>(listener, out var whisperDeafable) && whisperDeafable.IsDeaf)
+            {
+                _chatManager.ChatMessageToOne(ChatChannel.Whisper, obfuscatedMessage, wrappedUnknownMessage, source, false, session.Channel);
+                continue;
+            }
+            //HONK END
+
             if (data.Range <= WhisperClearRange || data.Observer)
                 _chatManager.ChatMessageToOne(ChatChannel.Whisper, message, wrappedMessage, source, false, session.Channel);
             //If listener is too far, they only hear fragments of the message
@@ -672,6 +681,11 @@ public sealed partial class ChatSystem : SharedChatSystem
         RaiseLocalEvent(source, ref voiceRangeEv);
         //HONK END
 
+        //HONK START - Deafness: obfuscate messages for deaf recipients
+        string? deafMessage = null;
+        string? deafWrapped = null;
+        //HONK END
+
         //HONK START - use voiceRangeEv.Range (was VoiceRange)
         foreach (var (session, data) in GetRecipients(source, voiceRangeEv.Range))
         //HONK END
@@ -680,6 +694,20 @@ public sealed partial class ChatSystem : SharedChatSystem
             if (entRange == MessageRangeCheckResult.Disallowed)
                 continue;
             var entHideChat = entRange == MessageRangeCheckResult.HideChat;
+
+            //HONK START - Deafness: send obfuscated message to deaf recipients
+            if (session.AttachedEntity is { Valid: true } listener
+                && TryComp<DeafableComponent>(listener, out var deafable)
+                && deafable.IsDeaf)
+            {
+                deafMessage ??= ObfuscateMessageReadability(message, 0.2f);
+                deafWrapped ??= Loc.GetString("chat-manager-entity-deaf-wrap-message",
+                    ("message", FormattedMessage.EscapeText(deafMessage)));
+                _chatManager.ChatMessageToOne(channel, deafMessage, deafWrapped, source, entHideChat, session.Channel, author: author);
+                continue;
+            }
+            //HONK END
+
             _chatManager.ChatMessageToOne(channel, message, wrappedMessage, source, entHideChat, session.Channel, author: author);
         }
 
