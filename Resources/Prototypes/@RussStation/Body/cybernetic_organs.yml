@@ -293,6 +293,7 @@
       tier: Advanced
       empEffect: None
       empVulnerability: 0.5
+    - type: CyberneticLiver
 
 # ============================================================
 # EYES - EmpEffect: Flicker
