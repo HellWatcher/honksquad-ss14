@@ -4,6 +4,7 @@ using Content.Shared.RussStation.Body;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
 using Content.Shared.Stunnable;
+
 namespace Content.Server.RussStation.Body;
 
 /// <summary>
@@ -32,12 +33,20 @@ public sealed class CardiacArrestSystem : EntitySystem
         SubscribeLocalEvent<ActiveCardiacArrestComponent, TargetDefibrillatedEvent>(OnDefibrillated);
     }
 
+    /// <summary>
+    /// Cap stun duration so permanent effects don't cause infinite stun.
+    /// </summary>
+    private static readonly TimeSpan MaxStunDuration = TimeSpan.FromSeconds(30);
+
     private void OnApplied(Entity<CardiacArrestComponent> ent, ref StatusEffectAppliedEvent args)
     {
         EnsureComp<ActiveCardiacArrestComponent>(args.Target);
 
-        if (TryComp<StatusEffectComponent>(ent, out var effect))
-            _stun.TryAddStunDuration(args.Target, effect.Duration);
+        if (!TryComp<StatusEffectComponent>(ent, out var effect))
+            return;
+
+        var stunDuration = effect.Duration > MaxStunDuration ? MaxStunDuration : effect.Duration;
+        _stun.TryAddStunDuration(args.Target, stunDuration);
     }
 
     private void OnRemoved(Entity<CardiacArrestComponent> ent, ref StatusEffectRemovedEvent args)
@@ -47,15 +56,19 @@ public sealed class CardiacArrestSystem : EntitySystem
 
     private void OnDefibrillated(Entity<ActiveCardiacArrestComponent> ent, ref TargetDefibrillatedEvent args)
     {
-        if (!TryComp<StatusEffectContainerComponent>(ent, out var container)
-            || container.ActiveStatusEffects is not { } effectContainer)
-            return;
-
-        foreach (var effect in effectContainer.ContainedEntities)
+        if (TryComp<StatusEffectContainerComponent>(ent, out var container)
+            && container.ActiveStatusEffects is { } effectContainer)
         {
-            if (HasComp<CardiacArrestComponent>(effect))
-                QueueDel(effect);
+            foreach (var effect in effectContainer.ContainedEntities)
+            {
+                if (HasComp<CardiacArrestComponent>(effect))
+                    QueueDel(effect);
+            }
         }
+
+        // Always clean up the active marker so the patient stops suffocating,
+        // even if the status effect entity was already gone.
+        RemComp<ActiveCardiacArrestComponent>(ent);
     }
 
     public override void Update(float frameTime)
