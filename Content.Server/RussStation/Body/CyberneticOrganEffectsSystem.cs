@@ -4,6 +4,8 @@ using Content.Shared.Body;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Flash;
 using Content.Shared.Mobs;
+using Content.Shared.Nutrition.Components;
+using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Body;
 using Robust.Shared.Timing;
@@ -19,6 +21,7 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstream = default!;
+    [Dependency] private readonly HungerSystem _hunger = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
     public override void Initialize()
@@ -34,6 +37,10 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         // Lungs: toxic gas filtering (must run before RespiratorSystem relays to lungs)
         SubscribeLocalEvent<BodyComponent, InhaledGasEvent>(OnInhaledGas,
             before: [typeof(RespiratorSystem)]);
+
+        // Stomach: nutrient efficiency (reduced hunger decay)
+        SubscribeLocalEvent<CyberneticStomachComponent, OrganGotInsertedEvent>(OnStomachInserted);
+        SubscribeLocalEvent<CyberneticStomachComponent, OrganGotRemovedEvent>(OnStomachRemoved);
     }
 
     // ================================================================
@@ -130,5 +137,27 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
             gas.SetMoles(gasId, moles * (1f - lungs.FilterFraction));
         }
+    }
+
+    // ================================================================
+    // Stomach — nutrient efficiency (reduced hunger decay)
+    // ================================================================
+
+    private void OnStomachInserted(EntityUid uid, CyberneticStomachComponent stomach, ref OrganGotInsertedEvent args)
+    {
+        ApplyHungerDecayModifier(args.Target, stomach.DecayMultiplier);
+    }
+
+    private void OnStomachRemoved(EntityUid uid, CyberneticStomachComponent stomach, ref OrganGotRemovedEvent args)
+    {
+        ApplyHungerDecayModifier(args.Target, 1f / stomach.DecayMultiplier);
+    }
+
+    private void ApplyHungerDecayModifier(EntityUid body, float modifier)
+    {
+        if (!TryComp<HungerComponent>(body, out var hunger))
+            return;
+
+        _hunger.SetBaseDecayRate(body, hunger.BaseDecayRate * modifier, hunger);
     }
 }

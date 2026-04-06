@@ -211,7 +211,7 @@
   parent: [OrganBase, OrganCyberneticInternal]
   id: OrganCyberneticStomachAdvanced
   name: advanced cybernetic stomach
-  description: A high-capacity cybernetic stomach with rapid digestion.
+  description: A high-efficiency cybernetic stomach that extracts more nutrients from food.
   components:
     - type: Organ
       category: Stomach
@@ -222,7 +222,6 @@
           maxVol: 70
     - type: Metabolizer
       maxReagents: 4
-      updateIntervalMultiplier: 0.75
       stages: [Digestion]
     - type: Sprite
       layers:
@@ -231,6 +230,7 @@
       tier: Advanced
       empEffect: None
       empVulnerability: 0.5
+    - type: CyberneticStomach
 
 # ============================================================
 # LIVER - EmpEffect: None (non-critical organ)
