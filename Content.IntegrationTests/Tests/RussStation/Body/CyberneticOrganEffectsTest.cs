@@ -752,17 +752,21 @@ public sealed class CyberneticOrganEffectsTest
             var body = entMan.SpawnEntity("CyberTestBodyWithLungs", mapData.GridCoords);
 
             var organContainer = containerSys.GetContainer(body, BodyComponent.ContainerID);
-            CyberneticLungsComponent? lungs = null;
+            EntityUid lungOrganEnt = default;
             foreach (var organ in organContainer.ContainedEntities)
             {
-                if (entMan.TryGetComponent(organ, out lungs))
+                if (entMan.HasComponent<CyberneticLungsComponent>(organ))
+                {
+                    lungOrganEnt = organ;
                     break;
+                }
             }
 
-            Assert.That(lungs, Is.Not.Null, "Precondition: lungs organ should exist");
+            Assert.That(lungOrganEnt, Is.Not.EqualTo(default(EntityUid)), "Precondition: lungs organ should exist");
+            var lungs = entMan.GetComponent<CyberneticLungsComponent>(lungOrganEnt);
 
             // Oxygen should be in the oxygenating set for a human metabolizer
-            Assert.That(lungs!.OxygenatingGases.Contains(Gas.Oxygen), Is.True,
+            Assert.That(lungs.OxygenatingGases.Contains(Gas.Oxygen), Is.True,
                 "Oxygen should be in the oxygenating gases set for a human-type body");
 
             // Create a gas mix and raise InhaledGasEvent via relay
@@ -775,18 +779,7 @@ public sealed class CyberneticOrganEffectsTest
                 new Entity<BodyComponent>(body, entMan.GetComponent<BodyComponent>(body)),
                 inhaleEvent);
 
-            // Find the organ entity to raise on
-            EntityUid lungOrgan = default;
-            foreach (var organ in organContainer.ContainedEntities)
-            {
-                if (entMan.HasComponent<CyberneticLungsComponent>(organ))
-                {
-                    lungOrgan = organ;
-                    break;
-                }
-            }
-
-            entMan.EventBus.RaiseLocalEvent(lungOrgan, ref relayEvent);
+            entMan.EventBus.RaiseLocalEvent(lungOrganEnt, ref relayEvent);
 
             // Oxygen (oxygenating) should be untouched
             Assert.That(gasMix.GetMoles(Gas.Oxygen), Is.EqualTo(10f),
