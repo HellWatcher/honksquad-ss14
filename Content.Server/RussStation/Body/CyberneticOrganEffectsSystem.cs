@@ -45,6 +45,10 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
         // Ears: deafness resistance
         SubscribeLocalEvent<BodyComponent, CanHearAttemptEvent>(OnCanHearAttempt);
+
+        // Liver: overdose resistance (applied to body on insert/remove)
+        SubscribeLocalEvent<CyberneticLiverComponent, OrganGotInsertedEvent>(OnLiverInserted);
+        SubscribeLocalEvent<CyberneticLiverComponent, OrganGotRemovedEvent>(OnLiverRemoved);
     }
 
     // ================================================================
@@ -169,5 +173,21 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
                 return;
             }
         }
+    }
+
+    // ================================================================
+    // Liver — overdose resistance
+    // ================================================================
+
+    private void OnLiverInserted(EntityUid uid, CyberneticLiverComponent liver, ref OrganGotInsertedEvent args)
+    {
+        var resistance = EnsureComp<OverdoseResistanceComponent>(args.Target);
+        resistance.ThresholdMultiplier = liver.OverdoseThresholdMultiplier;
+        Dirty(args.Target, resistance);
+    }
+
+    private void OnLiverRemoved(EntityUid uid, CyberneticLiverComponent liver, ref OrganGotRemovedEvent args)
+    {
+        RemComp<OverdoseResistanceComponent>(args.Target);
     }
 }
