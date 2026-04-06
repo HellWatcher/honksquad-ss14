@@ -1,0 +1,52 @@
+# Cybernetic organ research nodes - T1/T2/T3
+
+- type: technology
+  id: BasicCybernetics
+  name: Basic Cybernetics
+  icon:
+    sprite: Mobs/Species/Human/organs.rsi
+    state: heart-on
+  discipline: CivilianServices
+  tier: 1
+  cost: 5000
+  recipeUnlocks:
+    - CyberneticHeartBasic
+    - CyberneticLungsBasic
+    - CyberneticStomachBasic
+    - CyberneticLiverBasic
+    - CyberneticEyesBasic
+    - CyberneticEarsBasic
+
+- type: technology
+  id: StandardCybernetics
+  name: Standard Cybernetics
+  icon:
+    sprite: Mobs/Species/Human/organs.rsi
+    state: heart-on
+  discipline: CivilianServices
+  tier: 2
+  cost: 10000
+  recipeUnlocks:
+    - CyberneticHeartStandard
+    - CyberneticLungsStandard
+    - CyberneticStomachStandard
+    - CyberneticLiverStandard
+    - CyberneticEyesStandard
+    - CyberneticEarsStandard
+
+- type: technology
+  id: AdvancedCybernetics
+  name: Advanced Cybernetics
+  icon:
+    sprite: Mobs/Species/Human/organs.rsi
+    state: heart-on
+  discipline: CivilianServices
+  tier: 3
+  cost: 15000
+  recipeUnlocks:
+    - CyberneticHeartAdvanced
+    - CyberneticLungsAdvanced
+    - CyberneticStomachAdvanced
+    - CyberneticLiverAdvanced
+    - CyberneticEyesAdvanced
+    - CyberneticEarsAdvanced
