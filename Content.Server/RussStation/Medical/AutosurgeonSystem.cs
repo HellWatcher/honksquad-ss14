@@ -42,15 +42,10 @@ public sealed class AutosurgeonSystem : EntitySystem
             return;
         }
 
-        // Self-use is instant
-        if (args.User == target)
-        {
-            InstallOrgan(uid, comp, args.User, target);
-            args.Handled = true;
-            return;
-        }
+        var isSelfUse = args.User == target;
+        var delay = isSelfUse ? comp.SelfInstallTime : comp.InstallTime;
 
-        var doAfterArgs = new DoAfterArgs(EntityManager, args.User, comp.InstallTime,
+        var doAfterArgs = new DoAfterArgs(EntityManager, args.User, delay,
             new AutosurgeonDoAfterEvent(), uid, target: target, used: uid)
         {
             BreakOnDamage = true,
@@ -60,15 +55,24 @@ public sealed class AutosurgeonSystem : EntitySystem
 
         if (_doAfter.TryStartDoAfter(doAfterArgs))
         {
-            var targetName = Identity.Entity(target, EntityManager);
-            _popup.PopupEntity(
-                Loc.GetString("autosurgeon-installing-user", ("target", targetName)),
-                target, args.User);
+            if (isSelfUse)
+            {
+                _popup.PopupEntity(
+                    Loc.GetString("autosurgeon-installing-self"),
+                    target, args.User);
+            }
+            else
+            {
+                var targetName = Identity.Entity(target, EntityManager);
+                _popup.PopupEntity(
+                    Loc.GetString("autosurgeon-installing-user", ("target", targetName)),
+                    target, args.User);
 
-            var userName = Identity.Entity(args.User, EntityManager);
-            _popup.PopupEntity(
-                Loc.GetString("autosurgeon-installing-target", ("user", userName)),
-                args.User, target, PopupType.LargeCaution);
+                var userName = Identity.Entity(args.User, EntityManager);
+                _popup.PopupEntity(
+                    Loc.GetString("autosurgeon-installing-target", ("user", userName)),
+                    args.User, target, PopupType.LargeCaution);
+            }
         }
 
         args.Handled = true;
