@@ -1,0 +1,4 @@
+autosurgeon-no-body = This device can only be used on a living creature.
+autosurgeon-installing-user = You begin installing the cybernetic organ into {$target}...
+autosurgeon-installing-target = {$user} begins installing a cybernetic organ into you!
+autosurgeon-success = The {$organ} has been successfully installed.
