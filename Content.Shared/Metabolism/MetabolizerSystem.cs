@@ -9,6 +9,9 @@ using Content.Shared.Chemistry.Reagent;
 using Content.Shared.EntityConditions;
 using Content.Shared.EntityConditions.Conditions;
 using Content.Shared.EntityConditions.Conditions.Body;
+//HONK START - cybernetic liver overdose threshold
+using Content.Shared.RussStation.Body;
+//HONK END
 using Content.Shared.EntityEffects;
 using Content.Shared.EntityEffects.Effects.Body;
 using Content.Shared.EntityEffects.Effects.Solution;
@@ -295,7 +298,20 @@ public sealed class MetabolizerSystem : EntitySystem
                     if (_entityConditions.TryCondition(organ, condition))
                         continue;
                     break;
-                case ReagentCondition:
+                case ReagentCondition reagentCondition:
+                    //HONK START - cybernetic liver overdose threshold
+                    if (TryComp<OverdoseResistanceComponent>(body, out var overdoseResist)
+                        && reagentCondition.Min > FixedPoint2.Zero)
+                    {
+                        var soln = solution.Comp.Solution;
+                        var quant = soln.GetTotalPrototypeQuantity(reagentCondition.Reagent);
+                        var scaledMin = reagentCondition.Min * overdoseResist.ThresholdMultiplier;
+                        var result = quant >= scaledMin && quant <= reagentCondition.Max;
+                        if (reagentCondition.Inverted != result)
+                            continue;
+                        break;
+                    }
+                    //HONK END
                     if (_entityConditions.TryCondition(solution, condition))
                         continue;
                     break;
