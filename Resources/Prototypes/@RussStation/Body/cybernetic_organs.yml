@@ -153,6 +153,7 @@
       tier: Advanced
       empEffect: BreathingFailure
       empVulnerability: 0.5
+    - type: CyberneticLungs
 
 # ============================================================
 # STOMACH - EmpEffect: None (non-critical organ)
@@ -221,6 +222,7 @@
           maxVol: 70
     - type: Metabolizer
       maxReagents: 4
+      updateIntervalMultiplier: 0.75
       stages: [Digestion]
     - type: Sprite
       layers:
@@ -285,6 +287,7 @@
         - state: liver
     - type: Metabolizer
       maxReagents: 2
+      updateIntervalMultiplier: 0.75
       stages: [Metabolites]
     - type: CyberneticOrgan
       tier: Advanced
@@ -345,6 +348,7 @@
       tier: Advanced
       empEffect: Flicker
       empVulnerability: 0.5
+    - type: CyberneticEyes
 
 # ============================================================
 # EARS - EmpEffect: Deafen
