@@ -2,7 +2,6 @@ using Content.Shared.Body;
 using Content.Shared.Emp;
 using Content.Shared.RussStation.Body;
 using Content.Shared.StatusEffectNew;
-using Content.Shared.Stunnable;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server.RussStation.Body;
@@ -12,10 +11,10 @@ namespace Content.Server.RussStation.Body;
 /// </summary>
 public sealed class CyberneticEmpSystem : EntitySystem
 {
-    [Dependency] private readonly SharedStunSystem _stun = default!;
     [Dependency] private readonly StatusEffectsSystem _statusEffects = default!;
 
     private static readonly EntProtoId CardiacArrestEffect = "StatusEffectCardiacArrest";
+    private static readonly EntProtoId BreathingSuppressedEffect = "StatusEffectBreathingSuppressed";
     private static readonly EntProtoId DrowsinessEffect = "StatusEffectDrowsiness";
     private static readonly EntProtoId DeafnessEffect = "StatusEffectTemporaryDeafness";
 
@@ -56,7 +55,7 @@ public sealed class CyberneticEmpSystem : EntitySystem
                 break;
 
             case CyberneticEmpEffect.BreathingFailure:
-                _stun.TryAddStunDuration(body, duration);
+                _statusEffects.TryAddStatusEffectDuration(body, BreathingSuppressedEffect, duration);
                 break;
 
             case CyberneticEmpEffect.Flicker:
