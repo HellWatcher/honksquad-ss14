@@ -16,8 +16,15 @@ public sealed partial class AutosurgeonComponent : Component
     public EntProtoId OrganPrototype;
 
     /// <summary>
-    /// How long the installation takes.
+    /// How long the installation takes when used on another person.
     /// </summary>
     [DataField]
     public TimeSpan InstallTime = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// How long the installation takes when used on yourself.
+    /// Shorter than normal since you only need to hold still.
+    /// </summary>
+    [DataField]
+    public TimeSpan SelfInstallTime = TimeSpan.FromSeconds(3);
 }
