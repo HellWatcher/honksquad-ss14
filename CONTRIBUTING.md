@@ -1,62 +1,40 @@
-# Honksquad Contributing Guidelines
+# Contributing to Honksquad
 
-Thanks for contributing to Honksquad, a downstream fork of [Space Station 14](https://github.com/space-wizards/space-station-14).
+Honksquad is a downstream fork of [Space Station 14](https://github.com/space-wizards/space-station-14). We rebase on upstream regularly, so most of the rules here exist to keep that process painless.
 
-## Getting Started
+## Setup
 
 1. Clone the repo and run `python RUN_THIS.py` to initialize submodules and the engine.
 2. Build with `dotnet build`.
 3. Start the server with `./runserver.sh` and the client with `./runclient.sh`.
-4. Run tests with `dotnet test Content.IntegrationTests` and `dotnet test Content.Tests`.
 
-## Branching & Workflow
+## Branching
 
 All work targets the `release` branch. See [BRANCHING.md](BRANCHING.md) for the full strategy.
 
 ```bash
 git fetch origin release
 git checkout -b feat/my-feature origin/release
-# Make changes, commit, push
-# Open PR targeting release
+# Make changes, commit, push, open PR targeting release
 ```
 
-- **Feature branches:** `feat/<description>`
-- **Fix branches:** `fix/<description>`
-- **Commit prefix:** All fork-specific commits must start with `honksquad:` followed by a conventional commit type.
+Branch names use `feat/<description>` or `fix/<description>`. All fork-specific commits start with `honksquad:` followed by a conventional commit type:
 
-    ```
-    honksquad: feat: add new feature
-    honksquad: fix: resolve null reference in carry system
-    honksquad: refactor: extract helper for item weight calculation
-    ```
+```
+honksquad: feat: add new feature
+honksquad: fix: resolve null reference in carry system
+honksquad: refactor: extract helper for item weight calculation
+```
 
-## Code Style
+## The upstream rule
 
-Enforced via `.editorconfig`:
+Don't modify upstream files unless you have to. Every upstream file we touch is a potential merge conflict on the next rebase.
 
-- 4 spaces indent (2 for XML, YAML, and csproj)
-- File-scoped namespaces (`namespace Foo;`)
-- Allman brace style (braces on new line)
-- `var` everywhere
-- No `this.` qualification
-- Private fields: `_camelCase`
-- Max line length: 120 characters
+Instead, add new files (components, systems, events) and use ECS event subscriptions to hook into existing behavior. When you must edit an upstream file (adding a component to a prototype YAML, for example), keep the diff small.
 
-Follow the upstream [codebase conventions](https://docs.spacestation14.com/en/general-development/codebase-info/codebase-organization.html) for anything not covered here.
+### Marking your changes
 
-## Fork-Specific Rules
-
-### Avoid Modifying Upstream Files
-
-This fork regularly rebases on upstream. Every upstream file touched creates a potential merge conflict.
-
-- Add new features in **new files** (new components, systems, events) rather than editing existing upstream code.
-- Use ECS event subscriptions and hooks to extend behavior without modifying upstream systems.
-- When upstream files _must_ be touched (e.g., adding a component to a prototype YAML), keep changes minimal and isolated.
-
-### HONK Marker Comments
-
-When you must modify upstream C# files, wrap all fork changes with marker comments:
+Wrap fork changes in upstream C# files with marker comments so they're easy to find during rebase:
 
 ```csharp
 //HONK START - Brief description
@@ -64,7 +42,7 @@ using Some.New.Namespace;
 //HONK END
 ```
 
-For YAML:
+For YAML, use `#` comments:
 
 ```yaml
 # HONK START - Brief description
@@ -73,26 +51,22 @@ For YAML:
 # HONK END
 ```
 
-### YAML Formatting in Upstream Files
+### YAML indentation
 
-Never reformat upstream YAML. Match the existing file's indentation exactly. Upstream uses a specific style where sequence items sit at the same indent level as the parent key, not indented beneath it. See CLAUDE.md for examples. Only add or remove the lines you need.
+Upstream YAML uses a specific indentation style. Don't reformat it. Match whatever the surrounding lines do, and only add or remove the lines you need. Formatters will fight you on this, so double-check your diffs.
 
-### New File Locations
+### Where new files go
 
-Fork-specific files go under `@RussStation` prefixed directories to avoid upstream collisions:
+Fork-specific files live under `@RussStation` prefixed directories so they never collide with upstream paths:
 
-- `Resources/Prototypes/@RussStation/` for new prototype YAML
-- `Resources/Textures/@RussStation/` for new sprites and RSIs
-- `Resources/Audio/@RussStation/` for new sound files
-- `Content.Shared/RussStation/`, `Content.Server/RussStation/`, `Content.Client/RussStation/` for new C# code
+- `Resources/Prototypes/@RussStation/` for prototype YAML
+- `Resources/Textures/@RussStation/` for sprites and RSIs
+- `Resources/Audio/@RussStation/` for sound files
+- `Content.Shared/RussStation/`, `Content.Server/RussStation/`, `Content.Client/RussStation/` for C#
 
-## Pull Requests
+## Pull requests
 
-Use the [PR template](.github/PULL_REQUEST_TEMPLATE.md) and fill in all sections (About the PR, Why / Balance, Technical details, Media, Requirements, Breaking changes, Changelog).
-
-Follow the upstream [PR guidelines](https://docs.spacestation14.com/en/general-development/codebase-info/pull-request-guidelines.html).
-
-### Changelog
+Use the [PR template](.github/PULL_REQUEST_TEMPLATE.md) and fill in all sections. Follow the upstream [PR guidelines](https://docs.spacestation14.com/en/general-development/codebase-info/pull-request-guidelines.html).
 
 Player-facing changes need a `:cl:` changelog entry:
 
@@ -104,25 +78,22 @@ Player-facing changes need a `:cl:` changelog entry:
 - fix: Fixed fun!
 ```
 
-### Labels
-
-Apply appropriate labels to your PR after creating it. Maintainers may adjust labels during review.
-
 ## Testing
 
-- **Unit tests:** `dotnet test Content.Tests`
-- **Integration tests:** `dotnet test Content.IntegrationTests`
-- **Single test:** `dotnet test Content.Tests --filter "FullyQualifiedName~MyTestClass"`
-- **Local CI:** `./ci-local.sh` runs build, tests, and YAML linting
+Run tests before submitting:
 
-Run tests before submitting your PR. Integration tests treat YAML mapping warnings as failures.
+- `dotnet test Content.Tests` for unit tests
+- `dotnet test Content.IntegrationTests` for integration tests
+- `./ci-local.sh` to replicate the full CI pipeline locally (build, tests, YAML lint)
 
-## AI-Assisted Contributions
+Integration tests treat YAML mapping warnings as failures, so fix those before pushing.
 
-AI-assisted contributions to code, YAML, and documentation are accepted, provided the contributor understands and can speak to the changes they submit. Low-effort, unreviewed dumps will be rejected like any other low-quality PR.
+## AI-assisted contributions
 
-AI-generated artwork, sound files, and other creative assets are **not accepted**.
+AI-assisted contributions to code, YAML, and documentation are accepted, as long as you understand and can explain the changes you're submitting. Low-effort, unreviewed dumps get rejected like any other low-quality PR.
 
-## Getting Help
+AI-generated artwork, sound files, and other creative assets are not accepted.
 
-Join the [Discord](https://discord.gg/honk) if you want to help or have questions.
+## Questions?
+
+Join the [Discord](https://discord.gg/honk).
