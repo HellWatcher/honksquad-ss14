@@ -390,7 +390,7 @@
   parent: [OrganBase, OrganCyberneticInternal]
   id: OrganCyberneticEarsAdvanced
   name: advanced cybernetic ears
-  description: Premium cybernetic ears with sound filtering capabilities.
+  description: Advanced cybernetic ears with built-in deafness resistance.
   components:
     - type: Organ
       category: Ears
@@ -401,3 +401,4 @@
       tier: Advanced
       empEffect: Deafen
       empVulnerability: 0.5
+    - type: CyberneticEars

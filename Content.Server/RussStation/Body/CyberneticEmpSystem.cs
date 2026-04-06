@@ -22,7 +22,7 @@ public sealed class CyberneticEmpSystem : EntitySystem
 
     private static readonly ProtoId<DamageTypePrototype> ShockDamageType = "Shock";
     private static readonly EntProtoId DrowsinessEffect = "StatusEffectDrowsiness";
-    private static readonly EntProtoId SlurredEffect = "StatusEffectSlurred";
+    private static readonly EntProtoId DeafnessEffect = "StatusEffectTemporaryDeafness";
 
     public override void Initialize()
     {
@@ -70,7 +70,7 @@ public sealed class CyberneticEmpSystem : EntitySystem
                 break;
 
             case CyberneticEmpEffect.Deafen:
-                _statusEffects.TryAddStatusEffectDuration(body, SlurredEffect, duration);
+                _statusEffects.TryAddStatusEffectDuration(body, DeafnessEffect, duration);
                 break;
 
             case CyberneticEmpEffect.None:
