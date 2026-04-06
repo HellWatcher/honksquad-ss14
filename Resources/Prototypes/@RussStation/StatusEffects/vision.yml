@@ -1,0 +1,14 @@
+# Causes temporary blindness - vision cuts out entirely.
+# Used by cybernetic eyes EMP effect (Flicker).
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectTemporaryBlindness
+  name: temporary blindness
+  components:
+    - type: StatusEffect
+      whitelist:
+        components:
+          - MobState
+          - Blindable
+        requireAll: true
+    - type: TemporaryBlindness
