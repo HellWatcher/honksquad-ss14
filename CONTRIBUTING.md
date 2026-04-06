@@ -1,24 +1,99 @@
-# Honksquad Contributing Guidelines
+# Contributing to Honksquad
 
-Thanks for contributing to Honksquad, a downstream fork of [Space Station 14](https://github.com/space-wizards/space-station-14).
+Honksquad is a downstream fork of [Space Station 14](https://github.com/space-wizards/space-station-14). We rebase on upstream regularly, so most of the rules here exist to keep that process painless.
 
-## Code Style & PR Guidelines
+## Setup
 
-Follow the upstream [codebase conventions](https://docs.spacestation14.com/en/general-development/codebase-info/codebase-organization.html) and [PR guidelines](https://docs.spacestation14.com/en/general-development/codebase-info/pull-request-guidelines.html).
+1. Clone the repo and run `python RUN_THIS.py` to initialize submodules and the engine.
+2. Build with `dotnet build`.
+3. Start the server with `./runserver.sh` and the client with `./runclient.sh`.
 
-## Fork-Specific Rules
+## Branching
 
-- **Commit prefix:** All fork-specific commits must start with `honksquad:` (e.g., `honksquad: feat: add new feature`).
-- **Avoid modifying upstream files** whenever possible. Add new features in new files using ECS event subscriptions.
-- When upstream files must be touched, wrap changes with `//HONK START` / `//HONK END` marker comments (or `# HONK START` / `# HONK END` for YAML).
-- New files go under `@RussStation` prefixed directories (`Resources/Prototypes/@RussStation/`, etc.).
+All work targets the `release` branch. See [BRANCHING.md](BRANCHING.md) for the full strategy.
 
-## AI-Assisted Contributions
+```bash
+git fetch origin release
+git checkout -b feat/my-feature origin/release
+# Make changes, commit, push, open PR targeting release
+```
 
-AI-assisted contributions to code, YAML, and documentation are accepted, provided the contributor understands and can speak to the changes they submit. Low-effort, unreviewed dumps will be rejected like any other low-quality PR.
+Branch names use `feat/<description>` or `fix/<description>`. All fork-specific commits start with `honksquad:` followed by a conventional commit type:
 
-AI-generated artwork, sound files, and other creative assets are **not accepted**.
+```
+honksquad: feat: add new feature
+honksquad: fix: resolve null reference in carry system
+honksquad: refactor: extract helper for item weight calculation
+```
 
-## Getting Help
+## The upstream rule
 
-Join the [Discord](https://discord.gg/honk) if you want to help or have questions.
+Don't modify upstream files unless you have to. Every upstream file we touch is a potential merge conflict on the next rebase.
+
+Instead, add new files (components, systems, events) and use ECS event subscriptions to hook into existing behavior. When you must edit an upstream file (adding a component to a prototype YAML, for example), keep the diff small.
+
+### Marking your changes
+
+Wrap fork changes in upstream C# files with marker comments so they're easy to find during rebase:
+
+```csharp
+//HONK START - Brief description
+using Some.New.Namespace;
+//HONK END
+```
+
+For YAML, use `#` comments:
+
+```yaml
+# HONK START - Brief description
+- type: SomeComponent
+  someField: value
+# HONK END
+```
+
+### YAML indentation
+
+Upstream YAML uses a specific indentation style. Don't reformat it. Match whatever the surrounding lines do, and only add or remove the lines you need. Formatters will fight you on this, so double-check your diffs.
+
+### Where new files go
+
+Fork-specific files live under `@RussStation` prefixed directories so they never collide with upstream paths:
+
+- `Resources/Prototypes/@RussStation/` for prototype YAML
+- `Resources/Textures/@RussStation/` for sprites and RSIs
+- `Resources/Audio/@RussStation/` for sound files
+- `Content.Shared/RussStation/`, `Content.Server/RussStation/`, `Content.Client/RussStation/` for C#
+
+## Pull requests
+
+Use the [PR template](.github/PULL_REQUEST_TEMPLATE.md) and fill in all sections. Follow the upstream [PR guidelines](https://docs.spacestation14.com/en/general-development/codebase-info/pull-request-guidelines.html).
+
+Player-facing changes need a `:cl:` changelog entry:
+
+```
+:cl:
+- add: Added fun!
+- remove: Removed fun!
+- tweak: Changed fun!
+- fix: Fixed fun!
+```
+
+## Testing
+
+Run tests before submitting:
+
+- `dotnet test Content.Tests` for unit tests
+- `dotnet test Content.IntegrationTests` for integration tests
+- `./ci-local.sh` to replicate the full CI pipeline locally (build, tests, YAML lint)
+
+Integration tests treat YAML mapping warnings as failures, so fix those before pushing.
+
+## AI-assisted contributions
+
+AI-assisted contributions to code, YAML, and documentation are accepted, as long as you understand and can explain the changes you're submitting. Low-effort, unreviewed dumps get rejected like any other low-quality PR.
+
+AI-generated artwork, sound files, and other creative assets are not accepted.
+
+## Questions?
+
+Join the [Discord](https://discord.gg/honk).
