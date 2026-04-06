@@ -8,6 +8,7 @@ using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Body;
+using Content.Shared.RussStation.Hearing.Systems;
 using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Body;
@@ -41,6 +42,9 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         // Stomach: nutrient efficiency (reduced hunger decay)
         SubscribeLocalEvent<CyberneticStomachComponent, OrganGotInsertedEvent>(OnStomachInserted);
         SubscribeLocalEvent<CyberneticStomachComponent, OrganGotRemovedEvent>(OnStomachRemoved);
+
+        // Ears: deafness resistance
+        SubscribeLocalEvent<BodyComponent, CanHearAttemptEvent>(OnCanHearAttempt);
     }
 
     // ================================================================
@@ -159,5 +163,24 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
             return;
 
         _hunger.SetBaseDecayRate(body, hunger.BaseDecayRate * modifier, hunger);
+    }
+
+    // ================================================================
+    // Ears — deafness resistance
+    // ================================================================
+
+    private void OnCanHearAttempt(EntityUid uid, BodyComponent body, CanHearAttemptEvent args)
+    {
+        if (body.Organs == null)
+            return;
+
+        foreach (var organ in body.Organs.ContainedEntities)
+        {
+            if (HasComp<CyberneticEarsComponent>(organ))
+            {
+                args.Uncancel();
+                return;
+            }
+        }
     }
 }

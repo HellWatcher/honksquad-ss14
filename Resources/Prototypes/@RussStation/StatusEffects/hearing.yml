@@ -1,0 +1,13 @@
+# Causes temporary deafness - muffles/obfuscates incoming chat messages.
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectTemporaryDeafness
+  name: temporary deafness
+  components:
+    - type: StatusEffect
+      whitelist:
+        components:
+          - MobState
+          - Deafable
+        requireAll: true
+    - type: TemporaryDeafness
