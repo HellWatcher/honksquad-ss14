@@ -1,7 +1,4 @@
 using Content.Shared.Body;
-using Content.Shared.Damage;
-using Content.Shared.Damage.Prototypes;
-using Content.Shared.Damage.Systems;
 using Content.Shared.Emp;
 using Content.Shared.RussStation.Body;
 using Content.Shared.StatusEffectNew;
@@ -15,12 +12,10 @@ namespace Content.Server.RussStation.Body;
 /// </summary>
 public sealed class CyberneticEmpSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly SharedStunSystem _stun = default!;
     [Dependency] private readonly StatusEffectsSystem _statusEffects = default!;
 
-    private static readonly ProtoId<DamageTypePrototype> ShockDamageType = "Shock";
+    private static readonly EntProtoId CardiacArrestEffect = "StatusEffectCardiacArrest";
     private static readonly EntProtoId DrowsinessEffect = "StatusEffectDrowsiness";
     private static readonly EntProtoId DeafnessEffect = "StatusEffectTemporaryDeafness";
 
@@ -57,8 +52,7 @@ public sealed class CyberneticEmpSystem : EntitySystem
         switch (cyber.EmpEffect)
         {
             case CyberneticEmpEffect.CardiacArrest:
-                var damage = new DamageSpecifier(_proto.Index(ShockDamageType), 30 * cyber.EmpVulnerability);
-                _damageable.TryChangeDamage(body, damage);
+                _statusEffects.TryAddStatusEffectDuration(body, CardiacArrestEffect, duration);
                 break;
 
             case CyberneticEmpEffect.BreathingFailure:

@@ -1,0 +1,14 @@
+# Cardiac arrest - heart stops pumping, causing oxygen deprivation.
+# Used by cybernetic heart EMP effect (CardiacArrest).
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectCardiacArrest
+  name: cardiac arrest
+  components:
+    - type: StatusEffect
+      whitelist:
+        components:
+          - MobState
+          - Body
+        requireAll: true
+    - type: CardiacArrest
