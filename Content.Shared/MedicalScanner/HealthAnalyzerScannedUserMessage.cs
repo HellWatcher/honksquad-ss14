@@ -30,10 +30,13 @@ public struct HealthAnalyzerUiState
     public bool? Bleeding;
     public bool? Unrevivable;
     public List<WoundDisplayInfo>? Wounds; //HONK
+    // HONK START - Cardiac arrest alert
+    public bool? CardiacArrest;
+    // HONK END
 
     public HealthAnalyzerUiState() {}
 
-    public HealthAnalyzerUiState(NetEntity? targetEntity, float temperature, float bloodLevel, bool? scanMode, bool? bleeding, bool? unrevivable, List<WoundDisplayInfo>? wounds = null) //HONK
+    public HealthAnalyzerUiState(NetEntity? targetEntity, float temperature, float bloodLevel, bool? scanMode, bool? bleeding, bool? unrevivable, List<WoundDisplayInfo>? wounds = null, bool? cardiacArrest = null) //HONK - Wounds + Cardiac arrest alert
     {
         TargetEntity = targetEntity;
         Temperature = temperature;
@@ -42,5 +45,6 @@ public struct HealthAnalyzerUiState
         Bleeding = bleeding;
         Unrevivable = unrevivable;
         Wounds = wounds; //HONK
+        CardiacArrest = cardiacArrest; // HONK
     }
 }
