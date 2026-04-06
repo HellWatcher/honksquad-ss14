@@ -19,6 +19,9 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 using Content.Server.Body.Systems;
+// HONK START - Cardiac arrest alert
+using Content.Shared.RussStation.Body;
+// HONK END
 
 namespace Content.Server.Medical;
 
@@ -248,13 +251,19 @@ public sealed class HealthAnalyzerSystem : EntitySystem
         if (TryComp<UnrevivableComponent>(entity, out var unrevivableComp) && unrevivableComp.Analyzable)
             unrevivable = true;
 
+        // HONK START - Cardiac arrest alert
+        // TODO: Move cardiac arrest detection under wound checking once that system is implemented (#323)
+        var cardiacArrest = HasComp<ActiveCardiacArrestComponent>(entity);
+        // HONK END
+
         return new HealthAnalyzerUiState(
             GetNetEntity(entity),
             bodyTemperature,
             bloodAmount,
             null,
             bleeding,
-            unrevivable
+            unrevivable,
+            cardiacArrest // HONK
         );
     }
 }
