@@ -1,14 +1,21 @@
+using System.Linq;
 using Content.Server.Body.Systems;
 using Content.Shared.Atmos;
+using Content.Shared.Atmos.EntitySystems;
 using Content.Shared.Body;
 using Content.Shared.Chemistry.Components;
+using Content.Shared.Chemistry.Reagent;
+using Content.Shared.EntityConditions.Conditions.Body;
+using Content.Shared.EntityEffects.Effects.Body;
 using Content.Shared.Flash;
+using Content.Shared.Metabolism;
 using Content.Shared.Mobs;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Body;
 using Content.Shared.RussStation.Hearing.Systems;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Body;
@@ -21,8 +28,10 @@ namespace Content.Server.RussStation.Body;
 public sealed class CyberneticOrganEffectsSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstream = default!;
     [Dependency] private readonly HungerSystem _hunger = default!;
+    [Dependency] private readonly SharedAtmosphereSystem _atmos = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
     public override void Initialize()
@@ -36,6 +45,8 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         SubscribeLocalEvent<BodyComponent, FlashAttemptEvent>(OnFlashAttempt);
 
         // Lungs: toxic gas filtering (runs on the organ via relay, before RespiratorSystem processes it)
+        SubscribeLocalEvent<CyberneticLungsComponent, OrganGotInsertedEvent>(OnLungsInserted);
+        SubscribeLocalEvent<CyberneticLungsComponent, OrganGotRemovedEvent>(OnLungsRemoved);
         SubscribeLocalEvent<CyberneticLungsComponent, BodyRelayedEvent<InhaledGasEvent>>(OnInhaledGas,
             before: [typeof(RespiratorSystem)]);
 
@@ -112,18 +123,84 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
     // Lungs — toxic gas filtering
     // ================================================================
 
-    /// <summary>
-    /// Safe gases that cybernetic lungs should NOT filter.
-    /// Everything else (plasma, tritium, ammonia, etc.) gets reduced.
-    /// </summary>
-    private static readonly Gas[] SafeGases = [Gas.Oxygen, Gas.Nitrogen, Gas.WaterVapor];
+    private void OnLungsInserted(EntityUid uid, CyberneticLungsComponent lungs, ref OrganGotInsertedEvent args)
+    {
+        lungs.OxygenatingGases.Clear();
+
+        // Find the host body's metabolizer types from any organ that has them.
+        var metabolizerTypes = new HashSet<ProtoId<MetabolizerTypePrototype>>();
+        if (TryComp<BodyComponent>(args.Target, out var body) && body.Organs != null)
+        {
+            foreach (var organ in body.Organs.ContainedEntities)
+            {
+                if (TryComp<MetabolizerComponent>(organ, out var met) && met.MetabolizerTypes != null)
+                {
+                    metabolizerTypes.UnionWith(met.MetabolizerTypes);
+                }
+            }
+        }
+
+        if (metabolizerTypes.Count == 0)
+            return;
+
+        // Scan gas reagent prototypes for Oxygenate effects matching the host's types.
+        for (var i = 0; i < Atmospherics.TotalNumberOfGases; i++)
+        {
+            var reagentId = _atmos.GasReagents[i];
+            if (reagentId == null || !_proto.TryIndex<ReagentPrototype>(reagentId, out var reagent))
+                continue;
+
+            if (IsOxygenatingForTypes(reagent, metabolizerTypes))
+                lungs.OxygenatingGases.Add((Gas) i);
+        }
+    }
+
+    private void OnLungsRemoved(EntityUid uid, CyberneticLungsComponent lungs, ref OrganGotRemovedEvent args)
+    {
+        lungs.OxygenatingGases.Clear();
+    }
+
+    private bool IsOxygenatingForTypes(
+        ReagentPrototype reagent,
+        HashSet<ProtoId<MetabolizerTypePrototype>> types)
+    {
+        if (reagent.Metabolisms == null)
+            return false;
+
+        // Check both Respiration and Bloodstream stages (gases use both).
+        foreach (var (_, entry) in reagent.Metabolisms.Metabolisms)
+        {
+            foreach (var effect in entry.Effects)
+            {
+                if (effect is not Oxygenate oxy || oxy.Factor <= 0f)
+                    continue;
+
+                if (effect.Conditions == null)
+                    return true;
+
+                foreach (var condition in effect.Conditions)
+                {
+                    if (condition is not MetabolizerTypeCondition metCond)
+                        continue;
+
+                    var matchesAny = metCond.Type.Any(t => types.Contains(t));
+                    // Inverted means "NOT these types", so invert the result.
+                    if (matchesAny != metCond.Inverted)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     private void OnInhaledGas(Entity<CyberneticLungsComponent> ent, ref BodyRelayedEvent<InhaledGasEvent> args)
     {
         var gas = args.Args.Gas;
+
         foreach (var gasId in Enum.GetValues<Gas>())
         {
-            if (Array.IndexOf(SafeGases, gasId) >= 0)
+            if (ent.Comp.OxygenatingGases.Contains(gasId))
                 continue;
 
             var moles = gas[(int) gasId];
