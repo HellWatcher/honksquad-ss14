@@ -2,7 +2,7 @@
 
 - type: technology
   id: BasicCybernetics
-  name: Basic Cybernetics
+  name: research-technology-basic-cybernetics
   icon:
     sprite: Mobs/Species/Human/organs.rsi
     state: heart-on
@@ -19,7 +19,7 @@
 
 - type: technology
   id: StandardCybernetics
-  name: Standard Cybernetics
+  name: research-technology-standard-cybernetics
   icon:
     sprite: Mobs/Species/Human/organs.rsi
     state: heart-on
@@ -36,7 +36,7 @@
 
 - type: technology
   id: AdvancedCybernetics
-  name: Advanced Cybernetics
+  name: research-technology-advanced-cybernetics
   icon:
     sprite: Mobs/Species/Human/organs.rsi
     state: heart-on
