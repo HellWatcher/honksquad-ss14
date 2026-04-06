@@ -104,6 +104,19 @@ public sealed class HungerSystem : EntitySystem
         UpdateCurrentThreshold(uid, component);
     }
 
+    //HONK START - Cybernetic stomach nutrient efficiency
+    public void SetBaseDecayRate(EntityUid uid, float rate, HungerComponent? component = null)
+    {
+        if (!Resolve(uid, ref component))
+            return;
+
+        var currentHunger = GetHunger(component);
+        component.BaseDecayRate = rate;
+        SetAuthoritativeHungerValue((uid, component), currentHunger);
+        UpdateCurrentThreshold(uid, component);
+    }
+    //HONK END
+
     /// <summary>
     /// Sets <see cref="HungerComponent.LastAuthoritativeHungerValue"/> and
     /// <see cref="HungerComponent.LastAuthoritativeHungerChangeTime"/>, and dirties this entity. This "resets" the
