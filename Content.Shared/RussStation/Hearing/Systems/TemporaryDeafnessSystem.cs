@@ -1,12 +1,7 @@
-using Content.Shared.StatusEffect;
-using Robust.Shared.Prototypes;
-
 namespace Content.Shared.RussStation.Hearing.Systems;
 
 public sealed class TemporaryDeafnessSystem : EntitySystem
 {
-    public static readonly ProtoId<StatusEffectPrototype> DeafnessStatusEffect = "TemporaryDeafness";
-
     [Dependency] private readonly DeafableSystem _deafable = default!;
 
     public override void Initialize()
