@@ -1,9 +1,9 @@
 using Content.Server.Body.Systems;
+using Content.Shared.Medical;
 using Content.Shared.RussStation.Body;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
 using Content.Shared.Stunnable;
-
 namespace Content.Server.RussStation.Body;
 
 /// <summary>
@@ -29,6 +29,7 @@ public sealed class CardiacArrestSystem : EntitySystem
 
         SubscribeLocalEvent<CardiacArrestComponent, StatusEffectAppliedEvent>(OnApplied);
         SubscribeLocalEvent<CardiacArrestComponent, StatusEffectRemovedEvent>(OnRemoved);
+        SubscribeLocalEvent<ActiveCardiacArrestComponent, TargetDefibrillatedEvent>(OnDefibrillated);
     }
 
     private void OnApplied(Entity<CardiacArrestComponent> ent, ref StatusEffectAppliedEvent args)
@@ -42,6 +43,19 @@ public sealed class CardiacArrestSystem : EntitySystem
     private void OnRemoved(Entity<CardiacArrestComponent> ent, ref StatusEffectRemovedEvent args)
     {
         RemComp<ActiveCardiacArrestComponent>(args.Target);
+    }
+
+    private void OnDefibrillated(Entity<ActiveCardiacArrestComponent> ent, ref TargetDefibrillatedEvent args)
+    {
+        if (!TryComp<StatusEffectContainerComponent>(ent, out var container)
+            || container.ActiveStatusEffects is not { } effectContainer)
+            return;
+
+        foreach (var effect in effectContainer.ContainedEntities)
+        {
+            if (HasComp<CardiacArrestComponent>(effect))
+                QueueDel(effect);
+        }
     }
 
     public override void Update(float frameTime)
