@@ -15,7 +15,7 @@ public sealed class CyberneticEmpSystem : EntitySystem
 
     private static readonly EntProtoId CardiacArrestEffect = "StatusEffectCardiacArrest";
     private static readonly EntProtoId BreathingSuppressedEffect = "StatusEffectBreathingSuppressed";
-    private static readonly EntProtoId DrowsinessEffect = "StatusEffectDrowsiness";
+    private static readonly EntProtoId BlindnessEffect = "StatusEffectTemporaryBlindness";
     private static readonly EntProtoId DeafnessEffect = "StatusEffectTemporaryDeafness";
 
     public override void Initialize()
@@ -59,7 +59,7 @@ public sealed class CyberneticEmpSystem : EntitySystem
                 break;
 
             case CyberneticEmpEffect.Flicker:
-                _statusEffects.TryAddStatusEffectDuration(body, DrowsinessEffect, duration);
+                _statusEffects.TryAddStatusEffectDuration(body, BlindnessEffect, duration);
                 break;
 
             case CyberneticEmpEffect.Deafen:
