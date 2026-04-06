@@ -1,0 +1,153 @@
+# Cybernetic organ lathe recipes - 6 organs x 3 tiers
+# Printed at the exosuit fabricator (Robotics category)
+
+# ============================================================
+# Abstract bases per tier
+# ============================================================
+
+- type: latheRecipe
+  abstract: true
+  id: BaseCyberneticRecipeBasic
+  categories:
+    - Robotics
+  completetime: 4
+  materials:
+    Steel: 500
+    Plastic: 300
+
+- type: latheRecipe
+  abstract: true
+  id: BaseCyberneticRecipeStandard
+  categories:
+    - Robotics
+  completetime: 6
+  materials:
+    Steel: 500
+    Plastic: 300
+    Gold: 200
+
+- type: latheRecipe
+  abstract: true
+  id: BaseCyberneticRecipeAdvanced
+  categories:
+    - Robotics
+  completetime: 8
+  materials:
+    Steel: 500
+    Plasma: 300
+    Gold: 300
+    Silver: 200
+
+# ============================================================
+# Heart
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticHeartBasic
+  result: OrganCyberneticHeartBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticHeartStandard
+  result: OrganCyberneticHeartStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticHeartAdvanced
+  result: OrganCyberneticHeartAdvanced
+
+# ============================================================
+# Lungs
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticLungsBasic
+  result: OrganCyberneticLungsBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticLungsStandard
+  result: OrganCyberneticLungsStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticLungsAdvanced
+  result: OrganCyberneticLungsAdvanced
+
+# ============================================================
+# Stomach
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticStomachBasic
+  result: OrganCyberneticStomachBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticStomachStandard
+  result: OrganCyberneticStomachStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticStomachAdvanced
+  result: OrganCyberneticStomachAdvanced
+
+# ============================================================
+# Liver
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticLiverBasic
+  result: OrganCyberneticLiverBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticLiverStandard
+  result: OrganCyberneticLiverStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticLiverAdvanced
+  result: OrganCyberneticLiverAdvanced
+
+# ============================================================
+# Eyes
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticEyesBasic
+  result: OrganCyberneticEyesBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticEyesStandard
+  result: OrganCyberneticEyesStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticEyesAdvanced
+  result: OrganCyberneticEyesAdvanced
+
+# ============================================================
+# Ears
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticEarsBasic
+  result: OrganCyberneticEarsBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticEarsStandard
+  result: OrganCyberneticEarsStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticEarsAdvanced
+  result: OrganCyberneticEarsAdvanced

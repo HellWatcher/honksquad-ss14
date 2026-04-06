@@ -1,0 +1,401 @@
+# Cybernetic organ replacements - 6 organs x 3 tiers (Basic, Standard, Advanced)
+# All use human organ sprites as placeholders until cybernetic sprites are made.
+# Parent OrganBase directly (not species-specific bases) to avoid GibbableOrgan inheritance.
+
+# ============================================================
+# Abstract bases for shared cybernetic sprite path
+# ============================================================
+
+- type: entity
+  id: OrganCyberneticInternal
+  abstract: true
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/organs.rsi
+
+# ============================================================
+# HEART - EmpEffect: CardiacArrest
+# ============================================================
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticHeartBasic
+  name: basic cybernetic heart
+  description: A cheap cybernetic heart replacement. Keeps you alive, barely.
+  components:
+    - type: Organ
+      category: Heart
+    - type: Sprite
+      layers:
+        - state: heart-on
+    - type: Metabolizer
+      maxReagents: 1
+      stages: [Bloodstream]
+    - type: CyberneticOrgan
+      tier: Basic
+      empEffect: CardiacArrest
+      empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticHeartStandard
+  name: cybernetic heart
+  description: A reliable cybernetic heart. Performs identically to a biological one.
+  components:
+    - type: Organ
+      category: Heart
+    - type: Sprite
+      layers:
+        - state: heart-on
+    - type: Metabolizer
+      maxReagents: 2
+      stages: [Bloodstream]
+    - type: CyberneticOrgan
+      tier: Standard
+      empEffect: CardiacArrest
+      empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticHeartAdvanced
+  name: advanced cybernetic heart
+  description: A state-of-the-art cybernetic heart with enhanced circulatory efficiency.
+  components:
+    - type: Organ
+      category: Heart
+    - type: Sprite
+      layers:
+        - state: heart-on
+    - type: Metabolizer
+      maxReagents: 3
+      stages: [Bloodstream]
+    - type: CyberneticOrgan
+      tier: Advanced
+      empEffect: CardiacArrest
+      empVulnerability: 0.5
+    - type: MovementSpeedModifier
+      baseWalkSpeed: 2.6
+      baseSprintSpeed: 4.6
+
+# ============================================================
+# LUNGS - EmpEffect: BreathingFailure
+# ============================================================
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticLungsBasic
+  name: basic cybernetic lungs
+  description: Budget cybernetic lungs. You'll breathe, but don't push it.
+  components:
+    - type: Organ
+      category: Lungs
+    - type: Lung
+    - type: Metabolizer
+      stages: [Respiration]
+    - type: SolutionContainerManager
+      solutions:
+        Lung:
+          maxVol: 75.0
+          canReact: false
+    - type: Sprite
+      layers:
+        - state: lung-l
+        - state: lung-r
+    - type: CyberneticOrgan
+      tier: Basic
+      empEffect: BreathingFailure
+      empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticLungsStandard
+  name: cybernetic lungs
+  description: Reliable cybernetic lungs. Breathe easy.
+  components:
+    - type: Organ
+      category: Lungs
+    - type: Lung
+    - type: Metabolizer
+      stages: [Respiration]
+    - type: SolutionContainerManager
+      solutions:
+        Lung:
+          maxVol: 100.0
+          canReact: false
+    - type: Sprite
+      layers:
+        - state: lung-l
+        - state: lung-r
+    - type: CyberneticOrgan
+      tier: Standard
+      empEffect: BreathingFailure
+      empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticLungsAdvanced
+  name: advanced cybernetic lungs
+  description: High-end cybernetic lungs with extended oxygen reserves.
+  components:
+    - type: Organ
+      category: Lungs
+    - type: Lung
+    - type: Metabolizer
+      stages: [Respiration]
+    - type: SolutionContainerManager
+      solutions:
+        Lung:
+          maxVol: 130.0
+          canReact: false
+    - type: Sprite
+      layers:
+        - state: lung-l
+        - state: lung-r
+    - type: CyberneticOrgan
+      tier: Advanced
+      empEffect: BreathingFailure
+      empVulnerability: 0.5
+
+# ============================================================
+# STOMACH - EmpEffect: None (non-critical organ)
+# ============================================================
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticStomachBasic
+  name: basic cybernetic stomach
+  description: A bare-bones cybernetic stomach. Digests slowly.
+  components:
+    - type: Organ
+      category: Stomach
+    - type: Stomach
+    - type: SolutionContainerManager
+      solutions:
+        stomach:
+          maxVol: 35
+    - type: Metabolizer
+      maxReagents: 2
+      stages: [Digestion]
+    - type: Sprite
+      layers:
+        - state: stomach
+    - type: CyberneticOrgan
+      tier: Basic
+      empEffect: None
+      empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticStomachStandard
+  name: cybernetic stomach
+  description: A dependable cybernetic stomach.
+  components:
+    - type: Organ
+      category: Stomach
+    - type: Stomach
+    - type: SolutionContainerManager
+      solutions:
+        stomach:
+          maxVol: 50
+    - type: Metabolizer
+      maxReagents: 3
+      stages: [Digestion]
+    - type: Sprite
+      layers:
+        - state: stomach
+    - type: CyberneticOrgan
+      tier: Standard
+      empEffect: None
+      empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticStomachAdvanced
+  name: advanced cybernetic stomach
+  description: A high-capacity cybernetic stomach with rapid digestion.
+  components:
+    - type: Organ
+      category: Stomach
+    - type: Stomach
+    - type: SolutionContainerManager
+      solutions:
+        stomach:
+          maxVol: 70
+    - type: Metabolizer
+      maxReagents: 4
+      stages: [Digestion]
+    - type: Sprite
+      layers:
+        - state: stomach
+    - type: CyberneticOrgan
+      tier: Advanced
+      empEffect: None
+      empVulnerability: 0.5
+
+# ============================================================
+# LIVER - EmpEffect: None (non-critical organ)
+# ============================================================
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticLiverBasic
+  name: basic cybernetic liver
+  description: A cheap cybernetic liver. Filters toxins, eventually.
+  components:
+    - type: Organ
+      category: Liver
+    - type: Sprite
+      layers:
+        - state: liver
+    - type: Metabolizer
+      maxReagents: 1
+      stages: [Metabolites]
+    - type: CyberneticOrgan
+      tier: Basic
+      empEffect: None
+      empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticLiverStandard
+  name: cybernetic liver
+  description: A reliable cybernetic liver.
+  components:
+    - type: Organ
+      category: Liver
+    - type: Sprite
+      layers:
+        - state: liver
+    - type: Metabolizer
+      maxReagents: 1
+      stages: [Metabolites]
+    - type: CyberneticOrgan
+      tier: Standard
+      empEffect: None
+      empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticLiverAdvanced
+  name: advanced cybernetic liver
+  description: A high-performance cybernetic liver with enhanced toxin processing.
+  components:
+    - type: Organ
+      category: Liver
+    - type: Sprite
+      layers:
+        - state: liver
+    - type: Metabolizer
+      maxReagents: 2
+      stages: [Metabolites]
+    - type: CyberneticOrgan
+      tier: Advanced
+      empEffect: None
+      empVulnerability: 0.5
+
+# ============================================================
+# EYES - EmpEffect: Flicker
+# ============================================================
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticEyesBasic
+  name: basic cybernetic eyes
+  description: Cheap cybernetic eyes. They work, mostly.
+  components:
+    - type: Organ
+      category: Eyes
+    - type: Sprite
+      layers:
+        - state: eyeball-l
+        - state: eyeball-r
+    - type: CyberneticOrgan
+      tier: Basic
+      empEffect: Flicker
+      empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticEyesStandard
+  name: cybernetic eyes
+  description: Standard cybernetic eyes with clear vision.
+  components:
+    - type: Organ
+      category: Eyes
+    - type: Sprite
+      layers:
+        - state: eyeball-l
+        - state: eyeball-r
+    - type: CyberneticOrgan
+      tier: Standard
+      empEffect: Flicker
+      empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticEyesAdvanced
+  name: advanced cybernetic eyes
+  description: Top-of-the-line cybernetic eyes with enhanced visual acuity.
+  components:
+    - type: Organ
+      category: Eyes
+    - type: Sprite
+      layers:
+        - state: eyeball-l
+        - state: eyeball-r
+    - type: CyberneticOrgan
+      tier: Advanced
+      empEffect: Flicker
+      empVulnerability: 0.5
+
+# ============================================================
+# EARS - EmpEffect: Deafen
+# ============================================================
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticEarsBasic
+  name: basic cybernetic ears
+  description: Budget cybernetic ears. You'll hear, sort of.
+  components:
+    - type: Organ
+      category: Ears
+    - type: Sprite
+      layers:
+        - state: ears
+    - type: CyberneticOrgan
+      tier: Basic
+      empEffect: Deafen
+      empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticEarsStandard
+  name: cybernetic ears
+  description: Reliable cybernetic ears with normal hearing.
+  components:
+    - type: Organ
+      category: Ears
+    - type: Sprite
+      layers:
+        - state: ears
+    - type: CyberneticOrgan
+      tier: Standard
+      empEffect: Deafen
+      empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBase, OrganCyberneticInternal]
+  id: OrganCyberneticEarsAdvanced
+  name: advanced cybernetic ears
+  description: Premium cybernetic ears with sound filtering capabilities.
+  components:
+    - type: Organ
+      category: Ears
+    - type: Sprite
+      layers:
+        - state: ears
+    - type: CyberneticOrgan
+      tier: Advanced
+      empEffect: Deafen
+      empVulnerability: 0.5
