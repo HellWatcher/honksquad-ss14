@@ -35,8 +35,8 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         // Eyes: flash protection
         SubscribeLocalEvent<BodyComponent, FlashAttemptEvent>(OnFlashAttempt);
 
-        // Lungs: toxic gas filtering (must run before RespiratorSystem relays to lungs)
-        SubscribeLocalEvent<BodyComponent, InhaledGasEvent>(OnInhaledGas,
+        // Lungs: toxic gas filtering (runs on the organ via relay, before RespiratorSystem processes it)
+        SubscribeLocalEvent<CyberneticLungsComponent, BodyRelayedEvent<InhaledGasEvent>>(OnInhaledGas,
             before: [typeof(RespiratorSystem)]);
 
         // Stomach: nutrient efficiency (reduced hunger decay)
@@ -114,22 +114,9 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
     /// </summary>
     private static readonly Gas[] SafeGases = [Gas.Oxygen, Gas.Nitrogen, Gas.WaterVapor];
 
-    private void OnInhaledGas(EntityUid uid, BodyComponent body, ref InhaledGasEvent args)
+    private void OnInhaledGas(Entity<CyberneticLungsComponent> ent, ref BodyRelayedEvent<InhaledGasEvent> args)
     {
-        if (body.Organs == null)
-            return;
-
-        CyberneticLungsComponent? lungs = null;
-        foreach (var organ in body.Organs.ContainedEntities)
-        {
-            if (TryComp(organ, out lungs))
-                break;
-        }
-
-        if (lungs == null)
-            return;
-
-        var gas = args.Gas;
+        var gas = args.Args.Gas;
         foreach (var gasId in Enum.GetValues<Gas>())
         {
             if (Array.IndexOf(SafeGases, gasId) >= 0)
@@ -139,7 +126,7 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
             if (moles <= 0f)
                 continue;
 
-            gas.SetMoles(gasId, moles * (1f - lungs.FilterFraction));
+            gas.SetMoles(gasId, moles * (1f - ent.Comp.FilterFraction));
         }
     }
 
