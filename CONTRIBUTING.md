@@ -64,6 +64,18 @@ Fork-specific files live under `@RussStation` prefixed directories so they never
 - `Resources/Audio/@RussStation/` for sound files
 - `Content.Shared/RussStation/`, `Content.Server/RussStation/`, `Content.Client/RussStation/` for C#
 
+## Bug fixes within feature PRs
+
+When a feature PR has bugs tracked as issues, each fix gets its own branch off the feature branch (not off `release`). The fix PR targets the feature branch, not `release`.
+
+```
+feat/my-feature        <- parent PR targets release
+  ├── fix/123-some-bug   <- PR targets feat/my-feature
+  └── fix/124-other-bug  <- PR targets feat/my-feature
+```
+
+This keeps fixes reviewable in isolation. The parent feature PR rolls everything up into `release`. See [BRANCHING.md](BRANCHING.md) for the full workflow.
+
 ## Pull requests
 
 Use the [PR template](.github/PULL_REQUEST_TEMPLATE.md) and fill in all sections. Follow the upstream [PR guidelines](https://docs.spacestation14.com/en/general-development/codebase-info/pull-request-guidelines.html).
