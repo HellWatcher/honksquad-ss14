@@ -153,6 +153,7 @@
       tier: Advanced
       empEffect: BreathingFailure
       empVulnerability: 0.5
+    - type: CyberneticLungs
 
 # ============================================================
 # STOMACH - EmpEffect: None (non-critical organ)
@@ -210,7 +211,7 @@
   parent: [OrganBase, OrganCyberneticInternal]
   id: OrganCyberneticStomachAdvanced
   name: advanced cybernetic stomach
-  description: A high-capacity cybernetic stomach with rapid digestion.
+  description: A high-efficiency cybernetic stomach that extracts more nutrients from food.
   components:
     - type: Organ
       category: Stomach
@@ -229,6 +230,7 @@
       tier: Advanced
       empEffect: None
       empVulnerability: 0.5
+    - type: CyberneticStomach
 
 # ============================================================
 # LIVER - EmpEffect: None (non-critical organ)
@@ -285,11 +287,13 @@
         - state: liver
     - type: Metabolizer
       maxReagents: 2
+      updateIntervalMultiplier: 0.75
       stages: [Metabolites]
     - type: CyberneticOrgan
       tier: Advanced
       empEffect: None
       empVulnerability: 0.5
+    - type: CyberneticLiver
 
 # ============================================================
 # EYES - EmpEffect: Flicker
@@ -345,6 +349,7 @@
       tier: Advanced
       empEffect: Flicker
       empVulnerability: 0.5
+    - type: CyberneticEyes
 
 # ============================================================
 # EARS - EmpEffect: Deafen
@@ -386,7 +391,7 @@
   parent: [OrganBase, OrganCyberneticInternal]
   id: OrganCyberneticEarsAdvanced
   name: advanced cybernetic ears
-  description: Premium cybernetic ears with sound filtering capabilities.
+  description: Advanced cybernetic ears with built-in deafness resistance.
   components:
     - type: Organ
       category: Ears
@@ -397,3 +402,4 @@
       tier: Advanced
       empEffect: Deafen
       empVulnerability: 0.5
+    - type: CyberneticEars
