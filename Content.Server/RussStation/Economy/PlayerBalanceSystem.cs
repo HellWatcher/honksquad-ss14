@@ -70,8 +70,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
         comp.AccountNumber = GenerateAccountNumber();
         _accountIndex[comp.AccountNumber] = args.Mob;
 
-        Dirty(args.Mob, comp);
-
         // Stamp account number onto the player's ID card.
         if (_idCard.TryFindIdCard(args.Mob, out var idCard))
         {
@@ -132,7 +130,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         comp.Balance -= amount;
         RecordTransaction(comp, -amount, description ?? "Debit");
-        Dirty(uid, comp);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
         return true;
     }
@@ -147,7 +144,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         comp.Balance += amount;
         RecordTransaction(comp, amount, description ?? "Credit");
-        Dirty(uid, comp);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
     }
 
@@ -172,7 +168,8 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
     /// <summary>
     /// Create a new bank account for an entity, invalidating any previous account.
-    /// Balance defaults to 0 unless overridden.
+    /// Intentionally resets balance to startingBalance (default 0) -- creating a new account
+    /// means the old one and its funds are gone. This is the intended penalty for account replacement.
     /// </summary>
     public string CreateAccount(EntityUid uid, int startingBalance = 0)
     {
@@ -184,7 +181,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
         comp.Balance = startingBalance;
         comp.AccountNumber = GenerateAccountNumber();
         _accountIndex[comp.AccountNumber] = uid;
-        Dirty(uid, comp);
 
         _memories.AddMemory(uid, "memories-key-account-number", comp.AccountNumber);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
