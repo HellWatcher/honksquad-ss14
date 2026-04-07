@@ -75,7 +75,7 @@ public sealed class PayrollSystem : EntitySystem
         if (!_jobs.MindTryGetJobId(args.MindId, out var jobId))
             return;
 
-        comp.JobId = jobId.Value;
+        comp.JobId = jobId!.Value;
     }
 
     private void OnBalanceStartup(EntityUid uid, PlayerBalanceComponent comp, ComponentStartup args)
