@@ -22,7 +22,7 @@ public sealed partial class PluoxiumFormationReaction : IGasReactionEffect
         // Rate limited by all three reactants and max rate
         var produced = Math.Min(co2, o2 / 0.5f);
         produced = Math.Min(produced, tritium / 0.01f);
-        produced = Math.Min(produced, Atmospherics.PluoxiumFormationMaxRate);
+        produced = Math.Min(produced, RussAtmospherics.PluoxiumFormationMaxRate);
 
         if (produced <= 0)
             return ReactionResult.NoReaction;

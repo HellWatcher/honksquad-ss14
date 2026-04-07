@@ -25,14 +25,14 @@ public sealed partial class MiasmaOxidationReaction : IGasReactionEffect
             return ReactionResult.NoReaction;
 
         var miasma = mixture.GetMoles(Gas.Miasma);
-        var cleanedMoles = Math.Min(miasma, Atmospherics.MiasmaOxidationRate);
+        var cleanedMoles = Math.Min(miasma, RussAtmospherics.MiasmaOxidationRate);
 
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
         mixture.AdjustMoles(Gas.Miasma, -cleanedMoles);
         mixture.AdjustMoles(Gas.Oxygen, cleanedMoles);
 
-        var energyReleased = cleanedMoles * Atmospherics.MiasmaOxidationEnergyReleased;
+        var energyReleased = cleanedMoles * RussAtmospherics.MiasmaOxidationEnergyReleased;
         energyReleased /= heatScale;
 
         var newHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
