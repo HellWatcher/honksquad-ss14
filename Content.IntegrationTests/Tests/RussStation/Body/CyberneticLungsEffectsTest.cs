@@ -32,6 +32,13 @@ public sealed class CyberneticLungsEffectsTest
     stages: [Respiration]
 
 - type: entity
+  id: CyberLungsTestLungsNoMetabolizer
+  components:
+  - type: Organ
+    category: Lungs
+  - type: CyberneticLungs
+
+- type: entity
   id: CyberLungsTestBodyWithLungs
   components:
   - type: Body
@@ -225,6 +232,42 @@ public sealed class CyberneticLungsEffectsTest
                 "Dynamically inserted lungs should resolve oxygenating gases");
             Assert.That(lungs.OxygenatingGases.Contains(Gas.Oxygen), Is.True,
                 "Oxygen should be in oxygenating gases after dynamic insertion");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task LungsSkipFilteringWhenNoOxygenatingGasesTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            // Body with no metabolizer organs, so lungs won't resolve any oxygenating gases
+            var body = entMan.SpawnEntity("CyberLungsTestBody", mapData.GridCoords);
+            var lungEntity = entMan.SpawnInContainerOrDrop("CyberLungsTestLungsNoMetabolizer", body, BodyComponent.ContainerID);
+
+            var lungs = entMan.GetComponent<CyberneticLungsComponent>(lungEntity);
+            Assert.That(lungs.OxygenatingGases, Is.Empty,
+                "Precondition: no oxygenating gases should be resolved without metabolizer");
+
+            // Raise InhaledGasEvent with plasma - it should NOT be filtered
+            var gasMix = new GasMixture(10f);
+            gasMix.SetMoles(Gas.Plasma, 10f);
+
+            var inhaledEvent = new InhaledGasEvent(gasMix);
+            var bodyComp = entMan.GetComponent<BodyComponent>(body);
+            var relayedEvent = new BodyRelayedEvent<InhaledGasEvent>(
+                new Entity<BodyComponent>(body, bodyComp), inhaledEvent);
+            entMan.EventBus.RaiseLocalEvent(lungEntity, ref relayedEvent);
+
+            Assert.That(gasMix.GetMoles(Gas.Plasma), Is.EqualTo(10f).Within(0.01f),
+                "Gas should not be filtered when no oxygenating gases are resolved (safety guard)");
         });
 
         await pair.CleanReturnAsync();
