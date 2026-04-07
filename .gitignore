@@ -315,7 +315,6 @@ Resources/MapImages
 CLAUDE.md
 .serena/
 .prettierignore
-ci-local.sh
 /docs/
 
 # Deploy
