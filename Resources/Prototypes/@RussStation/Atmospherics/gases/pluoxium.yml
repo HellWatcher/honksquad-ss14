@@ -1,0 +1,22 @@
+- type: gas
+  id: Pluoxium
+  name: gas-pluoxium
+  abbreviation: gas-pluoxium-abbreviation
+  molarHeatCapacity: 80
+  heatCapacityRatio: 1.4
+  molarMass: 46
+  color: "#7b68ee"
+  reagent: Pluoxium
+  pricePerMole: 0.5
+
+- type: gasReaction
+  id: PluoxiumFormation
+  priority: 4
+  minimumTemperature: 50
+  maximumTemperature: 273 # Atmospherics.PluoxiumFormationMaxTemp
+  minimumRequirements:
+    CarbonDioxide: 0.01
+    Oxygen: 0.5
+    Tritium: 0.01
+  effects:
+    - !type:PluoxiumFormationReaction {}

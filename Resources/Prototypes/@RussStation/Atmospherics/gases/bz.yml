@@ -1,0 +1,20 @@
+- type: gas
+  id: BZ
+  name: gas-bz
+  abbreviation: gas-bz-abbreviation
+  molarHeatCapacity: 20
+  heatCapacityRatio: 1.4
+  molarMass: 58
+  color: "#9370db"
+  reagent: BZ
+  pricePerMole: 1.5
+
+- type: gasReaction
+  id: BZFormation
+  priority: 4
+  maximumTemperature: 313.15 # Atmospherics.BZFormationMaxTemp
+  minimumRequirements:
+    NitrousOxide: 10
+    Plasma: 10
+  effects:
+    - !type:BZFormationReaction {}

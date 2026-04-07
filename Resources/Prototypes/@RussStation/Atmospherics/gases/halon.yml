@@ -1,0 +1,20 @@
+- type: gas
+  id: Halon
+  name: gas-halon
+  abbreviation: gas-halon-abbreviation
+  molarHeatCapacity: 175
+  heatCapacityRatio: 1.4
+  molarMass: 130
+  color: "#800080"
+  reagent: Halon
+  pricePerMole: 0.75
+
+- type: gasReaction
+  id: HalonOxygenRemoval
+  priority: 3
+  minimumTemperature: 343.15 # Atmospherics.HalonOxygenAbsorptionMinTemp
+  minimumRequirements:
+    Halon: 0.01
+    Oxygen: 0.01
+  effects:
+    - !type:HalonOxygenRemovalReaction {}

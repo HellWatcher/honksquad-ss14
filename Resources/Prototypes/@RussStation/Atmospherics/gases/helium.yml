@@ -1,0 +1,9 @@
+- type: gas
+  id: Helium
+  name: gas-helium
+  abbreviation: gas-helium-abbreviation
+  molarHeatCapacity: 15
+  heatCapacityRatio: 1.66
+  molarMass: 4
+  color: "#f0f8ff"
+  pricePerMole: 1.5
