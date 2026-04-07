@@ -35,6 +35,8 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
 
+    private List<string> _cachedProcedureIds = new();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -48,7 +50,25 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         SubscribeNetworkEvent<SelectSurgeryProcedureEvent>(OnProcedureSelected);
         SubscribeNetworkEvent<SelectOrganEvent>(OnOrganSelected);
 
+        SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
+
         InitializeOrgans();
+        CacheProcedureIds();
+    }
+
+    private void OnPrototypesReloaded(PrototypesReloadedEventArgs args)
+    {
+        if (args.WasModified<SurgeryProcedurePrototype>())
+            CacheProcedureIds();
+    }
+
+    private void CacheProcedureIds()
+    {
+        _cachedProcedureIds.Clear();
+        foreach (var proto in ProtoManager.EnumeratePrototypes<SurgeryProcedurePrototype>())
+        {
+            _cachedProcedureIds.Add(proto.ID);
+        }
     }
 
     private void OnAfterInteract(Entity<BodyComponent> target, ref AfterInteractUsingEvent args)
@@ -127,13 +147,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
     private void OpenProcedureMenu(EntityUid surgeon, EntityUid patient, EntityUid bedsheet)
     {
-        var procedures = new List<string>();
-        foreach (var proto in ProtoManager.EnumeratePrototypes<SurgeryProcedurePrototype>())
-        {
-            procedures.Add(proto.ID);
-        }
-
-        if (procedures.Count == 0)
+        if (_cachedProcedureIds.Count == 0)
         {
             _popup.PopupEntity(Loc.GetString("surgery-no-procedures"), patient, surgeon);
             return;
@@ -142,7 +156,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         if (!TryComp<ActorComponent>(surgeon, out var actor))
             return;
 
-        RaiseNetworkEvent(new OpenSurgeryMenuEvent(GetNetEntity(patient), GetNetEntity(bedsheet), procedures), actor.PlayerSession);
+        RaiseNetworkEvent(new OpenSurgeryMenuEvent(GetNetEntity(patient), GetNetEntity(bedsheet), _cachedProcedureIds), actor.PlayerSession);
     }
 
     private void OnProcedureSelected(SelectSurgeryProcedureEvent ev, EntitySessionEventArgs args)
