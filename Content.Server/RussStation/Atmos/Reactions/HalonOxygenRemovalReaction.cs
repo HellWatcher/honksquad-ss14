@@ -32,12 +32,8 @@ public sealed partial class HalonOxygenRemovalReaction : IGasReactionEffect
         mixture.AdjustMoles(Gas.Oxygen, -heatEfficiency * RussAtmospherics.HalonOxygenAbsorptionRatio);
         mixture.AdjustMoles(Gas.CarbonDioxide, heatEfficiency * RussAtmospherics.HalonOxygenAbsorptionRatio);
 
-        var energyAbsorbed = heatEfficiency * 2500f;
-        energyAbsorbed /= heatScale;
-
-        var newHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
-        if (newHeatCapacity > Atmospherics.MinimumHeatCapacity)
-            mixture.Temperature = Math.Max((temperature * oldHeatCapacity - energyAbsorbed) / newHeatCapacity, Atmospherics.TCMB);
+        ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
+            -(heatEfficiency * 2500f), heatScale, temperature);
 
         return ReactionResult.Reacting;
     }

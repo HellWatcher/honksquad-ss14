@@ -40,12 +40,8 @@ public sealed partial class BZFormationReaction : IGasReactionEffect
         mixture.AdjustMoles(Gas.Plasma, -produced);
         mixture.AdjustMoles(Gas.BZ, produced);
 
-        var energyReleased = produced * 80000f;
-        energyReleased /= heatScale;
-
-        var newHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
-        if (newHeatCapacity > Atmospherics.MinimumHeatCapacity)
-            mixture.Temperature = (mixture.Temperature * oldHeatCapacity + energyReleased) / newHeatCapacity;
+        ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
+            produced * 80000f, heatScale);
 
         return ReactionResult.Reacting;
     }

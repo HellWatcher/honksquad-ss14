@@ -35,12 +35,8 @@ public sealed partial class PluoxiumFormationReaction : IGasReactionEffect
         mixture.AdjustMoles(Gas.Pluoxium, produced);
         mixture.AdjustMoles(Gas.Hydrogen, produced * 0.01f);
 
-        var energyReleased = produced * 250f;
-        energyReleased /= heatScale;
-
-        var newHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
-        if (newHeatCapacity > Atmospherics.MinimumHeatCapacity)
-            mixture.Temperature = (mixture.Temperature * oldHeatCapacity + energyReleased) / newHeatCapacity;
+        ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
+            produced * 250f, heatScale);
 
         return ReactionResult.Reacting;
     }

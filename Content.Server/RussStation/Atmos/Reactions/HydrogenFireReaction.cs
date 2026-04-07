@@ -40,13 +40,8 @@ public sealed partial class HydrogenFireReaction : IGasReactionEffect
         energyReleased += burned * RussAtmospherics.FireHydrogenH2EnergyReleased;
         mixture.ReactionResults[(byte)GasReaction.Fire] += burned;
 
-        energyReleased /= heatScale;
         if (energyReleased > 0)
-        {
-            var newHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
-            if (newHeatCapacity > Atmospherics.MinimumHeatCapacity)
-                mixture.Temperature = (temperature * oldHeatCapacity + energyReleased) / newHeatCapacity;
-        }
+            ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity, energyReleased, heatScale, temperature);
 
         if (location != null)
         {
