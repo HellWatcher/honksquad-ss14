@@ -9,6 +9,8 @@ namespace Content.Shared.RussStation.Memories;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
 public sealed partial class MemoriesComponent : Component
 {
+    public override bool SendOnlyToOwner => true;
+
     [DataField, AutoNetworkedField]
     public Dictionary<string, string> Memories = new();
 }

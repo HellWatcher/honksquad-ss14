@@ -297,6 +297,13 @@ public sealed class IdCardAccountSystem : EntitySystem
             return;
         }
 
+        // Only the account owner can withdraw
+        if (owner != user)
+        {
+            _popup.PopupEntity(Loc.GetString("id-card-withdraw-not-owner"), idCard, session, PopupType.MediumCaution);
+            return;
+        }
+
         if (!_balance.TryDeduct(owner, amount, description: Loc.GetString("transaction-withdraw")))
         {
             _popup.PopupEntity(Loc.GetString("id-card-withdraw-insufficient"), idCard, session, PopupType.MediumCaution);

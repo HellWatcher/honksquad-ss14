@@ -70,7 +70,6 @@ public sealed partial class IdCardComponent : Component
     /// Bank account number linked to the player's balance. Set at spawn, can be manually set on new IDs.
     /// </summary>
     [DataField]
-    [AutoNetworkedField]
     public string? AccountNumber;
     //HONK END
 }
