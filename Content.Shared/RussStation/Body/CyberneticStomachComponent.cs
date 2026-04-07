@@ -14,4 +14,11 @@ public sealed partial class CyberneticStomachComponent : Component
     /// </summary>
     [DataField]
     public float DecayMultiplier = 0.5f;
+
+    /// <summary>
+    /// Original BaseDecayRate stored on insert, restored on remove.
+    /// Avoids float drift from multiply/divide roundtrips.
+    /// </summary>
+    [ViewVariables]
+    public float? OriginalDecayRate;
 }

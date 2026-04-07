@@ -34,6 +34,8 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
     [Dependency] private readonly SharedAtmosphereSystem _atmos = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
+    private static readonly Gas[] AllGases = Enum.GetValues<Gas>();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -90,7 +92,10 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
         var solution = new Solution(heart.Reagent, heart.InjectAmount);
         if (!_bloodstream.TryAddToBloodstream(body, solution))
+        {
+            Log.Warning($"Cybernetic heart failed to inject into {ToPrettyString(body)}");
             return;
+        }
 
         heart.LastInjection = now;
         Dirty(organ, heart);
@@ -196,9 +201,14 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
     private void OnInhaledGas(Entity<CyberneticLungsComponent> ent, ref BodyRelayedEvent<InhaledGasEvent> args)
     {
+        // If no oxygenating gases were resolved, skip filtering entirely
+        // to avoid suffocating the patient by removing all gas.
+        if (ent.Comp.OxygenatingGases.Count == 0)
+            return;
+
         var gas = args.Args.Gas;
 
-        foreach (var gasId in Enum.GetValues<Gas>())
+        foreach (var gasId in AllGases)
         {
             if (ent.Comp.OxygenatingGases.Contains(gasId))
                 continue;
@@ -217,20 +227,20 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
     private void OnStomachInserted(EntityUid uid, CyberneticStomachComponent stomach, ref OrganGotInsertedEvent args)
     {
-        ApplyHungerDecayModifier(args.Target, stomach.DecayMultiplier);
+        if (!TryComp<HungerComponent>(args.Target, out var hunger))
+            return;
+
+        stomach.OriginalDecayRate = hunger.BaseDecayRate;
+        _hunger.SetBaseDecayRate(args.Target, hunger.BaseDecayRate * stomach.DecayMultiplier, hunger);
     }
 
     private void OnStomachRemoved(EntityUid uid, CyberneticStomachComponent stomach, ref OrganGotRemovedEvent args)
     {
-        ApplyHungerDecayModifier(args.Target, 1f / stomach.DecayMultiplier);
-    }
-
-    private void ApplyHungerDecayModifier(EntityUid body, float modifier)
-    {
-        if (!TryComp<HungerComponent>(body, out var hunger))
+        if (stomach.OriginalDecayRate == null || !TryComp<HungerComponent>(args.Target, out var hunger))
             return;
 
-        _hunger.SetBaseDecayRate(body, hunger.BaseDecayRate * modifier, hunger);
+        _hunger.SetBaseDecayRate(args.Target, stomach.OriginalDecayRate.Value, hunger);
+        stomach.OriginalDecayRate = null;
     }
 
     // ================================================================
@@ -265,6 +275,16 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
     private void OnLiverRemoved(EntityUid uid, CyberneticLiverComponent liver, ref OrganGotRemovedEvent args)
     {
+        // Check if any other cybernetic liver remains in the body
+        if (TryComp<BodyComponent>(args.Target, out var body) && body.Organs != null)
+        {
+            foreach (var organ in body.Organs.ContainedEntities)
+            {
+                if (organ != uid && HasComp<CyberneticLiverComponent>(organ))
+                    return;
+            }
+        }
+
         RemComp<OverdoseResistanceComponent>(args.Target);
     }
 }
