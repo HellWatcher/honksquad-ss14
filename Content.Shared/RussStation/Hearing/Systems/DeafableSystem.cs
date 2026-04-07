@@ -1,11 +1,13 @@
+using Content.Shared.Body;
 using Content.Shared.Inventory;
 using Content.Shared.Rejuvenate;
+using Content.Shared.RussStation.Body;
 
 namespace Content.Shared.RussStation.Hearing.Systems;
 
 /// <summary>
 /// Manages the IsDeaf state on DeafableComponent by raising CanHearAttemptEvent.
-/// TODO: Integrate with language system so deaf entities lose spoken languages but retain sign language.
+/// Also handles cybernetic ears deafness resistance (shared so client/server agree).
 /// </summary>
 public sealed class DeafableSystem : EntitySystem
 {
@@ -13,6 +15,9 @@ public sealed class DeafableSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<DeafableComponent, RejuvenateEvent>(OnRejuvenate);
+
+        // Cybernetic ears: prevent deafness (shared for client prediction)
+        SubscribeLocalEvent<BodyComponent, CanHearAttemptEvent>(OnCanHearAttempt);
     }
 
     private void OnRejuvenate(Entity<DeafableComponent> ent, ref RejuvenateEvent args)
@@ -23,6 +28,9 @@ public sealed class DeafableSystem : EntitySystem
     public void UpdateIsDeaf(Entity<DeafableComponent?> entity)
     {
         if (!Resolve(entity, ref entity.Comp, false))
+            return;
+
+        if (TerminatingOrDeleted(entity.Owner))
             return;
 
         var old = entity.Comp.IsDeaf;
@@ -37,6 +45,21 @@ public sealed class DeafableSystem : EntitySystem
         var changeEv = new DeafnessChangedEvent(entity.Comp.IsDeaf);
         RaiseLocalEvent(entity.Owner, ref changeEv);
         Dirty(entity);
+    }
+
+    private void OnCanHearAttempt(EntityUid uid, BodyComponent body, CanHearAttemptEvent args)
+    {
+        if (body.Organs == null)
+            return;
+
+        foreach (var organ in body.Organs.ContainedEntities)
+        {
+            if (HasComp<CyberneticEarsComponent>(organ))
+            {
+                args.Uncancel();
+                return;
+            }
+        }
     }
 }
 
