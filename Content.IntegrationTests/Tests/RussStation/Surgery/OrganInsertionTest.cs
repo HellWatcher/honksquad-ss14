@@ -5,6 +5,7 @@ using Content.Shared.Interaction;
 using Content.Shared.RussStation.Surgery.Components;
 using Robust.Shared.Containers;
 using Robust.Shared.GameObjects;
+using Robust.Shared.Map;
 
 namespace Content.IntegrationTests.Tests.RussStation.Surgery;
 
