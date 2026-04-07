@@ -18,3 +18,18 @@
     Oxygen: 0.01
   effects:
     - !type:HalonOxygenRemovalReaction {}
+
+- type: reagent
+  id: Halon
+  name: reagent-name-halon
+  desc: reagent-desc-halon
+  physicalDesc: reagent-physical-desc-gaseous
+  flavor: acrid
+  color: "#800080"
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:HealthChange
+          damage:
+            types:
+              Caustic: 0.5
