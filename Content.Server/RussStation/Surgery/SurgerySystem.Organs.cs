@@ -21,22 +21,23 @@ public sealed partial class SurgerySystem
         if (!TryComp<OrganComponent>(organ, out var organComp))
             return;
 
+        if (organComp.Category == null)
+        {
+            Log.Warning($"Attempted to insert organ {ToPrettyString(organ)} with no category");
+            return;
+        }
+
         if (!TryComp<BodyComponent>(patient, out var body) || body.Organs == null)
         {
             _popup.PopupEntity(Loc.GetString("surgery-organ-insert-failed"), patient, surgeon);
             return;
         }
 
-        // Block if the patient already has an organ of the same category,
-        // or the same prototype if category is null.
-        var organProtoId = MetaData(organ).EntityPrototype?.ID;
+        // Block if the patient already has an organ of the same category
         foreach (var existing in body.Organs.ContainedEntities)
         {
-            if (!TryComp<OrganComponent>(existing, out var existingOrgan))
-                continue;
-
-            if (organComp.Category != null && existingOrgan.Category == organComp.Category
-                || organComp.Category == null && MetaData(existing).EntityPrototype?.ID == organProtoId)
+            if (TryComp<OrganComponent>(existing, out var existingOrgan) &&
+                existingOrgan.Category == organComp.Category)
             {
                 _popup.PopupEntity(
                     Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(organ).EntityName)),
