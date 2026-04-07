@@ -1,7 +1,9 @@
 using Content.Shared.CartridgeLoader;
 using Content.Shared.PDA;
 using Content.Shared.Popups;
+using Content.Shared.Mind;
 using Content.Shared.Roles;
+using Content.Shared.Roles.Jobs;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Robust.Shared.Audio;
@@ -26,6 +28,7 @@ public sealed class PayrollSystem : EntitySystem
     [Dependency] private readonly PlayerBalanceSystem _balance = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SharedJobSystem _jobs = default!;
 
     private static readonly ProtoId<DepartmentPrototype> CommandDepartment = "Command";
 
@@ -58,6 +61,21 @@ public sealed class PayrollSystem : EntitySystem
         Subs.CVar(_cfg, EconomyCCVars.WageCommand, v => _wageCommand = v, true);
 
         SubscribeLocalEvent<PlayerBalanceComponent, ComponentStartup>(OnBalanceStartup);
+        SubscribeLocalEvent<RoleAddedEvent>(OnRoleAdded);
+    }
+
+    private void OnRoleAdded(RoleAddedEvent args)
+    {
+        if (args.Mind.CurrentEntity is not { } mob)
+            return;
+
+        if (!TryComp<PlayerBalanceComponent>(mob, out var comp))
+            return;
+
+        if (!_jobs.MindTryGetJobId(args.MindId, out var jobId))
+            return;
+
+        comp.JobId = jobId.Value;
     }
 
     private void OnBalanceStartup(EntityUid uid, PlayerBalanceComponent comp, ComponentStartup args)
