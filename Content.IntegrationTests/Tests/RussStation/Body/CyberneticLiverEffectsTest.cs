@@ -156,4 +156,42 @@ public sealed class CyberneticLiverEffectsTest
 
         await pair.CleanReturnAsync();
     }
+
+    [Test]
+    public async Task RemovingOneOfTwoLiversKeepsResistanceTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var containerSys = entMan.System<SharedContainerSystem>();
+            var body = entMan.SpawnEntity("CyberLiverTestBody", mapData.GridCoords);
+
+            // Insert two cybernetic livers
+            var liver1 = entMan.SpawnInContainerOrDrop("CyberLiverTestLiver", body, BodyComponent.ContainerID);
+            var liver2 = entMan.SpawnInContainerOrDrop("CyberLiverTestLiver", body, BodyComponent.ContainerID);
+
+            Assert.That(entMan.HasComponent<OverdoseResistanceComponent>(body), Is.True,
+                "Precondition: resistance should be present with two livers");
+
+            // Remove one liver
+            var organContainer = containerSys.GetContainer(body, BodyComponent.ContainerID);
+            containerSys.Remove(liver1, organContainer);
+
+            Assert.That(entMan.HasComponent<OverdoseResistanceComponent>(body), Is.True,
+                "OverdoseResistanceComponent should remain when a second liver is still present");
+
+            // Remove the second liver
+            containerSys.Remove(liver2, organContainer);
+
+            Assert.That(entMan.HasComponent<OverdoseResistanceComponent>(body), Is.False,
+                "OverdoseResistanceComponent should be removed when all livers are gone");
+        });
+
+        await pair.CleanReturnAsync();
+    }
 }
