@@ -177,11 +177,25 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
         var cx = 0f;
         var cy = 0f;
         var totalRads = 0f;
+        var minRads = float.MaxValue;
+        var maxRads = float.MinValue;
+        var minX = int.MaxValue;
+        var minY = int.MaxValue;
+        var maxX = int.MinValue;
+        var maxY = int.MinValue;
+
         foreach (var (tile, rads) in tiles)
         {
             cx += (tile.X + 0.5f) * rads;
             cy += (tile.Y + 0.5f) * rads;
             totalRads += rads;
+
+            if (rads < minRads) minRads = rads;
+            if (rads > maxRads) maxRads = rads;
+            if (tile.X < minX) minX = tile.X;
+            if (tile.Y < minY) minY = tile.Y;
+            if (tile.X > maxX) maxX = tile.X;
+            if (tile.Y > maxY) maxY = tile.Y;
         }
 
         if (totalRads < MinIntensity)
@@ -195,8 +209,15 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
 
         var uid = Spawn(null, coords);
 
+        // Gradient from max (centroid) to min (edge) using slope.
+        var radius = Math.Max(maxX - minX + 1, maxY - minY + 1) / 2f;
+        var slope = radius > 0.5f && minRads > 0f
+            ? (maxRads / minRads - 1f) / radius
+            : 0.5f;
+
         var source = EnsureComp<RadiationSourceComponent>(uid);
-        source.Intensity = totalRads / tiles.Count;
+        source.Intensity = maxRads;
+        source.Slope = slope;
         source.Enabled = true;
 
         var despawn = EnsureComp<TimedDespawnComponent>(uid);
