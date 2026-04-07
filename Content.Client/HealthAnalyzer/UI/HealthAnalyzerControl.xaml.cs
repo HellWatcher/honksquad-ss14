@@ -108,7 +108,9 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
 
         // Alerts
 
-        var showAlerts = state.Unrevivable == true || state.Bleeding == true;
+        // HONK START - Cardiac arrest alert
+        var showAlerts = state.Unrevivable == true || state.Bleeding == true || state.CardiacArrest == true;
+        // HONK END
 
         AlertsDivider.Visible = showAlerts;
         AlertsContainer.Visible = showAlerts;
@@ -131,6 +133,16 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
                 Margin = new Thickness(0, 4),
                 MaxWidth = 300
             });
+
+        // HONK START - Cardiac arrest alert
+        if (state.CardiacArrest == true)
+            AlertsContainer.AddChild(new RichTextLabel
+            {
+                Text = Loc.GetString("health-analyzer-window-entity-cardiac-arrest-text"),
+                Margin = new Thickness(0, 4),
+                MaxWidth = 300
+            });
+        // HONK END
 
         // Damage Groups
 
