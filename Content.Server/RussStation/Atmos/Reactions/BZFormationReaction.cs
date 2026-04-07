@@ -1,9 +1,10 @@
+using Content.Server.Atmos;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Reactions;
 using JetBrains.Annotations;
 
-namespace Content.Server.Atmos.Reactions;
+namespace Content.Server.RussStation.Atmos.Reactions;
 
 /// <summary>
 ///     BZ formation from N2O and Plasma at cold temperatures.

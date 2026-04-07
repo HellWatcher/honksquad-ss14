@@ -1,9 +1,10 @@
+using Content.Server.Atmos;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Reactions;
 using JetBrains.Annotations;
 
-namespace Content.Server.Atmos.Reactions;
+namespace Content.Server.RussStation.Atmos.Reactions;
 
 /// <summary>
 ///     Pluoxium formation: CO2 + 0.5 O2 + 0.01 Tritium -> Pluoxium + 0.01 Hydrogen.
