@@ -18,8 +18,11 @@ public sealed partial class BZFormationReaction : IGasReactionEffect
         var n2o = mixture.GetMoles(Gas.NitrousOxide);
         var plasma = mixture.GetMoles(Gas.Plasma);
 
+        if (n2o <= 0)
+            return ReactionResult.NoReaction;
+
         // If plasma:N2O ratio > 3:1, N2O decomposes into N2+O2 instead
-        if (n2o <= 0 || plasma / n2o > 3f)
+        if (plasma / n2o > 3f)
         {
             mixture.AdjustMoles(Gas.NitrousOxide, -n2o);
             mixture.AdjustMoles(Gas.Nitrogen, n2o * 0.5f);
