@@ -54,7 +54,6 @@ public sealed class BalanceCartridgeSystem : EntitySystem
             return;
 
         balance.PaycheckMuted = !balance.PaycheckMuted;
-        Dirty(holder, balance);
         UpdateUiState(uid, loaderUid);
     }
 

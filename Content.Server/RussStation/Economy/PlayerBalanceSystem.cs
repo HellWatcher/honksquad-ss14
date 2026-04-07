@@ -70,8 +70,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
         comp.AccountNumber = GenerateAccountNumber();
         _accountIndex[comp.AccountNumber] = args.Mob;
 
-        Dirty(args.Mob, comp);
-
         // Stamp account number onto the player's ID card.
         if (_idCard.TryFindIdCard(args.Mob, out var idCard))
         {
@@ -132,7 +130,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         comp.Balance -= amount;
         RecordTransaction(comp, -amount, description ?? "Debit");
-        Dirty(uid, comp);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
         return true;
     }
@@ -147,7 +144,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
 
         comp.Balance += amount;
         RecordTransaction(comp, amount, description ?? "Credit");
-        Dirty(uid, comp);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
     }
 
@@ -185,7 +181,6 @@ public sealed class PlayerBalanceSystem : EntitySystem
         comp.Balance = startingBalance;
         comp.AccountNumber = GenerateAccountNumber();
         _accountIndex[comp.AccountNumber] = uid;
-        Dirty(uid, comp);
 
         _memories.AddMemory(uid, "memories-key-account-number", comp.AccountNumber);
         RaiseLocalEvent(uid, new BalanceChangedEvent(uid));
