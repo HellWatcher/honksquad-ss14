@@ -11,4 +11,4 @@
           - MobState
           - Blindable
         requireAll: true
-    - type: TemporaryBlindness
+    - type: EmpBlindness
