@@ -306,7 +306,10 @@ public sealed class MetabolizerSystem : EntitySystem
                         var soln = solution.Comp.Solution;
                         var quant = soln.GetTotalPrototypeQuantity(reagentCondition.Reagent);
                         var scaledMin = reagentCondition.Min * overdoseResist.ThresholdMultiplier;
-                        var result = quant >= scaledMin && quant <= reagentCondition.Max;
+                        var scaledMax = reagentCondition.Max > FixedPoint2.Zero
+                            ? reagentCondition.Max * overdoseResist.ThresholdMultiplier
+                            : reagentCondition.Max;
+                        var result = quant >= scaledMin && quant <= scaledMax;
                         if (reagentCondition.Inverted != result)
                             continue;
                         break;
