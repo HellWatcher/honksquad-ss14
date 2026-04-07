@@ -23,6 +23,11 @@ public sealed class CyberneticStomachEffectsTest
   - type: CyberneticStomach
 
 - type: entity
+  id: CyberStomachTestBodyNoHunger
+  components:
+  - type: Body
+
+- type: entity
   id: CyberStomachTestBodyWithStomach
   components:
   - type: Body
@@ -131,6 +136,32 @@ public sealed class CyberneticStomachEffectsTest
 
             Assert.That(hunger.BaseDecayRate, Is.EqualTo(reducedRate).Within(0.0001f),
                 "Re-inserting stomach should re-apply the reduced decay rate");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task StomachNoEffectWithoutHungerComponentTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var body = entMan.SpawnEntity("CyberStomachTestBodyNoHunger", mapData.GridCoords);
+
+            Assert.That(entMan.HasComponent<HungerComponent>(body), Is.False,
+                "Precondition: body should not have HungerComponent");
+
+            // Insert stomach into body without Hunger - should not throw
+            entMan.SpawnInContainerOrDrop("CyberStomachTestStomach", body, BodyComponent.ContainerID);
+
+            Assert.That(entMan.HasComponent<HungerComponent>(body), Is.False,
+                "Stomach insertion should not add HungerComponent to body that lacks one");
         });
 
         await pair.CleanReturnAsync();
