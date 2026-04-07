@@ -208,7 +208,9 @@ namespace Content.Shared.Atmos
         /// <summary>
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
-        public const int TotalNumberOfGases = 9;
+        // HONK START - Fork gases
+        public const int TotalNumberOfGases = 18;
+        // HONK END
 
         /// <summary>
         ///     This is the actual length of the gases arrays in mixtures.
@@ -372,6 +374,17 @@ namespace Content.Shared.Atmos
         WaterVapor = 5,
         Ammonia = 6,
         NitrousOxide = 7,
-        Frezon = 8
+        Frezon = 8,
+        // HONK START - Fork gases
+        Miasma = 9,
+        Hydrogen = 10,
+        Helium = 11,
+        BZ = 12,
+        Pluoxium = 13,
+        Halon = 14,
+        Antinoblium = 15,
+        Healium = 16,
+        Nitrium = 17,
+        // HONK END
     }
 }

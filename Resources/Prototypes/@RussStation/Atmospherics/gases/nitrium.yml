@@ -1,0 +1,49 @@
+- type: gas
+  id: Nitrium
+  name: gas-nitrium
+  abbreviation: gas-nitrium-abbreviation
+  molarHeatCapacity: 10
+  heatCapacityRatio: 1.4
+  molarMass: 50
+  color: "#a52a2a"
+  reagent: Nitrium
+  pricePerMole: 2.5
+
+- type: gasReaction
+  id: NitriumFormation
+  priority: 4
+  minimumTemperature: 1500 # RussAtmospherics.NitriumFormationMinTemp
+  minimumRequirements:
+    Tritium: 20
+    Nitrogen: 10
+    BZ: 5
+  effects:
+    - !type:NitriumFormationReaction {}
+
+- type: gasReaction
+  id: NitriumDecomposition
+  priority: -1
+  maximumTemperature: 343.15 # RussAtmospherics.NitriumDecompositionMaxTemp
+  minimumRequirements:
+    Oxygen: 0.01
+    Nitrium: 0.01
+  effects:
+    - !type:NitriumDecompositionReaction {}
+
+- type: reagent
+  id: Nitrium
+  name: reagent-name-nitrium
+  desc: reagent-desc-nitrium
+  physicalDesc: reagent-physical-desc-gaseous
+  flavor: burning
+  color: "#a52a2a"
+  metabolisms:
+    Respiration:
+      effects:
+        - !type:MovementSpeedModifier
+          walkSpeedModifier: 1.25
+          sprintSpeedModifier: 1.25
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 0.5
