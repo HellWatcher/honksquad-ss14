@@ -209,7 +209,7 @@ namespace Content.Shared.Atmos
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
         // HONK START - Fork gases
-        public const int TotalNumberOfGases = 18;
+        public const int TotalNumberOfGases = 19;
         // HONK END
 
         /// <summary>
@@ -385,6 +385,7 @@ namespace Content.Shared.Atmos
         Antinoblium = 15,
         Healium = 16,
         Nitrium = 17,
+        ProtoNitrate = 18,
         // HONK END
     }
 }

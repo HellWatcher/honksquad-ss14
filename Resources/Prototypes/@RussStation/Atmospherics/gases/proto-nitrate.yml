@@ -1,0 +1,67 @@
+- type: gas
+  id: ProtoNitrate
+  name: gas-proto-nitrate
+  abbreviation: gas-proto-nitrate-abbreviation
+  molarHeatCapacity: 30
+  heatCapacityRatio: 1.4
+  molarMass: 80
+  color: "#adff2f"
+  reagent: ProtoNitrate
+  pricePerMole: 2.5
+
+- type: gasReaction
+  id: ProtoNitrateFormation
+  priority: 4
+  minimumTemperature: 5000 # RussAtmospherics.ProtoNitrateFormationMinTemp
+  maximumTemperature: 10000 # RussAtmospherics.ProtoNitrateFormationMaxTemp
+  minimumRequirements:
+    Pluoxium: 0.01
+    Hydrogen: 0.01
+  effects:
+    - !type:ProtoNitrateFormationReaction {}
+
+- type: gasReaction
+  id: ProtoNitrateHydrogenConversion
+  priority: 3
+  minimumRequirements:
+    ProtoNitrate: 0.01
+    Hydrogen: 150 # RussAtmospherics.ProtoNitrateHydrogenConversionThreshold
+  effects:
+    - !type:ProtoNitrateHydrogenReaction {}
+
+- type: gasReaction
+  id: ProtoNitrateTritiumConversion
+  priority: 3
+  minimumTemperature: 150 # RussAtmospherics.ProtoNitrateTritiumConversionMinTemp
+  maximumTemperature: 340 # RussAtmospherics.ProtoNitrateTritiumConversionMaxTemp
+  minimumRequirements:
+    ProtoNitrate: 0.01
+    Tritium: 0.01
+  effects:
+    - !type:ProtoNitrateTritiumReaction {}
+
+- type: gasReaction
+  id: ProtoNitrateBZDecomposition
+  priority: 3
+  minimumTemperature: 260 # RussAtmospherics.ProtoNitrateBZDecompositionMinTemp
+  maximumTemperature: 280 # RussAtmospherics.ProtoNitrateBZDecompositionMaxTemp
+  minimumRequirements:
+    ProtoNitrate: 0.01
+    BZ: 0.01
+  effects:
+    - !type:ProtoNitrateBZReaction {}
+
+- type: reagent
+  id: ProtoNitrate
+  name: reagent-name-proto-nitrate
+  desc: reagent-desc-proto-nitrate
+  physicalDesc: reagent-physical-desc-gaseous
+  flavor: acidic
+  color: "#adff2f"
+  metabolisms:
+    Respiration:
+      effects:
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 1

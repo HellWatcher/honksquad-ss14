@@ -35,4 +35,20 @@ public static class RussAtmospherics
     public const float NitriumDecompositionMaxTemp = Atmospherics.T0C + 70f;
     public const float NitriumDecompositionTempDivisor = Atmospherics.FireMinimumTemperatureToExist * 8f;
     public const float NitriumDecompositionEnergy = 30000f;
+
+    public const float ProtoNitrateFormationMinTemp = 5000f;
+    public const float ProtoNitrateFormationMaxTemp = 10000f;
+    public const float ProtoNitrateFormationEnergy = 650f;
+
+    public const float ProtoNitrateHydrogenConversionThreshold = 150f;
+    public const float ProtoNitrateHydrogenConversionMaxRate = 5f;
+    public const float ProtoNitrateHydrogenConversionEnergy = 2500f;
+
+    public const float ProtoNitrateTritiumConversionMinTemp = 150f;
+    public const float ProtoNitrateTritiumConversionMaxTemp = 340f;
+    public const float ProtoNitrateTritiumConversionEnergy = 10000f;
+
+    public const float ProtoNitrateBZDecompositionMinTemp = 260f;
+    public const float ProtoNitrateBZDecompositionMaxTemp = 280f;
+    public const float ProtoNitrateBZDecompositionEnergy = 60000f;
 }
