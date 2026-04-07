@@ -11,7 +11,6 @@ public static class RussAtmospherics
     public const float MiasmaOxidationRate = 5f;
     public const float MiasmaOxidationEnergyReleased = 100f;
 
-    public const float FireHydrogenH2EnergyReleased = 284e4f;
     public const float HydrogenBurnRateDelta = 2f;
     public const float HydrogenOxygenFullburn = 10f;
 
