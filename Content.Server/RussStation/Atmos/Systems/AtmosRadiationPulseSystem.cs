@@ -26,22 +26,11 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
     private const float PulseLifetime = 1.5f;
     private const float MinIntensity = 0.5f;
 
-    /// <summary>
-    ///     Aspect ratio threshold. A blob with max(w,h)/min(w,h) above this gets split.
-    /// </summary>
-    private const float AspectThreshold = 1.5f;
-
-    /// <summary>
-    ///     Blobs at or below this tile count are never subdivided.
-    /// </summary>
-    private const int MinSplitSize = 4;
 
     // Reusable collections to avoid per-tick allocation.
     private readonly HashSet<(EntityUid, Vector2i)> _visited = new();
     private readonly Queue<(EntityUid, Vector2i)> _queue = new();
     private readonly List<(Vector2i Tile, float Rads)> _blob = new();
-    private readonly List<(Vector2i Tile, float Rads)> _splitA = new();
-    private readonly List<(Vector2i Tile, float Rads)> _splitB = new();
 
     private static readonly Vector2i[] Neighbors =
     {
@@ -91,82 +80,12 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
             if (!TryComp<MapGridComponent>(key.Grid, out var grid))
                 continue;
 
-            SpawnSubdivided(key.Grid, grid, _blob);
+            var chunks = RadiationBlobMath.Subdivide(_blob);
+            foreach (var chunk in chunks)
+                SpawnSource(key.Grid, grid, chunk);
         }
 
         _pending.Clear();
-    }
-
-    /// <summary>
-    ///     Recursively subdivides a blob along its longer bounding-box axis
-    ///     until each chunk is roughly square, then spawns a source per chunk.
-    /// </summary>
-    private void SpawnSubdivided(
-        EntityUid gridUid,
-        MapGridComponent grid,
-        List<(Vector2i Tile, float Rads)> tiles)
-    {
-        if (tiles.Count == 0)
-            return;
-
-        // Compute bounding box.
-        var minX = int.MaxValue;
-        var minY = int.MaxValue;
-        var maxX = int.MinValue;
-        var maxY = int.MinValue;
-        foreach (var (tile, _) in tiles)
-        {
-            if (tile.X < minX) minX = tile.X;
-            if (tile.Y < minY) minY = tile.Y;
-            if (tile.X > maxX) maxX = tile.X;
-            if (tile.Y > maxY) maxY = tile.Y;
-        }
-
-        var width = maxX - minX + 1;
-        var height = maxY - minY + 1;
-        var longer = Math.Max(width, height);
-        var shorter = Math.Max(1, Math.Min(width, height));
-
-        // If roughly square or too small to split, spawn a single source.
-        if (tiles.Count <= MinSplitSize || (float) longer / shorter <= AspectThreshold)
-        {
-            SpawnSource(gridUid, grid, tiles);
-            return;
-        }
-
-        // Split along the longer axis at the midpoint.
-        _splitA.Clear();
-        _splitB.Clear();
-
-        if (width >= height)
-        {
-            var midX = minX + width / 2;
-            foreach (var entry in tiles)
-            {
-                if (entry.Tile.X <= midX)
-                    _splitA.Add(entry);
-                else
-                    _splitB.Add(entry);
-            }
-        }
-        else
-        {
-            var midY = minY + height / 2;
-            foreach (var entry in tiles)
-            {
-                if (entry.Tile.Y <= midY)
-                    _splitA.Add(entry);
-                else
-                    _splitB.Add(entry);
-            }
-        }
-
-        // Copy to avoid aliasing since recursion reuses _splitA/_splitB.
-        var halfA = new List<(Vector2i, float)>(_splitA);
-        var halfB = new List<(Vector2i, float)>(_splitB);
-
-        SpawnSubdivided(gridUid, grid, halfA);
-        SpawnSubdivided(gridUid, grid, halfB);
     }
 
     private void SpawnSource(
@@ -174,49 +93,23 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
         MapGridComponent grid,
         List<(Vector2i Tile, float Rads)> tiles)
     {
-        var cx = 0f;
-        var cy = 0f;
         var totalRads = 0f;
-        var minRads = float.MaxValue;
-        var maxRads = float.MinValue;
-        var minX = int.MaxValue;
-        var minY = int.MaxValue;
-        var maxX = int.MinValue;
-        var maxY = int.MinValue;
-
-        foreach (var (tile, rads) in tiles)
-        {
-            cx += (tile.X + 0.5f) * rads;
-            cy += (tile.Y + 0.5f) * rads;
+        foreach (var (_, rads) in tiles)
             totalRads += rads;
-
-            if (rads < minRads) minRads = rads;
-            if (rads > maxRads) maxRads = rads;
-            if (tile.X < minX) minX = tile.X;
-            if (tile.Y < minY) minY = tile.Y;
-            if (tile.X > maxX) maxX = tile.X;
-            if (tile.Y > maxY) maxY = tile.Y;
-        }
 
         if (totalRads < MinIntensity)
             return;
 
-        cx /= totalRads;
-        cy /= totalRads;
-
+        var (cx, cy) = RadiationBlobMath.Centroid(tiles, totalRads);
         var centroidTile = new Vector2i((int) Math.Floor(cx), (int) Math.Floor(cy));
         var coords = _map.GridTileToLocal(gridUid, grid, centroidTile);
 
         var uid = Spawn(null, coords);
 
-        // Gradient from max (centroid) to min (edge) using slope.
-        var radius = Math.Max(maxX - minX + 1, maxY - minY + 1) / 2f;
-        var slope = radius > 0.5f && minRads > 0f
-            ? (maxRads / minRads - 1f) / radius
-            : 0.5f;
+        var (intensity, slope) = RadiationBlobMath.GradientParams(tiles);
 
         var source = EnsureComp<RadiationSourceComponent>(uid);
-        source.Intensity = maxRads;
+        source.Intensity = intensity;
         source.Slope = slope;
         source.Enabled = true;
 
