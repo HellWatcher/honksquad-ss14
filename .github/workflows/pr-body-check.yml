@@ -1,0 +1,71 @@
+name: "PR Body Check"
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, ready_for_review]
+    branches: [release]
+
+jobs:
+  check:
+    name: PR Body Check
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR body
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          WARNINGS=0
+          ERRORS=0
+
+          warn() { echo "::warning::$1"; ((WARNINGS++)) || true; }
+          err()  { echo "::error::$1";   ((ERRORS++))   || true; }
+
+          if [ -z "$PR_BODY" ]; then
+            err "PR body is empty. Please use the PR template."
+            exit 1
+          fi
+
+          # Check required sections exist and aren't just the template placeholder
+          check_section() {
+            local heading="$1"
+            local placeholder="$2"
+
+            if ! echo "$PR_BODY" | grep -q "## ${heading}"; then
+              err "Missing section: ## ${heading}"
+              return
+            fi
+
+            # Extract content between this heading and the next heading (or EOF)
+            local content
+            content=$(echo "$PR_BODY" | sed -n "/## ${heading}/,/^## /p" | tail -n +2 | sed '/^## /d')
+
+            # Strip HTML comments and whitespace
+            local stripped
+            stripped=$(echo "$content" | sed 's/<!--.*-->//g' | tr -d '[:space:]')
+
+            if [ -z "$stripped" ]; then
+              warn "Section '## ${heading}' appears empty (only template comments)"
+            fi
+          }
+
+          check_section "About the PR" "What did you change"
+          check_section "Why / Balance" "Discuss how this would affect"
+
+          # Check for changelog - :cl: should be outside comment block
+          # Template has :cl: inside <!-- --> comments; a filled-in PR moves it outside
+          CL_UNCOMMENTED=$(echo "$PR_BODY" | grep -v '^\s*<!--' | grep -c ':cl:' || true)
+          CL_COMMENTED=$(echo "$PR_BODY" | sed -n '/<!--/,/-->/p' | grep -c ':cl:' || true)
+
+          if [ "$CL_UNCOMMENTED" -eq 0 ] && [ "$CL_COMMENTED" -gt 0 ]; then
+            warn "Changelog (:cl:) is still inside a comment block. Uncomment it if this PR has player-facing changes."
+          elif [ "$CL_UNCOMMENTED" -eq 0 ] && [ "$CL_COMMENTED" -eq 0 ]; then
+            warn "No :cl: changelog found. Add one if this PR has player-facing changes."
+          fi
+
+          echo ""
+          echo "PR body check: ${ERRORS} error(s), ${WARNINGS} warning(s)"
+
+          if [ "$ERRORS" -gt 0 ]; then
+            exit 1
+          fi

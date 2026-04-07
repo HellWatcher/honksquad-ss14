@@ -1,0 +1,21 @@
+name: "Prototype ID Check"
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [release]
+    paths:
+      - "Resources/Prototypes/@RussStation/**/*.yml"
+      - "Resources/Prototypes/@RussStation/**/*.yaml"
+
+jobs:
+  check:
+    name: Prototype ID Collision Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Check for prototype ID collisions
+        run: |
+          chmod +x Tools/prototype_id_check.sh
+          Tools/prototype_id_check.sh
