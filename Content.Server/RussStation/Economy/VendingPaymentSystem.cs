@@ -112,11 +112,7 @@ public sealed class VendingPaymentSystem : EntitySystem
         foreach (var itemId in comp.Inventory.Keys)
             prices.Prices[itemId] = GetRawItemPrice(itemId);
 
-        foreach (var itemId in comp.EmaggedInventory.Keys)
-            prices.Prices.TryAdd(itemId, GetRawItemPrice(itemId));
-
-        foreach (var itemId in comp.ContrabandInventory.Keys)
-            prices.Prices.TryAdd(itemId, GetRawItemPrice(itemId));
+        // Emag and contraband items are not priced -- they vend free once unlocked.
 
         // Pass 2: find cheapest non-zero price as vendor minimum.
         var vendorMin = int.MaxValue;
