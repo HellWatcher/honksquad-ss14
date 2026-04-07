@@ -8,6 +8,7 @@ id-card-withdraw-verb = Withdraw
 id-card-withdraw-title = Withdraw Spesos
 id-card-withdraw-prompt = Amount to withdraw:
 id-card-withdraw-insufficient = Insufficient funds.
+id-card-withdraw-not-owner = This isn't your account.
 id-card-withdraw-success = Withdrew {$amount} spesos.
 
 id-card-deposit-success = Deposited {$amount} spesos.

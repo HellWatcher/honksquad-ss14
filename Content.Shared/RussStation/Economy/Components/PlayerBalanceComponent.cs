@@ -1,5 +1,4 @@
 using Robust.Shared.GameObjects;
-using Robust.Shared.GameStates;
 
 namespace Content.Shared.RussStation.Economy.Components;
 
@@ -7,16 +6,16 @@ namespace Content.Shared.RussStation.Economy.Components;
 /// Tracks a player's speso balance for the current round.
 /// Added to the player mob on spawn.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent]
 public sealed partial class PlayerBalanceComponent : Component
 {
-    [DataField, AutoNetworkedField]
+    [DataField]
     public int Balance;
 
     /// <summary>
     /// Unique hex account number assigned at spawn. Used by ID cards to reference this balance.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [DataField]
     public string AccountNumber = string.Empty;
 
     /// <summary>
@@ -35,7 +34,7 @@ public sealed partial class PlayerBalanceComponent : Component
     /// <summary>
     /// Whether paycheck notification sounds are muted. Toggled via the wallet cartridge UI.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [DataField]
     public bool PaycheckMuted;
 
     /// <summary>
