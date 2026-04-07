@@ -5,7 +5,7 @@ using Content.Shared.Roles;
 using Content.Shared.Roles.Jobs;
 using Content.Shared.RussStation.Economy.Components;
 using Robust.Shared.GameObjects;
-using Robust.Shared.Maths;
+using Robust.Shared.Map;
 
 namespace Content.IntegrationTests.Tests.RussStation.Economy;
 
