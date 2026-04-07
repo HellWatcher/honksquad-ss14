@@ -8,10 +8,10 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: 2
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 2
 
 - type: reagent
   id: BZ
@@ -23,10 +23,10 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: 1.5
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 1.5
 
 - type: reagent
   id: Pluoxium
@@ -38,22 +38,22 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:Oxygenate
-        factor: 8
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant ]
-      - !type:ModifyLungGas
-        ratios:
-          CarbonDioxide: 1.0
-          Pluoxium: -1.0
+        - !type:Oxygenate
+          factor: 8
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Human, Animal, Rat, Plant, Arachnid, Moth]
+        - !type:ModifyLungGas
+          ratios:
+            CarbonDioxide: 1.0
+            Pluoxium: -1.0
     Respiration:
       effects:
-      - !type:Oxygenate
-        factor: 8
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant, Arachnid, Moth ]
+        - !type:Oxygenate
+          factor: 8
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Human, Animal, Rat, Plant, Arachnid, Moth]
 
 - type: reagent
   id: Halon
@@ -65,7 +65,7 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Caustic: 0.5
+        - !type:HealthChange
+          damage:
+            types:
+              Caustic: 0.5
