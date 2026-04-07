@@ -287,6 +287,22 @@ namespace Content.Shared.Atmos
         /// </summary>
         public const float AmmoniaOxygenReactionRate = 10f;
 
+        // HONK START - Tier 1 reaction constants
+        public const float MiasmaOxidationMinTemp = T0C + 170f;
+        public const float MiasmaOxidationRate = 5f;
+        public const float MiasmaOxidationEnergyReleased = 100f;
+        public const float FireHydrogenH2EnergyReleased = 284e4f;
+        public const float HydrogenBurnRateDelta = 2f;
+        public const float HydrogenOxygenFullburn = 10f;
+        public const float BZFormationMaxTemp = T0C + 40f;
+        public const float BZFormationRate = 0.4f;
+        public const float PluoxiumFormationMinTemp = 50f;
+        public const float PluoxiumFormationMaxTemp = 273f;
+        public const float PluoxiumFormationMaxRate = 5f;
+        public const float HalonOxygenAbsorptionMinTemp = T0C + 70f;
+        public const float HalonOxygenAbsorptionRatio = 20f;
+        // HONK END
+
         /// <summary>
         ///     Determines at what pressure the ultra-high pressure red icon is displayed.
         /// </summary>

@@ -1,0 +1,80 @@
+- type: gas
+  id: Miasma
+  name: gas-miasma
+  abbreviation: gas-miasma-abbreviation
+  molarHeatCapacity: 20
+  heatCapacityRatio: 1.4
+  molarMass: 44
+  gasOverlaySprite:
+    sprite: /Textures/Effects/atmospherics.rsi
+    state: miasma
+  gasMolesVisible: 0.25
+  color: "#808000"
+  reagent: Miasma
+  pricePerMole: 0
+
+- type: gas
+  id: Hydrogen
+  name: gas-hydrogen
+  abbreviation: gas-hydrogen-abbreviation
+  molarHeatCapacity: 15
+  heatCapacityRatio: 1.4
+  molarMass: 2
+  color: "#ffffff"
+  reagent: Hydrogen
+  pricePerMole: 0.5
+  isFuel: true
+
+- type: gas
+  id: Helium
+  name: gas-helium
+  abbreviation: gas-helium-abbreviation
+  molarHeatCapacity: 15
+  heatCapacityRatio: 1.66
+  molarMass: 4
+  color: "#f0f8ff"
+  pricePerMole: 1.5
+
+- type: gas
+  id: BZ
+  name: gas-bz
+  abbreviation: gas-bz-abbreviation
+  molarHeatCapacity: 20
+  heatCapacityRatio: 1.4
+  molarMass: 58
+  color: "#9370db"
+  reagent: BZ
+  pricePerMole: 1.5
+
+- type: gas
+  id: Pluoxium
+  name: gas-pluoxium
+  abbreviation: gas-pluoxium-abbreviation
+  molarHeatCapacity: 80
+  heatCapacityRatio: 1.4
+  molarMass: 46
+  color: "#7b68ee"
+  reagent: Pluoxium
+  pricePerMole: 0.5
+
+- type: gas
+  id: Halon
+  name: gas-halon
+  abbreviation: gas-halon-abbreviation
+  molarHeatCapacity: 175
+  heatCapacityRatio: 1.4
+  molarMass: 130
+  color: "#800080"
+  reagent: Halon
+  pricePerMole: 0.75
+
+- type: gas
+  id: Antinoblium
+  name: gas-antinoblium
+  abbreviation: gas-antinoblium-abbreviation
+  molarHeatCapacity: 1
+  heatCapacityRatio: 1.4
+  molarMass: 300
+  gasMolesVisible: 0.6
+  color: "#800000"
+  pricePerMole: 10.0
