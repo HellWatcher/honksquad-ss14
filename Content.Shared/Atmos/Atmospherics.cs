@@ -184,6 +184,15 @@ namespace Content.Shared.Atmos
             [Gas.Plasma] = Loc.GetString("gas-plasma-abbreviation"),
             [Gas.Tritium] = Loc.GetString("gas-tritium-abbreviation"),
             [Gas.WaterVapor] = Loc.GetString("gas-water-vapor-abbreviation"),
+            // HONK START - Tier 1 gas abbreviations
+            [Gas.Miasma] = Loc.GetString("gas-miasma-abbreviation"),
+            [Gas.Hydrogen] = Loc.GetString("gas-hydrogen-abbreviation"),
+            [Gas.Helium] = Loc.GetString("gas-helium-abbreviation"),
+            [Gas.BZ] = Loc.GetString("gas-bz-abbreviation"),
+            [Gas.Pluoxium] = Loc.GetString("gas-pluoxium-abbreviation"),
+            [Gas.Halon] = Loc.GetString("gas-halon-abbreviation"),
+            [Gas.Antinoblium] = Loc.GetString("gas-antinoblium-abbreviation"),
+            // HONK END
         };
 
         #region Excited Groups
@@ -213,7 +222,9 @@ namespace Content.Shared.Atmos
         /// <summary>
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
-        public const int TotalNumberOfGases = 9;
+        // HONK START - Tier 1 gases: Miasma, Hydrogen, Helium, BZ, Pluoxium, Halon, Antinoblium
+        public const int TotalNumberOfGases = 16;
+        // HONK END
 
         /// <summary>
         ///     This is the actual length of the gases arrays in mixtures.
@@ -291,6 +302,20 @@ namespace Content.Shared.Atmos
         ///     Divisor for Ammonia Oxygen reaction so that it doesn't happen instantaneously.
         /// </summary>
         public const float AmmoniaOxygenReactionRate = 10f;
+
+        // HONK START - Tier 1 reaction constants
+        public const float MiasmaOxidationMinTemp = T0C + 170f;
+        public const float FireHydrogenH2EnergyReleased = 284e4f;
+        public const float HydrogenBurnRateDelta = 2f;
+        public const float HydrogenOxygenFullburn = 10f;
+        public const float BZFormationMaxTemp = T0C + 40f;
+        public const float BZFormationRate = 0.4f;
+        public const float PluoxiumFormationMinTemp = 50f;
+        public const float PluoxiumFormationMaxTemp = 273f;
+        public const float PluoxiumFormationMaxRate = 5f;
+        public const float HalonOxygenAbsorptionMinTemp = T0C + 70f;
+        public const float HalonOxygenAbsorptionRatio = 20f;
+        // HONK END
 
         /// <summary>
         ///     Determines at what pressure the ultra-high pressure red icon is displayed.
@@ -377,6 +402,15 @@ namespace Content.Shared.Atmos
         WaterVapor = 5,
         Ammonia = 6,
         NitrousOxide = 7,
-        Frezon = 8
+        Frezon = 8,
+        // HONK START - Tier 1 gases
+        Miasma = 9,
+        Hydrogen = 10,
+        Helium = 11,
+        BZ = 12,
+        Pluoxium = 13,
+        Halon = 14,
+        Antinoblium = 15
+        // HONK END
     }
 }
