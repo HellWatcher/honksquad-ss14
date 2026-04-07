@@ -48,26 +48,19 @@ public sealed class CyberneticEmpSystem : EntitySystem
     {
         var duration = baseDuration * cyber.EmpVulnerability;
 
-        switch (cyber.EmpEffect)
+        var effectId = cyber.EmpEffect switch
         {
-            case CyberneticEmpEffect.CardiacArrest:
-                _statusEffects.TryAddStatusEffectDuration(body, CardiacArrestEffect, duration);
-                break;
+            CyberneticEmpEffect.CardiacArrest => (EntProtoId?) CardiacArrestEffect,
+            CyberneticEmpEffect.BreathingFailure => BreathingSuppressedEffect,
+            CyberneticEmpEffect.Flicker => BlindnessEffect,
+            CyberneticEmpEffect.Deafen => DeafnessEffect,
+            _ => null,
+        };
 
-            case CyberneticEmpEffect.BreathingFailure:
-                _statusEffects.TryAddStatusEffectDuration(body, BreathingSuppressedEffect, duration);
-                break;
+        if (effectId == null)
+            return;
 
-            case CyberneticEmpEffect.Flicker:
-                _statusEffects.TryAddStatusEffectDuration(body, BlindnessEffect, duration);
-                break;
-
-            case CyberneticEmpEffect.Deafen:
-                _statusEffects.TryAddStatusEffectDuration(body, DeafnessEffect, duration);
-                break;
-
-            case CyberneticEmpEffect.None:
-                break;
-        }
+        if (!_statusEffects.TryAddStatusEffectDuration(body, effectId.Value, duration))
+            Log.Debug($"Failed to apply EMP effect {cyber.EmpEffect} to {ToPrettyString(body)}");
     }
 }

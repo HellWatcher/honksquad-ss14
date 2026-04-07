@@ -90,13 +90,17 @@ public sealed class AutosurgeonSystem : EntitySystem
     private void InstallOrgan(EntityUid autosurgeon, AutosurgeonComponent comp, EntityUid user, EntityUid target)
     {
         if (!TryComp<BodyComponent>(target, out var body) || body.Organs == null)
+        {
+            _popup.PopupEntity(Loc.GetString("autosurgeon-no-body"), target, user);
             return;
+        }
 
         // Spawn the organ entity
         var organ = Spawn(comp.OrganPrototype, Transform(target).Coordinates);
 
         if (!TryComp<OrganComponent>(organ, out var organComp))
         {
+            Log.Error($"Autosurgeon organ prototype {comp.OrganPrototype} missing OrganComponent");
             QueueDel(organ);
             return;
         }
