@@ -25,8 +25,8 @@ public sealed partial class HydrogenFireReaction : IGasReactionEffect
 
         // burned = min(h2 / BURN_RATE_DELTA, o2 / (BURN_RATE_DELTA * OXYGEN_FULLBURN), h2, o2 * 2)
         var burned = Math.Min(
-            initialH2 / Atmospherics.HydrogenBurnRateDelta,
-            initialO2 / (Atmospherics.HydrogenBurnRateDelta * Atmospherics.HydrogenOxygenFullburn));
+            initialH2 / RussAtmospherics.HydrogenBurnRateDelta,
+            initialO2 / (RussAtmospherics.HydrogenBurnRateDelta * RussAtmospherics.HydrogenOxygenFullburn));
         burned = Math.Min(burned, initialH2);
         burned = Math.Min(burned, initialO2 * 2f);
 
@@ -37,7 +37,7 @@ public sealed partial class HydrogenFireReaction : IGasReactionEffect
         mixture.AdjustMoles(Gas.Oxygen, -burned * 0.5f);
         mixture.AdjustMoles(Gas.WaterVapor, burned);
 
-        energyReleased += burned * Atmospherics.FireHydrogenH2EnergyReleased;
+        energyReleased += burned * RussAtmospherics.FireHydrogenH2EnergyReleased;
         mixture.ReactionResults[(byte)GasReaction.Fire] += burned;
 
         energyReleased /= heatScale;

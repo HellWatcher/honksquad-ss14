@@ -21,7 +21,7 @@ public sealed partial class HalonOxygenRemovalReaction : IGasReactionEffect
 
         var heatEfficiency = Math.Min(
             temperature / (Atmospherics.FireMinimumTemperatureToExist * 10f),
-            Math.Min(halon, o2 / Atmospherics.HalonOxygenAbsorptionRatio));
+            Math.Min(halon, o2 / RussAtmospherics.HalonOxygenAbsorptionRatio));
 
         if (heatEfficiency <= 0)
             return ReactionResult.NoReaction;
@@ -29,8 +29,8 @@ public sealed partial class HalonOxygenRemovalReaction : IGasReactionEffect
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
         mixture.AdjustMoles(Gas.Halon, -heatEfficiency);
-        mixture.AdjustMoles(Gas.Oxygen, -heatEfficiency * Atmospherics.HalonOxygenAbsorptionRatio);
-        mixture.AdjustMoles(Gas.CarbonDioxide, heatEfficiency * Atmospherics.HalonOxygenAbsorptionRatio);
+        mixture.AdjustMoles(Gas.Oxygen, -heatEfficiency * RussAtmospherics.HalonOxygenAbsorptionRatio);
+        mixture.AdjustMoles(Gas.CarbonDioxide, heatEfficiency * RussAtmospherics.HalonOxygenAbsorptionRatio);
 
         var energyAbsorbed = heatEfficiency * 2500f;
         energyAbsorbed /= heatScale;
