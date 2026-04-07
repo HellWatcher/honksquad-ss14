@@ -61,6 +61,22 @@ public sealed class IdCardAccountSystem : EntitySystem
         _quickDialog.CloseAllDialogs(actor.PlayerSession);
     }
 
+    private void OpenTrackedDialog<T>(ICommonSession session, string titleKey, string promptKey, Action<T> onConfirm)
+    {
+        if (!_pendingDialogSessions.Add(session))
+            return;
+
+        _quickDialog.OpenDialog(session,
+            Loc.GetString(titleKey),
+            Loc.GetString(promptKey),
+            (T value) =>
+            {
+                _pendingDialogSessions.Remove(session);
+                onConfirm(value);
+            },
+            () => _pendingDialogSessions.Remove(session));
+    }
+
     private void OnGetAltVerbs(EntityUid uid, IdCardComponent comp, GetVerbsEvent<AlternativeVerb> args)
     {
         if (!TryComp(args.User, out ActorComponent? actor))
@@ -77,21 +93,10 @@ public sealed class IdCardAccountSystem : EntitySystem
             args.Verbs.Add(new AlternativeVerb
             {
                 Text = Loc.GetString("id-card-set-account-verb"),
-                Act = () =>
-                {
-                    if (!_pendingDialogSessions.Add(actor.PlayerSession))
-                        return;
-
-                    _quickDialog.OpenDialog(actor.PlayerSession,
-                        Loc.GetString("id-card-set-account-title"),
-                        Loc.GetString("id-card-set-account-prompt"),
-                        (string accountNumber) =>
-                        {
-                            _pendingDialogSessions.Remove(actor.PlayerSession);
-                            OnAccountEntered(uid, args.User, actor.PlayerSession, accountNumber);
-                        },
-                        () => _pendingDialogSessions.Remove(actor.PlayerSession));
-                },
+                Act = () => OpenTrackedDialog<string>(actor.PlayerSession,
+                    "id-card-set-account-title",
+                    "id-card-set-account-prompt",
+                    account => OnAccountEntered(uid, args.User, actor.PlayerSession, account)),
                 Impact = LogImpact.Low,
             });
         }
@@ -100,21 +105,10 @@ public sealed class IdCardAccountSystem : EntitySystem
             args.Verbs.Add(new AlternativeVerb
             {
                 Text = Loc.GetString("id-card-withdraw-verb"),
-                Act = () =>
-                {
-                    if (!_pendingDialogSessions.Add(actor.PlayerSession))
-                        return;
-
-                    _quickDialog.OpenDialog(actor.PlayerSession,
-                        Loc.GetString("id-card-withdraw-title"),
-                        Loc.GetString("id-card-withdraw-prompt"),
-                        (int amount) =>
-                        {
-                            _pendingDialogSessions.Remove(actor.PlayerSession);
-                            OnWithdraw(uid, args.User, actor.PlayerSession, amount);
-                        },
-                        () => _pendingDialogSessions.Remove(actor.PlayerSession));
-                },
+                Act = () => OpenTrackedDialog<int>(actor.PlayerSession,
+                    "id-card-withdraw-title",
+                    "id-card-withdraw-prompt",
+                    amount => OnWithdraw(uid, args.User, actor.PlayerSession, amount)),
                 Impact = LogImpact.Low,
             });
         }
@@ -137,22 +131,14 @@ public sealed class IdCardAccountSystem : EntitySystem
         args.Verbs.Add(new ActivationVerb
         {
             Text = Loc.GetString("id-card-create-account-verb"),
-            Act = () =>
-            {
-                if (!_pendingDialogSessions.Add(actor.PlayerSession))
-                    return;
-
-                _quickDialog.OpenDialog(actor.PlayerSession,
-                    Loc.GetString("id-card-create-account-title"),
-                    Loc.GetString("id-card-create-account-confirm"),
-                    (string confirmation) =>
-                    {
-                        _pendingDialogSessions.Remove(actor.PlayerSession);
-                        if (confirmation.Trim().Equals("YES", StringComparison.OrdinalIgnoreCase))
-                            OnCreateAccount(uid, args.User, actor.PlayerSession);
-                    },
-                    () => _pendingDialogSessions.Remove(actor.PlayerSession));
-            },
+            Act = () => OpenTrackedDialog<string>(actor.PlayerSession,
+                "id-card-create-account-title",
+                "id-card-create-account-confirm",
+                confirmation =>
+                {
+                    if (confirmation.Trim().Equals("YES", StringComparison.OrdinalIgnoreCase))
+                        OnCreateAccount(uid, args.User, actor.PlayerSession);
+                }),
             Impact = LogImpact.Low,
         });
     }
