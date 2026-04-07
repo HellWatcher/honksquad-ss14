@@ -23,4 +23,16 @@ public static class RussAtmospherics
 
     public const float HalonOxygenAbsorptionMinTemp = Atmospherics.T0C + 70f;
     public const float HalonOxygenAbsorptionRatio = 20f;
+
+    public const float HealiumFormationMinTemp = 25f;
+    public const float HealiumFormationMaxTemp = 300f;
+    public const float HealiumFormationEnergy = 9000f;
+
+    public const float NitriumFormationMinTemp = 1500f;
+    public const float NitriumFormationTempDivisor = Atmospherics.FireMinimumTemperatureToExist * 8f;
+    public const float NitriumFormationEnergy = 100000f;
+
+    public const float NitriumDecompositionMaxTemp = Atmospherics.T0C + 70f;
+    public const float NitriumDecompositionTempDivisor = Atmospherics.FireMinimumTemperatureToExist * 8f;
+    public const float NitriumDecompositionEnergy = 30000f;
 }

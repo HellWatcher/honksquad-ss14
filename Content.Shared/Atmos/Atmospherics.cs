@@ -184,7 +184,7 @@ namespace Content.Shared.Atmos
             [Gas.Plasma] = Loc.GetString("gas-plasma-abbreviation"),
             [Gas.Tritium] = Loc.GetString("gas-tritium-abbreviation"),
             [Gas.WaterVapor] = Loc.GetString("gas-water-vapor-abbreviation"),
-            // HONK START - Tier 1 gas abbreviations
+            // HONK START - Fork gas abbreviations
             [Gas.Miasma] = Loc.GetString("gas-miasma-abbreviation"),
             [Gas.Hydrogen] = Loc.GetString("gas-hydrogen-abbreviation"),
             [Gas.Helium] = Loc.GetString("gas-helium-abbreviation"),
@@ -192,6 +192,8 @@ namespace Content.Shared.Atmos
             [Gas.Pluoxium] = Loc.GetString("gas-pluoxium-abbreviation"),
             [Gas.Halon] = Loc.GetString("gas-halon-abbreviation"),
             [Gas.Antinoblium] = Loc.GetString("gas-antinoblium-abbreviation"),
+            [Gas.Healium] = Loc.GetString("gas-healium-abbreviation"),
+            [Gas.Nitrium] = Loc.GetString("gas-nitrium-abbreviation"),
             // HONK END
         };
 
@@ -222,8 +224,8 @@ namespace Content.Shared.Atmos
         /// <summary>
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
-        // HONK START - Tier 1 gases: Miasma, Hydrogen, Helium, BZ, Pluoxium, Halon, Antinoblium
-        public const int TotalNumberOfGases = 16;
+        // HONK START - Fork gases
+        public const int TotalNumberOfGases = 18;
         // HONK END
 
         /// <summary>
@@ -389,14 +391,16 @@ namespace Content.Shared.Atmos
         Ammonia = 6,
         NitrousOxide = 7,
         Frezon = 8,
-        // HONK START - Tier 1 gases
+        // HONK START - Fork gases
         Miasma = 9,
         Hydrogen = 10,
         Helium = 11,
         BZ = 12,
         Pluoxium = 13,
         Halon = 14,
-        Antinoblium = 15
+        Antinoblium = 15,
+        Healium = 16,
+        Nitrium = 17,
         // HONK END
     }
 }
