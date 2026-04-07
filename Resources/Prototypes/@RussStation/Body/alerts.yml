@@ -1,0 +1,7 @@
+- type: alert
+  id: CardiacArrest
+  icons:
+    - sprite: /Textures/Mobs/Species/Human/organs.rsi
+      state: heart-off
+  name: alerts-cardiac-arrest-name
+  description: alerts-cardiac-arrest-desc
