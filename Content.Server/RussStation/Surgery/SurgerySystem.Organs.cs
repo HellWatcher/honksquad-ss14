@@ -21,6 +21,12 @@ public sealed partial class SurgerySystem
         if (!TryComp<OrganComponent>(organ, out var organComp))
             return;
 
+        if (organComp.Category == null)
+        {
+            Log.Warning($"Attempted to insert organ {ToPrettyString(organ)} with no category");
+            return;
+        }
+
         if (!TryComp<BodyComponent>(patient, out var body) || body.Organs == null)
         {
             _popup.PopupEntity(Loc.GetString("surgery-organ-insert-failed"), patient, surgeon);
@@ -28,18 +34,15 @@ public sealed partial class SurgerySystem
         }
 
         // Block if the patient already has an organ of the same category
-        if (organComp.Category != null)
+        foreach (var existing in body.Organs.ContainedEntities)
         {
-            foreach (var existing in body.Organs.ContainedEntities)
+            if (TryComp<OrganComponent>(existing, out var existingOrgan) &&
+                existingOrgan.Category == organComp.Category)
             {
-                if (TryComp<OrganComponent>(existing, out var existingOrgan) &&
-                    existingOrgan.Category == organComp.Category)
-                {
-                    _popup.PopupEntity(
-                        Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(organ).EntityName)),
-                        patient, surgeon);
-                    return;
-                }
+                _popup.PopupEntity(
+                    Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(organ).EntityName)),
+                    patient, surgeon);
+                return;
             }
         }
 
