@@ -27,19 +27,21 @@ public sealed partial class SurgerySystem
             return;
         }
 
-        // Block if the patient already has an organ of the same category
-        if (organComp.Category != null)
+        // Block if the patient already has an organ of the same category,
+        // or the same prototype if category is null.
+        var organProtoId = MetaData(organ).EntityPrototype?.ID;
+        foreach (var existing in body.Organs.ContainedEntities)
         {
-            foreach (var existing in body.Organs.ContainedEntities)
+            if (!TryComp<OrganComponent>(existing, out var existingOrgan))
+                continue;
+
+            if (organComp.Category != null && existingOrgan.Category == organComp.Category
+                || organComp.Category == null && MetaData(existing).EntityPrototype?.ID == organProtoId)
             {
-                if (TryComp<OrganComponent>(existing, out var existingOrgan) &&
-                    existingOrgan.Category == organComp.Category)
-                {
-                    _popup.PopupEntity(
-                        Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(organ).EntityName)),
-                        patient, surgeon);
-                    return;
-                }
+                _popup.PopupEntity(
+                    Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(organ).EntityName)),
+                    patient, surgeon);
+                return;
             }
         }
 
