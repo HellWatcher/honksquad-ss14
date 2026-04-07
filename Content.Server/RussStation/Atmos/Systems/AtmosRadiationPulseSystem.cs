@@ -196,7 +196,7 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
         var uid = Spawn(null, coords);
 
         var source = EnsureComp<RadiationSourceComponent>(uid);
-        source.Intensity = totalRads;
+        source.Intensity = totalRads / tiles.Count;
         source.Enabled = true;
 
         var despawn = EnsureComp<TimedDespawnComponent>(uid);
