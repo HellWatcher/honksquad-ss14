@@ -162,3 +162,9 @@
     - footsteps
   components:
     - type: LightStep
+- type: trait
+  id: Vegetarian
+  name: trait-vegetarian-name
+  description: trait-vegetarian-desc
+    - diet
+    - type: Vegetarian

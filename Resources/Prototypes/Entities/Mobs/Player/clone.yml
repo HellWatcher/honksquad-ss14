@@ -27,6 +27,7 @@
   - Freerunning # HONK
   - Illiterate # HONK
   - LightStep # HONK
+  - Vegetarian # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
   - LightweightDrunk
@@ -42,6 +43,7 @@
   - Unrevivable
   - WeakArm # HONK
   - BloodDeficiency # HONK
+  - Vegetarian # HONK
   # accents
   - Accentless
   - BackwardsAccent
