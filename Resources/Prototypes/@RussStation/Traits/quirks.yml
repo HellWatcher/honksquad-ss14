@@ -109,3 +109,17 @@
   components:
     - type: PermanentBlindness
       blindness: 4
+
+- type: trait
+  id: Illiterate
+  name: trait-illiterate-name
+  description: trait-illiterate-desc
+  category: Quirks
+  cost: -8
+  tags:
+    - literacy
+  excludedTags:
+    - literacy
+  components:
+    - type: Illiterate
+    - type: BlockWriting
