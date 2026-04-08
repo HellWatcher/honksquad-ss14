@@ -56,7 +56,8 @@ public abstract class SharedStrippableSystem : EntitySystem
         SubscribeLocalEvent<StrippingComponent, CanDropTargetEvent>(OnCanDropOn);
         SubscribeLocalEvent<StrippableComponent, CanDropDraggedEvent>(OnCanDrop);
         SubscribeLocalEvent<StrippableComponent, DragDropDraggedEvent>(OnDragDrop);
-        SubscribeLocalEvent<StrippableComponent, ActivateInWorldEvent>(OnActivateInWorld);
+        // HONK - Click-to-strip disabled: inconsistent interaction behavior. Use drag-to-strip or verb instead.
+        // SubscribeLocalEvent<StrippableComponent, ActivateInWorldEvent>(OnActivateInWorld);
     }
 
     private void AddStripVerb(EntityUid uid, StrippableComponent component, GetVerbsEvent<Verb> args)
