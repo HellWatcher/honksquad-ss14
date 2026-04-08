@@ -1,3 +1,4 @@
+# HONK - Formatting standardized to match .editorconfig (2-space YAML indent)
 - type: entity
   id: ClosetBase
   parent: [BaseStructureDynamic, BasePaperLabelableVisualized]
