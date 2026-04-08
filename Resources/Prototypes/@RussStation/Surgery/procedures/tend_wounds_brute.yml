@@ -2,9 +2,7 @@
   id: TendWoundsBrute
   name: surgery-procedure-tend-wounds-brute
   description: Repair physical damage through surgery.
-  icon:
-    sprite: "@RussStation/Interface/Alerts/wounds.rsi"
-    state: brute_icon
+  icon: SurgeryIconTendBrute
   difficulty: Minor
   steps:
     - quality: Slicing

@@ -36,8 +36,9 @@ public sealed class SurgerySystem : SharedSurgerySystem
             var target = ev.Target;
             var bedsheet = ev.Bedsheet;
 
-            var icon = proto.Icon
-                ?? new SpriteSpecifier.Rsi(
+            var icon = proto.Icon != null
+                ? (SpriteSpecifier) new SpriteSpecifier.EntityPrototype(proto.Icon)
+                : new SpriteSpecifier.Rsi(
                     new ResPath("Objects/Specific/Medical/Surgery/scalpel.rsi"),
                     "scalpel");
 

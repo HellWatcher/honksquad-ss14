@@ -2,9 +2,7 @@
   id: OrganManipulation
   name: surgery-procedure-organ-manipulation
   description: Open the body cavity to remove or insert organs.
-  icon:
-    sprite: "@RussStation/Interface/Surgery/procedures.rsi"
-    state: organmanipulation_icon
+  icon: SurgeryIconOrganManipulation
   difficulty: Major
   steps:
     - quality: Slicing
