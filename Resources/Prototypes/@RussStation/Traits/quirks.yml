@@ -162,9 +162,29 @@
     - footsteps
   components:
     - type: LightStep
+
 - type: trait
   id: Vegetarian
   name: trait-vegetarian-name
   description: trait-vegetarian-desc
+  category: Diet
+  cost: 0
+  tags:
     - diet
+  excludedTags:
+    - diet
+  components:
     - type: Vegetarian
+
+- type: trait
+  id: GlassJaw
+  name: trait-glassjaw-name
+  description: trait-glassjaw-desc
+  category: Combat
+  cost: -4
+  tags:
+    - stamina
+  excludedTags:
+    - stamina
+  components:
+    - type: GlassJaw
