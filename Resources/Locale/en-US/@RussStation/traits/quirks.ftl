@@ -23,3 +23,5 @@ self-aware-examine-verb = Diagnose self
 self-aware-no-damage = You feel perfectly healthy.
 self-aware-damage-header = [bold]Self-diagnosis:[/bold]
 self-aware-damage-type = - [color=red]{$type}[/color]: {$amount}
+trait-freerunning-name = Freerunning
+trait-freerunning-desc = You vault over obstacles like they're not even there.
