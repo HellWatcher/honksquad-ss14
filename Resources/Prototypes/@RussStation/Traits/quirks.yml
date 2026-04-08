@@ -23,3 +23,16 @@
     - wage
   components:
     - type: Negotiator
+
+- type: trait
+  id: EagleEye
+  name: trait-eagle-eye-name
+  description: trait-eagle-eye-desc
+  category: Senses
+  cost: 2
+  tags:
+    - examine-range
+  excludedTags:
+    - examine-range
+  components:
+    - type: EagleEye
