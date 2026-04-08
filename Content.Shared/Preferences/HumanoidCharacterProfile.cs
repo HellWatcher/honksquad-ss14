@@ -409,6 +409,28 @@ namespace Content.Shared.Preferences
 
             var list = new HashSet<ProtoId<TraitPrototype>>(_traitPreferences) { traitId };
 
+            //HONK START - Remove traits excluded by tag
+            foreach (var existingId in _traitPreferences)
+            {
+                if (existingId == traitId)
+                    continue;
+
+                if (!protoManager.TryIndex<TraitPrototype>(existingId, out var existingProto))
+                    continue;
+
+                // Remove existing trait if its tag is excluded by the new trait
+                if (existingProto.Tag != null && traitProto.ExcludedTags.Contains(existingProto.Tag))
+                    list.Remove(existingId);
+
+                // Remove new trait if existing trait excludes it
+                if (traitProto.Tag != null && existingProto.ExcludedTags.Contains(traitProto.Tag))
+                {
+                    list.Remove(traitId);
+                    break;
+                }
+            }
+            //HONK END
+
             // HONK START - Global trait point budget
             var configManager = IoCManager.Resolve<IConfigurationManager>();
             var globalMax = configManager.GetCVar(CCVars.MaxTraitPoints);
@@ -683,6 +705,11 @@ namespace Content.Shared.Preferences
                 if (!protoManager.TryIndex(trait, out var traitProto))
                     continue;
 
+                //HONK START - Skip traits that conflict with already-selected ones
+                if (HasConflict(trait, traitProto, result, protoManager))
+                    continue;
+                //HONK END
+
                 // HONK START - Check global budget
                 var newGlobal = globalCount + traitProto.Cost;
                 if (newGlobal > globalMax && traitProto.Cost > 0)
@@ -715,6 +742,34 @@ namespace Content.Shared.Preferences
 
             return result;
         }
+
+        //HONK START - Tag-based exclusion checking helper
+        /// <summary>
+        /// Checks if a trait is excluded by any already-selected trait's excluded tags (bidirectional).
+        /// </summary>
+        private static bool HasConflict(
+            ProtoId<TraitPrototype> traitId,
+            TraitPrototype traitProto,
+            List<ProtoId<TraitPrototype>> selected,
+            IPrototypeManager protoManager)
+        {
+            foreach (var selectedId in selected)
+            {
+                if (!protoManager.TryIndex<TraitPrototype>(selectedId, out var selectedProto))
+                    continue;
+
+                // Does the selected trait exclude the new trait's tag?
+                if (traitProto.Tag != null && selectedProto.ExcludedTags.Contains(traitProto.Tag))
+                    return true;
+
+                // Does the new trait exclude the selected trait's tag?
+                if (selectedProto.Tag != null && traitProto.ExcludedTags.Contains(selectedProto.Tag))
+                    return true;
+            }
+
+            return false;
+        }
+        //HONK END
 
         public HumanoidCharacterProfile Validated(ICommonSession session, IDependencyCollection collection)
         {
