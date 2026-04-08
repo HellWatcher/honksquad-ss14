@@ -56,6 +56,7 @@ public abstract class SharedStrippableSystem : EntitySystem
         SubscribeLocalEvent<StrippingComponent, CanDropTargetEvent>(OnCanDropOn);
         SubscribeLocalEvent<StrippableComponent, CanDropDraggedEvent>(OnCanDrop);
         SubscribeLocalEvent<StrippableComponent, DragDropDraggedEvent>(OnDragDrop);
+        SubscribeLocalEvent<StrippableComponent, ActivateInWorldEvent>(OnActivateInWorld);
     }
 
     private void AddStripVerb(EntityUid uid, StrippableComponent component, GetVerbsEvent<Verb> args)
@@ -638,6 +639,20 @@ public abstract class SharedStrippableSystem : EntitySystem
         var targetEv = new BeforeGettingStrippedEvent(userEv.Time, userEv.Stealth);
         RaiseLocalEvent(targetPlayer, ref targetEv);
         return (targetEv.Time, targetEv.Stealth);
+    }
+
+    private void OnActivateInWorld(EntityUid uid, StrippableComponent component, ActivateInWorldEvent args)
+    {
+        if (args.Handled || !args.Complex || args.Target == args.User)
+            return;
+
+        //HONK START - Skip strip if escalated grab active
+        if (TryComp<GrabStateComponent>(args.User, out var grab) && grab.Target == uid)
+            return;
+        //HONK END
+
+        if (TryOpenStrippingUi(args.User, (uid, component)))
+            args.Handled = true;
     }
 
     private void OnDragDrop(EntityUid uid, StrippableComponent component, ref DragDropDraggedEvent args)
