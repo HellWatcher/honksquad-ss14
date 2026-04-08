@@ -49,3 +49,16 @@
     - throwing
   components:
     - type: ThrowingArm
+
+- type: trait
+  id: AlcoholTolerance
+  name: trait-alcohol-tolerance-name
+  description: trait-alcohol-tolerance-desc
+  category: Diet
+  cost: 2
+  tags:
+    - alcohol
+  excludedTags:
+    - alcohol
+  components:
+    - type: AlcoholTolerance
