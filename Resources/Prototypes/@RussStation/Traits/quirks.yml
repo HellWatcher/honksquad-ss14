@@ -36,3 +36,16 @@
     - wounds
   components:
     - type: Frail
+
+- type: trait
+  id: ThrowingArm
+  name: trait-throwing-arm-name
+  description: trait-throwing-arm-desc
+  category: Combat
+  cost: 2
+  tags:
+    - throwing
+  excludedTags:
+    - throwing
+  components:
+    - type: ThrowingArm

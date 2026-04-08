@@ -4,3 +4,5 @@ trait-negotiator-name = Negotiator
 trait-negotiator-desc = You negotiated a better contract. Your paycheck is 50% higher.
 trait-frail-name = Frail
 trait-frail-desc = Your body is fragile.
+trait-throwing-arm-name = Throwing Arm
+trait-throwing-arm-desc = You've got a hell of an arm.
