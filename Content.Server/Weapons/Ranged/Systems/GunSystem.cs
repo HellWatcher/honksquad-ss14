@@ -18,6 +18,9 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Random;
+//HONK START
+using Content.Shared.RussStation.Traits;
+//HONK END
 
 namespace Content.Server.Weapons.Ranged.Systems;
 
@@ -71,6 +74,14 @@ public sealed partial class GunSystem : SharedGunSystem
         var mapDirection = toMap - fromMap.Position;
         var mapAngle = mapDirection.ToAngle();
         var angle = GetRecoilAngle(Timing.CurTime, gun, mapDirection.ToAngle());
+
+        //HONK START - Poor Aim: increase shot spread for entities with PoorAimComponent
+        if (user != null && TryComp<PoorAimComponent>(user.Value, out var poorAim))
+        {
+            var deviation = angle.Theta - mapAngle.Theta;
+            angle = new Angle(mapAngle.Theta + deviation * poorAim.SpreadMultiplier);
+        }
+        //HONK END
 
         // If applicable, this ensures the projectile is parented to grid on spawn, instead of the map.
         var fromEnt = MapManager.TryFindGridAt(fromMap, out var gridUid, out _)
