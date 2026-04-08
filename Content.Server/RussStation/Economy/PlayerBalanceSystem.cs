@@ -1,5 +1,4 @@
 using Content.Server.RussStation.Memories;
-using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
 using Content.Shared.GameTicking;
 using Content.Shared.RussStation.Economy;
@@ -73,9 +72,8 @@ public sealed class PlayerBalanceSystem : EntitySystem
         // Stamp account number onto the player's ID card.
         if (_idCard.TryFindIdCard(args.Mob, out var idCard))
         {
-            var idComp = Comp<IdCardComponent>(idCard);
-            idComp.AccountNumber = comp.AccountNumber;
-            Dirty(idCard, idComp);
+            var bankComp = EnsureComp<BankLinkedCardComponent>(idCard);
+            bankComp.AccountNumber = comp.AccountNumber;
         }
 
         // Register account number in the player's memories.
@@ -94,13 +92,13 @@ public sealed class PlayerBalanceSystem : EntitySystem
         if (!_idCard.TryFindIdCard(args.Entity, out var idCard))
             return;
 
-        var idComp = Comp<IdCardComponent>(idCard);
-        if (!string.IsNullOrEmpty(idComp.AccountNumber))
+        var bankComp = CompOrNull<BankLinkedCardComponent>(idCard);
+        if (!string.IsNullOrEmpty(bankComp?.AccountNumber))
             return;
 
         var accountNumber = CreateAccount(args.Entity, _defaultStartingBalance);
-        idComp.AccountNumber = accountNumber;
-        Dirty(idCard, idComp);
+        bankComp = EnsureComp<BankLinkedCardComponent>(idCard);
+        bankComp.AccountNumber = accountNumber;
     }
 
     private void OnRemove(EntityUid uid, PlayerBalanceComponent comp, ComponentRemove args)
