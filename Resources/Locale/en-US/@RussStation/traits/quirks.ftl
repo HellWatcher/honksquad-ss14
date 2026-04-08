@@ -10,3 +10,5 @@ trait-alcohol-tolerance-name = Hard Drinker
 trait-alcohol-tolerance-desc = You can hold your liquor.
 trait-weak-arm-name = Weak Arm
 trait-weak-arm-desc = Your throws are feeble.
+trait-blood-deficiency-name = Blood Deficiency
+trait-blood-deficiency-desc = Your blood runs thin.
