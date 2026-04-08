@@ -279,3 +279,16 @@
     - stamina
   components:
     - type: IronJaw
+
+- type: trait
+  id: SteadyHand
+  name: trait-steady-hand-name
+  description: trait-steady-hand-desc
+  category: Combat
+  cost: 4
+  tags:
+    - accuracy
+  excludedTags:
+    - accuracy
+  components:
+    - type: SteadyHand
