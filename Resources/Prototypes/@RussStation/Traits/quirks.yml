@@ -91,3 +91,20 @@
       - Bloodstream
   components:
     - type: BloodDeficiency
+
+- type: trait
+  id: ScarredEye
+  name: trait-scarred-eye-name
+  description: trait-scarred-eye-desc
+  traitGear: ClothingEyesEyepatch
+  category: Quirks
+  cost: -2
+  conflicts:
+    - Blindness
+    - PoorVision
+  whitelist:
+    components:
+      - Blindable
+  components:
+    - type: PermanentBlindness
+      blindness: 4

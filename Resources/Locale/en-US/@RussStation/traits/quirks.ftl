@@ -12,3 +12,5 @@ trait-weak-arm-name = Weak Arm
 trait-weak-arm-desc = Your throws are feeble.
 trait-blood-deficiency-name = Blood Deficiency
 trait-blood-deficiency-desc = Your blood runs thin.
+trait-scarred-eye-name = Scarred Eye
+trait-scarred-eye-desc = An old wound left one of your eyes barely functional.
