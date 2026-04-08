@@ -42,3 +42,5 @@ trait-softspoken-name = Soft-Spoken
 trait-softspoken-desc = You've always been a little quiet.
 trait-touchy-name = Touchy
 trait-touchy-desc = You have to get close to really see anything.
+trait-indebted-name = Indebted
+trait-indebted-desc = You owe the company more than you'd like to admit.
