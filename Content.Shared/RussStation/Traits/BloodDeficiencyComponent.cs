@@ -15,5 +15,5 @@ public sealed partial class BloodDeficiencyComponent : Component
     /// At 0.0 blood won't regenerate at all; at 0.5 it regenerates at half speed.
     /// </summary>
     [DataField]
-    public float BloodRefreshMultiplier = 0f;
+    public float BloodRefreshMultiplier = 0.5f;
 }
