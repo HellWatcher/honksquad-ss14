@@ -2,7 +2,9 @@
   id: TendWoundsBurn
   name: surgery-procedure-tend-wounds-burn
   description: Treat burn damage through surgery.
-  icon: SurgeryIconTendBurn
+  icon:
+    sprite: "@RussStation/Interface/Alerts/wounds.rsi"
+    state: burn_icon
   difficulty: Minor
   steps:
     - quality: Slicing
