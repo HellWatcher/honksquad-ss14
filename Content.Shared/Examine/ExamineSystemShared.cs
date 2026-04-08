@@ -140,6 +140,13 @@ namespace Content.Shared.Examine
         /// </summary>
         public float GetExaminerRange(EntityUid examiner, MobStateComponent? mobState = null)
         {
+            //HONK START - Allow components to modify examine range
+            var range = ExamineRange;
+            var ev = new GetExamineRangeEvent(range);
+            RaiseLocalEvent(examiner, ref ev);
+            range = ev.Range;
+            //HONK END
+
             if (Resolve(examiner, ref mobState, logMissing: false))
             {
                 if (MobStateSystem.IsDead(examiner, mobState))
@@ -149,9 +156,9 @@ namespace Content.Shared.Examine
                     return CritExamineRange;
 
                 if (TryComp<BlurryVisionComponent>(examiner, out var blurry))
-                    return Math.Clamp(ExamineRange - blurry.Magnitude * ExamineBlurrinessMult, 2, ExamineRange);
+                    return Math.Clamp(range - blurry.Magnitude * ExamineBlurrinessMult, 2, range);
             }
-            return ExamineRange;
+            return range;
         }
 
         /// <summary>

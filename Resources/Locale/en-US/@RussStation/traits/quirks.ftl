@@ -40,3 +40,5 @@ trait-prosopagnosia-name = Prosopagnosia
 trait-prosopagnosia-desc = Every face is a stranger's face.
 trait-softspoken-name = Soft-Spoken
 trait-softspoken-desc = You've always been a little quiet.
+trait-touchy-name = Touchy
+trait-touchy-desc = You have to get close to really see anything.
