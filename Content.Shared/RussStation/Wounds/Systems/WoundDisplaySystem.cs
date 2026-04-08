@@ -17,18 +17,24 @@ public sealed class WoundDisplaySystem : EntitySystem
     /// Updates which damage type (Slash or Piercing) is the bleed source for display.
     /// Prefers Slash on tie.
     /// </summary>
-    public void UpdateBleedSource(WoundComponent comp, string damageType, float amount)
+    public bool UpdateBleedSource(WoundComponent comp, string damageType, float amount)
     {
-        if (comp.BleedSourceDamageType == null)
+        var prev = comp.BleedSourceDamageType;
+
+        if (prev == null)
         {
             comp.BleedSourceDamageType = damageType;
-            return;
+        }
+        else if (damageType == "Slash")
+        {
+            comp.BleedSourceDamageType = "Slash";
+        }
+        else if (prev != "Slash")
+        {
+            comp.BleedSourceDamageType = damageType;
         }
 
-        if (damageType == "Slash")
-            comp.BleedSourceDamageType = "Slash";
-        else if (comp.BleedSourceDamageType != "Slash")
-            comp.BleedSourceDamageType = damageType;
+        return comp.BleedSourceDamageType != prev;
     }
 
     /// <summary>
@@ -68,7 +74,7 @@ public sealed class WoundDisplaySystem : EntitySystem
             {
                 var source = woundComp.BleedSourceDamageType ?? "Slash";
                 var locKey = $"wound-bleed-{source.ToLowerInvariant()}-{bleedTier}";
-                result.Add(new WoundDisplayInfo(locKey, bleedTier, WoundCategory.Fracture));
+                result.Add(new WoundDisplayInfo(locKey, bleedTier, WoundCategory.Bleeding));
             }
         }
 
