@@ -89,11 +89,6 @@
 - type: Tag
   id: Boll # MaterialStorage whitelist: Sheetifier
 
-# HONK START - Surgery tool tags
-- type: Tag
-  id: BoneSaw
-# HONK END
-
 - type: Tag
   id: Book # Storage whitelist: BorgModuleService, BooksBag, Bookshelf. Blacklisting on various entities whitelisting PaperComponent
 
@@ -215,11 +210,6 @@
 
 - type: Tag
   id: Cake # CargoBounty blacklist: BountyFruit, BountyVegetable
-
-# HONK START - Surgery tool tag
-- type: Tag
-  id: Cautery
-# HONK END
 
 - type: Tag
   id: Candle # Storage whitelist: BoxCandle
@@ -504,11 +494,6 @@
 - type: Tag
   id: DoorRemoteWhitelist # Doors with this tag can be interacted with door remotes
 
-# HONK START - Surgery tool tag
-- type: Tag
-  id: Drill
-# HONK END
-
 - type: Tag
   id: DrinkBottle # Storage whitelist: BoozeDispenserEmpty, SodaDispenserEmpty
 
@@ -745,11 +730,6 @@
 
 - type: Tag
   id: HelmetEVA # ConstructionGraph: ClownHardsuit, MimeHardsuit. PartAssembly: VimHarness. ItemMapper: VimHarness
-
-# HONK START - Surgery tool tag
-- type: Tag
-  id: Hemostat
-# HONK END
 
 - type: Tag
   id: HideContextMenu # Used by client VerbSystem to exclude tagged entities from the right click menu.
@@ -1230,11 +1210,6 @@
 - type: Tag
   id: ReptilianFood # SpecialDigestible: OrganReptilianStomach
 
-# HONK START - Surgery tool tag
-- type: Tag
-  id: Retractor
-# HONK END
-
 - type: Tag
   id: RifleStock # ConstructionGraph: ImprovisedShotgunGraph
 
@@ -1278,11 +1253,6 @@
 
 - type: Tag
   id: SalvageScrap # CargoBounty: BountySalvageScrap
-
-# HONK START - Surgery tool tag
-- type: Tag
-  id: Scalpel
-# HONK END
 
 - type: Tag
   id: Scarf # CargoBounty: BountyWarmCloth
@@ -1420,41 +1390,6 @@
 
 - type: Tag
   id: SurgeryTool # Storage whitelist: ClothingBeltMedical
-
-# HONK START - Tool tier and type tags
-- type: Tag
-  id: TierStandard
-
-- type: Tag
-  id: TierAdvanced
-
-- type: Tag
-  id: TierExperimental
-
-- type: Tag
-  id: SurgeryScalpel
-
-- type: Tag
-  id: SurgerySaw
-
-- type: Tag
-  id: SurgeryRetractor
-
-- type: Tag
-  id: SurgeryHemostat
-
-- type: Tag
-  id: SurgeryBoneSetter
-
-- type: Tag
-  id: SurgeryCautery
-
-- type: Tag
-  id: SurgeryDrill
-
-- type: Tag
-  id: SurgeryDrape
-# HONK END
 
 - type: Tag
   id: SurveillanceCameraMonitorCircuitboard # ConstructionGraph: WallmountTelescreen
