@@ -1,0 +1,97 @@
+using Content.Shared.Body.Components;
+using Robust.Shared.GameObjects;
+using Robust.Shared.IoC;
+using Robust.Shared.Prototypes;
+
+namespace Content.Shared.RussStation.Wounds.Systems;
+
+/// <summary>
+/// Builds wound display info for health analyzer and examine text.
+/// Handles bleed source tracking and bleed tier calculation.
+/// </summary>
+public sealed class WoundDisplaySystem : EntitySystem
+{
+    [Dependency] private readonly IPrototypeManager _proto = default!;
+
+    /// <summary>
+    /// Updates which damage type (Slash or Piercing) is the bleed source for display.
+    /// Prefers Slash on tie.
+    /// </summary>
+    public void UpdateBleedSource(WoundComponent comp, string damageType, float amount)
+    {
+        if (comp.BleedSourceDamageType == null)
+        {
+            comp.BleedSourceDamageType = damageType;
+            return;
+        }
+
+        if (damageType == "Slash")
+            comp.BleedSourceDamageType = "Slash";
+        else if (comp.BleedSourceDamageType != "Slash")
+            comp.BleedSourceDamageType = damageType;
+    }
+
+    /// <summary>
+    /// Gets the bleeding tier based on BleedAmount thresholds.
+    /// Returns 0 if not bleeding.
+    /// </summary>
+    public int GetBleedTier(WoundComponent woundComp, BloodstreamComponent bloodComp)
+    {
+        var bleed = bloodComp.BleedAmount;
+        if (bleed <= 0)
+            return 0;
+
+        var tier = 0;
+        for (var i = 0; i < woundComp.BleedTierThresholds.Length; i++)
+        {
+            if (bleed >= woundComp.BleedTierThresholds[i])
+                tier = i + 1;
+        }
+        return tier;
+    }
+
+    /// <summary>
+    /// Builds a list of wound display info for UI purposes.
+    /// </summary>
+    public List<WoundDisplayInfo> GetWoundDisplayInfo(EntityUid uid, WoundComponent? woundComp = null, BloodstreamComponent? bloodComp = null)
+    {
+        var result = new List<WoundDisplayInfo>();
+
+        if (!Resolve(uid, ref woundComp, false))
+            return result;
+
+        // Bleeding wounds (derived from BleedAmount)
+        if (Resolve(uid, ref bloodComp, false))
+        {
+            var bleedTier = GetBleedTier(woundComp, bloodComp);
+            if (bleedTier > 0)
+            {
+                var source = woundComp.BleedSourceDamageType ?? "Slash";
+                var locKey = $"wound-bleed-{source.ToLowerInvariant()}-{bleedTier}";
+                result.Add(new WoundDisplayInfo(locKey, bleedTier, WoundCategory.Fracture));
+            }
+        }
+
+        // Active wounds (fractures and burns)
+        foreach (var wound in woundComp.ActiveWounds)
+        {
+            if (!_proto.TryIndex(wound.WoundTypeId, out var proto))
+                continue;
+
+            if (!proto.Names.TryGetValue(wound.Tier, out var name))
+                continue;
+
+            var locKey = $"wound-{proto.ID.ToLowerInvariant()}-{wound.Tier}";
+            result.Add(new WoundDisplayInfo(locKey, wound.Tier, proto.Category));
+        }
+
+        // Sort by tier descending, then category
+        result.Sort((a, b) =>
+        {
+            var tierCmp = b.Tier.CompareTo(a.Tier);
+            return tierCmp != 0 ? tierCmp : a.Category.CompareTo(b.Category);
+        });
+
+        return result;
+    }
+}
