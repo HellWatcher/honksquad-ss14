@@ -47,7 +47,6 @@ public sealed class SurgerySystem : SharedSurgerySystem
             {
                 ToolTip = Loc.GetString(proto.Name),
                 IconSpecifier = RadialMenuIconSpecifier.With(icon),
-                IconScale = 2f,
             });
         }
 
