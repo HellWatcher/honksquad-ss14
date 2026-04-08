@@ -1,20 +1,31 @@
-using Content.Shared.RussStation.EscalatedGrab.Components;
+using Content.Shared.ActionBlocker;
+using Content.Shared.Damage.Systems;
+using Content.Shared.DoAfter;
+using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Events;
-using Content.Shared.RussStation.EscalatedGrab.Events;
+using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
+using Content.Shared.Pulling.Events;
+using Content.Shared.RussStation.EscalatedGrab.Components;
+using Content.Shared.RussStation.EscalatedGrab.Events;
+using Content.Shared.Strip.Components;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.EscalatedGrab.Systems;
 
 /// <summary>
 /// Manages grab escalation. Re-clicking pull on a target escalates the grab
-/// through <see cref="GrabStage"/> tiers instead of releasing.
+/// through <see cref="GrabStage"/> tiers via do-afters instead of releasing.
 /// </summary>
 public abstract class SharedEscalatedGrabSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly ActionBlockerSystem _actionBlocker = default!;
+    [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
+    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SharedStaminaSystem _stamina = default!;
 
     public override void Initialize()
     {
@@ -22,7 +33,39 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
         SubscribeLocalEvent<PullableComponent, PullGrabEscalateAttemptEvent>(OnEscalateAttempt);
         SubscribeLocalEvent<PullerComponent, PullReleaseRequestedEvent>(OnPullReleaseRequested);
+        SubscribeLocalEvent<PullableComponent, AttemptStopPullingEvent>(OnAttemptStopPulling);
+        SubscribeLocalEvent<PullableComponent, UpdateCanMoveEvent>(OnPullableCanMove);
         SubscribeLocalEvent<GrabStateComponent, PullStoppedMessage>(OnPullStopped);
+        SubscribeLocalEvent<GrabStateComponent, GrabEscalateDoAfterEvent>(OnEscalateDoAfterFinished);
+        SubscribeLocalEvent<GrabStateComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshPullerSpeed);
+        SubscribeLocalEvent<PullableComponent, GrabResistDoAfterEvent>(OnResistDoAfterFinished);
+        SubscribeLocalEvent<GrabStateComponent, DamageChangedEvent>(OnPullerDamaged);
+        SubscribeLocalEvent<PullableComponent, BeforeGettingStrippedEvent>(OnTargetBeingStripped);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        if (!_timing.IsFirstTimePredicted)
+            return;
+
+        var query = EntityQueryEnumerator<GrabStateComponent>();
+        while (query.MoveNext(out var uid, out var state))
+        {
+            if (state.Stage != GrabStage.Choke)
+                continue;
+
+            if (!state.Target.IsValid())
+                continue;
+
+            state.ChokeDamageAccumulator += frameTime;
+            while (state.ChokeDamageAccumulator >= state.ChokeTickInterval)
+            {
+                state.ChokeDamageAccumulator -= state.ChokeTickInterval;
+                _stamina.TakeStaminaDamage(state.Target, state.ChokeStaminaPerTick, source: uid);
+            }
+        }
     }
 
     private void OnEscalateAttempt(EntityUid uid, PullableComponent component, ref PullGrabEscalateAttemptEvent args)
@@ -36,30 +79,187 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         ClearEscalation(args.Puller);
     }
 
+    private void OnPullableCanMove(EntityUid uid, PullableComponent component, UpdateCanMoveEvent args)
+    {
+        if (!component.BeingPulled || component.Puller is not { } puller)
+            return;
+
+        if (TryComp<GrabStateComponent>(puller, out var state)
+            && state.Target == uid
+            && state.Stage >= GrabStage.Grab)
+        {
+            args.Cancel();
+        }
+    }
+
+    private void OnRefreshPullerSpeed(EntityUid uid, GrabStateComponent component, RefreshMovementSpeedModifiersEvent args)
+    {
+        var modifier = GrabStateComponent.PullerSpeedModifiers[(int) component.Stage];
+        args.ModifySpeed(modifier, modifier);
+    }
+
+    private void OnPullerDamaged(EntityUid uid, GrabStateComponent component, DamageChangedEvent args)
+    {
+        if (!args.DamageIncreased)
+            return;
+
+        if (args.DamageDelta == null)
+            return;
+
+        var total = args.DamageDelta.GetTotal();
+        if (total < component.DamageDropThreshold)
+            return;
+
+        _popup.PopupPredicted(
+            Loc.GetString("escalated-grab-broken-by-damage"),
+            Loc.GetString("escalated-grab-broken-by-damage"),
+            uid, uid);
+
+        DropStage(uid, component);
+    }
+
+    private void OnTargetBeingStripped(EntityUid uid, PullableComponent component, BeforeGettingStrippedEvent args)
+    {
+        if (!component.BeingPulled || component.Puller is not { } puller)
+            return;
+
+        if (!TryComp<GrabStateComponent>(puller, out var state) || state.Target != uid)
+            return;
+
+        args.Multiplier *= GrabStateComponent.StripTimeModifiers[(int) state.Stage];
+    }
+
+    private void OnAttemptStopPulling(EntityUid uid, PullableComponent component, ref AttemptStopPullingEvent args)
+    {
+        if (args.Cancelled || args.User == null)
+            return;
+
+        if (component.Puller is not { } puller)
+            return;
+
+        if (!TryComp<GrabStateComponent>(puller, out var state) || state.Target != uid)
+            return;
+
+        // At Pull stage, no resist needed - let the normal stop-pull proceed.
+        if (state.Stage <= GrabStage.Pull)
+            return;
+
+        // Cancel the stop-pull and start a resist do-after instead.
+        args.Cancelled = true;
+        TryResist(uid, puller, state);
+    }
+
     private void OnPullStopped(EntityUid uid, GrabStateComponent component, PullStoppedMessage args)
     {
-        RemComp<GrabStateComponent>(uid);
+        ClearEscalation(uid);
+    }
+
+    private void OnEscalateDoAfterFinished(EntityUid uid, GrabStateComponent component, GrabEscalateDoAfterEvent args)
+    {
+        component.EscalateDoAfter = null;
+
+        if (args.Cancelled)
+            return;
+
+        if (!TryComp<PullerComponent>(uid, out var puller) || puller.Pulling == null)
+            return;
+
+        // Only escalate if still pulling the same target.
+        if (puller.Pulling.Value != component.Target)
+            return;
+
+        var nextStage = component.Stage + 1;
+        if (nextStage > GrabStage.Choke)
+            return;
+
+        SetStage(uid, component, nextStage);
     }
 
     /// <summary>
-    /// Escalates the grab to the next stage. Currently always succeeds
-    /// (returns true unconditionally), but the return value is kept for
-    /// future multi-stage gating.
+    /// Starts a do-after to escalate the grab to the next stage.
+    /// If the puller has no escalation yet, the first escalation to Grab is started.
     /// </summary>
     public bool TryEscalate(EntityUid puller, EntityUid target)
     {
-        if (TryComp<GrabStateComponent>(puller, out var existing) && existing.Target == target)
-            return true;
-
         if (!_timing.IsFirstTimePredicted)
             return true;
 
         var state = EnsureComp<GrabStateComponent>(puller);
+
+        // If already escalating, don't start another.
+        if (state.EscalateDoAfter != null)
+            return true;
+
+        // Already grabbed a different target, can't escalate.
+        if (state.Target != default && state.Target != target)
+            return false;
+
         state.Target = target;
-        state.Stage = GrabStage.Aggressive;
         Dirty(puller, state);
-        _popup.PopupPredicted(Loc.GetString("escalated-grab-aggressive"), target, puller);
+
+        var nextStage = state.Stage + 1;
+        if (nextStage > GrabStage.Choke)
+            return true; // Already at max stage.
+
+        var delay = GrabStateComponent.EscalationTimes[(int) nextStage];
+        if (delay == TimeSpan.Zero)
+        {
+            // Instant escalation (shouldn't happen with current config but handle gracefully).
+            SetStage(puller, state, nextStage);
+            return true;
+        }
+
+        var doAfterArgs = new DoAfterArgs(EntityManager, puller, delay, new GrabEscalateDoAfterEvent(), puller, target)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            DamageThreshold = 15,
+            NeedHand = true,
+            DistanceThreshold = 2f,
+        };
+
+        if (_doAfter.TryStartDoAfter(doAfterArgs, out var doAfterId))
+        {
+            state.EscalateDoAfter = doAfterId;
+        }
+
         return true;
+    }
+
+    /// <summary>
+    /// Sets the grab stage and raises events/popups.
+    /// </summary>
+    private void SetStage(EntityUid puller, GrabStateComponent state, GrabStage newStage)
+    {
+        var oldStage = state.Stage;
+        state.Stage = newStage;
+        state.ChokeDamageAccumulator = 0f;
+        Dirty(puller, state);
+
+        // Popup messages: puller sees recipientMessage, everyone else (including target) sees othersMessage.
+        var target = state.Target;
+        var localeKey = newStage switch
+        {
+            GrabStage.Grab => "escalated-grab-grab",
+            GrabStage.Aggressive => "escalated-grab-aggressive",
+            GrabStage.Choke => "escalated-grab-choke",
+            _ => null,
+        };
+
+        if (localeKey != null)
+        {
+            _popup.PopupPredicted(
+                Loc.GetString($"{localeKey}-puller", ("target", target)),
+                Loc.GetString($"{localeKey}-others", ("puller", puller), ("target", target)),
+                target, puller);
+        }
+
+        // Refresh movement modifiers for both puller and target.
+        _movementSpeed.RefreshMovementSpeedModifiers(puller);
+        _actionBlocker.UpdateCanMove(target);
+
+        var ev = new GrabEscalatedEvent(puller, target, oldStage, newStage);
+        RaiseLocalEvent(puller, ref ev);
     }
 
     /// <summary>
@@ -83,10 +283,126 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
     }
 
     /// <summary>
-    /// Removes grab escalation from a puller.
+    /// Removes grab escalation from a puller, cancelling any active do-afters.
     /// </summary>
     public void ClearEscalation(EntityUid puller)
     {
+        if (!TryComp<GrabStateComponent>(puller, out var state))
+            return;
+
+        var target = state.Target;
+
+        _doAfter.Cancel(state.EscalateDoAfter);
+        _doAfter.Cancel(state.ResistDoAfter);
+        state.EscalateDoAfter = null;
+        state.ResistDoAfter = null;
+
         RemComp<GrabStateComponent>(puller);
+
+        // Re-enable target movement and reset puller speed.
+        if (target.IsValid())
+            _actionBlocker.UpdateCanMove(target);
+
+        _movementSpeed.RefreshMovementSpeedModifiers(puller);
+    }
+
+    /// <summary>
+    /// Starts a resist do-after for the grabbed target. Drops one stage on completion.
+    /// </summary>
+    public void TryResist(EntityUid target, EntityUid puller, GrabStateComponent state)
+    {
+        if (!_timing.IsFirstTimePredicted)
+            return;
+
+        // Already resisting.
+        if (state.ResistDoAfter != null)
+            return;
+
+        var resistTime = GrabStateComponent.ResistTimes[(int) state.Stage];
+
+        // Raise attempt event so quirks can modify resist time.
+        var attemptEv = new GrabResistAttemptEvent(puller, target, state.Stage, resistTime);
+        RaiseLocalEvent(target, ref attemptEv);
+        resistTime = attemptEv.ResistTime;
+
+        if (resistTime <= TimeSpan.Zero)
+        {
+            // Instant resist (e.g. Pull stage, shouldn't reach here but handle gracefully).
+            DropStage(puller, state);
+            return;
+        }
+
+        _popup.PopupPredicted(
+            Loc.GetString("escalated-grab-resist-start-target"),
+            Loc.GetString("escalated-grab-resist-start-others", ("target", target)),
+            target, target);
+
+        var doAfterArgs = new DoAfterArgs(EntityManager, target, resistTime, new GrabResistDoAfterEvent(), target, puller)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = false,
+            NeedHand = false,
+            DistanceThreshold = 2f,
+        };
+
+        if (_doAfter.TryStartDoAfter(doAfterArgs, out var doAfterId))
+        {
+            state.ResistDoAfter = doAfterId;
+        }
+    }
+
+    private void OnResistDoAfterFinished(EntityUid uid, PullableComponent component, GrabResistDoAfterEvent args)
+    {
+        if (component.Puller is not { } puller)
+            return;
+
+        if (!TryComp<GrabStateComponent>(puller, out var state))
+            return;
+
+        state.ResistDoAfter = null;
+
+        if (args.Cancelled)
+            return;
+
+        // Only process if still grabbing the same target.
+        if (state.Target != uid)
+            return;
+
+        DropStage(puller, state);
+    }
+
+    /// <summary>
+    /// Drops the grab by one stage. If already at Grab, clears escalation entirely.
+    /// </summary>
+    public void DropStage(EntityUid puller, GrabStateComponent state)
+    {
+        var target = state.Target;
+
+        if (state.Stage <= GrabStage.Grab)
+        {
+            // At Grab or below, fully release.
+            ClearEscalation(puller);
+
+            if (target.IsValid())
+            {
+                _popup.PopupPredicted(
+                    Loc.GetString("escalated-grab-resist-success-target"),
+                    Loc.GetString("escalated-grab-resist-success-others", ("target", target)),
+                    target, target);
+            }
+
+            return;
+        }
+
+        var newStage = state.Stage - 1;
+        SetStage(puller, state, newStage);
+
+        if (target.IsValid())
+        {
+            _popup.PopupPredicted(
+                Loc.GetString("escalated-grab-resist-success-target"),
+                Loc.GetString("escalated-grab-resist-success-others", ("target", target)),
+                target, target);
+        }
     }
 }

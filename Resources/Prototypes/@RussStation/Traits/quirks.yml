@@ -1,0 +1,9 @@
+- type: trait
+  id: Pushover
+  name: trait-pushover-name
+  description: trait-pushover-desc
+  category: Quirks
+  cost: -8
+  components:
+    - type: Pushover
+      resistTimeMultiplier: 1.5
