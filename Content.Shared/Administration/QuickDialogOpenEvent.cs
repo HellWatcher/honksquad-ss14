@@ -101,22 +101,6 @@ public sealed class QuickDialogEntry
     }
 }
 
-// HONK START - Server-initiated dialog close (#163)
-/// <summary>
-/// A networked event raised when the server wants to close an open quick dialog.
-/// </summary>
-[Serializable, NetSerializable]
-public sealed class QuickDialogCloseEvent : EntityEventArgs
-{
-    public int DialogId;
-
-    public QuickDialogCloseEvent(int dialogId)
-    {
-        DialogId = dialogId;
-    }
-}
-// HONK END
-
 /// <summary>
 /// The buttons available in a quick dialog.
 /// </summary>
