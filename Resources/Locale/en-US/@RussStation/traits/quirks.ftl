@@ -8,3 +8,5 @@ trait-throwing-arm-name = Throwing Arm
 trait-throwing-arm-desc = You've got a hell of an arm.
 trait-alcohol-tolerance-name = Hard Drinker
 trait-alcohol-tolerance-desc = You can hold your liquor.
+trait-weak-arm-name = Weak Arm
+trait-weak-arm-desc = Your throws are feeble.

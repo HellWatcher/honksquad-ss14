@@ -62,3 +62,16 @@
     - alcohol
   components:
     - type: AlcoholTolerance
+
+- type: trait
+  id: WeakArm
+  name: trait-weak-arm-name
+  description: trait-weak-arm-desc
+  category: Combat
+  cost: -2
+  tags:
+    - throwing
+  excludedTags:
+    - throwing
+  components:
+    - type: WeakArm
