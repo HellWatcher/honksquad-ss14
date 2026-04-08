@@ -2,15 +2,11 @@ using Content.Shared.Movement.Systems;
 using Content.Shared.RussStation.Wounds;
 using Content.Shared.RussStation.Wounds.Systems;
 using Robust.Shared.IoC;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Wounds;
 
 public sealed class WoundSystem : SharedWoundSystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
 
     public override void Update(float frameTime)
