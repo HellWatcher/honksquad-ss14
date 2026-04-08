@@ -2,6 +2,9 @@ using Content.Shared.ActionBlocker;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Climbing.Components;
 using Content.Shared.Climbing.Events;
+//HONK START
+using Content.Shared.RussStation.Traits;
+//HONK END
 using Content.Shared.Damage.Systems;
 using Content.Shared.DoAfter;
 using Content.Shared.DragDrop;
@@ -224,7 +227,13 @@ public sealed partial class ClimbSystem : VirtualController
         if (ev.Cancelled)
             return false;
 
-        var args = new DoAfterArgs(EntityManager, user, comp.ClimbDelay, new ClimbDoAfterEvent(),
+        //HONK START - Freerunning: faster climb
+        var climbDelay = comp.ClimbDelay;
+        if (TryComp<FreerunningComponent>(user, out var freerunning))
+            climbDelay *= freerunning.ClimbDelayMultiplier;
+        //HONK END
+
+        var args = new DoAfterArgs(EntityManager, user, climbDelay, new ClimbDoAfterEvent(),
             entityToMove,
             target: climbable,
             used: entityToMove)
@@ -568,6 +577,11 @@ public sealed partial class ClimbSystem : VirtualController
     {
         if (TryComp<PhysicsComponent>(args.Climber, out var physics) && physics.Mass <= component.MassLimit)
             return;
+
+        //HONK START - Freerunning: immune to glass table damage
+        if (HasComp<FreerunningComponent>(args.Climber))
+            return;
+        //HONK END
 
         _damageableSystem.TryChangeDamage(args.Climber, component.ClimberDamage, origin: args.Climber);
         _damageableSystem.TryChangeDamage(uid, component.TableDamage, origin: args.Climber);
