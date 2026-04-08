@@ -15,6 +15,8 @@ namespace Content.Client.UserInterface.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class SimpleRadialMenu : RadialMenu
 {
+    private const float ButtonSize = 64f;
+
     private EntityUid? _attachMenuToEntity;
 
     [Dependency] private readonly IClyde _clyde = default!;
@@ -124,15 +126,17 @@ public sealed partial class SimpleRadialMenu : RadialMenu
         var button = settings.UseSectors
             ? ConvertToButtonWithSector(model, settings)
             : new RadialMenuButton();
-        button.SetSize = new Vector2(64f, 64f);
+        button.SetSize = new Vector2(ButtonSize, ButtonSize);
         button.ToolTip = model.ToolTip;
+        // HONK START - Pass IconScale to texture rendering
         var imageControl = model.IconSpecifier switch
         {
-            RadialMenuTextureIconSpecifier textureSpecifier => CreateTexture(textureSpecifier.Sprite, sprites),
+            RadialMenuTextureIconSpecifier textureSpecifier => CreateTexture(textureSpecifier.Sprite, sprites, model.IconScale),
             RadialMenuEntityIconSpecifier entitySpecifier => CreateSpriteView(entitySpecifier.Entity),
             RadialMenuEntityPrototypeIconSpecifier entProtoSpecifier => CreateEntityPrototypeView(entProtoSpecifier.ProtoId),
             _ => null
         };
+        // HONK END
 
         if(imageControl != null)
             button.AddChild(imageControl);
@@ -176,23 +180,34 @@ public sealed partial class SimpleRadialMenu : RadialMenu
         return entView;
     }
 
-    private static Control CreateTexture(SpriteSpecifier spriteSpecifier, SpriteSystem sprites)
+    // HONK START - IconScale support for texture-based radial menu icons
+    private static Control CreateTexture(SpriteSpecifier spriteSpecifier, SpriteSystem sprites, float iconScale = 1f)
     {
-        var scale = Vector2.One;
-
         var texture = sprites.Frame0(spriteSpecifier);
-        if (texture.Width <= 32)
-        {
-            scale *= 2;
-        }
 
-        var imageControl = new TextureRect()
+        var scale = Vector2.One;
+        if (texture.Width <= 32)
+            scale *= 2;
+        scale *= iconScale;
+
+        var imageControl = new TextureRect
         {
             Texture = texture,
-            TextureScale = scale
+            TextureScale = scale,
         };
+
+        // When scaled beyond the default, the texture overflows the button from the top-left.
+        // Apply negative margins to re-center it within the button area.
+        if (iconScale != 1f)
+        {
+            var rendered = new Vector2(texture.Width, texture.Height) * scale;
+            var overflow = (rendered - new Vector2(ButtonSize)) / 2f;
+            imageControl.Margin = new Thickness(-overflow.X, -overflow.Y, -overflow.X, -overflow.Y);
+        }
+
         return imageControl;
     }
+    // HONK END
 
     private static RadialMenuButtonWithSector ConvertToButtonWithSector(RadialMenuOptionBase model, SimpleRadialMenuSettings settings)
     {
@@ -334,6 +349,14 @@ public abstract class RadialMenuOptionBase
     /// Specifier that describes icon to be used for radial menu button.
     /// </summary>
     public RadialMenuIconSpecifier? IconSpecifier { get; set; }
+
+    // HONK START - Per-button icon scale multiplier
+    /// <summary>
+    /// Additional scale multiplier applied on top of the default texture scaling.
+    /// Only affects texture-based icons (not entity views).
+    /// </summary>
+    public float IconScale { get; set; } = 1f;
+    // HONK END
 }
 
 /// <summary> Base type for model of radial menu button with some action on button pressed. </summary>
