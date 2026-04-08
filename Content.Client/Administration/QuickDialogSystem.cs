@@ -1,5 +1,8 @@
 using Content.Client.UserInterface.Controls;
 using Content.Shared.Administration;
+//HONK START
+using Content.Shared.RussStation.Economy.Events;
+//HONK END
 
 namespace Content.Client.Administration;
 
