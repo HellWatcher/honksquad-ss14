@@ -6,3 +6,16 @@
   cost: 0
   components:
     - type: Ageusia
+
+- type: trait
+  id: Tough
+  name: trait-tough-name
+  description: trait-tough-desc
+  category: Combat
+  cost: 3
+  tags:
+    - wounds
+  excludedTags:
+    - wounds
+  components:
+    - type: Tough
