@@ -9,8 +9,8 @@ namespace Content.Shared.RussStation.Wounds.Systems;
 
 public abstract class SharedWoundSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] protected readonly IPrototypeManager _proto = default!;
+    [Dependency] protected readonly IGameTiming _timing = default!;
     [Dependency] private readonly WoundDisplaySystem _display = default!;
 
     private readonly List<WoundTypePrototype> _woundTypes = new();
@@ -46,6 +46,8 @@ public abstract class SharedWoundSystem : EntitySystem
         if (args.DamageDelta is null || !args.DamageIncreased)
             return;
 
+        var changed = false;
+
         foreach (var (damageType, amount) in args.DamageDelta.DamageDict)
         {
             var amountFloat = amount.Float();
@@ -57,7 +59,7 @@ public abstract class SharedWoundSystem : EntitySystem
             // Track bleed source damage type for display
             if (typeStr == "Slash" || typeStr == "Piercing")
             {
-                _display.UpdateBleedSource(comp, typeStr, amountFloat);
+                changed |= _display.UpdateBleedSource(comp, typeStr, amountFloat);
                 continue; // Bleeding wounds are display-only, not wound entries
             }
 
@@ -71,9 +73,12 @@ public abstract class SharedWoundSystem : EntitySystem
                 if (tier <= 0)
                     continue;
 
-                ApplyWound(comp, woundProto, tier);
+                changed |= ApplyWound(comp, woundProto, tier);
             }
         }
+
+        if (!changed)
+            return;
 
         Dirty(uid, comp);
         RaiseLocalEvent(uid, new WoundsDamagedEvent());
@@ -90,30 +95,38 @@ public abstract class SharedWoundSystem : EntitySystem
         return tier;
     }
 
-    private static void ApplyWound(WoundComponent comp, WoundTypePrototype proto, int tier)
+    private static bool ApplyWound(WoundComponent comp, WoundTypePrototype proto, int tier)
     {
         // Try to upgrade an existing wound of this type first
+        var existingCount = 0;
         foreach (var wound in comp.ActiveWounds)
         {
             if (wound.WoundTypeId != proto.ID)
                 continue;
 
+            existingCount++;
+
             if (wound.Tier < tier)
             {
                 wound.Tier = tier;
                 wound.TimeAtCurrentTier = TimeSpan.Zero;
-                return;
+                return true;
             }
 
             if (wound.Tier < 3)
-                return; // Existing wound is same or higher tier, no action
+                return false; // Existing wound is same or higher tier, no action
 
             // At tier 3, fall through to stack a new wound
             break;
         }
 
+        // Cap stacking at 3 wounds per type
+        if (existingCount >= 3)
+            return false;
+
         // Create new wound entry
         comp.ActiveWounds.Add(new WoundEntry(proto.ID, tier, TimeSpan.Zero));
+        return true;
     }
 
     /// <summary>
