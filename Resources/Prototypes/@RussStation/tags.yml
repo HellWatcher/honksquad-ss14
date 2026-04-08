@@ -1,0 +1,52 @@
+# Surgery tool tags
+- type: Tag
+  id: BoneSaw
+
+- type: Tag
+  id: Cautery
+
+- type: Tag
+  id: Drill
+
+- type: Tag
+  id: Hemostat
+
+- type: Tag
+  id: Retractor
+
+- type: Tag
+  id: Scalpel
+
+# Tool tier and type tags
+- type: Tag
+  id: TierStandard
+
+- type: Tag
+  id: TierAdvanced
+
+- type: Tag
+  id: TierExperimental
+
+- type: Tag
+  id: SurgeryScalpel
+
+- type: Tag
+  id: SurgerySaw
+
+- type: Tag
+  id: SurgeryRetractor
+
+- type: Tag
+  id: SurgeryHemostat
+
+- type: Tag
+  id: SurgeryBoneSetter
+
+- type: Tag
+  id: SurgeryCautery
+
+- type: Tag
+  id: SurgeryDrill
+
+- type: Tag
+  id: SurgeryDrape
