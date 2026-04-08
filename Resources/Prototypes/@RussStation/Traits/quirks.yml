@@ -201,3 +201,16 @@
     - accuracy
   components:
     - type: PoorAim
+
+- type: trait
+  id: Prosopagnosia
+  name: trait-prosopagnosia-name
+  description: trait-prosopagnosia-desc
+  category: Senses
+  cost: -2
+  tags:
+    - face-recognition
+  excludedTags:
+    - face-recognition
+  components:
+    - type: Prosopagnosia

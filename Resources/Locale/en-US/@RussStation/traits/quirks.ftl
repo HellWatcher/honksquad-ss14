@@ -36,3 +36,5 @@ trait-glassjaw-desc = One good hit and you're seeing stars.
 
 trait-pooraim-name = Poor Aim
 trait-pooraim-desc = Your hands just won't stay steady.
+trait-prosopagnosia-name = Prosopagnosia
+trait-prosopagnosia-desc = Every face is a stranger's face.
