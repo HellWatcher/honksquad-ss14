@@ -1,0 +1,8 @@
+- type: trait
+  id: Ageusia
+  name: trait-ageusia-name
+  description: trait-ageusia-desc
+  category: Diet
+  cost: 0
+  components:
+    - type: Ageusia
