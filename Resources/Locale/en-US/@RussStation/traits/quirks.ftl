@@ -25,3 +25,5 @@ self-aware-damage-header = [bold]Self-diagnosis:[/bold]
 self-aware-damage-type = - [color=red]{$type}[/color]: {$amount}
 trait-freerunning-name = Freerunning
 trait-freerunning-desc = You vault over obstacles like they're not even there.
+trait-lightstep-name = Light Step
+trait-lightstep-desc = You move with a soft tread, barely making a sound.
