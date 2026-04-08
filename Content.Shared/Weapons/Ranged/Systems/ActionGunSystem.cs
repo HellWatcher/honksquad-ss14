@@ -1,23 +1,12 @@
 using Content.Shared.Actions;
 using Content.Shared.Weapons.Ranged.Components;
 
-//HONK START
-using Content.Shared.Popups;
-using Robust.Shared.Audio.Systems;
-using Content.Shared.Actions.Components;
-//HONK END
-
 namespace Content.Shared.Weapons.Ranged.Systems;
 
 public sealed class ActionGunSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly SharedGunSystem _gun = default!;
-
-    //HONK START
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    //HONK END
 
     public override void Initialize()
     {
@@ -45,16 +34,7 @@ public sealed class ActionGunSystem : EntitySystem
 
     private void OnShoot(Entity<ActionGunComponent> ent, ref ActionGunShootEvent args)
     {
-        //HONK START
-        if (ent.Comp.PopupText != null)
-            _popup.PopupPredicted(Comp<MetaDataComponent>(ent).EntityName + " " + ent.Comp.PopupText + "!", ent, ent, type: PopupType.Small);
-
         if (TryComp<GunComponent>(ent.Comp.Gun, out var gun))
-        {
-            if (_gun.AttemptShoot(ent, (ent.Comp.Gun.Value, gun), args.Target) == true)
-                _audio.PlayPredicted(ent.Comp.OnShootSound, ent, ent.Comp.ActionEntity); //Fixes shooting sounds for action guns
-        }
-        //HONK END
+            _gun.AttemptShoot(ent, (ent.Comp.Gun.Value, gun), args.Target);
     }
 }
-
