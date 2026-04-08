@@ -1,5 +1,4 @@
 using Content.Server.Cargo.Systems;
-using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Materials;
@@ -169,9 +168,9 @@ public sealed class VendingPaymentSystem : EntitySystem
 
         // Account balance.
         if (_idCard.TryFindIdCard(buyer, out var idCard)
-            && TryComp<IdCardComponent>(idCard, out var id)
-            && !string.IsNullOrEmpty(id.AccountNumber)
-            && _balance.TryGetByAccount(id.AccountNumber, out var owner))
+            && TryComp<BankLinkedCardComponent>(idCard, out var bankCard)
+            && !string.IsNullOrEmpty(bankCard.AccountNumber)
+            && _balance.TryGetByAccount(bankCard.AccountNumber, out var owner))
         {
             funds += _balance.GetBalance(owner);
         }
@@ -193,9 +192,9 @@ public sealed class VendingPaymentSystem : EntitySystem
     private bool TryPayByAccount(EntityUid buyer, int price)
     {
         if (_idCard.TryFindIdCard(buyer, out var idCard)
-            && TryComp<IdCardComponent>(idCard, out var id)
-            && !string.IsNullOrEmpty(id.AccountNumber)
-            && _balance.TryGetByAccount(id.AccountNumber, out var owner)
+            && TryComp<BankLinkedCardComponent>(idCard, out var bankCard)
+            && !string.IsNullOrEmpty(bankCard.AccountNumber)
+            && _balance.TryGetByAccount(bankCard.AccountNumber, out var owner)
             && TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
         {
             return _balance.TryDeduct(owner, price, balanceComp, Loc.GetString("transaction-vending"));
