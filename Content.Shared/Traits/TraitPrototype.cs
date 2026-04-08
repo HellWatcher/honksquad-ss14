@@ -70,4 +70,20 @@ public sealed partial class TraitPrototype : IPrototype
     [DataField]
     public ProtoId<TraitCategoryPrototype>? Category;
 
+    //HONK START - Tag-based quirk exclusion system
+    /// <summary>
+    /// A tag that identifies this trait for exclusion purposes.
+    /// Traits with the same tag can be blocked by other traits that exclude that tag.
+    /// </summary>
+    [DataField]
+    public string? Tag;
+
+    /// <summary>
+    /// Tags that this trait cannot coexist with.
+    /// When this trait is selected, any other trait whose ExclusionTag appears in this list is blocked.
+    /// Typically includes the trait's own tag to prevent stacking with similar traits.
+    /// </summary>
+    [DataField]
+    public List<string> ExcludedTags { get; private set; } = new();
+    //HONK END
 }

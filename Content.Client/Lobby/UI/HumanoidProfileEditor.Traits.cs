@@ -4,6 +4,7 @@ using Content.Client.Stylesheets;
 using Content.Shared.CCVar;
 using Content.Shared.Traits;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.Prototypes; //HONK
 using Robust.Shared.Utility;
 
 namespace Content.Client.Lobby.UI;
@@ -65,6 +66,32 @@ public sealed partial class HumanoidProfileEditor
                     globalSpent += trait.Cost;
             }
         }
+
+        //HONK START - Build set of excluded tags and conflicted trait IDs for UI disabling
+        var selectedTraits = Profile?.TraitPreferences ?? new HashSet<ProtoId<TraitPrototype>>();
+        var excludedTags = new HashSet<string>();
+
+        // Collect all tags excluded by selected traits
+        foreach (var selectedId in selectedTraits)
+        {
+            if (!_prototypeManager.TryIndex<TraitPrototype>(selectedId, out var selectedProto))
+                continue;
+
+            foreach (var tag in selectedProto.ExcludedTags)
+                excludedTags.Add(tag);
+        }
+
+        // Find unselected traits whose exclusion tag is blocked
+        var conflictedTraits = new HashSet<ProtoId<TraitPrototype>>();
+        foreach (var trait in traits)
+        {
+            if (selectedTraits.Contains(trait.ID))
+                continue;
+
+            if (trait.Tag != null && excludedTags.Contains(trait.Tag))
+                conflictedTraits.Add(trait.ID);
+        }
+        //HONK END
 
         var globalAvailable = globalMax - globalSpent;
 
@@ -175,6 +202,14 @@ public sealed partial class HumanoidProfileEditor
             {
                 if (selector == null)
                     continue;
+
+                //HONK START - Disable conflicted traits
+                if (selector.TraitId is { } traitId && conflictedTraits.Contains(traitId))
+                {
+                    selector.Checkbox.Disabled = true;
+                    selector.Checkbox.Label.FontColorOverride = Color.Gray;
+                }
+                //HONK END
 
                 traitGrid.AddChild(selector);
             }
