@@ -298,3 +298,16 @@
     - paper
     - paper
     - type: Papyrophobia
+
+- type: trait
+  id: Tough
+  name: trait-tough-name
+  description: trait-tough-desc
+  category: Combat
+  cost: 3
+  tags:
+    - wounds
+  excludedTags:
+    - wounds
+  components:
+    - type: Tough

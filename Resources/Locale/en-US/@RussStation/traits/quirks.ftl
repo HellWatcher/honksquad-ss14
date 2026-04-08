@@ -64,3 +64,5 @@ self-aware-wound-entry = [color={$color}]{$name} (Tier {$tier})[/color]
 trait-papyrophobia-name = Papyrophobia
 trait-papyrophobia-desc = Something about paper just sets you off. You can't bring yourself to read it or put pen to it.
 papyrophobia-popup = You recoil from the paper.
+trait-tough-name = Tough
+trait-tough-desc = You can take a beating.
