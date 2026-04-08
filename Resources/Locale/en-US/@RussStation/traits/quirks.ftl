@@ -38,3 +38,5 @@ trait-pooraim-name = Poor Aim
 trait-pooraim-desc = Your hands just won't stay steady.
 trait-prosopagnosia-name = Prosopagnosia
 trait-prosopagnosia-desc = Every face is a stranger's face.
+trait-softspoken-name = Soft-Spoken
+trait-softspoken-desc = You've always been a little quiet.

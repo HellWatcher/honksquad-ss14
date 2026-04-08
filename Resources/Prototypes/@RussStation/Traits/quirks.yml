@@ -214,3 +214,16 @@
     - face-recognition
   components:
     - type: Prosopagnosia
+
+- type: trait
+  id: SoftSpoken
+  name: trait-softspoken-name
+  description: trait-softspoken-desc
+  category: Social
+  cost: -2
+  tags:
+    - voice-volume
+  excludedTags:
+    - voice-volume
+  components:
+    - type: SoftSpoken
