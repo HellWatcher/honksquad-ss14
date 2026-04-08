@@ -38,7 +38,7 @@ public sealed class HealthAnalyzerSystem : EntitySystem
     [Dependency] private readonly TransformSystem _transformSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
-    [Dependency] private readonly SharedWoundSystem _wounds = default!; //HONK
+    [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!; //HONK
 
     public override void Initialize()
     {
@@ -256,7 +256,7 @@ public sealed class HealthAnalyzerSystem : EntitySystem
         //HONK START - Wound display info
         List<WoundDisplayInfo>? wounds = null;
         if (TryComp<WoundComponent>(entity, out var woundComp))
-            wounds = _wounds.GetWoundDisplayInfo(entity, woundComp, bloodstream);
+            wounds = _woundDisplay.GetWoundDisplayInfo(entity, woundComp, bloodstream);
         //HONK END
 
         return new HealthAnalyzerUiState(

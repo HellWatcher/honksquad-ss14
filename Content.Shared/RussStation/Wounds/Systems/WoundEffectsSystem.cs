@@ -18,6 +18,7 @@ public sealed class WoundEffectsSystem : EntitySystem
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly SharedWoundSystem _wounds = default!;
+    [Dependency] private readonly WoundDisplaySystem _display = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
 
@@ -58,7 +59,7 @@ public sealed class WoundEffectsSystem : EntitySystem
 
     private void OnExamined(EntityUid uid, WoundComponent comp, ExaminedEvent args)
     {
-        var wounds = _wounds.GetWoundDisplayInfo(uid, comp);
+        var wounds = _display.GetWoundDisplayInfo(uid, comp);
         if (wounds.Count == 0)
             return;
 

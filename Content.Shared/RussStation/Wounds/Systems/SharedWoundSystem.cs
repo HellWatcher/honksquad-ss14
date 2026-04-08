@@ -1,4 +1,3 @@
-using Content.Shared.Body.Components;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Robust.Shared.GameObjects;
@@ -12,6 +11,7 @@ public abstract class SharedWoundSystem : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly WoundDisplaySystem _display = default!;
 
     private readonly List<WoundTypePrototype> _woundTypes = new();
 
@@ -57,7 +57,7 @@ public abstract class SharedWoundSystem : EntitySystem
             // Track bleed source damage type for display
             if (typeStr == "Slash" || typeStr == "Piercing")
             {
-                UpdateBleedSource(comp, typeStr, amountFloat);
+                _display.UpdateBleedSource(comp, typeStr, amountFloat);
                 continue; // Bleeding wounds are display-only, not wound entries
             }
 
@@ -77,22 +77,6 @@ public abstract class SharedWoundSystem : EntitySystem
 
         Dirty(uid, comp);
         RaiseLocalEvent(uid, new WoundsDamagedEvent());
-    }
-
-    private void UpdateBleedSource(WoundComponent comp, string damageType, float amount)
-    {
-        // If no current source, set it. Otherwise, prefer Slash on tie.
-        if (comp.BleedSourceDamageType == null)
-        {
-            comp.BleedSourceDamageType = damageType;
-            return;
-        }
-
-        // When both contribute equally, prefer Slash per spec
-        if (damageType == "Slash")
-            comp.BleedSourceDamageType = "Slash";
-        else if (comp.BleedSourceDamageType != "Slash")
-            comp.BleedSourceDamageType = damageType;
     }
 
     private static int GetTierFromSpike(WoundTypePrototype proto, float amount)
@@ -168,67 +152,4 @@ public abstract class SharedWoundSystem : EntitySystem
         return worst;
     }
 
-    /// <summary>
-    /// Gets the bleeding tier based on BleedAmount thresholds.
-    /// Returns 0 if not bleeding.
-    /// </summary>
-    public int GetBleedTier(WoundComponent woundComp, BloodstreamComponent bloodComp)
-    {
-        var bleed = bloodComp.BleedAmount;
-        if (bleed <= 0)
-            return 0;
-
-        var tier = 0;
-        for (var i = 0; i < woundComp.BleedTierThresholds.Length; i++)
-        {
-            if (bleed >= woundComp.BleedTierThresholds[i])
-                tier = i + 1;
-        }
-        return tier;
-    }
-
-    /// <summary>
-    /// Builds a list of wound display info for UI purposes.
-    /// </summary>
-    public List<WoundDisplayInfo> GetWoundDisplayInfo(EntityUid uid, WoundComponent? woundComp = null, BloodstreamComponent? bloodComp = null)
-    {
-        var result = new List<WoundDisplayInfo>();
-
-        if (!Resolve(uid, ref woundComp, false))
-            return result;
-
-        // Bleeding wounds (derived from BleedAmount)
-        if (Resolve(uid, ref bloodComp, false))
-        {
-            var bleedTier = GetBleedTier(woundComp, bloodComp);
-            if (bleedTier > 0)
-            {
-                var source = woundComp.BleedSourceDamageType ?? "Slash";
-                var locKey = $"wound-bleed-{source.ToLowerInvariant()}-{bleedTier}";
-                result.Add(new WoundDisplayInfo(locKey, bleedTier, WoundCategory.Fracture));
-            }
-        }
-
-        // Active wounds (fractures and burns)
-        foreach (var wound in woundComp.ActiveWounds)
-        {
-            if (!_proto.TryIndex(wound.WoundTypeId, out var proto))
-                continue;
-
-            if (!proto.Names.TryGetValue(wound.Tier, out var name))
-                continue;
-
-            var locKey = $"wound-{proto.ID.ToLowerInvariant()}-{wound.Tier}";
-            result.Add(new WoundDisplayInfo(locKey, wound.Tier, proto.Category));
-        }
-
-        // Sort by tier descending, then category
-        result.Sort((a, b) =>
-        {
-            var tierCmp = b.Tier.CompareTo(a.Tier);
-            return tierCmp != 0 ? tierCmp : a.Category.CompareTo(b.Category);
-        });
-
-        return result;
-    }
 }
