@@ -77,7 +77,7 @@ public abstract class SharedBloodstreamSystem : EntitySystem
             // Blood level regulation. Must be alive.
             if (!_mobStateSystem.IsDead(uid))
             {
-                TryRegulateBloodLevel(uid, bloodstream.BloodRefreshAmount);
+                TryModifyBloodLevel(uid, bloodstream.BloodRefreshAmount); // HONK - support negative BloodRefreshAmount
 
                 TickBleed((uid, bloodstream));
 

@@ -19,9 +19,4 @@ public sealed partial class BloodDeficiencyComponent : Component
     [DataField]
     public FixedPoint2 BloodLossPerTick = 0.2f;
 
-    /// <summary>
-    /// Time accumulator for periodic drain.
-    /// </summary>
-    [ViewVariables]
-    public float Accumulator;
 }
