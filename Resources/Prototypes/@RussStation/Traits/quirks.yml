@@ -253,3 +253,16 @@
     - wage
   components:
     - type: Indebted
+
+- type: trait
+  id: BoomingVoice
+  name: trait-booming-voice-name
+  description: trait-booming-voice-desc
+  category: Social
+  cost: 2
+  tags:
+    - voice-volume
+  excludedTags:
+    - voice-volume
+  components:
+    - type: BoomingVoice

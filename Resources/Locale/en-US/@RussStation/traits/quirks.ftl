@@ -44,3 +44,5 @@ trait-touchy-name = Touchy
 trait-touchy-desc = You have to get close to really see anything.
 trait-indebted-name = Indebted
 trait-indebted-desc = You owe the company more than you'd like to admit.
+trait-booming-voice-name = Booming Voice
+trait-booming-voice-desc = Your voice carries further than most.
