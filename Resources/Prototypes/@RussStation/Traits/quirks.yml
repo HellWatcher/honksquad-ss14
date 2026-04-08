@@ -23,3 +23,16 @@
     - wage
   components:
     - type: Negotiator
+
+- type: trait
+  id: IronJaw
+  name: trait-iron-jaw-name
+  description: trait-iron-jaw-desc
+  category: Combat
+  cost: 4
+  tags:
+    - stamina
+  excludedTags:
+    - stamina
+  components:
+    - type: IronJaw
