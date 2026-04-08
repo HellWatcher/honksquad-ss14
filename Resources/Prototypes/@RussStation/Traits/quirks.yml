@@ -6,3 +6,16 @@
   cost: 0
   components:
     - type: Ageusia
+
+- type: trait
+  id: GlassJaw
+  name: trait-glassjaw-name
+  description: trait-glassjaw-desc
+  category: Combat
+  cost: -4
+  tags:
+    - stamina
+  excludedTags:
+    - stamina
+  components:
+    - type: GlassJaw
