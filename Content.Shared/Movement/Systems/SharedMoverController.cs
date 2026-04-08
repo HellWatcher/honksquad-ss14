@@ -7,6 +7,9 @@ using Content.Shared.Gravity;
 using Content.Shared.Inventory;
 using Content.Shared.Maps;
 using Content.Shared.Mobs.Systems;
+//HONK START
+using Content.Shared.RussStation.Traits;
+//HONK END
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Events;
 using Content.Shared.Shuttles.Components;
@@ -365,6 +368,11 @@ public abstract partial class SharedMoverController : VirtualController
                 TryGetSound(weightless, uid, mover, mobMover, xform, out var sound, tileDef: tileDef))
             {
                 var soundModifier = mover.Sprinting ? InputMoverComponent.SprintingSoundModifier : InputMoverComponent.WalkingSoundModifier;
+
+                //HONK START - Light Step: quieter footsteps
+                if (TryComp<LightStepComponent>(uid, out var lightStep))
+                    soundModifier += lightStep.VolumeModifier;
+                //HONK END
 
                 var audioParams = sound.Params
                     .WithVolume(sound.Params.Volume + soundModifier)
