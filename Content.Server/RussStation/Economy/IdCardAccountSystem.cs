@@ -63,7 +63,9 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (!_hands.IsHolding(args.User, uid))
             return;
 
-        if (string.IsNullOrEmpty(comp.AccountNumber))
+        var accountNumber = CompOrNull<BankLinkedCardComponent>(uid)?.AccountNumber;
+
+        if (string.IsNullOrEmpty(accountNumber))
         {
             args.Verbs.Add(new AlternativeVerb
             {
@@ -75,7 +77,7 @@ public sealed class IdCardAccountSystem : EntitySystem
                 Impact = LogImpact.Low,
             });
         }
-        else if (_balance.TryGetByAccount(comp.AccountNumber, out _))
+        else if (_balance.TryGetByAccount(accountNumber, out _))
         {
             args.Verbs.Add(new AlternativeVerb
             {
@@ -100,7 +102,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (!_hands.IsHolding(args.User, uid))
             return;
 
-        if (!string.IsNullOrEmpty(comp.AccountNumber))
+        if (!string.IsNullOrEmpty(CompOrNull<BankLinkedCardComponent>(uid)?.AccountNumber))
             return;
 
         args.Verbs.Add(new ActivationVerb
@@ -120,12 +122,13 @@ public sealed class IdCardAccountSystem : EntitySystem
 
     private void OnExamine(EntityUid uid, IdCardComponent comp, ExaminedEvent args)
     {
-        if (string.IsNullOrEmpty(comp.AccountNumber))
+        var accountNumber = CompOrNull<BankLinkedCardComponent>(uid)?.AccountNumber;
+        if (string.IsNullOrEmpty(accountNumber))
             return;
 
         using (args.PushGroup(nameof(IdCardAccountSystem)))
         {
-            if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner)
+            if (!_balance.TryGetByAccount(accountNumber, out var owner)
                 || !TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
             {
                 args.PushMarkup(Loc.GetString("id-card-account-invalid-examine"));
@@ -167,13 +170,14 @@ public sealed class IdCardAccountSystem : EntitySystem
 
     private bool TryDeposit(EntityUid idCard, IdCardComponent comp, EntityUid cash, EntityUid user)
     {
-        if (string.IsNullOrEmpty(comp.AccountNumber))
+        var accountNumber = CompOrNull<BankLinkedCardComponent>(idCard)?.AccountNumber;
+        if (string.IsNullOrEmpty(accountNumber))
             return false;
 
         if (!TryComp<StackComponent>(cash, out var stack) || stack.StackTypeId != CreditStack)
             return false;
 
-        if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
+        if (!_balance.TryGetByAccount(accountNumber, out var owner))
         {
             _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, user, PopupType.MediumCaution);
             return true;
@@ -196,10 +200,11 @@ public sealed class IdCardAccountSystem : EntitySystem
 
     private void OnCreateAccount(EntityUid idCard, EntityUid user, ICommonSession session)
     {
-        if (!TryComp<IdCardComponent>(idCard, out var comp))
+        if (!HasComp<IdCardComponent>(idCard))
             return;
 
-        if (!string.IsNullOrEmpty(comp.AccountNumber))
+        var bankComp = CompOrNull<BankLinkedCardComponent>(idCard);
+        if (!string.IsNullOrEmpty(bankComp?.AccountNumber))
         {
             _popup.PopupEntity(Loc.GetString("id-card-account-locked"), idCard, session, PopupType.MediumCaution);
             return;
@@ -207,18 +212,19 @@ public sealed class IdCardAccountSystem : EntitySystem
 
         var accountNumber = _balance.CreateAccount(user);
 
-        comp.AccountNumber = accountNumber;
-        Dirty(idCard, comp);
+        bankComp = EnsureComp<BankLinkedCardComponent>(idCard);
+        bankComp.AccountNumber = accountNumber;
 
         _popup.PopupEntity(Loc.GetString("id-card-create-account-success"), idCard, session, PopupType.Medium);
     }
 
     private void OnAccountEntered(EntityUid idCard, EntityUid user, ICommonSession session, string accountNumber)
     {
-        if (!TryComp<IdCardComponent>(idCard, out var comp))
+        if (!HasComp<IdCardComponent>(idCard))
             return;
 
-        if (!string.IsNullOrEmpty(comp.AccountNumber))
+        var bankComp = CompOrNull<BankLinkedCardComponent>(idCard);
+        if (!string.IsNullOrEmpty(bankComp?.AccountNumber))
         {
             _popup.PopupEntity(Loc.GetString("id-card-account-locked"), idCard, session, PopupType.MediumCaution);
             return;
@@ -235,24 +241,25 @@ public sealed class IdCardAccountSystem : EntitySystem
             return;
         }
 
-        comp.AccountNumber = accountNumber;
-        Dirty(idCard, comp);
+        bankComp = EnsureComp<BankLinkedCardComponent>(idCard);
+        bankComp.AccountNumber = accountNumber;
 
         _popup.PopupEntity(Loc.GetString("id-card-set-account-success"), idCard, session, PopupType.Medium);
     }
 
     private void OnWithdraw(EntityUid idCard, EntityUid user, ICommonSession session, int amount)
     {
-        if (!TryComp<IdCardComponent>(idCard, out var comp))
+        if (!HasComp<IdCardComponent>(idCard))
             return;
 
-        if (string.IsNullOrEmpty(comp.AccountNumber))
+        var accountNumber = CompOrNull<BankLinkedCardComponent>(idCard)?.AccountNumber;
+        if (string.IsNullOrEmpty(accountNumber))
             return;
 
         if (amount <= 0)
             return;
 
-        if (!_balance.TryGetByAccount(comp.AccountNumber, out var owner))
+        if (!_balance.TryGetByAccount(accountNumber, out var owner))
         {
             _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, session, PopupType.MediumCaution);
             return;
