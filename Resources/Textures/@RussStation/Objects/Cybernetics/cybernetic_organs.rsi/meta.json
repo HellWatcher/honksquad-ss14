@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-4.0",
+  "copyright": "Katyes",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "heart-plastic"
+    },
+    {
+      "name": "heart-plastic-on",
+      "delays": [
+        [
+          0.6,
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "heart-plasma-on",
+      "delays": [
+        [
+          0.6,
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "heart-bluespace-on",
+      "delays": [
+        [
+          0.6,
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "heart-plastic-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "heart-plastic-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "heart-plasma-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "heart-plasma-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "heart-bluespace-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "heart-bluespace-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "lung-plastic-l"
+    },
+    {
+      "name": "lung-plastic-r"
+    },
+    {
+      "name": "lung-plasma-l"
+    },
+    {
+      "name": "lung-plasma-r"
+    },
+    {
+      "name": "lung-bluespace-l"
+    },
+    {
+      "name": "lung-bluespace-r"
+    },
+    {
+      "name": "lung-plastic-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "lung-plastic-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "lung-plasma-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "lung-plasma-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "lung-bluespace-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "lung-bluespace-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "eyeball-plastic-l"
+    },
+    {
+      "name": "eyeball-plastic-r"
+    },
+    {
+      "name": "eyeball-plasma-l"
+    },
+    {
+      "name": "eyeball-plasma-r"
+    },
+    {
+      "name": "eyeball-bluespace-l"
+    },
+    {
+      "name": "eyeball-bluespace-r"
+    },
+    {
+      "name": "eyeball-plastic-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "eyeball-plastic-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "eyeball-plasma-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "eyeball-plasma-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "eyeball-bluespace-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "eyeball-bluespace-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "kidney-plastic-l"
+    },
+    {
+      "name": "kidney-plastic-r"
+    },
+    {
+      "name": "kidney-plasma-l"
+    },
+    {
+      "name": "kidney-plasma-r"
+    },
+    {
+      "name": "kidney-bluespace-l"
+    },
+    {
+      "name": "kidney-bluespace-r"
+    },
+    {
+      "name": "kidney-plastic-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "kidney-plastic-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "kidney-plasma-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "kidney-plasma-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "kidney-bluespace-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "kidney-bluespace-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "ears-plastic"
+    },
+    {
+      "name": "ears-plasma"
+    },
+    {
+      "name": "ears-bluespace"
+    },
+    {
+      "name": "ears-plastic-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "ears-plastic-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "ears-plasma-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "ears-plasma-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "ears-bluespace-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "ears-bluespace-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "liver-plastic"
+    },
+    {
+      "name": "liver-plasma"
+    },
+    {
+      "name": "liver-bluespace"
+    },
+    {
+      "name": "liver-plastic-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "liver-plastic-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "liver-plasma-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "liver-plasma-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "liver-bluespace-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "liver-bluespace-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "stomach-plastic"
+    },
+    {
+      "name": "stomach-plasma"
+    },
+    {
+      "name": "stomach-bluespace"
+    },
+    {
+      "name": "stomach-plastic-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "stomach-plastic-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "stomach-plasma-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "stomach-plasma-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "stomach-bluespace-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "stomach-bluespace-inhand-right",
+      "directions": 4
+    }
+  ]
+}
