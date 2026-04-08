@@ -5,6 +5,7 @@
   name: trait-pacifist-name
   description: trait-pacifist-desc
   category: Quirks
+  cost: -8 # HONK - Negative quirk, refunds points
   components:
   - type: Pacified
 
@@ -13,6 +14,7 @@
   name: trait-lightweight-name
   description: trait-lightweight-desc
   category: Quirks
+  cost: -2 # HONK - Negative quirk, refunds points
   components:
   - type: LightweightDrunk
     boozeStrengthMultiplier: 2
