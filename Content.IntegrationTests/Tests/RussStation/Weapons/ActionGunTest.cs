@@ -1,23 +1,23 @@
-using Content.Shared.Weapons.Ranged.Components;
+using Content.Shared.RussStation.Weapons.Ranged;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests.RussStation.Weapons;
 
 /// <summary>
-/// Tests for HONK modifications to ActionGunComponent (PopupText and OnShootSound fields).
+/// Tests for ActionGunExtComponent (fork-owned popup and sound fields for ActionGun entities).
 /// Uses the real game prototypes to avoid the complexity of setting up test action pipelines.
 /// </summary>
 [TestFixture]
-[TestOf(typeof(ActionGunComponent))]
-public sealed class ActionGunTest
+[TestOf(typeof(ActionGunExtComponent))]
+public sealed class ActionGunExtTest
 {
     /// <summary>
     /// Verifies that the spit ActionGun entity (from species_appearance.yml) loads
-    /// correctly with the HONK PopupText and OnShootSound fields set.
+    /// correctly with the ActionGunExt PopupText and OnShootSound fields set.
     /// </summary>
     [Test]
-    public async Task SpitPrototypeHasHonkFields()
+    public async Task SpitPrototypeHasExtFields()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
@@ -25,7 +25,7 @@ public sealed class ActionGunTest
 
         await server.WaitAssertion(() =>
         {
-            // The spit ActionGun is defined as a component on HumanoidAppearance in species_appearance.yml.
+            // The spit ActionGun + ActionGunExt are defined on HumanoidAppearance in species_appearance.yml.
             // We verify the prototype loads without errors (implicitly tested by pool startup)
             // and that the real spit gun and action prototypes exist.
             var allProtos = protoManager.EnumeratePrototypes<EntityPrototype>();
@@ -47,12 +47,11 @@ public sealed class ActionGunTest
     }
 
     /// <summary>
-    /// Verifies that ActionGunComponent's PopupText and OnShootSound DataFields are
-    /// correctly defined (nullable defaults) by spawning a minimal entity without the
-    /// ActionGun component, then adding it manually.
+    /// Verifies that ActionGunExtComponent's PopupText and OnShootSound DataFields
+    /// default to null when added without YAML data.
     /// </summary>
     [Test]
-    public async Task ActionGunComponentDefaultValues()
+    public async Task ActionGunExtComponentDefaultValues()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
@@ -61,10 +60,8 @@ public sealed class ActionGunTest
 
         await server.WaitAssertion(() =>
         {
-            // Create a bare entity and add the component manually to test defaults
-            // without triggering MapInit (which requires action setup).
             var entity = entityManager.SpawnEntity(null, mapData.GridCoords);
-            var comp = entityManager.AddComponent<ActionGunComponent>(entity);
+            var comp = entityManager.AddComponent<ActionGunExtComponent>(entity);
 
             Assert.That(comp.PopupText, Is.Null, "PopupText should default to null");
             Assert.That(comp.OnShootSound, Is.Null, "OnShootSound should default to null");
