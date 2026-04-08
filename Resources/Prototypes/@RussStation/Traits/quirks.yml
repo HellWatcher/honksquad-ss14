@@ -188,3 +188,16 @@
     - stamina
   components:
     - type: GlassJaw
+
+- type: trait
+  id: PoorAim
+  name: trait-pooraim-name
+  description: trait-pooraim-desc
+  category: Combat
+  cost: -4
+  tags:
+    - accuracy
+  excludedTags:
+    - accuracy
+  components:
+    - type: PoorAim
