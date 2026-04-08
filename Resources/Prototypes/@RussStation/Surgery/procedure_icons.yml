@@ -1,0 +1,23 @@
+- type: entity
+  id: SurgeryIconTendBrute
+  categories: [HideSpawnMenu]
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Interface/Alerts/wounds.rsi"
+      state: brute_icon
+
+- type: entity
+  id: SurgeryIconTendBurn
+  categories: [HideSpawnMenu]
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Interface/Alerts/wounds.rsi"
+      state: burn_icon
+
+- type: entity
+  id: SurgeryIconOrganManipulation
+  categories: [HideSpawnMenu]
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Interface/Surgery/procedures.rsi"
+      state: organmanipulation_icon
