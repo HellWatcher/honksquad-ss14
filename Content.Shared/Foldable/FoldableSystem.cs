@@ -8,9 +8,6 @@ using Robust.Shared.Containers;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
-//HONK START - Fold sound
-using Robust.Shared.Audio.Systems;
-//HONK END
 
 namespace Content.Shared.Foldable;
 
@@ -22,9 +19,6 @@ public sealed class FoldableSystem : EntitySystem
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly AnchorableSystem _anchorable = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
-    //HONK START - Fold sound
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    //HONK END
 
     public override void Initialize()
     {
@@ -90,11 +84,6 @@ public sealed class FoldableSystem : EntitySystem
         Dirty(uid, component);
         _appearance.SetData(uid, FoldedVisuals.State, folded);
         _buckle.StrapSetEnabled(uid, !component.IsFolded);
-
-        //HONK START - Play buckle sound on fold/unfold (only when a user triggers it)
-        if (user != null)
-            _audio.PlayPredicted(new Robust.Shared.Audio.SoundPathSpecifier("/Audio/Effects/buckle.ogg"), uid, user);
-        //HONK END
 
         var ev = new FoldedEvent(folded, user);
         RaiseLocalEvent(uid, ref ev);
