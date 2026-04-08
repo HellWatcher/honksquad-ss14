@@ -46,3 +46,5 @@ trait-indebted-name = Indebted
 trait-indebted-desc = You owe the company more than you'd like to admit.
 trait-booming-voice-name = Booming Voice
 trait-booming-voice-desc = Your voice carries further than most.
+trait-iron-jaw-name = Iron Jaw
+trait-iron-jaw-desc = You can take a hit.
