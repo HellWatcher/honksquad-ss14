@@ -1,5 +1,7 @@
+using Content.Shared.Alert;
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager.Attributes;
 using Robust.Shared.ViewVariables;
 
@@ -29,4 +31,10 @@ public sealed partial class WoundComponent : Component
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float[] BleedTierThresholds = [1f, 3f, 6f];
+
+    [DataField]
+    public ProtoId<AlertPrototype> FractureAlert = "Fracture";
+
+    [DataField]
+    public ProtoId<AlertPrototype> BurnAlert = "Burn";
 }

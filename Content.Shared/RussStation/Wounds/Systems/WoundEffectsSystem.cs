@@ -1,3 +1,4 @@
+using Content.Shared.Alert;
 using Content.Shared.Examine;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -15,6 +16,7 @@ namespace Content.Shared.RussStation.Wounds.Systems;
 /// </summary>
 public sealed class WoundEffectsSystem : EntitySystem
 {
+    [Dependency] private readonly AlertsSystem _alerts = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly SharedWoundSystem _wounds = default!;
@@ -37,13 +39,16 @@ public sealed class WoundEffectsSystem : EntitySystem
         base.Initialize();
         SubscribeLocalEvent<WoundComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshSpeed);
         SubscribeLocalEvent<WoundComponent, WoundsDamagedEvent>(OnWoundsDamaged);
+        SubscribeLocalEvent<WoundComponent, WoundsClearedEvent>(OnWoundsCleared);
         SubscribeLocalEvent<WoundComponent, ComponentStartup>(OnStartup);
+        SubscribeLocalEvent<WoundComponent, ComponentShutdown>(OnShutdown);
         SubscribeLocalEvent<WoundComponent, ExaminedEvent>(OnExamined);
     }
 
     private void OnStartup(EntityUid uid, WoundComponent comp, ComponentStartup args)
     {
         _movementSpeed.RefreshMovementSpeedModifiers(uid);
+        RefreshAlerts(uid, comp);
     }
 
     private void OnRefreshSpeed(EntityUid uid, WoundComponent comp, ref RefreshMovementSpeedModifiersEvent args)
@@ -75,10 +80,18 @@ public sealed class WoundEffectsSystem : EntitySystem
         }
     }
 
+    private void OnShutdown(EntityUid uid, WoundComponent comp, ComponentShutdown args)
+    {
+        _alerts.ClearAlert(uid, comp.FractureAlert);
+        _alerts.ClearAlert(uid, comp.BurnAlert);
+    }
+
     private void OnWoundsDamaged(EntityUid uid, WoundComponent comp, WoundsDamagedEvent args)
     {
         if (_timing.ApplyingState)
             return;
+
+        RefreshAlerts(uid, comp);
 
         // Tier 3 fracture: chance to drop held items on hit
         var fractureTier = _wounds.GetWorstTier(comp, WoundCategory.Fracture);
@@ -92,5 +105,30 @@ public sealed class WoundEffectsSystem : EntitySystem
             return;
 
         _hands.TryDrop((uid, hands));
+    }
+
+    private void OnWoundsCleared(EntityUid uid, WoundComponent comp, WoundsClearedEvent args)
+    {
+        _movementSpeed.RefreshMovementSpeedModifiers(uid);
+        RefreshAlerts(uid, comp);
+    }
+
+    /// <summary>
+    /// Shows or clears fracture/burn HUD alerts based on current wound state.
+    /// </summary>
+    public void RefreshAlerts(EntityUid uid, WoundComponent comp)
+    {
+        var fractureTier = _wounds.GetWorstTier(comp, WoundCategory.Fracture);
+        var burnTier = _wounds.GetWorstTier(comp, WoundCategory.Burn);
+
+        if (fractureTier > 0)
+            _alerts.ShowAlert(uid, comp.FractureAlert, (short) (fractureTier - 1));
+        else
+            _alerts.ClearAlert(uid, comp.FractureAlert);
+
+        if (burnTier > 0)
+            _alerts.ShowAlert(uid, comp.BurnAlert, (short) (burnTier - 1));
+        else
+            _alerts.ClearAlert(uid, comp.BurnAlert);
     }
 }

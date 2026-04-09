@@ -145,6 +145,7 @@ public abstract class SharedWoundSystem : EntitySystem
         });
 
         Dirty(uid, comp);
+        RaiseLocalEvent(uid, new WoundsClearedEvent());
     }
 
     /// <summary>
