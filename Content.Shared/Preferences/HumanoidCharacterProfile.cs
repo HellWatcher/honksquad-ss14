@@ -409,6 +409,22 @@ namespace Content.Shared.Preferences
 
             var list = new HashSet<ProtoId<TraitPrototype>>(_traitPreferences) { traitId };
 
+            // HONK START - Global trait point budget
+            var configManager = IoCManager.Resolve<IConfigurationManager>();
+            var globalMax = configManager.GetCVar(CCVars.MaxTraitPoints);
+
+            // Check global budget across all categories
+            var globalCount = 0;
+            foreach (var trait in list)
+            {
+                if (protoManager.TryIndex<TraitPrototype>(trait, out var otherProto))
+                    globalCount += otherProto.Cost;
+            }
+
+            if (globalCount > globalMax && traitProto.Cost > 0)
+                return new(this);
+            // HONK END
+
             if (traitCategory == null || traitCategory.MaxTraitPoints < 0)
             {
                 return new(this)
@@ -421,13 +437,13 @@ namespace Content.Shared.Preferences
             foreach (var trait in list)
             {
                 // If trait not found or another category don't count its points.
-                if (!protoManager.TryIndex<TraitPrototype>(trait, out var otherProto) ||
-                    otherProto.Category != traitCategory)
+                if (!protoManager.TryIndex<TraitPrototype>(trait, out var otherProto2) ||
+                    otherProto2.Category != traitCategory)
                 {
                     continue;
                 }
 
-                count += otherProto.Cost;
+                count += otherProto2.Cost;
             }
 
             if (count > traitCategory.MaxTraitPoints && traitProto.Cost != 0)
@@ -656,14 +672,27 @@ namespace Content.Shared.Preferences
             var groups = new Dictionary<string, int>();
             var result = new List<ProtoId<TraitPrototype>>();
 
+            // HONK START - Global trait point budget
+            var configManager = IoCManager.Resolve<IConfigurationManager>();
+            var globalMax = configManager.GetCVar(CCVars.MaxTraitPoints);
+            var globalCount = 0;
+            // HONK END
+
             foreach (var trait in traits)
             {
                 if (!protoManager.TryIndex(trait, out var traitProto))
                     continue;
 
+                // HONK START - Check global budget
+                var newGlobal = globalCount + traitProto.Cost;
+                if (newGlobal > globalMax && traitProto.Cost > 0)
+                    continue;
+                // HONK END
+
                 // Always valid.
                 if (traitProto.Category == null)
                 {
+                    globalCount = newGlobal; // HONK - Track global spending
                     result.Add(trait);
                     continue;
                 }
@@ -680,6 +709,7 @@ namespace Content.Shared.Preferences
                     continue;
 
                 groups[category.ID] = existing;
+                globalCount = newGlobal; // HONK - Track global spending
                 result.Add(trait);
             }
 

@@ -5,11 +5,3 @@
 - type: traitCategory
   id: SpeechTraits
   name: trait-category-speech
-  maxTraitPoints: 2
-
-# HONK START - Point-buy budget for quirks
-- type: traitCategory
-  id: Quirks
-  name: trait-category-quirks
-  maxTraitPoints: 10
-# HONK END
