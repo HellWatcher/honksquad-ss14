@@ -12,6 +12,8 @@
   tags:
   - speech
   - accent
+  excludedTags:
+  - accent
   # HONK END
   components:
   - type: Accentless
