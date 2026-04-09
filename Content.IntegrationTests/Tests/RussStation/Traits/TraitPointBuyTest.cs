@@ -19,12 +19,12 @@ public sealed class TraitPointBuyTest
     private const string Prototypes = @"
 - type: traitCategory
   id: TestCombat
-  name: Test Combat
+  name: generic-unknown
   maxTraitPoints: 5
 
 - type: trait
   id: TestTraitA
-  name: Test Trait A
+  name: generic-unknown
   cost: 3
   category: TestCombat
   tags:
@@ -34,7 +34,7 @@ public sealed class TraitPointBuyTest
 
 - type: trait
   id: TestTraitB
-  name: Test Trait B
+  name: generic-unknown
   cost: 3
   category: TestCombat
   tags:
@@ -44,7 +44,7 @@ public sealed class TraitPointBuyTest
 
 - type: trait
   id: TestTraitC
-  name: Test Trait C
+  name: generic-unknown
   cost: 2
   category: TestCombat
   tags:
@@ -53,22 +53,22 @@ public sealed class TraitPointBuyTest
 
 - type: trait
   id: TestTraitExpensive
-  name: Test Expensive Trait
+  name: generic-unknown
   cost: 8
 
 - type: trait
   id: TestTraitCheap
-  name: Test Cheap Trait
+  name: generic-unknown
   cost: 1
 
 - type: trait
   id: TestTraitNegative
-  name: Test Negative Trait
+  name: generic-unknown
   cost: -3
 
 - type: trait
   id: TestTraitNoTag
-  name: No Tag Trait
+  name: generic-unknown
   cost: 2
 ";
 
