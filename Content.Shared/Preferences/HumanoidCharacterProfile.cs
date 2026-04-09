@@ -420,7 +420,10 @@ namespace Content.Shared.Preferences
 
                 // Remove existing trait if its tag is excluded by the new trait
                 if (existingProto.Tag != null && traitProto.ExcludedTags.Contains(existingProto.Tag))
+                {
                     list.Remove(existingId);
+                    continue; // Already removing this trait, skip reverse check
+                }
 
                 // Remove new trait if existing trait excludes it
                 if (traitProto.Tag != null && existingProto.ExcludedTags.Contains(traitProto.Tag))
