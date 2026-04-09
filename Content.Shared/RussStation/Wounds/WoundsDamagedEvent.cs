@@ -8,3 +8,9 @@ namespace Content.Shared.RussStation.Wounds;
 /// conflicting with SharedWoundSystem's DamageChangedEvent subscription.
 /// </summary>
 public sealed class WoundsDamagedEvent : EntityEventArgs;
+
+/// <summary>
+/// Raised on an entity after wounds are cleared by category (e.g. surgery).
+/// Used by WoundEffectsSystem to refresh alerts and movement speed.
+/// </summary>
+public sealed class WoundsClearedEvent : EntityEventArgs;

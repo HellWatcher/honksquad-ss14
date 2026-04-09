@@ -40,3 +40,25 @@ wound-bleed-piercing-3 = Hemorrhaging
 # Examine text
 wound-examine-entry = {$name} (Tier {$tier})
 wound-examine-header = [bold]Wounds:[/bold]
+
+# HUD Alerts
+alerts-wound-fracture-name = { $severity ->
+    [0] Hairline Fracture
+    [1] Compound Fracture
+    *[2] Shattered Bone
+}
+alerts-wound-fracture-desc = { $severity ->
+    [0] Something cracked. Get to [color=green]medical[/color] before it gets worse.
+    [1] You have a [color=red]compound fracture[/color]. Moving is painful and [color=yellow]slow[/color].
+    *[2] Your bones are [color=red]shattered[/color]. You can barely move and might [color=yellow]drop whatever you're holding[/color] if you take another hit.
+}
+alerts-wound-burn-name = { $severity ->
+    [0] Moderate Burn
+    [1] Severe Burn
+    *[2] Catastrophic Burn
+}
+alerts-wound-burn-desc = { $severity ->
+    [0] That's going to blister. Get to [color=green]medical[/color] before it gets worse.
+    [1] You have [color=red]severe burns[/color]. The pain is [color=yellow]slowing you down[/color].
+    *[2] You're [color=red]badly burned[/color]. Every step is agony and your movement is [color=yellow]slowed[/color].
+}

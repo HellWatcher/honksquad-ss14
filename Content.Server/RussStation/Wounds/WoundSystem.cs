@@ -8,6 +8,7 @@ namespace Content.Server.RussStation.Wounds;
 public sealed class WoundSystem : SharedWoundSystem
 {
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
+    [Dependency] private readonly WoundEffectsSystem _effects = default!;
 
     public override void Update(float frameTime)
     {
@@ -44,6 +45,7 @@ public sealed class WoundSystem : SharedWoundSystem
             {
                 Dirty(uid, comp);
                 _movementSpeed.RefreshMovementSpeedModifiers(uid);
+                _effects.RefreshAlerts(uid, comp);
             }
         }
     }

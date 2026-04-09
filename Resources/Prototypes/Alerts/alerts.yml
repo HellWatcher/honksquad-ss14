@@ -20,6 +20,10 @@
     - category: Breathing # Vox gang not calling this oxygen
     - category: Pressure
     - alertType: Bleed
+    # HONK START - Wound alert ordering
+    - alertType: Fracture
+    - alertType: Burn
+    # HONK END
     - category: Temperature
     - category: Hunger
     - category: Thirst
