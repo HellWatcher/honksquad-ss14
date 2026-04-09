@@ -67,29 +67,52 @@ public sealed partial class HumanoidProfileEditor
             }
         }
 
-        //HONK START - Build set of excluded tags and conflicted trait IDs for UI disabling
+        //HONK START - Build conflict map: blocked trait → list of blocking trait names
         var selectedTraits = Profile?.TraitPreferences ?? new HashSet<ProtoId<TraitPrototype>>();
-        var excludedTags = new HashSet<string>();
 
-        // Collect all tags excluded by selected traits
+        // Map each excluded tag back to the selected trait(s) that exclude it
+        var tagBlockers = new Dictionary<string, List<string>>();
         foreach (var selectedId in selectedTraits)
         {
             if (!_prototypeManager.TryIndex<TraitPrototype>(selectedId, out var selectedProto))
                 continue;
 
+            var blockerName = Loc.GetString(selectedProto.Name);
             foreach (var tag in selectedProto.ExcludedTags)
-                excludedTags.Add(tag);
+            {
+                if (!tagBlockers.TryGetValue(tag, out var list))
+                {
+                    list = new List<string>();
+                    tagBlockers[tag] = list;
+                }
+                list.Add(blockerName);
+            }
         }
 
-        // Find unselected traits that have any tag blocked by excluded tags
-        var conflictedTraits = new HashSet<ProtoId<TraitPrototype>>();
+        // Find unselected traits blocked by excluded tags, and record why
+        var conflictReasons = new Dictionary<ProtoId<TraitPrototype>, List<string>>();
         foreach (var trait in traits)
         {
             if (selectedTraits.Contains(trait.ID))
                 continue;
 
-            if (trait.Tags.Any(t => excludedTags.Contains(t)))
-                conflictedTraits.Add(trait.ID);
+            foreach (var tag in trait.Tags)
+            {
+                if (!tagBlockers.TryGetValue(tag, out var blockers))
+                    continue;
+
+                if (!conflictReasons.TryGetValue(trait.ID, out var reasons))
+                {
+                    reasons = new List<string>();
+                    conflictReasons[trait.ID] = reasons;
+                }
+
+                foreach (var name in blockers)
+                {
+                    if (!reasons.Contains(name))
+                        reasons.Add(name);
+                }
+            }
         }
         //HONK END
 
@@ -203,11 +226,14 @@ public sealed partial class HumanoidProfileEditor
                 if (selector == null)
                     continue;
 
-                //HONK START - Disable conflicted traits
-                if (selector.TraitId is { } traitId && conflictedTraits.Contains(traitId))
+                //HONK START - Disable conflicted traits and show reason
+                if (selector.TraitId is { } traitId && conflictReasons.TryGetValue(traitId, out var blockedBy))
                 {
                     selector.Checkbox.Disabled = true;
                     selector.Checkbox.Label.FontColorOverride = Color.Gray;
+                    selector.Checkbox.ToolTip = Loc.GetString(
+                        "humanoid-profile-editor-trait-conflict",
+                        ("traits", string.Join(", ", blockedBy)));
                 }
                 //HONK END
 
