@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Client.Lobby.UI.Roles;
 using Content.Client.Stylesheets;
+using Content.Shared.CCVar;
 using Content.Shared.Traits;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Utility;
@@ -50,19 +51,71 @@ public sealed partial class HumanoidProfileEditor
             group.Add(trait.ID);
         }
 
-        // Create UI view from model
-        foreach (var (categoryId, categoryTraits) in traitGroups)
+        // HONK START - Global trait point budget display
+        var globalMax = _cfgManager.GetCVar(CCVars.MaxTraitPoints);
+        var globalSpent = 0;
+
+        // Pre-calculate global spending
+        foreach (var (_, categoryTraits) in traitGroups)
         {
+            foreach (var traitProto in categoryTraits)
+            {
+                var trait = _prototypeManager.Index<TraitPrototype>(traitProto);
+                if (Profile?.TraitPreferences.Contains(trait.ID) == true)
+                    globalSpent += trait.Cost;
+            }
+        }
+
+        var globalAvailable = globalMax - globalSpent;
+
+        TraitsList.AddChild(new Label
+        {
+            Text = Loc.GetString("humanoid-profile-editor-trait-points-available",
+                ("points", globalAvailable)),
+            FontColorOverride = globalAvailable >= 0 ? Color.LimeGreen : Color.Red,
+            Margin = new Thickness(0, 0, 0, 8),
+            StyleClasses = { StyleClass.LabelHeading },
+            HorizontalAlignment = HAlignment.Center,
+        });
+
+        // Wrapping container for category columns
+        var columnsContainer = new GridContainer
+        {
+            Columns = 3,
+            HorizontalExpand = true,
+        };
+        TraitsList.AddChild(columnsContainer);
+        // HONK END
+
+        // Create UI view from model (sorted alphabetically by display name)
+        foreach (var (categoryId, categoryTraits) in traitGroups.OrderBy(g =>
+            g.Key == TraitCategoryPrototype.Default
+                ? string.Empty
+                : _prototypeManager.TryIndex<TraitCategoryPrototype>(g.Key, out var cat)
+                    ? Loc.GetString(cat.Name)
+                    : g.Key))
+        {
+            if (categoryTraits.Count == 0)
+                continue;
+
             TraitCategoryPrototype? category = null;
+
+            // HONK START - Each category gets its own vertical column
+            var column = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Vertical,
+                HorizontalExpand = true,
+            };
+            // HONK END
 
             if (categoryId != TraitCategoryPrototype.Default)
             {
                 category = _prototypeManager.Index<TraitCategoryPrototype>(categoryId);
                 // Label
-                TraitsList.AddChild(new Label
+                column.AddChild(new Label // HONK - Changed from TraitsList to column
                 {
                     Text = Loc.GetString(category.Name),
-                    Margin = new Thickness(0, 10, 0, 0),
+                    Margin = new Thickness(0, 0, 0, 0),
                     StyleClasses = { StyleClass.LabelHeading },
                 });
             }
@@ -96,29 +149,30 @@ public sealed partial class HumanoidProfileEditor
                 selectors.Add(selector);
             }
 
-            // Selection counter
+            // HONK START - Point-buy: show category cap if set
             if (category is { MaxTraitPoints: >= 0 })
             {
-                TraitsList.AddChild(new Label
+                column.AddChild(new Label
                 {
-                    Text = Loc.GetString("humanoid-profile-editor-trait-count-hint", ("current", selectionCount), ("max", category.MaxTraitPoints)),
-                    FontColorOverride = Color.Gray
+                    Text = Loc.GetString("humanoid-profile-editor-trait-category-cap",
+                        ("spent", selectionCount),
+                        ("max", category.MaxTraitPoints)),
+                    FontColorOverride = selectionCount <= category.MaxTraitPoints ? Color.LightGray : Color.Red,
+                    Margin = new Thickness(0, 0, 0, 5),
                 });
             }
+
+            // HONK END
 
             foreach (var selector in selectors)
             {
                 if (selector == null)
                     continue;
 
-                if (category is { MaxTraitPoints: >= 0 } &&
-                    selector.Cost + selectionCount > category.MaxTraitPoints)
-                {
-                    selector.Checkbox.Label.FontColorOverride = Color.Red;
-                }
-
-                TraitsList.AddChild(selector);
+                column.AddChild(selector); // HONK - Changed from TraitsList to column
             }
+
+            columnsContainer.AddChild(column); // HONK - Add to columns
         }
     }
 }

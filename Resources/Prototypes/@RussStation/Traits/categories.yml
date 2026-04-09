@@ -1,0 +1,19 @@
+- type: traitCategory
+  id: Combat
+  name: trait-category-combat
+
+- type: traitCategory
+  id: Diet
+  name: trait-category-diet
+
+- type: traitCategory
+  id: Movement
+  name: trait-category-movement
+
+- type: traitCategory
+  id: Senses
+  name: trait-category-senses
+
+- type: traitCategory
+  id: Social
+  name: trait-category-social

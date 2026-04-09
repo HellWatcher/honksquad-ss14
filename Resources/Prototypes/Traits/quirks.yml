@@ -4,7 +4,7 @@
   id: Pacifist
   name: trait-pacifist-name
   description: trait-pacifist-desc
-  category: Quirks
+  category: Combat # HONK - Reassigned from Quirks
   cost: -8 # HONK - Negative quirk, refunds points
   components:
   - type: Pacified
@@ -13,7 +13,7 @@
   id: LightweightDrunk
   name: trait-lightweight-name
   description: trait-lightweight-desc
-  category: Quirks
+  category: Diet # HONK - Reassigned from Quirks
   cost: -2 # HONK - Negative quirk, refunds points
   components:
   - type: LightweightDrunk
@@ -23,6 +23,6 @@
   id: Snoring
   name: trait-snoring-name
   description: trait-snoring-desc
-  category: Quirks
+  category: Social # HONK - Reassigned from Quirks
   components:
   - type: Snoring
