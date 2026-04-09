@@ -17,8 +17,6 @@ Configuration variables added by the Honksquad fork. These can be set in the ser
 
 ## Traits
 
-<!-- TODO: game.max_trait_points (PR #376) not yet merged into release -->
-
 | CVar                    | Type | Default | Scope      | Description                                            |
 | ----------------------- | ---- | ------- | ---------- | ------------------------------------------------------ |
 | `game.max_trait_points` | int  | 10      | Replicated | Global point budget shared across all trait categories |
