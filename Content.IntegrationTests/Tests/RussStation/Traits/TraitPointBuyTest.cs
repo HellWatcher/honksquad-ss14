@@ -27,7 +27,8 @@ public sealed class TraitPointBuyTest
   name: Test Trait A
   cost: 3
   category: TestCombat
-  tag: test_a
+  tags:
+  - test_a
   excludedTags:
   - test_b
 
@@ -36,7 +37,8 @@ public sealed class TraitPointBuyTest
   name: Test Trait B
   cost: 3
   category: TestCombat
-  tag: test_b
+  tags:
+  - test_b
   excludedTags:
   - test_a
 
@@ -45,7 +47,8 @@ public sealed class TraitPointBuyTest
   name: Test Trait C
   cost: 2
   category: TestCombat
-  tag: test_c
+  tags:
+  - test_c
   excludedTags: []
 
 - type: trait

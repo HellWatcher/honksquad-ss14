@@ -72,16 +72,15 @@ public sealed partial class TraitPrototype : IPrototype
 
     //HONK START - Tag-based quirk exclusion system
     /// <summary>
-    /// A tag that identifies this trait for exclusion purposes.
-    /// Traits with the same tag can be blocked by other traits that exclude that tag.
+    /// Domain tags describing what this trait affects (e.g. "sight", "speech").
+    /// Other traits can exclude these tags to prevent incompatible combinations.
     /// </summary>
     [DataField]
-    public string? Tag;
+    public List<string> Tags { get; private set; } = new();
 
     /// <summary>
     /// Tags that this trait cannot coexist with.
-    /// When this trait is selected, any other trait whose ExclusionTag appears in this list is blocked.
-    /// Typically includes the trait's own tag to prevent stacking with similar traits.
+    /// When this trait is selected, any other trait that has a tag in this list is blocked.
     /// </summary>
     [DataField]
     public List<string> ExcludedTags { get; private set; } = new();

@@ -418,15 +418,15 @@ namespace Content.Shared.Preferences
                 if (!protoManager.TryIndex<TraitPrototype>(existingId, out var existingProto))
                     continue;
 
-                // Remove existing trait if its tag is excluded by the new trait
-                if (existingProto.Tag != null && traitProto.ExcludedTags.Contains(existingProto.Tag))
+                // Remove existing trait if any of its tags are excluded by the new trait
+                if (existingProto.Tags.Any(t => traitProto.ExcludedTags.Contains(t)))
                 {
                     list.Remove(existingId);
                     continue; // Already removing this trait, skip reverse check
                 }
 
-                // Remove new trait if existing trait excludes it
-                if (traitProto.Tag != null && existingProto.ExcludedTags.Contains(traitProto.Tag))
+                // Remove new trait if existing trait excludes any of the new trait's tags
+                if (traitProto.Tags.Any(t => existingProto.ExcludedTags.Contains(t)))
                 {
                     list.Remove(traitId);
                     break;
@@ -761,12 +761,12 @@ namespace Content.Shared.Preferences
                 if (!protoManager.TryIndex<TraitPrototype>(selectedId, out var selectedProto))
                     continue;
 
-                // Does the selected trait exclude the new trait's tag?
-                if (traitProto.Tag != null && selectedProto.ExcludedTags.Contains(traitProto.Tag))
+                // Does the selected trait exclude any of the new trait's tags?
+                if (traitProto.Tags.Any(t => selectedProto.ExcludedTags.Contains(t)))
                     return true;
 
-                // Does the new trait exclude the selected trait's tag?
-                if (selectedProto.Tag != null && traitProto.ExcludedTags.Contains(selectedProto.Tag))
+                // Does the new trait exclude any of the selected trait's tags?
+                if (selectedProto.Tags.Any(t => traitProto.ExcludedTags.Contains(t)))
                     return true;
             }
 

@@ -9,9 +9,8 @@
   category: SpeechTraits
   cost: 2
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: Accentless
@@ -30,9 +29,8 @@
   category: SpeechTraits
   cost: 1
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: SouthernAccent
@@ -44,9 +42,8 @@
   category: SpeechTraits
   cost: 1
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: GermanAccent
@@ -58,9 +55,8 @@
   category: SpeechTraits
   cost: 1
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: FrenchAccent
@@ -72,9 +68,8 @@
   category: SpeechTraits
   cost: 1
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: SpanishAccent
@@ -86,9 +81,8 @@
   category: SpeechTraits
   cost: 1
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: ReplacementAccent
@@ -101,9 +95,8 @@
   category: SpeechTraits
   cost: 1
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: ReplacementAccent
@@ -118,9 +111,8 @@
   category: SpeechTraits
   cost: 2
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: StutteringAccent
@@ -136,9 +128,8 @@
   category: SpeechTraits
   cost: 2
   # HONK START - Tag-based exclusion
-  tag: speech_accent
-  excludedTags:
-  - muted
+  tags:
+  - speech
   # HONK END
   components:
   - type: FrontalLisp
