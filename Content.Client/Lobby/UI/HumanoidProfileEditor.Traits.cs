@@ -81,14 +81,14 @@ public sealed partial class HumanoidProfileEditor
                 excludedTags.Add(tag);
         }
 
-        // Find unselected traits whose exclusion tag is blocked
+        // Find unselected traits that have any tag blocked by excluded tags
         var conflictedTraits = new HashSet<ProtoId<TraitPrototype>>();
         foreach (var trait in traits)
         {
             if (selectedTraits.Contains(trait.ID))
                 continue;
 
-            if (trait.Tag != null && excludedTags.Contains(trait.Tag))
+            if (trait.Tags.Any(t => excludedTags.Contains(t)))
                 conflictedTraits.Add(trait.ID);
         }
         //HONK END

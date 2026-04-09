@@ -7,9 +7,10 @@
   traitGear: WhiteCane
   category: Disabilities
   # HONK START - Tag-based exclusion
-  tag: vision_blind
+  tags:
+  - sight
   excludedTags:
-  - vision_poor
+  - sight
   # HONK END
   whitelist:
     components:
@@ -24,9 +25,10 @@
   traitGear: ClothingEyesGlasses
   category: Disabilities
   # HONK START - Tag-based exclusion
-  tag: vision_poor
+  tags:
+  - sight
   excludedTags:
-  - vision_blind
+  - sight
   # HONK END
   whitelist:
     components:
@@ -69,10 +71,11 @@
   name: trait-muted-name
   description: trait-muted-desc
   category: Disabilities
-  # HONK START - Tag-based exclusion (can't speak, so no accent)
-  tag: muted
+  # HONK START - Tag-based exclusion (can't speak, blocks all speech traits)
+  tags:
+  - speech
   excludedTags:
-  - speech_accent
+  - speech
   # HONK END
   blacklist:
     components:
