@@ -11,6 +11,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: Accentless
@@ -31,6 +32,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: SouthernAccent
@@ -44,6 +46,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: GermanAccent
@@ -57,6 +60,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: FrenchAccent
@@ -70,6 +74,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: SpanishAccent
@@ -83,6 +88,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: ReplacementAccent
@@ -97,6 +103,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: ReplacementAccent
@@ -113,6 +120,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: StutteringAccent
@@ -130,6 +138,7 @@
   # HONK START - Tag-based exclusion
   tags:
   - speech
+  - accent
   # HONK END
   components:
   - type: FrontalLisp
