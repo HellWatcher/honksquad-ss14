@@ -164,13 +164,22 @@ public sealed partial class HumanoidProfileEditor
 
             // HONK END
 
+            // HONK - 2-column grid for trait selectors within each category
+            var traitGrid = new GridContainer
+            {
+                Columns = 2,
+                HorizontalExpand = true,
+            };
+
             foreach (var selector in selectors)
             {
                 if (selector == null)
                     continue;
 
-                column.AddChild(selector); // HONK - Changed from TraitsList to column
+                traitGrid.AddChild(selector);
             }
+
+            column.AddChild(traitGrid);
 
             columnsContainer.AddChild(column); // HONK - Add to columns
         }
