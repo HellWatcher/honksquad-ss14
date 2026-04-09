@@ -8,6 +8,11 @@
   description: trait-accentless-desc
   category: SpeechTraits
   cost: 2
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: Accentless
     removes:
@@ -24,6 +29,11 @@
   description: trait-southern-desc
   category: SpeechTraits
   cost: 1
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: SouthernAccent
 
@@ -33,6 +43,11 @@
   description: trait-german-desc
   category: SpeechTraits
   cost: 1
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: GermanAccent
 
@@ -42,6 +57,11 @@
   description: trait-french-desc
   category: SpeechTraits
   cost: 1
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: FrenchAccent
 
@@ -51,6 +71,11 @@
   description: trait-spanish-desc
   category: SpeechTraits
   cost: 1
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: SpanishAccent
 
@@ -60,6 +85,11 @@
   description: trait-liar-desc
   category: SpeechTraits
   cost: 1
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: ReplacementAccent
     accent: liar
@@ -70,6 +100,11 @@
   description: trait-scottish-desc
   category: SpeechTraits
   cost: 1
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: ReplacementAccent
     accent: scottish
@@ -82,6 +117,11 @@
   description: trait-socialanxiety-desc
   category: SpeechTraits
   cost: 2
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: StutteringAccent
     matchRandomProb: 0.1
@@ -95,5 +135,10 @@
   description: trait-frontal-lisp-desc
   category: SpeechTraits
   cost: 2
+  # HONK START - Tag-based exclusion
+  tag: speech_accent
+  excludedTags:
+  - muted
+  # HONK END
   components:
   - type: FrontalLisp

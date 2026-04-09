@@ -6,6 +6,11 @@
   description: trait-blindness-desc
   traitGear: WhiteCane
   category: Disabilities
+  # HONK START - Tag-based exclusion
+  tag: vision_blind
+  excludedTags:
+  - vision_poor
+  # HONK END
   whitelist:
     components:
       - Blindable
@@ -18,6 +23,11 @@
   description: trait-poor-vision-desc
   traitGear: ClothingEyesGlasses
   category: Disabilities
+  # HONK START - Tag-based exclusion
+  tag: vision_poor
+  excludedTags:
+  - vision_blind
+  # HONK END
   whitelist:
     components:
       - Blindable
@@ -59,6 +69,11 @@
   name: trait-muted-name
   description: trait-muted-desc
   category: Disabilities
+  # HONK START - Tag-based exclusion (can't speak, so no accent)
+  tag: muted
+  excludedTags:
+  - speech_accent
+  # HONK END
   blacklist:
     components:
       - BorgChassis
