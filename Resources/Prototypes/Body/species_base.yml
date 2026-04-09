@@ -193,6 +193,9 @@
         Piercing: -0.05
         Slash: -0.05
   - type: Fingerprint
+  # HONK START - Wound system phase 1
+  - type: Wound
+  # HONK END
   - type: Blindable
   - type: Temperature
     currentTemperature: 310.15
