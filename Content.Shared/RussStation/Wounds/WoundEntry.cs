@@ -12,13 +12,9 @@ public sealed partial class WoundEntry
     [DataField]
     public int Tier;
 
-    [DataField]
-    public TimeSpan TimeAtCurrentTier;
-
-    public WoundEntry(ProtoId<WoundTypePrototype> woundTypeId, int tier, TimeSpan timeAtCurrentTier)
+    public WoundEntry(ProtoId<WoundTypePrototype> woundTypeId, int tier)
     {
         WoundTypeId = woundTypeId;
         Tier = tier;
-        TimeAtCurrentTier = timeAtCurrentTier;
     }
 }

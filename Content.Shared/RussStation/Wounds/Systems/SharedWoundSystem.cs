@@ -109,7 +109,6 @@ public abstract class SharedWoundSystem : EntitySystem
             if (wound.Tier < tier)
             {
                 wound.Tier = tier;
-                wound.TimeAtCurrentTier = TimeSpan.Zero;
                 return true;
             }
 
@@ -125,7 +124,7 @@ public abstract class SharedWoundSystem : EntitySystem
             return false;
 
         // Create new wound entry
-        comp.ActiveWounds.Add(new WoundEntry(proto.ID, tier, TimeSpan.Zero));
+        comp.ActiveWounds.Add(new WoundEntry(proto.ID, tier));
         return true;
     }
 

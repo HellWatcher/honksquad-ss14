@@ -3,7 +3,7 @@
   category: Fracture
   damageType: Blunt
   thresholds: [15, 25, 40]
-  degradationTime: 300
+
   names:
     1: Hairline Fracture
     2: Compound Fracture
@@ -14,7 +14,7 @@
   category: Burn
   damageType: Heat
   thresholds: [10, 20, 35]
-  degradationTime: 300
+
   names:
     1: Moderate Burn
     2: Severe Burn
@@ -25,7 +25,7 @@
   category: Burn
   damageType: Cold
   thresholds: [10, 20, 35]
-  degradationTime: 300
+
   names:
     1: Mild Frostbite
     2: Severe Frostbite
@@ -36,7 +36,7 @@
   category: Burn
   damageType: Shock
   thresholds: [10, 20, 35]
-  degradationTime: 300
+
   names:
     1: Minor Shock Burn
     2: Severe Shock Burn
@@ -47,7 +47,7 @@
   category: Burn
   damageType: Caustic
   thresholds: [10, 20, 35]
-  degradationTime: 300
+
   names:
     1: Minor Chemical Burn
     2: Severe Chemical Burn
@@ -58,7 +58,7 @@
   category: Burn
   damageType: Radiation
   thresholds: [10, 20, 35]
-  degradationTime: 300
+
   names:
     1: Minor Radiation Burn
     2: Severe Radiation Burn
