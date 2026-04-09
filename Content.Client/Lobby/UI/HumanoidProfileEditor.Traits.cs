@@ -89,13 +89,33 @@ public sealed partial class HumanoidProfileEditor
             }
         }
 
-        // Find unselected traits blocked by excluded tags, and record why
+        // Also map each selected trait's tags so we can check the reverse direction
+        var selectedTagOwners = new Dictionary<string, List<string>>();
+        foreach (var selectedId in selectedTraits)
+        {
+            if (!_prototypeManager.TryIndex<TraitPrototype>(selectedId, out var selectedProto))
+                continue;
+
+            var ownerName = Loc.GetString(selectedProto.Name);
+            foreach (var tag in selectedProto.Tags)
+            {
+                if (!selectedTagOwners.TryGetValue(tag, out var list))
+                {
+                    list = new List<string>();
+                    selectedTagOwners[tag] = list;
+                }
+                list.Add(ownerName);
+            }
+        }
+
+        // Find unselected traits blocked by excluded tags (both directions), and record why
         var conflictReasons = new Dictionary<ProtoId<TraitPrototype>, List<string>>();
         foreach (var trait in traits)
         {
             if (selectedTraits.Contains(trait.ID))
                 continue;
 
+            // Direction 1: selected trait excludes this trait's tags
             foreach (var tag in trait.Tags)
             {
                 if (!tagBlockers.TryGetValue(tag, out var blockers))
@@ -108,6 +128,25 @@ public sealed partial class HumanoidProfileEditor
                 }
 
                 foreach (var name in blockers)
+                {
+                    if (!reasons.Contains(name))
+                        reasons.Add(name);
+                }
+            }
+
+            // Direction 2: this trait's excludedTags would block a selected trait's tags
+            foreach (var excludedTag in trait.ExcludedTags)
+            {
+                if (!selectedTagOwners.TryGetValue(excludedTag, out var owners))
+                    continue;
+
+                if (!conflictReasons.TryGetValue(trait.ID, out var reasons))
+                {
+                    reasons = new List<string>();
+                    conflictReasons[trait.ID] = reasons;
+                }
+
+                foreach (var name in owners)
                 {
                     if (!reasons.Contains(name))
                         reasons.Add(name);
