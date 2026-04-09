@@ -12,8 +12,8 @@ trait-pacifist-desc = You cannot attack or hurt any living beings.
 
 permanent-blindness-trait-examined = [color=lightblue]{CAPITALIZE(POSS-ADJ($target))} eyes are glassy and unfocused. It doesn't seem like {SUBJECT($target)} can see you well, if at all.[/color]
 
-trait-lightweight-name = Lightweight drunk
-trait-lightweight-desc = Alcohol has a stronger effect on you.
+trait-lightweight-name = Lightweight
+trait-lightweight-desc = Alcohol hits you much harder than most.
 
 trait-monochromacy-name = Monochromacy
 trait-monochromacy-desc = You are fully colorblind, everything you perceive ranges from blacks to whites.
@@ -30,31 +30,31 @@ trait-unrevivable-desc = You are unable to be revived by defibrillators.
 trait-accentless-name = Accentless
 trait-accentless-desc = You don't have the accent that your species would usually have.
 
-trait-frontal-lisp-name = Frontal lisp
+trait-frontal-lisp-name = Frontal Lisp
 trait-frontal-lisp-desc = You thpeak with a lithp.
 
 trait-socialanxiety-name = Stutter
 trait-socialanxiety-desc = You speak with a stutter.
 
-trait-southern-name = Southern drawl
+trait-southern-name = Southern Drawl
 trait-southern-desc = You have a different way of speakin'.
 
 trait-snoring-name = Snoring
 trait-snoring-desc = You will snore while sleeping.
 
-trait-liar-name = Pathological liar
+trait-liar-name = Pathological Liar
 trait-liar-desc = You can hardly bring yourself to tell the truth. Sometimes you lie anyway.
 
-trait-german-name = German accent
+trait-german-name = German Accent
 trait-german-desc = You seem to come from space Germany.
 
-trait-french-name = French accent
+trait-french-name = French Accent
 trait-french-desc = Your accent seems to have a certain «je ne sais quoi».
 
-trait-spanish-name = Spanish accent
+trait-spanish-name = Spanish Accent
 trait-spanish-desc = Hola señor, donde esta la biblioteca.
 
-trait-scottish-name = Scottish accent
+trait-scottish-name = Scottish Accent
 trait-scottish-desc = Ye're speaking like ae proper Scot!
 
 trait-painnumbness-name = Numb

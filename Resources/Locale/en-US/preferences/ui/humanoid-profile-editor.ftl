@@ -56,9 +56,8 @@ humanoid-profile-editor-flavortext-tab = Description
 # Traits
 humanoid-profile-editor-traits-tab = Traits
 humanoid-profile-editor-no-traits = No traits available
-
 humanoid-profile-editor-trait-count-hint = Points available: [{$current}/{$max}]
 
+# Trait categories
 trait-category-disabilities = Disabilities
-trait-category-speech = Speech traits
-trait-category-quirks = Quirks
+trait-category-speech = Speech
