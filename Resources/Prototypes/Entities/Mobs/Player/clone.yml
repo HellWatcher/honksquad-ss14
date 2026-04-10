@@ -19,18 +19,32 @@
   - Ageusia # HONK
   - BlockWriting # HONK
   - BlackAndWhiteOverlay
+  - BoomingVoice # HONK
   - Clumsy
+  - Freerunning # HONK
+  - GlassJaw # HONK
   - Illiterate # HONK
+  - LightStep # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
   - LightweightDrunk
   - Muted
   - Narcolepsy
+  - Negotiator # HONK
   - Pacified
   - Paracusia
   - PermanentBlindness
+  - Indebted # HONK
+  - IronJaw # HONK
+  - PoorAim # HONK
+  - Prosopagnosia # HONK
+  - SelfAware # HONK
   - Snoring
+  - SoftSpoken # HONK
+  - SteadyHand # HONK
+  - Touchy # HONK
   - Unrevivable
+  - Vegetarian # HONK
   # accents
   - Accentless
   - BackwardsAccent
