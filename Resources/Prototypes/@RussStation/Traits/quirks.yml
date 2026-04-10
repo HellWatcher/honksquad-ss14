@@ -25,6 +25,19 @@
     - type: Negotiator
 
 - type: trait
+  id: Indebted
+  name: trait-indebted-name
+  description: trait-indebted-desc
+  category: Social
+  cost: -1
+  tags:
+    - wage
+  excludedTags:
+    - wage
+  components:
+    - type: Indebted
+
+- type: trait
   id: BoomingVoice
   name: trait-booming-voice-name
   description: trait-booming-voice-desc
