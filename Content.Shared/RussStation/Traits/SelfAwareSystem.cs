@@ -41,7 +41,7 @@ public sealed class SelfAwareSystem : EntitySystem
         base.Initialize();
         SubscribeLocalEvent<SelfAwareComponent, GetVerbsEvent<ExamineVerb>>(
             OnGetExamineVerbs,
-            after: new[] { typeof(HealthExaminableSystem) });
+            before: new[] { typeof(HealthExaminableSystem) });
     }
 
     private void OnGetExamineVerbs(Entity<SelfAwareComponent> ent, ref GetVerbsEvent<ExamineVerb> args)
@@ -56,17 +56,7 @@ public sealed class SelfAwareSystem : EntitySystem
             return;
 
         var healthVerbText = Loc.GetString("health-examinable-verb-text");
-        ExamineVerb? existing = null;
-        foreach (var v in args.Verbs)
-        {
-            if (v.Text == healthVerbText && v.Category == VerbCategory.Examine)
-            {
-                existing = v;
-                break;
-            }
-        }
-        if (existing != null)
-            args.Verbs.Remove(existing);
+        args.Verbs.RemoveWhere(v => v.Text == healthVerbText && v.Category == VerbCategory.Examine);
 
         var user = args.User;
         var target = ent.Owner;
