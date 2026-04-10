@@ -16,3 +16,5 @@ trait-iron-jaw-name = Iron Jaw
 trait-iron-jaw-desc = You can take a hit.
 trait-steady-hand-name = Steady Hand
 trait-steady-hand-desc = Your hands are rock steady.
+trait-pooraim-name = Poor Aim
+trait-pooraim-desc = Your hands just won't stay steady.

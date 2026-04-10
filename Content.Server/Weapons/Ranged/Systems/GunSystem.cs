@@ -73,11 +73,16 @@ public sealed partial class GunSystem : SharedGunSystem
         var mapAngle = mapDirection.ToAngle();
         var angle = GetRecoilAngle(Timing.CurTime, gun, mapDirection.ToAngle());
 
-        //HONK START - Steady Hand: reduce shot spread for entities with SteadyHandComponent
+        //HONK START - Steady Hand / Poor Aim: scale shot spread based on accuracy quirks
         if (user != null && TryComp<SteadyHandComponent>(user.Value, out var steadyHand))
         {
             var deviation = angle.Theta - mapAngle.Theta;
             angle = new Angle(mapAngle.Theta + deviation * steadyHand.SpreadMultiplier);
+        }
+        if (user != null && TryComp<PoorAimComponent>(user.Value, out var poorAim))
+        {
+            var deviation = angle.Theta - mapAngle.Theta;
+            angle = new Angle(mapAngle.Theta + deviation * poorAim.SpreadMultiplier);
         }
         //HONK END
 
