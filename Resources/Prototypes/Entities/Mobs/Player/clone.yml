@@ -16,7 +16,6 @@
   - HumanoidProfile # Age, Sex, Gender
   - NpcFactionMember
   # traits
-  - Ageusia # HONK
   - BlackAndWhiteOverlay
   - Clumsy
   - ImpairedMobility
@@ -24,7 +23,6 @@
   - LightweightDrunk
   - Muted
   - Narcolepsy
-  - Negotiator # HONK
   - Pacified
   - Paracusia
   - PermanentBlindness

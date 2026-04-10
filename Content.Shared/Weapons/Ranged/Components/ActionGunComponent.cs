@@ -2,7 +2,9 @@ using Content.Shared.Actions;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
-
+//HONK START
+using Robust.Shared.Audio;
+//HONK END
 namespace Content.Shared.Weapons.Ranged.Components;
 
 /// <summary>
@@ -29,6 +31,14 @@ public sealed partial class ActionGunComponent : Component
 
     [DataField]
     public EntityUid? Gun;
+
+    //HONK START
+    [DataField]
+    public string? PopupText = null;
+
+    [DataField]
+    public SoundSpecifier? OnShootSound;
+    //HONK END
 }
 
 /// <summary>

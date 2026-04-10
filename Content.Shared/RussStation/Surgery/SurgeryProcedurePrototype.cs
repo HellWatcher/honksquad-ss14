@@ -3,7 +3,6 @@ using Content.Shared.RussStation.Surgery.Effects;
 using Content.Shared.Tools;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager.Attributes;
-using Robust.Shared.Utility;
 
 namespace Content.Shared.RussStation.Surgery;
 
@@ -96,11 +95,11 @@ public sealed partial class SurgeryProcedurePrototype : IPrototype
     public string Description = string.Empty;
 
     /// <summary>
-    /// Sprite used as the radial menu icon.
+    /// Entity prototype ID whose sprite is used as the radial menu icon.
     /// Falls back to a scalpel icon when null.
     /// </summary>
     [DataField]
-    public SpriteSpecifier? Icon;
+    public EntProtoId? Icon;
 
     [DataField(required: true)]
     public List<SurgeryStep> Steps = new();

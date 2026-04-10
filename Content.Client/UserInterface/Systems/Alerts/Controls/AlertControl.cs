@@ -60,15 +60,13 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
             HorizontalAlignment = HAlignment.Left;
             _severity = severity;
-            //HONK START - Fill scales any sprite size to 64x64 (supports 16x16 wound icons)
             _icon = new SpriteView
             {
-                Scale = new Vector2(1, 1),
+                Scale = new Vector2(2, 2),
                 MaxSize = new Vector2(64, 64),
-                Stretch = SpriteView.StretchMode.Fill,
+                Stretch = SpriteView.StretchMode.None,
                 HorizontalAlignment = HAlignment.Left
             };
-            //HONK END
 
             SetupIcon();
 
@@ -82,10 +80,8 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
         private Control SupplyTooltip(Control? sender)
         {
-            //HONK START - Pass severity to locale for tier-dependent tooltip text
-            var msg = FormattedMessage.FromMarkupOrThrow(Loc.GetString(Alert.Name, ("severity", (int) (_severity ?? 0))));
-            var desc = FormattedMessage.FromMarkupOrThrow(Loc.GetString(Alert.Description, ("severity", (int) (_severity ?? 0))));
-            //HONK END
+            var msg = FormattedMessage.FromMarkupOrThrow(Loc.GetString(Alert.Name));
+            var desc = FormattedMessage.FromMarkupOrThrow(Loc.GetString(Alert.Description));
             return new ActionAlertTooltip(msg, desc) { Cooldown = Cooldown };
         }
 

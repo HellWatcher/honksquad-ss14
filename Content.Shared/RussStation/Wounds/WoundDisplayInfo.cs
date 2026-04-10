@@ -1,9 +1,0 @@
-using Robust.Shared.Serialization;
-
-namespace Content.Shared.RussStation.Wounds;
-
-/// <summary>
-/// Display info for a wound, used in health analyzer and examine.
-/// </summary>
-[Serializable, NetSerializable]
-public readonly record struct WoundDisplayInfo(string LocKey, int Tier, WoundCategory Category);

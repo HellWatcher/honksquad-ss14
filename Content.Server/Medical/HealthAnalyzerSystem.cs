@@ -19,10 +19,6 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 using Content.Server.Body.Systems;
-//HONK START
-using Content.Shared.RussStation.Wounds;
-using Content.Shared.RussStation.Wounds.Systems;
-//HONK END
 
 namespace Content.Server.Medical;
 
@@ -38,7 +34,6 @@ public sealed class HealthAnalyzerSystem : EntitySystem
     [Dependency] private readonly TransformSystem _transformSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
-    [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!; //HONK
 
     public override void Initialize()
     {
@@ -253,20 +248,13 @@ public sealed class HealthAnalyzerSystem : EntitySystem
         if (TryComp<UnrevivableComponent>(entity, out var unrevivableComp) && unrevivableComp.Analyzable)
             unrevivable = true;
 
-        //HONK START - Wound display info
-        List<WoundDisplayInfo>? wounds = null;
-        if (TryComp<WoundComponent>(entity, out var woundComp))
-            wounds = _woundDisplay.GetWoundDisplayInfo(entity, woundComp, bloodstream);
-        //HONK END
-
         return new HealthAnalyzerUiState(
             GetNetEntity(entity),
             bodyTemperature,
             bloodAmount,
             null,
             bleeding,
-            unrevivable,
-            wounds //HONK
+            unrevivable
         );
     }
 }

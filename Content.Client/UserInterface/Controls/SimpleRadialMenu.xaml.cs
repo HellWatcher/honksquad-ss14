@@ -15,8 +15,6 @@ namespace Content.Client.UserInterface.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class SimpleRadialMenu : RadialMenu
 {
-    private const float ButtonSize = 64f;
-
     private EntityUid? _attachMenuToEntity;
 
     [Dependency] private readonly IClyde _clyde = default!;
@@ -126,7 +124,7 @@ public sealed partial class SimpleRadialMenu : RadialMenu
         var button = settings.UseSectors
             ? ConvertToButtonWithSector(model, settings)
             : new RadialMenuButton();
-        button.SetSize = new Vector2(ButtonSize, ButtonSize);
+        button.SetSize = new Vector2(64f, 64f);
         button.ToolTip = model.ToolTip;
         var imageControl = model.IconSpecifier switch
         {
@@ -178,26 +176,23 @@ public sealed partial class SimpleRadialMenu : RadialMenu
         return entView;
     }
 
-    // HONK START - Auto-scale 16x16 textures to fill 64x64 button area
     private static Control CreateTexture(SpriteSpecifier spriteSpecifier, SpriteSystem sprites)
     {
-        var texture = sprites.Frame0(spriteSpecifier);
-
         var scale = Vector2.One;
-        if (texture.Width <= 16)
-            scale *= 4;
-        else if (texture.Width <= 32)
-            scale *= 2;
 
-        var imageControl = new TextureRect
+        var texture = sprites.Frame0(spriteSpecifier);
+        if (texture.Width <= 32)
+        {
+            scale *= 2;
+        }
+
+        var imageControl = new TextureRect()
         {
             Texture = texture,
-            TextureScale = scale,
+            TextureScale = scale
         };
-
         return imageControl;
     }
-    // HONK END
 
     private static RadialMenuButtonWithSector ConvertToButtonWithSector(RadialMenuOptionBase model, SimpleRadialMenuSettings settings)
     {
@@ -339,7 +334,6 @@ public abstract class RadialMenuOptionBase
     /// Specifier that describes icon to be used for radial menu button.
     /// </summary>
     public RadialMenuIconSpecifier? IconSpecifier { get; set; }
-
 }
 
 /// <summary> Base type for model of radial menu button with some action on button pressed. </summary>
