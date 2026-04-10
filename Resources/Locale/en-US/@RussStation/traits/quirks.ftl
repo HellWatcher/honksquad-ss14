@@ -18,3 +18,5 @@ trait-steady-hand-name = Steady Hand
 trait-steady-hand-desc = Your hands are rock steady.
 trait-pooraim-name = Poor Aim
 trait-pooraim-desc = Your hands just won't stay steady.
+trait-glassjaw-name = Glass Jaw
+trait-glassjaw-desc = One good hit and you're seeing stars.
