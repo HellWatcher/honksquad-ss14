@@ -104,6 +104,13 @@ public sealed class PayrollSystem : EntitySystem
             if (wage <= 0)
                 continue;
 
+            var wageEv = new GetWageEvent(wage);
+            RaiseLocalEvent(uid, ref wageEv);
+            wage = wageEv.Wage;
+
+            if (wage <= 0)
+                continue;
+
             _balance.AddBalance(uid, wage, comp, Loc.GetString("transaction-payroll"));
             var newBalance = _balance.GetBalance(uid, comp);
             _popup.PopupEntity(Loc.GetString("payroll-received", ("wage", wage), ("balance", newBalance)), uid, uid);
