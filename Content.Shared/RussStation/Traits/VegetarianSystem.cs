@@ -1,3 +1,4 @@
+using System.Numerics;
 using Content.Shared.Medical;
 using Content.Shared.Nutrition;
 using Content.Shared.Popups;
@@ -9,6 +10,7 @@ namespace Content.Shared.RussStation.Traits;
 public sealed class VegetarianSystem : EntitySystem
 {
     [Dependency] private readonly TagSystem _tag = default!;
+    [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly VomitSystem _vomit = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
@@ -26,7 +28,8 @@ public sealed class VegetarianSystem : EntitySystem
         if (!_tag.HasTag(args.Food, MeatTag))
             return;
 
-        _popup.PopupPredicted(Loc.GetString("trait-vegetarian-nausea"), uid, uid, PopupType.MediumCaution);
+        var coords = _transform.GetMoverCoordinates(uid).Offset(new Vector2(0, 0.5f));
+        _popup.PopupPredictedCoordinates(Loc.GetString("trait-vegetarian-nausea"), coords, uid, PopupType.MediumCaution);
         _vomit.Vomit(uid, -20f, -20f);
     }
 }
