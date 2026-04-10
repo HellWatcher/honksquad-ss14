@@ -10,7 +10,7 @@ using Content.Shared.RussStation.Wounds.Systems;
 using Content.Shared.Verbs;
 using Robust.Shared.Utility;
 
-namespace Content.Shared.Traits.Assorted;
+namespace Content.Shared.RussStation.Traits;
 
 /// <summary>
 /// Replaces the normal health examine verb with a numerical/technical readout
