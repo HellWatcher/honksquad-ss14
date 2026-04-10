@@ -1,3 +1,4 @@
+using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Events;
 using Content.Shared.Damage.Systems;
 
@@ -17,7 +18,10 @@ public sealed class IronJawSystem : EntitySystem
 
     private void OnMapInit(EntityUid uid, IronJawComponent component, MapInitEvent args)
     {
-        _stamina.RefreshStaminaCritThreshold((uid, null));
+        if (!TryComp<StaminaComponent>(uid, out var stamina))
+            return;
+
+        _stamina.RefreshStaminaCritThreshold((uid, stamina));
     }
 
     private void OnRefreshCritThreshold(EntityUid uid, IronJawComponent component, ref RefreshStaminaCritThresholdEvent args)
