@@ -667,7 +667,12 @@ public sealed partial class ChatSystem : SharedChatSystem
     /// </summary>
     private void SendInVoiceRange(ChatChannel channel, string message, string wrappedMessage, EntityUid source, ChatTransmitRange range, NetUserId? author = null)
     {
-        foreach (var (session, data) in GetRecipients(source, VoiceRange))
+        //HONK START - Allow components to modify voice range
+        var voiceRangeEv = new GetVoiceRangeEvent(VoiceRange);
+        RaiseLocalEvent(source, ref voiceRangeEv);
+        //HONK END
+
+        foreach (var (session, data) in GetRecipients(source, voiceRangeEv.Range))
         {
             var entRange = MessageRangeCheck(session, data, range);
             if (entRange == MessageRangeCheckResult.Disallowed)
