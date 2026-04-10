@@ -54,3 +54,5 @@ self-aware-no-damage = You feel no injuries.
 self-aware-damage-type = [color=red]{$type}[/color]: {$amount}
 self-aware-bleed-rate = [color=red]Bleeding[/color]: {$current}/{$max} u/s
 self-aware-blood-level = [color=red]Blood level[/color]: {$percent}%
+self-aware-total-damage = [bold]Total damage: {$amount}[/bold]
+self-aware-blood-level = [bold]Blood level: {$percent}%[/bold]

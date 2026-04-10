@@ -5,6 +5,8 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
 using Content.Shared.HealthExaminable;
+using Content.Shared.RussStation.Wounds;
+using Content.Shared.RussStation.Wounds.Systems;
 using Content.Shared.Verbs;
 using Robust.Shared.Utility;
 
@@ -19,6 +21,7 @@ public sealed class SelfAwareSystem : EntitySystem
     [Dependency] private readonly ExamineSystemShared _examine = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly SharedBloodstreamSystem _bloodstream = default!;
+    [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!;
 
     public override void Initialize()
     {
@@ -74,8 +77,20 @@ public sealed class SelfAwareSystem : EntitySystem
     {
         var msg = new FormattedMessage();
         var damageSpecifier = _damageable.GetAllDamage((uid, damage));
+        var totalDamage = damageSpecifier.GetTotal();
 
-        var first = true;
+        msg.AddMarkupOrThrow(Loc.GetString("self-aware-total-damage",
+            ("amount", totalDamage.Int())));
+
+        if (TryComp<BloodstreamComponent>(uid, out var bloodstream))
+        {
+            var bloodPercent = _bloodstream.GetBloodLevel((uid, bloodstream));
+            msg.PushNewline();
+            msg.AddMarkupOrThrow(Loc.GetString("self-aware-blood-level",
+                ("percent", (bloodPercent * 100f).ToString("0"))));
+        }
+
+        var anyDamage = false;
         foreach (var type in examinable.ExaminableTypes)
         {
             if (!damageSpecifier.DamageDict.TryGetValue(type, out var dmg))
@@ -84,43 +99,32 @@ public sealed class SelfAwareSystem : EntitySystem
             if (dmg == FixedPoint2.Zero)
                 continue;
 
-            if (!first)
+            if (!anyDamage)
+            {
                 msg.PushNewline();
-            else
-                first = false;
+                anyDamage = true;
+            }
+            msg.PushNewline();
 
             msg.AddMarkupOrThrow(Loc.GetString("self-aware-damage-type",
                 ("type", type),
-                ("amount", dmg)));
+                ("amount", dmg.Int())));
         }
 
-        if (TryComp<BloodstreamComponent>(uid, out var bloodstream))
+        var woundInfos = _woundDisplay.GetWoundDisplayInfo(uid);
+        if (woundInfos.Count > 0)
         {
-            var bleed = bloodstream.BleedAmount;
-            var maxBleed = bloodstream.MaxBleedAmount;
-            if (bleed > 0)
+            msg.PushNewline();
+            msg.PushNewline();
+            msg.AddMarkupOrThrow(Loc.GetString("wound-examine-header"));
+            foreach (var wound in woundInfos)
             {
-                if (!msg.IsEmpty)
-                    msg.PushNewline();
-
-                msg.AddMarkupOrThrow(Loc.GetString("self-aware-bleed-rate",
-                    ("current", bleed.ToString("0.0")),
-                    ("max", maxBleed.ToString("0.0"))));
-            }
-
-            var bloodPercent = _bloodstream.GetBloodLevel((uid, bloodstream));
-            if (bloodPercent < 1f)
-            {
-                if (!msg.IsEmpty)
-                    msg.PushNewline();
-
-                msg.AddMarkupOrThrow(Loc.GetString("self-aware-blood-level",
-                    ("percent", (bloodPercent * 100f).ToString("0"))));
+                msg.PushNewline();
+                msg.AddMarkupOrThrow(Loc.GetString("wound-examine-entry",
+                    ("name", Loc.GetString(wound.LocKey)),
+                    ("tier", wound.Tier)));
             }
         }
-
-        if (msg.IsEmpty)
-            msg.AddMarkupOrThrow(Loc.GetString("self-aware-no-damage"));
 
         return msg;
     }
