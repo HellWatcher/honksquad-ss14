@@ -28,7 +28,7 @@ public sealed class VegetarianSystem : EntitySystem
         if (!_tag.HasTag(args.Food, MeatTag))
             return;
 
-        var coords = _transform.GetMoverCoordinates(uid).Offset(new Vector2(0, 0.5f));
+        var coords = _transform.GetMoverCoordinates(uid).Offset(new Vector2(0, 0.25f));
         _popup.PopupPredictedCoordinates(Loc.GetString("trait-vegetarian-nausea"), coords, uid, PopupType.MediumCaution);
         _vomit.Vomit(uid, -20f, -20f);
     }
