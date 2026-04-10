@@ -1,25 +1,31 @@
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
+using Content.Shared.HealthExaminable;
 using Content.Shared.Verbs;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Traits.Assorted;
 
 /// <summary>
-/// Adds an examine verb showing exact damage numbers when examining yourself.
-/// Requires <see cref="SelfAwareComponent"/>.
+/// Replaces the normal health examine verb with a numerical/technical readout
+/// when the Self-Aware entity examines themselves.
 /// </summary>
 public sealed class SelfAwareSystem : EntitySystem
 {
     [Dependency] private readonly ExamineSystemShared _examine = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
+    [Dependency] private readonly SharedBloodstreamSystem _bloodstream = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<SelfAwareComponent, GetVerbsEvent<ExamineVerb>>(OnGetExamineVerbs);
+        SubscribeLocalEvent<SelfAwareComponent, GetVerbsEvent<ExamineVerb>>(
+            OnGetExamineVerbs,
+            after: new[] { typeof(HealthExaminableSystem) });
     }
 
     private void OnGetExamineVerbs(Entity<SelfAwareComponent> ent, ref GetVerbsEvent<ExamineVerb> args)
@@ -30,6 +36,22 @@ public sealed class SelfAwareSystem : EntitySystem
         if (!TryComp<DamageableComponent>(ent, out var damageable))
             return;
 
+        if (!TryComp<HealthExaminableComponent>(ent, out var examinable))
+            return;
+
+        var healthVerbText = Loc.GetString("health-examinable-verb-text");
+        ExamineVerb? existing = null;
+        foreach (var v in args.Verbs)
+        {
+            if (v.Text == healthVerbText && v.Category == VerbCategory.Examine)
+            {
+                existing = v;
+                break;
+            }
+        }
+        if (existing != null)
+            args.Verbs.Remove(existing);
+
         var user = args.User;
         var target = ent.Owner;
 
@@ -37,10 +59,10 @@ public sealed class SelfAwareSystem : EntitySystem
         {
             Act = () =>
             {
-                var markup = CreateMarkup(target, damageable);
+                var markup = CreateMarkup(target, examinable, damageable);
                 _examine.SendExamineTooltip(user, target, markup, false, false);
             },
-            Text = Loc.GetString("self-aware-examine-verb"),
+            Text = healthVerbText,
             Category = VerbCategory.Examine,
             Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/rejuvenate.svg.192dpi.png")),
         };
@@ -48,34 +70,57 @@ public sealed class SelfAwareSystem : EntitySystem
         args.Verbs.Add(verb);
     }
 
-    private FormattedMessage CreateMarkup(EntityUid uid, DamageableComponent damageable)
+    private FormattedMessage CreateMarkup(EntityUid uid, HealthExaminableComponent examinable, DamageableComponent damage)
     {
         var msg = new FormattedMessage();
-        var damage = _damageable.GetAllDamage((uid, damageable));
-        var total = damage.GetTotal();
-
-        if (total == FixedPoint2.Zero)
-        {
-            msg.AddMarkupOrThrow(Loc.GetString("self-aware-no-damage"));
-            return msg;
-        }
-
-        msg.AddMarkupOrThrow(Loc.GetString("self-aware-damage-header"));
+        var damageSpecifier = _damageable.GetAllDamage((uid, damage));
 
         var first = true;
-        foreach (var (type, value) in damage.DamageDict)
+        foreach (var type in examinable.ExaminableTypes)
         {
-            if (value <= FixedPoint2.Zero)
+            if (!damageSpecifier.DamageDict.TryGetValue(type, out var dmg))
+                continue;
+
+            if (dmg == FixedPoint2.Zero)
                 continue;
 
             if (!first)
                 msg.PushNewline();
-            first = false;
+            else
+                first = false;
 
             msg.AddMarkupOrThrow(Loc.GetString("self-aware-damage-type",
                 ("type", type),
-                ("amount", value)));
+                ("amount", dmg)));
         }
+
+        if (TryComp<BloodstreamComponent>(uid, out var bloodstream))
+        {
+            var bleed = bloodstream.BleedAmount;
+            var maxBleed = bloodstream.MaxBleedAmount;
+            if (bleed > 0)
+            {
+                if (!msg.IsEmpty)
+                    msg.PushNewline();
+
+                msg.AddMarkupOrThrow(Loc.GetString("self-aware-bleed-rate",
+                    ("current", bleed.ToString("0.0")),
+                    ("max", maxBleed.ToString("0.0"))));
+            }
+
+            var bloodPercent = _bloodstream.GetBloodLevel((uid, bloodstream));
+            if (bloodPercent < 1f)
+            {
+                if (!msg.IsEmpty)
+                    msg.PushNewline();
+
+                msg.AddMarkupOrThrow(Loc.GetString("self-aware-blood-level",
+                    ("percent", (bloodPercent * 100f).ToString("0"))));
+            }
+        }
+
+        if (msg.IsEmpty)
+            msg.AddMarkupOrThrow(Loc.GetString("self-aware-no-damage"));
 
         return msg;
     }
