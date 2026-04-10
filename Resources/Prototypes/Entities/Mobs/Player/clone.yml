@@ -18,6 +18,7 @@
   # traits
   - Ageusia # HONK
   - BlackAndWhiteOverlay
+  - BoomingVoice # HONK
   - Clumsy
   - GlassJaw # HONK
   - ImpairedMobility
@@ -25,10 +26,18 @@
   - LightweightDrunk
   - Muted
   - Narcolepsy
+  - Negotiator # HONK
   - Pacified
   - Paracusia
   - PermanentBlindness
+  - Indebted # HONK
+  - IronJaw # HONK
+  - PoorAim # HONK
+  - Prosopagnosia # HONK
   - Snoring
+  - SoftSpoken # HONK
+  - SteadyHand # HONK
+  - Touchy # HONK
   - Unrevivable
   # accents
   - Accentless
