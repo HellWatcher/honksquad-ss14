@@ -23,3 +23,16 @@
     - wage
   components:
     - type: Negotiator
+
+- type: trait
+  id: Frail
+  name: trait-frail-name
+  description: trait-frail-desc
+  category: Combat
+  cost: -4
+  tags:
+    - wounds
+  excludedTags:
+    - wounds
+  components:
+    - type: Frail
