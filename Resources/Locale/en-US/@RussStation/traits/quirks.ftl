@@ -50,3 +50,7 @@ trait-iron-jaw-name = Iron Jaw
 trait-iron-jaw-desc = You can take a hit.
 trait-steady-hand-name = Steady Hand
 trait-steady-hand-desc = Your hands are rock steady.
+self-aware-no-damage = You feel no injuries.
+self-aware-damage-type = [color=red]{$type}[/color]: {$amount}
+self-aware-bleed-rate = [color=red]Bleeding[/color]: {$current}/{$max} u/s
+self-aware-blood-level = [color=red]Blood level[/color]: {$percent}%
