@@ -15,6 +15,12 @@
   description: trait-lightweight-desc
   category: Diet # HONK - Reassigned from Quirks
   cost: -2 # HONK - Negative quirk, refunds points
+  # HONK START - Tag for mutual exclusion with AlcoholTolerance
+  tags:
+    - alcohol
+  excludedTags:
+    - alcohol
+  # HONK END
   components:
   - type: LightweightDrunk
     boozeStrengthMultiplier: 2
