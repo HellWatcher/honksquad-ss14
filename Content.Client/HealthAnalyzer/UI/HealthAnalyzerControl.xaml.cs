@@ -17,6 +17,7 @@ using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
+using Robust.Client.Player; //HONK
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 namespace Content.Client.HealthAnalyzer.UI;
@@ -28,6 +29,7 @@ namespace Content.Client.HealthAnalyzer.UI;
 public sealed partial class HealthAnalyzerControl : BoxContainer
 {
     private readonly IEntityManager _entityManager;
+    private readonly IPlayerManager _player; //HONK
     private readonly SpriteSystem _spriteSystem;
     private readonly IPrototypeManager _prototypes;
     private readonly IResourceCache _cache;
@@ -39,6 +41,7 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
 
         var dependencies = IoCManager.Instance!;
         _entityManager = dependencies.Resolve<IEntityManager>();
+        _player = dependencies.Resolve<IPlayerManager>(); //HONK
         _spriteSystem = _entityManager.System<SpriteSystem>();
         _prototypes = dependencies.Resolve<IPrototypeManager>();
         _cache = dependencies.Resolve<IResourceCache>();
@@ -77,7 +80,7 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
         var name = new FormattedMessage();
         name.PushColor(Color.White);
         name.AddText(_entityManager.HasComponent<MetaDataComponent>(target.Value)
-            ? Identity.Name(target.Value, _entityManager)
+            ? Identity.Name(target.Value, _entityManager, _player.LocalEntity)
             : Loc.GetString("health-analyzer-window-entity-unknown-text"));
         NameLabel.SetMessage(name);
 

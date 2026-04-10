@@ -1,5 +1,8 @@
 ﻿using Content.Shared.Ghost;
 using Content.Shared.IdentityManagement.Components;
+//HONK START
+using Content.Shared.RussStation.Traits;
+//HONK END
 
 namespace Content.Shared.IdentityManagement;
 
@@ -40,6 +43,16 @@ public static class Identity
         var identName = ent.GetComponent<MetaDataComponent>(ident.Value).EntityName;
         if (viewer == null || !CanSeeThroughIdentity(uid, viewer.Value, ent))
         {
+            //HONK START - Prosopagnosia: let viewer-side components override perceived name
+            if (viewer != null)
+            {
+                var ev = new GetIdentityNameEvent(uid, identName);
+                ent.EventBus.RaiseLocalEvent(viewer.Value, ref ev);
+                if (ev.Handled)
+                    return ev.Name;
+            }
+            //HONK END
+
             return identName;
         }
         if (uidName == identName)
