@@ -36,6 +36,27 @@ public sealed class SelfAwareSystem : EntitySystem
         { "Radiation", "#E26804" },
     };
 
+    private static string GetWoundColor(string locKey)
+    {
+        if (locKey.Contains("bleed-slash"))
+            return DamageTypeColors["Slash"];
+        if (locKey.Contains("bleed-piercing"))
+            return DamageTypeColors["Piercing"];
+        if (locKey.Contains("bluntfracture"))
+            return DamageTypeColors["Blunt"];
+        if (locKey.Contains("heatburn"))
+            return DamageTypeColors["Heat"];
+        if (locKey.Contains("coldburn"))
+            return DamageTypeColors["Cold"];
+        if (locKey.Contains("shockburn"))
+            return DamageTypeColors["Shock"];
+        if (locKey.Contains("causticburn"))
+            return DamageTypeColors["Caustic"];
+        if (locKey.Contains("radiationburn"))
+            return DamageTypeColors["Radiation"];
+        return "#EFEFEF";
+    }
+
     public override void Initialize()
     {
         base.Initialize();
@@ -134,9 +155,10 @@ public sealed class SelfAwareSystem : EntitySystem
                 }
                 else
                 {
-                    msg.AddMarkupOrThrow(Loc.GetString("wound-examine-entry",
+                    msg.AddMarkupOrThrow(Loc.GetString("self-aware-wound-entry",
                         ("name", Loc.GetString(wound.LocKey)),
-                        ("tier", wound.Tier)));
+                        ("tier", wound.Tier),
+                        ("color", GetWoundColor(wound.LocKey))));
                 }
             }
         }

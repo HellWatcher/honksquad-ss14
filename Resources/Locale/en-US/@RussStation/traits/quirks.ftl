@@ -60,3 +60,4 @@ self-aware-total-damage = [bold][color=#FF5555]Total damage:[/color] [color=#FFB
 self-aware-blood-level = [bold][color=bisque]Blood level:[/color] [color=#e65353]{$percent}%[/color][/bold]
 self-aware-damage-type = [color={$color}]{$type}: {$amount}[/color]
 self-aware-wound-bleeding = [color=#e65353]Bleeding: {$rate}/s[/color]
+self-aware-wound-entry = [color={$color}]{$name} (Tier {$tier})[/color]
