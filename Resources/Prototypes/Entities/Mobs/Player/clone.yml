@@ -17,8 +17,10 @@
   - NpcFactionMember
   # traits
   - Ageusia # HONK
+  - BlockWriting # HONK
   - BlackAndWhiteOverlay
   - Clumsy
+  - Illiterate # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
   - LightweightDrunk
