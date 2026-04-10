@@ -21,8 +21,10 @@
   - Ageusia # HONK
   - AlcoholTolerance # HONK
   - BlackAndWhiteOverlay
+  - BlockWriting # HONK
   - Clumsy
   - Frail # HONK
+  - Illiterate # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
   - LightweightDrunk
