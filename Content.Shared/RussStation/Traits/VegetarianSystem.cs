@@ -26,7 +26,7 @@ public sealed class VegetarianSystem : EntitySystem
         if (!_tag.HasTag(args.Food, MeatTag))
             return;
 
-        _popup.PopupClient(Loc.GetString("trait-vegetarian-nausea"), uid, uid, PopupType.MediumCaution);
+        _popup.PopupPredicted(Loc.GetString("trait-vegetarian-nausea"), uid, uid, PopupType.MediumCaution);
         _vomit.Vomit(uid, -20f, -20f);
     }
 }
