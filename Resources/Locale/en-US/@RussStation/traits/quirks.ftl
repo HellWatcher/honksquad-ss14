@@ -61,3 +61,6 @@ self-aware-blood-level = [bold][color=bisque]Blood level:[/color] [color=#e65353
 self-aware-damage-type = [color={$color}]{$type}: {$amount}[/color]
 self-aware-wound-bleeding = [color=#e65353]Bleeding: {$rate}/s[/color]
 self-aware-wound-entry = [color={$color}]{$name} (Tier {$tier})[/color]
+trait-papyrophobia-name = Papyrophobia
+trait-papyrophobia-desc = Something about paper just sets you off. You can't bring yourself to read it or put pen to it.
+papyrophobia-popup = You recoil from the paper.

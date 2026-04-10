@@ -292,3 +292,10 @@
     - accuracy
   components:
     - type: SteadyHand
+  id: Papyrophobia
+  name: trait-papyrophobia-name
+  description: trait-papyrophobia-desc
+  cost: -2
+    - paper
+    - paper
+    - type: Papyrophobia
