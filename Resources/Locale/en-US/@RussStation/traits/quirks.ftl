@@ -4,3 +4,7 @@ trait-negotiator-name = Negotiator
 trait-negotiator-desc = You negotiated a better contract. Your paycheck is 50% higher.
 trait-booming-voice-name = Booming Voice
 trait-booming-voice-desc = Your voice carries further than most.
+trait-iron-jaw-name = Iron Jaw
+trait-iron-jaw-desc = You can take a hit.
+trait-steady-hand-name = Steady Hand
+trait-steady-hand-desc = Your hands are rock steady.
