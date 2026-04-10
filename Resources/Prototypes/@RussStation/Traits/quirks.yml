@@ -4,6 +4,10 @@
   description: trait-ageusia-desc
   category: Diet
   cost: 0
+  tags:
+    - taste
+  excludedTags:
+    - taste
   components:
     - type: Ageusia
 
