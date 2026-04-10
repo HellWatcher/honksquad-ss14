@@ -25,6 +25,19 @@
     - type: Negotiator
 
 - type: trait
+  id: BoomingVoice
+  name: trait-booming-voice-name
+  description: trait-booming-voice-desc
+  category: Social
+  cost: 2
+  tags:
+    - voice-volume
+  excludedTags:
+    - voice-volume
+  components:
+    - type: BoomingVoice
+
+- type: trait
   id: IronJaw
   name: trait-iron-jaw-name
   description: trait-iron-jaw-desc
