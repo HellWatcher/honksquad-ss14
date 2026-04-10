@@ -1,8 +1,11 @@
+using System.Globalization;
 using Content.Client.Gameplay;
 using Content.Client.Viewport;
 using Content.Shared.CCVar;
+using Content.Shared.IdentityManagement;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
+using Robust.Client.Player;
 using Robust.Client.ResourceManagement;
 using Robust.Client.State;
 using Robust.Client.UserInterface;
@@ -16,6 +19,7 @@ public sealed class EntityHoverTooltipSystem : EntitySystem
     [Dependency] private readonly IConfigurationManager _configManager = default!;
     [Dependency] private readonly IInputManager _inputManager = default!;
     [Dependency] private readonly IOverlayManager _overlayManager = default!;
+    [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IResourceCache _resourceCache = default!;
     [Dependency] private readonly IStateManager _stateManager = default!;
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
@@ -95,14 +99,14 @@ public sealed class EntityHoverTooltipSystem : EntitySystem
             return;
         }
 
-        var name = MetaData(_hoveredEntity.Value).EntityName;
+        var name = Identity.Name(_hoveredEntity.Value, EntityManager, _playerManager.LocalEntity);
         if (string.IsNullOrEmpty(name))
         {
             _overlay.Visible = false;
             return;
         }
 
-        _overlay.TooltipText = name;
+        _overlay.TooltipText = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name);
         _overlay.ScreenPosition = _inputManager.MouseScreenPosition.Position;
         _overlay.Visible = true;
     }
