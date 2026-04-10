@@ -56,3 +56,7 @@ self-aware-bleed-rate = [color=red]Bleeding[/color]: {$current}/{$max} u/s
 self-aware-blood-level = [color=red]Blood level[/color]: {$percent}%
 self-aware-total-damage = [bold]Total damage: {$amount}[/bold]
 self-aware-blood-level = [bold]Blood level: {$percent}%[/bold]
+self-aware-total-damage = [bold][color=#FF5555]Total damage:[/color] [color=#FFB84D]{$amount}[/color][/bold]
+self-aware-blood-level = [bold][color=bisque]Blood level:[/color] [color=#e65353]{$percent}%[/color][/bold]
+self-aware-damage-type = [color={$color}]{$type}: {$amount}[/color]
+self-aware-wound-bleeding = [color=#e65353]Bleeding: {$rate}/s[/color]

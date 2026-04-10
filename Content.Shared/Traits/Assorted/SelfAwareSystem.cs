@@ -23,6 +23,19 @@ public sealed class SelfAwareSystem : EntitySystem
     [Dependency] private readonly SharedBloodstreamSystem _bloodstream = default!;
     [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!;
 
+    private static readonly Dictionary<string, string> DamageTypeColors = new()
+    {
+        { "Slash", "#a8a8a8" },
+        { "Blunt", "#ff5555" },
+        { "Piercing", "#e8d84a" },
+        { "Asphyxiation", "#189FCC" },
+        { "Heat", "#CF5825" },
+        { "Shock", "#FFA100" },
+        { "Cold", "#7a85d6" },
+        { "Caustic", "#FF5993" },
+        { "Radiation", "#E26804" },
+    };
+
     public override void Initialize()
     {
         base.Initialize();
@@ -78,11 +91,12 @@ public sealed class SelfAwareSystem : EntitySystem
         var msg = new FormattedMessage();
         var damageSpecifier = _damageable.GetAllDamage((uid, damage));
         var totalDamage = damageSpecifier.GetTotal();
+        TryComp<BloodstreamComponent>(uid, out var bloodstream);
 
         msg.AddMarkupOrThrow(Loc.GetString("self-aware-total-damage",
             ("amount", totalDamage.Int())));
 
-        if (TryComp<BloodstreamComponent>(uid, out var bloodstream))
+        if (bloodstream != null)
         {
             var bloodPercent = _bloodstream.GetBloodLevel((uid, bloodstream));
             msg.PushNewline();
@@ -106,9 +120,11 @@ public sealed class SelfAwareSystem : EntitySystem
             }
             msg.PushNewline();
 
+            var color = DamageTypeColors.GetValueOrDefault(type, "#EFEFEF");
             msg.AddMarkupOrThrow(Loc.GetString("self-aware-damage-type",
                 ("type", type),
-                ("amount", dmg.Int())));
+                ("amount", dmg.Int()),
+                ("color", color)));
         }
 
         var woundInfos = _woundDisplay.GetWoundDisplayInfo(uid);
@@ -120,9 +136,18 @@ public sealed class SelfAwareSystem : EntitySystem
             foreach (var wound in woundInfos)
             {
                 msg.PushNewline();
-                msg.AddMarkupOrThrow(Loc.GetString("wound-examine-entry",
-                    ("name", Loc.GetString(wound.LocKey)),
-                    ("tier", wound.Tier)));
+                if (wound.Category == WoundCategory.Bleeding && bloodstream != null)
+                {
+                    var bleed = bloodstream.BleedAmount;
+                    msg.AddMarkupOrThrow(Loc.GetString("self-aware-wound-bleeding",
+                        ("rate", bleed.ToString("0.0"))));
+                }
+                else
+                {
+                    msg.AddMarkupOrThrow(Loc.GetString("wound-examine-entry",
+                        ("name", Loc.GetString(wound.LocKey)),
+                        ("tier", wound.Tier)));
+                }
             }
         }
 
