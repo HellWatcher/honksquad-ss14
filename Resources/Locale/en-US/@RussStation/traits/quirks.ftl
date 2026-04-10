@@ -1,5 +1,8 @@
 trait-ageusia-name = Ageusia
 trait-ageusia-desc = You can't taste anything.
+trait-papyrophobia-name = Papyrophobia
+trait-papyrophobia-desc = Something about paper just sets you off. You can't bring yourself to read it or put pen to it.
+papyrophobia-popup = You recoil from the paper.
 trait-negotiator-name = Negotiator
 trait-negotiator-desc = You negotiated a better contract. Your paycheck is 50% higher.
 trait-prosopagnosia-name = Prosopagnosia

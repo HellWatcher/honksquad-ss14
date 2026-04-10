@@ -12,6 +12,19 @@
     - type: Ageusia
 
 - type: trait
+  id: Papyrophobia
+  name: trait-papyrophobia-name
+  description: trait-papyrophobia-desc
+  category: Senses
+  cost: -2
+  tags:
+    - paper
+  excludedTags:
+    - paper
+  components:
+    - type: Papyrophobia
+
+- type: trait
   id: Negotiator
   name: trait-negotiator-name
   description: trait-negotiator-desc
