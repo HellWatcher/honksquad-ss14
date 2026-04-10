@@ -23,3 +23,5 @@ trait-glassjaw-desc = One good hit and you're seeing stars.
 trait-vegetarian-name = Vegetarian
 trait-vegetarian-desc = Meat just doesn't sit right with you.
 trait-vegetarian-nausea = You feel nauseous... that was meat!
+trait-lightstep-name = Light Step
+trait-lightstep-desc = You move with a soft tread, barely making a sound.

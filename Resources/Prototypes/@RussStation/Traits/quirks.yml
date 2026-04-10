@@ -153,3 +153,16 @@
     - diet
   components:
     - type: Vegetarian
+
+- type: trait
+  id: LightStep
+  name: trait-lightstep-name
+  description: trait-lightstep-desc
+  category: Social
+  cost: 4
+  tags:
+    - footsteps
+  excludedTags:
+    - footsteps
+  components:
+    - type: LightStep
