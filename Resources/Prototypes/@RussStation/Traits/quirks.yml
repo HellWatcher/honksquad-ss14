@@ -114,7 +114,7 @@
   id: Illiterate
   name: trait-illiterate-name
   description: trait-illiterate-desc
-  category: Quirks
+  category: Senses
   cost: -8
   tags:
     - literacy
