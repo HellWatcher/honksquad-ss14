@@ -97,11 +97,12 @@
   name: trait-scarred-eye-name
   description: trait-scarred-eye-desc
   traitGear: ClothingEyesEyepatch
-  category: Quirks
+  category: Senses
   cost: -2
-  conflicts:
-    - Blindness
-    - PoorVision
+  tags:
+    - sight
+  excludedTags:
+    - sight
   whitelist:
     components:
       - Blindable
