@@ -60,15 +60,13 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
             HorizontalAlignment = HAlignment.Left;
             _severity = severity;
-            //HONK START - Fill scales any sprite size to 64x64 (supports 16x16 wound icons)
             _icon = new SpriteView
             {
-                Scale = new Vector2(1, 1),
+                Scale = new Vector2(2, 2),
                 MaxSize = new Vector2(64, 64),
-                Stretch = SpriteView.StretchMode.Fill,
+                Stretch = SpriteView.StretchMode.None,
                 HorizontalAlignment = HAlignment.Left
             };
-            //HONK END
 
             SetupIcon();
 
@@ -102,7 +100,19 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
                 return;
             var icon = Alert.GetIcon(_severity);
             if (_sprite.LayerMapTryGet((_spriteViewEntity, sprite), AlertVisualLayers.Base, out var layer, false))
+            {
                 _sprite.LayerSetSprite((_spriteViewEntity, sprite), layer, icon);
+
+                //HONK START - Rescale on severity change
+                var pixelSize = sprite[layer].PixelSize;
+                var maxSide = Math.Max(pixelSize.X, pixelSize.Y);
+                if (maxSide > 0)
+                {
+                    var scale = 64f / maxSide;
+                    _icon.Scale = new Vector2(scale, scale);
+                }
+                //HONK END
+            }
         }
 
         protected override void FrameUpdate(FrameEventArgs args)
@@ -131,6 +141,16 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
                 var icon = Alert.GetIcon(_severity);
                 if (_sprite.LayerMapTryGet((_spriteViewEntity, sprite), AlertVisualLayers.Base, out var layer, false))
                     _sprite.LayerSetSprite((_spriteViewEntity, sprite), layer, icon);
+
+                //HONK START - Dynamic scale so any sprite size fills the 64x64 alert slot
+                var pixelSize = sprite[layer].PixelSize;
+                var maxSide = Math.Max(pixelSize.X, pixelSize.Y);
+                if (maxSide > 0)
+                {
+                    var scale = 64f / maxSide;
+                    _icon.Scale = new Vector2(scale, scale);
+                }
+                //HONK END
             }
 
             _icon.SetEntity(_spriteViewEntity);
