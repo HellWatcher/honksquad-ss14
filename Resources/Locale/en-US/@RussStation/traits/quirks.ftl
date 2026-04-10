@@ -29,6 +29,7 @@ trait-freerunning-name = Freerunning
 trait-freerunning-desc = You vault over obstacles like they're not even there.
 trait-self-aware-name = Self-Aware
 trait-self-aware-desc = You have an innate sense for the state of your own body.
-self-aware-total-damage = [bold]Total damage: {$amount}[/bold]
-self-aware-blood-level = [bold]Blood level: {$percent}%[/bold]
-self-aware-damage-type = [color=red]{$type}[/color]: {$amount}
+self-aware-total-damage = [bold][color=#FF5555]Total damage:[/color] [color=#FFB84D]{$amount}[/color][/bold]
+self-aware-blood-level = [bold][color=bisque]Blood level:[/color] [color=#e65353]{$percent}%[/color][/bold]
+self-aware-damage-type = [color={$color}]{$type}: {$amount}[/color]
+self-aware-wound-bleeding = [color=#e65353]Bleeding: {$rate}/s[/color]
