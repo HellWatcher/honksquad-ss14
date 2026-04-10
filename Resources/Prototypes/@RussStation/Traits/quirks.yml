@@ -36,3 +36,42 @@
     - wage
   components:
     - type: Indebted
+
+- type: trait
+  id: BoomingVoice
+  name: trait-booming-voice-name
+  description: trait-booming-voice-desc
+  category: Social
+  cost: 2
+  tags:
+    - voice-volume
+  excludedTags:
+    - voice-volume
+  components:
+    - type: BoomingVoice
+
+- type: trait
+  id: IronJaw
+  name: trait-iron-jaw-name
+  description: trait-iron-jaw-desc
+  category: Combat
+  cost: 4
+  tags:
+    - stamina
+  excludedTags:
+    - stamina
+  components:
+    - type: IronJaw
+
+- type: trait
+  id: SteadyHand
+  name: trait-steady-hand-name
+  description: trait-steady-hand-desc
+  category: Combat
+  cost: 4
+  tags:
+    - accuracy
+  excludedTags:
+    - accuracy
+  components:
+    - type: SteadyHand
