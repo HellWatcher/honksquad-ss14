@@ -17,13 +17,11 @@
   - NpcFactionMember
   # traits
   - Ageusia # HONK
-  - BlockWriting # HONK
   - BlackAndWhiteOverlay
   - BoomingVoice # HONK
   - Clumsy
   - Freerunning # HONK
   - GlassJaw # HONK
-  - Illiterate # HONK
   - LightStep # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
@@ -32,6 +30,7 @@
   - Narcolepsy
   - Negotiator # HONK
   - Pacified
+  - Papyrophobia # HONK
   - Paracusia
   - PermanentBlindness
   - Indebted # HONK

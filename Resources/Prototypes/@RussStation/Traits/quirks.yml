@@ -12,18 +12,17 @@
     - type: Ageusia
 
 - type: trait
-  id: Illiterate
-  name: trait-illiterate-name
-  description: trait-illiterate-desc
+  id: Papyrophobia
+  name: trait-papyrophobia-name
+  description: trait-papyrophobia-desc
   category: Senses
-  cost: -8
+  cost: -2
   tags:
-    - literacy
+    - paper
   excludedTags:
-    - literacy
+    - paper
   components:
-    - type: Illiterate
-    - type: BlockWriting
+    - type: Papyrophobia
 
 - type: trait
   id: Negotiator
