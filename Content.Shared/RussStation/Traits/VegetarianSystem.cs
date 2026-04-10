@@ -3,13 +3,11 @@ using Content.Shared.Nutrition;
 using Content.Shared.Popups;
 using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.Traits;
 
 public sealed class VegetarianSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly TagSystem _tag = default!;
     [Dependency] private readonly VomitSystem _vomit = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
@@ -25,16 +23,10 @@ public sealed class VegetarianSystem : EntitySystem
 
     private void OnIngesting(EntityUid uid, VegetarianComponent component, ref IngestingEvent args)
     {
-        if (_timing.CurTime < component.NextTrigger)
-            return;
-
         if (!_tag.HasTag(args.Food, MeatTag))
             return;
 
-        component.NextTrigger = _timing.CurTime + component.Cooldown;
-        Dirty(uid, component);
-
-        _popup.PopupEntity(Loc.GetString("trait-vegetarian-nausea"), uid, uid);
+        _popup.PopupClient(Loc.GetString("trait-vegetarian-nausea"), uid, uid);
         _vomit.Vomit(uid, -20f, -20f);
     }
 }
