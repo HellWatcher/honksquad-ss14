@@ -6,5 +6,5 @@ trait-frail-name = Frail
 trait-frail-desc = Your body is fragile.
 trait-throwing-arm-name = Throwing Arm
 trait-throwing-arm-desc = You've got a hell of an arm.
-trait-alcohol-tolerance-name = Alcohol Tolerance
+trait-alcohol-tolerance-name = Hard Drinker
 trait-alcohol-tolerance-desc = You can hold your liquor. Drunkenness effects last half as long.
