@@ -25,6 +25,19 @@
     - type: Negotiator
 
 - type: trait
+  id: SoftSpoken
+  name: trait-softspoken-name
+  description: trait-softspoken-desc
+  category: Social
+  cost: -2
+  tags:
+    - voice-volume
+  excludedTags:
+    - voice-volume
+  components:
+    - type: SoftSpoken
+
+- type: trait
   id: Touchy
   name: trait-touchy-name
   description: trait-touchy-desc
