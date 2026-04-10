@@ -6,6 +6,7 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Melee;
+using Content.Shared.RussStation.Traits; //HONK
 using Content.Shared.Weapons.Ranged;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
@@ -18,9 +19,6 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Random;
-//HONK START
-using Content.Shared.RussStation.Traits;
-//HONK END
 
 namespace Content.Server.Weapons.Ranged.Systems;
 
@@ -75,7 +73,12 @@ public sealed partial class GunSystem : SharedGunSystem
         var mapAngle = mapDirection.ToAngle();
         var angle = GetRecoilAngle(Timing.CurTime, gun, mapDirection.ToAngle());
 
-        //HONK START - Poor Aim: increase shot spread for entities with PoorAimComponent
+        //HONK START - Steady Hand / Poor Aim: scale shot spread based on accuracy quirks
+        if (user != null && TryComp<SteadyHandComponent>(user.Value, out var steadyHand))
+        {
+            var deviation = angle.Theta - mapAngle.Theta;
+            angle = new Angle(mapAngle.Theta + deviation * steadyHand.SpreadMultiplier);
+        }
         if (user != null && TryComp<PoorAimComponent>(user.Value, out var poorAim))
         {
             var deviation = angle.Theta - mapAngle.Theta;
