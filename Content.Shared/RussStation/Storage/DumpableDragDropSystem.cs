@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Shared.DoAfter;
 using Content.Shared.DragDrop;
 using Content.Shared.Item;
@@ -55,7 +54,10 @@ public sealed class DumpableDragDropSystem : EntitySystem
 
     private void OnCanDrag(EntityUid uid, DumpableComponent comp, ref CanDragEvent args)
     {
-        if (!HasComp<StorageComponent>(uid))
+        if (!TryComp<StorageComponent>(uid, out var storage))
+            return;
+
+        if (storage.Container.ContainedEntities.Count == 0)
             return;
 
         args.Handled = true;
@@ -82,6 +84,15 @@ public sealed class DumpableDragDropSystem : EntitySystem
             return;
 
         if (storage.Container.ContainedEntities.Count == 0)
+            return;
+
+        // If the target wants to consume the whole bag itself (e.g. disposal units
+        // accepting the entire container), let the default DragDropTargetEvent flow
+        // run by leaving this event unhandled. Our coord-dump is only the fallback
+        // for targets that don't claim the drop, like floor tiles.
+        var canDrop = new CanDropTargetEvent(args.User, uid);
+        RaiseLocalEvent(args.Target, ref canDrop);
+        if (canDrop.Handled && canDrop.CanDrop)
             return;
 
         var delay = 0f;
@@ -112,7 +123,7 @@ public sealed class DumpableDragDropSystem : EntitySystem
 
     private void OnDoAfter(EntityUid uid, DumpableComponent comp, DumpableDragDropDoAfterEvent args)
     {
-        if (args.Handled || args.Cancelled)
+        if (args.Handled || args.Cancelled || args.Args.Target is not { } target)
             return;
 
         if (!TryComp<StorageComponent>(uid, out var storage))
@@ -121,9 +132,25 @@ public sealed class DumpableDragDropSystem : EntitySystem
         if (storage.Container.ContainedEntities.Count == 0)
             return;
 
-        var targetCoords = GetCoordinates(args.TargetCoordinates);
+        // Give the target a chance to consume the dump (placeable surfaces, smart
+        // fridges, seed extractors, etc.) before falling back to teleport-at-coords.
+        // Mirrors upstream DumpableSystem.OnDoAfter so anything hooked into DumpEvent
+        // still works when the dump is triggered via drag-drop.
+        var dumpQueue = new Queue<EntityUid>(storage.Container.ContainedEntities);
+        var dumpEvt = new DumpEvent(dumpQueue, args.Args.User, false, false);
+        RaiseLocalEvent(target, ref dumpEvt);
 
-        foreach (var entity in storage.Container.ContainedEntities.ToArray())
+        if (dumpEvt.Handled)
+        {
+            args.Handled = true;
+            return;
+        }
+
+        var targetCoords = GetCoordinates(args.TargetCoordinates);
+        if (!targetCoords.IsValid(EntityManager))
+            return;
+
+        foreach (var entity in dumpQueue)
         {
             var offset = _random.NextVector2Box() / 4;
             _transform.SetCoordinates(entity, targetCoords.Offset(offset));
