@@ -1,14 +1,16 @@
-using Content.Shared.FixedPoint;
 using Robust.Shared.GameStates;
 
 namespace Content.Shared.RussStation.Traits;
 
 /// <summary>
-/// Increases all incoming damage by a configurable multiplier.
+/// Lowers wound spike thresholds, making the entity easier to wound.
 /// </summary>
 [RegisterComponent, NetworkedComponent]
 public sealed partial class FrailComponent : Component
 {
+    /// <summary>
+    /// Multiplier applied to wound thresholds. Lower = wounds trigger more easily.
+    /// </summary>
     [DataField]
-    public FixedPoint2 DamageMultiplier = 1.25f;
+    public float ThresholdMultiplier = 0.8f;
 }
