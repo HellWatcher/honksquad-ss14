@@ -1,3 +1,17 @@
+# Fork-owned copy of upstream Resources/Prototypes/Entities/Structures/Storage/Canisters/gas_canisters.yml.
+# Moved here so the SS13 russstation per-gas sprite overrides live in one fork file
+# instead of 22 HONK-marked hunks scattered across an upstream file.
+#
+# REBASE CAVEAT: upstream no longer ships this file in our tree, so upstream changes
+# to canister entities (new gas, balance tweak, destructible threshold, gas volume,
+# access level, etc.) will NOT flow in automatically. When rebasing on upstream,
+# diff upstream's gas_canisters.yml against this file by hand and port any relevant
+# changes. A clean rename conflict is the signal that upstream touched the file.
+#
+# Entity IDs stay identical to upstream so maps, cargo catalog, spawners, guidebook
+# pages, and the migration.yml `MiasmaCanister: AmmoniaCanister` redirect keep
+# working without edits.
+
 - type: entity
   abstract: true
   parent: [BaseStructureDynamic, BasePaperLabelableVisualized]
