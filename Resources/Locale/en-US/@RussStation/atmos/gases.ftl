@@ -8,6 +8,8 @@ gas-antinoblium-abbreviation = AN
 gas-healium-abbreviation = HLM
 gas-nitrium-abbreviation = NTR
 gas-proto-nitrate-abbreviation = PN
+gas-hyper-noblium-abbreviation = HN
+gas-zauker-abbreviation = ZK
 
 # Gas display names
 gases-hydrogen = Hydrogen
@@ -19,6 +21,8 @@ gases-antinoblium = Antinoblium
 gases-healium = Healium
 gases-nitrium = Nitrium
 gases-proto-nitrate = Proto-Nitrate
+gases-hyper-noblium = Hyper-noblium
+gases-zauker = Zauker
 
 # Reagent names and descriptions
 reagent-name-healium = Healium

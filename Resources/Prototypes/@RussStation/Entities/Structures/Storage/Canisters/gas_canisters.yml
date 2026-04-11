@@ -6,10 +6,9 @@
 # ProtoNitrate) ship filled with 2769.36 moles at 293.15 K, matching the
 # upstream single-gas canister convention.
 #
-# HyperNobliumCanister and ZaukerCanister remain staged with empty gasMixture
-# because those Gas enum values are blocked on issue #106 (Gas fusion).
-# Destructible is inherited from GasCanister, so they spawn the generic
-# GasCanisterBrokenBase when destroyed until #106 wires per-gas broken variants.
+# HyperNobliumCanister and ZaukerCanister ship filled with 2769.36 moles at
+# 293.15 K, matching the other fork canisters. Destructible is inherited from
+# GasCanister, so they spawn the generic GasCanisterBrokenBase when destroyed.
 #
 # MiasmaCanister is intentionally absent: migration.yml redirects it to
 # AmmoniaCanister, and PR 365 keeps that mapping.
@@ -129,6 +128,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          HyperNoblium: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -195,4 +196,6 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Zauker: 2769.36
         temperature: 293.15

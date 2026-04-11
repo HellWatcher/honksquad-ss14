@@ -194,6 +194,8 @@ namespace Content.Shared.Atmos
             [Gas.Healium] = Loc.GetString("gas-healium-abbreviation"),
             [Gas.Nitrium] = Loc.GetString("gas-nitrium-abbreviation"),
             [Gas.ProtoNitrate] = Loc.GetString("gas-proto-nitrate-abbreviation"),
+            [Gas.HyperNoblium] = Loc.GetString("gas-hyper-noblium-abbreviation"),
+            [Gas.Zauker] = Loc.GetString("gas-zauker-abbreviation"),
             // HONK END
         };
 
@@ -225,7 +227,7 @@ namespace Content.Shared.Atmos
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
         // HONK START - Fork gases
-        public const int TotalNumberOfGases = 18;
+        public const int TotalNumberOfGases = 20;
         // HONK END
 
         /// <summary>
@@ -401,6 +403,8 @@ namespace Content.Shared.Atmos
         Healium = 15,
         Nitrium = 16,
         ProtoNitrate = 17,
+        HyperNoblium = 18,
+        Zauker = 19,
         // HONK END
     }
 }

@@ -1,4 +1,4 @@
-# Fork-only gas miners for the nine gases added in feat/tier1-gases.
+# Fork-only gas miners for the eleven fork gases.
 # Parent chain ties back to upstream GasMinerBase so pressure cap, sprite,
 # and GuideHelp entries stay consistent with the vanilla miners.
 
@@ -73,3 +73,19 @@
   components:
     - type: GasMiner
       spawnGas: ProtoNitrate
+
+- type: entity
+  name: hyper-noblium gas miner
+  parent: GasMinerBase
+  id: GasMinerHyperNoblium
+  components:
+    - type: GasMiner
+      spawnGas: HyperNoblium
+
+- type: entity
+  name: zauker gas miner
+  parent: GasMinerBase
+  id: GasMinerZauker
+  components:
+    - type: GasMiner
+      spawnGas: Zauker
