@@ -1,0 +1,12 @@
+- type: gas
+  id: HyperNoblium
+  name: gas-hyper-noblium
+  abbreviation: gas-hyper-noblium-abbreviation
+  molarHeatCapacity: 2000
+  heatCapacityRatio: 1.4
+  molarMass: 400
+  gasOverlaySprite:
+    sprite: /Textures/Effects/atmospherics.rsi
+    state: frezon
+  color: "#008080"
+  pricePerMole: 2.5

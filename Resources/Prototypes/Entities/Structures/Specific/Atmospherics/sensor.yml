@@ -35,6 +35,8 @@
       Healium: danger
       Nitrium: danger
       ProtoNitrate: danger
+      HyperNoblium: danger
+      Zauker: danger
       # HONK END
   - type: GuideHelp
     guides:

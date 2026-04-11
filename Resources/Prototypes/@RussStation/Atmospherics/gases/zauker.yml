@@ -1,0 +1,12 @@
+- type: gas
+  id: Zauker
+  name: gas-zauker
+  abbreviation: gas-zauker-abbreviation
+  molarHeatCapacity: 350
+  heatCapacityRatio: 1.4
+  molarMass: 138
+  gasOverlaySprite:
+    sprite: /Textures/Effects/atmospherics.rsi
+    state: zauker
+  color: "#006400"
+  pricePerMole: 7

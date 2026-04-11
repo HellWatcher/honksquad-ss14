@@ -17,6 +17,11 @@ gas-nitrium = Nitrium
 gas-nitrium-abbreviation = NTR
 gas-proto-nitrate = Proto-Nitrate
 gas-proto-nitrate-abbreviation = PN
+gas-hyper-noblium-abbreviation = HN
+gas-zauker-abbreviation = ZK
+
+gas-hyper-noblium = Hyper-noblium
+gas-zauker = Zauker
 
 # Reagent names and descriptions
 reagent-name-healium = Healium

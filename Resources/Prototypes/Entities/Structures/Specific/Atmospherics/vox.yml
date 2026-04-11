@@ -25,6 +25,8 @@
       Healium: danger
       Nitrium: danger
       ProtoNitrate: danger
+      HyperNoblium: danger
+      Zauker: danger
       # HONK END
 
 - type: entity
@@ -60,6 +62,8 @@
     - Healium
     - Nitrium
     - ProtoNitrate
+    - HyperNoblium
+    - Zauker
     # HONK END
 
 # use this to prevent overriding filters with hardcoded defaults
