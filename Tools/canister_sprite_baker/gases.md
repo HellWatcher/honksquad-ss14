@@ -20,12 +20,13 @@ greyscale JSON configs in `code/datums/greyscale/json_configs/`.
 | nitrous_oxide  | double_stripe | `#c63e3b` | `#f7d5d3` | `NitrousOxideCanister`  |
 | frezon         | double_stripe | `#6696ee` | `#fefb30` | `FrezonCanister`        |
 | water_vapor    | double_stripe | `#4c4e4d` | `#f7d5d3` | `WaterVaporCanister`    |
-| ammonia        | double_stripe | `#a8c84e` | `#e9ff5c` | `AmmoniaCanister`       |
+| ammonia        | double_stripe | `#009823` | `#f7d5d3` | `AmmoniaCanister`       |
 | storage        | default       | `#6b6b80` |           | `StorageCanister`       |
 
-Ammonia has no SS13 equivalent; palette is invented to match the SS13 look
-(yellow-green double stripe, evoking the upstream `greenys` sprite). Storage
-uses the authentic SS13 generic canister color from `canister.dm`.
+Ammonia reuses SS13's miasma canister palette. Upstream migration.yml redirects
+`MiasmaCanister` to `AmmoniaCanister`, so the fork follows the same mapping and
+ammonia inherits the authentic SS13 miasma sprite. Storage uses the authentic
+SS13 generic canister color from `canister.dm`.
 
 ## Fork-only gases (staged for PR 365)
 
@@ -37,7 +38,6 @@ uses the authentic SS13 generic canister color from `canister.dm`.
 | healium       | double_stripe | `#009823` | `#ff0e00` | `HealiumCanister`      |
 | helium        | double_stripe | `#9b5d7f` | `#368bff` | `HeliumCanister`       |
 | hydrogen      | double_stripe | `#eaeaea` | `#be3455` | `HydrogenCanister`     |
-| miasma        | double_stripe | `#009823` | `#f7d5d3` | `MiasmaCanister`       |
 | nitrium       | default       | `#7b4732` |           | `NitriumCanister`      |
 | pluoxium      | default       | `#2786e5` |           | `PluoxiumCanister`     |
 | proto_nitrate | double_stripe | `#008200` | `#33cc33` | `ProtoNitrateCanister` |
