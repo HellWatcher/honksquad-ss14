@@ -1,0 +1,147 @@
+# Fork-only gas canisters staged for PR 365 (feat/tier1-gases).
+#
+# These entities parent the upstream GasCanister base and override only the
+# Sprite component to point at the SS13 russstation RSI. gasMixture is empty
+# (volume + temperature only) because the fork-only Gas enum values (Pluoxium,
+# Halon, Antinoblium, etc.) don't exist on release yet. PR 365 adds those enum
+# values and fills in moles per canister when it merges. Destructible is
+# inherited from GasCanister, so these spawn the generic GasCanisterBrokenBase
+# when destroyed until PR 365 wires per-gas broken variants.
+#
+# MiasmaCanister is intentionally absent: migration.yml redirects it to
+# AmmoniaCanister, and PR 365 keeps that mapping.
+
+- type: entity
+  parent: GasCanister
+  id: AntinobliumCanister
+  name: antinoblium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain antinoblium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: antinoblium
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: BZCanister
+  name: BZ canister
+  description: A canister that can contain any type of gas. This one is supposed to contain BZ. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: bz
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HalonCanister
+  name: halon canister
+  description: A canister that can contain any type of gas. This one is supposed to contain halon. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: halon
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HealiumCanister
+  name: healium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain healium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: healium
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HeliumCanister
+  name: helium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain helium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: helium
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HydrogenCanister
+  name: hydrogen canister
+  description: A canister that can contain any type of gas. This one is supposed to contain hydrogen. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: hydrogen
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: NitriumCanister
+  name: nitrium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain nitrium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: nitrium
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: PluoxiumCanister
+  name: pluoxium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain pluoxium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: pluoxium
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: ProtoNitrateCanister
+  name: proto-nitrate canister
+  description: A canister that can contain any type of gas. This one is supposed to contain proto-nitrate. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      layers:
+        - state: proto_nitrate
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
