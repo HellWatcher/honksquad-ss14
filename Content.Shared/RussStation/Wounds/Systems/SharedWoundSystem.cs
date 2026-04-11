@@ -63,13 +63,18 @@ public abstract class SharedWoundSystem : EntitySystem
                 continue; // Bleeding wounds are display-only, not wound entries
             }
 
-            // Check spike thresholds for fracture/burn wound types
+            // Check spike thresholds for fracture/burn wound types.
+            // Divide by ThresholdMultiplier so a multiplier > 1 effectively raises thresholds.
+            var effectiveAmount = comp.ThresholdMultiplier > 0f
+                ? amountFloat / comp.ThresholdMultiplier
+                : amountFloat;
+
             foreach (var woundProto in _woundTypes)
             {
                 if (woundProto.DamageType != typeStr)
                     continue;
 
-                var tier = GetTierFromSpike(woundProto, amountFloat);
+                var tier = GetTierFromSpike(woundProto, effectiveAmount);
                 if (tier <= 0)
                     continue;
 
