@@ -36,6 +36,16 @@ You keep things clean, it's a rough job sometimes, but someone's gotta do it. Th
 <GuideEntityEmbed Entity="FloorDrain"/>
 </Box>
 
+## Your Cart
+Your [color=#88ccff]janitorial trolley[/color] is the closest thing to a mobile office you'll ever get. It has dedicated slots for your mop, trash bag, bucket, plunger, light replacer, spray bottle, and up to four wet floor signs, plus enough room in the trash bag for whatever disasters you find on the way. A few tricks the tutorial doesn't mention:
+
+- With a janitorial tool in hand, press [color=yellow][bold][keybind="AltActivateItemInWorld"][/bold][/color] on the trolley to drop it into the matching slot. No fumbling, no misclicks.
+- With anything else (or an empty hand), [color=yellow][bold][keybind="AltActivateItemInWorld"][/bold][/color] opens a [italic]radial menu[/italic]. Perfect for when you need your plunger and your mop is in the way.
+- An empty-hand [color=yellow][bold][keybind="Use"][/bold][/color] yanks out the highest-priority item, which is usually your mop. Quick-draw.
+- [bold]Found trash on the floor?[/bold] Scoop it up, click the trolley, and it drops straight into the bag. No need to dig the bag out first.
+- Dragging a [color=#88ccff]sink[/color] or [color=#88ccff]floor drain[/color] onto the trolley tops up the bucket in place. Beats parking next to the sink every five minutes.
+- And if you really must, [color=yellow][bold][keybind="ActivateItemInWorld"][/bold][/color] lets you [italic]drink[/italic] from the bucket. The chaplain says it builds character.
+
 ## Tidying up.
 Now, onto the (figurative) meat and potatoes. We're here to clean, right? Lets keep it simple. The main tools you'll be putting to use are the trusty mop, a trash bag, space cleaner, and one of the three different buckets.
 
