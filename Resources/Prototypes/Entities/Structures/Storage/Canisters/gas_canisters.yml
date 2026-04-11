@@ -140,7 +140,8 @@
   components:
     - type: Sprite
       layers:
-        - state: yellow
+        - state: storage
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -179,7 +180,8 @@
   components:
   - type: Sprite
     layers:
-      - state: grey
+      - state: air
+        sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
   - type: GasCanister
     gasMixture:
       volume: 1500
@@ -219,7 +221,8 @@
   components:
   - type: Sprite
     layers:
-      - state: blue
+      - state: oxygen
+        sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
   - type: GasCanister
     gasMixture:
       volume: 1500
@@ -273,7 +276,8 @@
   components:
     - type: Sprite
       layers:
-        - state: red
+        - state: nitrogen
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -327,7 +331,8 @@
   components:
     - type: Sprite
       layers:
-        - state: black
+        - state: carbon_dioxide
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -383,7 +388,8 @@
   components:
     - type: Sprite
       layers:
-        - state: orange
+        - state: plasma
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -424,7 +430,8 @@
   components:
     - type: Sprite
       layers:
-        - state: green
+        - state: tritium
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -466,6 +473,7 @@
     - type: Sprite
       layers:
         - state: water_vapor
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -504,7 +512,8 @@
   components:
     - type: Sprite
       layers:
-        - state: greenys
+        - state: ammonia
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -545,7 +554,8 @@
   components:
     - type: Sprite
       layers:
-        - state: redws
+        - state: nitrous_oxide
+          sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -587,6 +597,7 @@
   - type: Sprite
     layers:
     - state: frezon
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
   - type: GasCanister
     gasMixture:
       volume: 1500
@@ -681,7 +692,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: yellow-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: storage-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -689,7 +701,8 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
-    state: grey-1
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    state: air-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -697,7 +710,8 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
-    state: blue-1
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    state: oxygen-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -705,7 +719,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: red-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: nitrogen-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -713,7 +728,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: black-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: carbon_dioxide-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -721,7 +737,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: orange-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: plasma-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -729,7 +746,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: green-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: tritium-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -738,6 +756,7 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: water_vapor-1
 
 - type: entity
@@ -746,7 +765,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: greenys-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: ammonia-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -754,7 +774,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: redws-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: nitrous_oxide-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -762,4 +783,5 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     state: frezon-1

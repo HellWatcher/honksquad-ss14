@@ -1,0 +1,179 @@
+# Fork-only gas canisters staged for follow-up gas PRs.
+#
+# These entities parent the upstream GasCanister base and override only the
+# Sprite component to point at the SS13 russstation RSI. gasMixture is empty
+# (volume + temperature only) because the fork-only Gas enum values (Pluoxium,
+# Halon, Antinoblium, HyperNoblium, Zauker, etc.) don't exist on release yet.
+# PR 365 (feat/tier1-gases) adds the tier-one entries and fills in moles per
+# canister when it merges; HyperNoblium and Zauker are staged here for a
+# second gas PR. Destructible is inherited from GasCanister, so these spawn
+# the generic GasCanisterBrokenBase when destroyed until those PRs wire
+# per-gas broken variants.
+#
+# MiasmaCanister is intentionally absent: migration.yml redirects it to
+# AmmoniaCanister, and PR 365 keeps that mapping.
+
+- type: entity
+  parent: GasCanister
+  id: AntinobliumCanister
+  name: antinoblium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain antinoblium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: antinoblium
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: BZCanister
+  name: BZ canister
+  description: A canister that can contain any type of gas. This one is supposed to contain BZ. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: bz
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HalonCanister
+  name: halon canister
+  description: A canister that can contain any type of gas. This one is supposed to contain halon. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: halon
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HealiumCanister
+  name: healium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain healium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: healium
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HeliumCanister
+  name: helium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain helium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: helium
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HydrogenCanister
+  name: hydrogen canister
+  description: A canister that can contain any type of gas. This one is supposed to contain hydrogen. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: hydrogen
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: HyperNobliumCanister
+  name: hyper-noblium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain hyper-noblium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: hyper_noblium
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: NitriumCanister
+  name: nitrium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain nitrium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: nitrium
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: PluoxiumCanister
+  name: pluoxium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain pluoxium. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: pluoxium
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: ProtoNitrateCanister
+  name: proto-nitrate canister
+  description: A canister that can contain any type of gas. This one is supposed to contain proto-nitrate. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: proto_nitrate
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
+
+- type: entity
+  parent: GasCanister
+  id: ZaukerCanister
+  name: zauker canister
+  description: A canister that can contain any type of gas. This one is supposed to contain zauker. It can be attached to connector ports using a wrench.
+  components:
+    - type: Sprite
+      layers:
+        - state: zauker
+          sprite: "@RussStation/Structures/Storage/canister.rsi"
+    - type: GasCanister
+      gasMixture:
+        volume: 1500
+        temperature: 293.15
