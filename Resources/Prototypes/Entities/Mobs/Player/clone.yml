@@ -18,18 +18,36 @@
   # traits
   - Ageusia # HONK
   - BlackAndWhiteOverlay
+  - BoomingVoice # HONK
   - Clumsy
+  - Freerunning # HONK
+  - GlassJaw # HONK
+  - LightStep # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
   - LightweightDrunk
   - Muted
   - Narcolepsy
+  - Negotiator # HONK
   - Pacified
+  - Papyrophobia # HONK
   - Paracusia
   - PermanentBlindness
+  - Indebted # HONK
+  - IronJaw # HONK
+  - PoorAim # HONK
+  - Prosopagnosia # HONK
+  - ScarredEye # HONK
+  - SelfAware # HONK
   - Snoring
-  - Tough # HONK
+  - SoftSpoken # HONK
+  - SteadyHand # HONK
+  - Touchy # HONK
   - Unrevivable
+  - Vegetarian # HONK
+  - BloodDeficiency # HONK
+  - WeakArm # HONK
+  - Tough # HONK
   # accents
   - Accentless
   - BackwardsAccent
