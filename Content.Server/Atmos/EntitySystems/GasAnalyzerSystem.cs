@@ -265,7 +265,6 @@ public sealed class GasAnalyzerSystem : EntitySystem
 
             if (mixture != null)
             {
-                // HONK - pack the ftl key, not the display name; clients call Loc.GetString on it
                 gases.Add(new GasEntry(gas.Name, mixture[i], gas.Color));
             }
         }
