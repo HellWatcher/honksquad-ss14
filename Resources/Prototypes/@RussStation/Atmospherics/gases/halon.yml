@@ -5,6 +5,9 @@
   molarHeatCapacity: 175
   heatCapacityRatio: 1.4
   molarMass: 130
+  gasOverlaySprite:
+    sprite: /Textures/Effects/atmospherics.rsi
+    state: halon
   color: "#800080"
   reagent: Halon
   pricePerMole: 0.75

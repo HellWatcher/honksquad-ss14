@@ -5,6 +5,9 @@
   molarHeatCapacity: 1
   heatCapacityRatio: 1.4
   molarMass: 300
+  gasOverlaySprite:
+    sprite: /Textures/Effects/atmospherics.rsi
+    state: antinoblium
   gasMolesVisible: 0.6
   color: "#800000"
   pricePerMole: 10.0
