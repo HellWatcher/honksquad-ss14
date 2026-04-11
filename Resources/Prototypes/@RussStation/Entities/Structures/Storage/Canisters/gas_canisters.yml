@@ -1,14 +1,15 @@
-# Fork-only gas canisters staged for follow-up gas PRs.
+# Fork-only gas canisters.
 #
-# These entities parent the upstream GasCanister base and override only the
-# Sprite component to point at the SS13 russstation RSI. gasMixture is empty
-# (volume + temperature only) because the fork-only Gas enum values (Pluoxium,
-# Halon, Antinoblium, HyperNoblium, Zauker, etc.) don't exist on release yet.
-# PR 365 (feat/tier1-gases) adds the tier-one entries and fills in moles per
-# canister when it merges; HyperNoblium and Zauker are staged here for a
-# second gas PR. Destructible is inherited from GasCanister, so these spawn
-# the generic GasCanisterBrokenBase when destroyed until those PRs wire
-# per-gas broken variants.
+# These entities parent the upstream GasCanister base and override the Sprite
+# component to use the SS13 russstation RSI. The nine tier-one gases added by
+# PR 365 (Hydrogen, Helium, BZ, Pluoxium, Halon, Antinoblium, Healium, Nitrium,
+# ProtoNitrate) ship filled with 2769.36 moles at 293.15 K, matching the
+# upstream single-gas canister convention.
+#
+# HyperNobliumCanister and ZaukerCanister remain staged with empty gasMixture
+# because those Gas enum values are blocked on issue #106 (Gas fusion).
+# Destructible is inherited from GasCanister, so they spawn the generic
+# GasCanisterBrokenBase when destroyed until #106 wires per-gas broken variants.
 #
 # MiasmaCanister is intentionally absent: migration.yml redirects it to
 # AmmoniaCanister, and PR 365 keeps that mapping.
@@ -26,6 +27,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Antinoblium: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -41,6 +44,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          BZ: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -56,6 +61,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Halon: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -71,6 +78,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Healium: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -86,6 +95,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Helium: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -101,6 +112,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Hydrogen: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -131,6 +144,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Nitrium: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -146,6 +161,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          Pluoxium: 2769.36
         temperature: 293.15
 
 - type: entity
@@ -161,6 +178,8 @@
     - type: GasCanister
       gasMixture:
         volume: 1500
+        moles:
+          ProtoNitrate: 2769.36
         temperature: 293.15
 
 - type: entity
