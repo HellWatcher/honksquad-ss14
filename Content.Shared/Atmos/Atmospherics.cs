@@ -209,7 +209,7 @@ namespace Content.Shared.Atmos
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
         // HONK START - Fork gases
-        public const int TotalNumberOfGases = 19;
+        public const int TotalNumberOfGases = 18;
         // HONK END
 
         /// <summary>
@@ -376,16 +376,15 @@ namespace Content.Shared.Atmos
         NitrousOxide = 7,
         Frezon = 8,
         // HONK START - Fork gases
-        Miasma = 9,
-        Hydrogen = 10,
-        Helium = 11,
-        BZ = 12,
-        Pluoxium = 13,
-        Halon = 14,
-        Antinoblium = 15,
-        Healium = 16,
-        Nitrium = 17,
-        ProtoNitrate = 18,
+        Hydrogen = 9,
+        Helium = 10,
+        BZ = 11,
+        Pluoxium = 12,
+        Halon = 13,
+        Antinoblium = 14,
+        Healium = 15,
+        Nitrium = 16,
+        ProtoNitrate = 17,
         // HONK END
     }
 }

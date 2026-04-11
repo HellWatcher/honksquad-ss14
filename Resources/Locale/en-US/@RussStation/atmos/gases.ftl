@@ -1,6 +1,4 @@
-# Tier 1+2 gas display names + abbreviations
-gas-miasma = Miasma
-gas-miasma-abbreviation = MIA
+# Fork gas display names + abbreviations
 gas-hydrogen = Hydrogen
 gas-hydrogen-abbreviation = H₂
 gas-helium = Helium
