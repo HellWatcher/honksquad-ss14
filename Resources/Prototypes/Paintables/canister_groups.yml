@@ -14,3 +14,16 @@
     storage: StorageCanister
     tritium: TritiumCanister
     water-vapor: WaterVaporCanister
+    # HONK START - fork-only canister styles (PR 365 tier-one gases + issue 106 fusion gases)
+    antinoblium: AntinobliumCanister
+    bz: BZCanister
+    halon: HalonCanister
+    healium: HealiumCanister
+    helium: HeliumCanister
+    hydrogen: HydrogenCanister
+    hyper-noblium: HyperNobliumCanister
+    nitrium: NitriumCanister
+    pluoxium: PluoxiumCanister
+    proto-nitrate: ProtoNitrateCanister
+    zauker: ZaukerCanister
+    # HONK END
