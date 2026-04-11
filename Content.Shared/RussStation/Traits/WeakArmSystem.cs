@@ -12,6 +12,7 @@ public sealed class WeakArmSystem : EntitySystem
 
     private void OnBeforeThrow(EntityUid uid, WeakArmComponent component, ref BeforeThrowEvent args)
     {
-        args.ThrowSpeed *= component.ThrowSpeedMultiplier;
+        args.Direction *= component.ThrowMultiplier;
+        args.ThrowSpeed *= component.ThrowMultiplier;
     }
 }
