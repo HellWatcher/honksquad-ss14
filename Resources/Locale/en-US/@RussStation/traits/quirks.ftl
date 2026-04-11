@@ -47,3 +47,5 @@ trait-tough-name = Tough
 trait-tough-desc = You can take a beating.
 trait-alcohol-tolerance-name = Hard Drinker
 trait-alcohol-tolerance-desc = You can hold your liquor.
+trait-throwing-arm-name = Throwing Arm
+trait-throwing-arm-desc = You've got a hell of an arm.
