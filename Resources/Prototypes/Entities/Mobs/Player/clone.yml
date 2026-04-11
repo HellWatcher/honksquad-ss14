@@ -17,8 +17,13 @@
   - NpcFactionMember
   # traits
   - Ageusia # HONK
+  - AlcoholTolerance # HONK
   - BlackAndWhiteOverlay
+  - BoomingVoice # HONK
   - Clumsy
+  - Freerunning # HONK
+  - GlassJaw # HONK
+  - LightStep # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
   - LightweightDrunk
@@ -26,11 +31,25 @@
   - Narcolepsy
   - Negotiator # HONK
   - Pacified
+  - Papyrophobia # HONK
   - Paracusia
   - PermanentBlindness
+  - Indebted # HONK
+  - IronJaw # HONK
+  - PoorAim # HONK
+  - Prosopagnosia # HONK
+  - ScarredEye # HONK
+  - SelfAware # HONK
   - Snoring
-  - ThrowingArm # HONK
+  - SoftSpoken # HONK
+  - SteadyHand # HONK
+  - Touchy # HONK
   - Unrevivable
+  - Vegetarian # HONK
+  - BloodDeficiency # HONK
+  - WeakArm # HONK
+  - ThrowingArm # HONK
+  - Tough # HONK
   # accents
   - Accentless
   - BackwardsAccent

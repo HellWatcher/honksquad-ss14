@@ -17,7 +17,8 @@ namespace Content.Shared.Body.Components;
 /// </summary>
 [RegisterComponent, NetworkedComponent,]
 [AutoGenerateComponentState(fieldDeltas: true), AutoGenerateComponentPause]
-[Access(typeof(SharedBloodstreamSystem))]
+[Access(typeof(SharedBloodstreamSystem),
+    typeof(RussStation.Traits.BloodDeficiencySystem))] // HONK - Blood Deficiency quirk
 public sealed partial class BloodstreamComponent : Component
 {
     public const string DefaultBloodSolutionName = "bloodstream";
