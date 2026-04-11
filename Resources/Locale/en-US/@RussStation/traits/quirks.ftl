@@ -51,3 +51,6 @@ trait-throwing-arm-name = Throwing Arm
 trait-throwing-arm-desc = You've got a hell of an arm.
 trait-frail-name = Frail
 trait-frail-desc = Your body is fragile.
+trait-skittish-name = Skittish
+trait-skittish-desc = You startle easily. Bumping into a closed container you could fit inside causes you to panic and hide inside it, slamming the door shut behind you if possible.
+skittish-hide = You panic and dive into the {THE($container)}!
