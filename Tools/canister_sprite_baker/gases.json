@@ -70,6 +70,13 @@
         "#be3455"
       ]
     },
+    "hyper_noblium": {
+      "template": "double_stripe",
+      "colors": [
+        "#6399fc",
+        "#b2b2b2"
+      ]
+    },
     "nitrium": {
       "template": "default",
       "colors": [
@@ -135,6 +142,13 @@
       "colors": [
         "#4c4e4d",
         "#f7d5d3"
+      ]
+    },
+    "zauker": {
+      "template": "double_stripe",
+      "colors": [
+        "#009a00",
+        "#006600"
       ]
     }
   }
