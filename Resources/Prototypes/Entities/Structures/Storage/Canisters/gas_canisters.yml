@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  parent: [BaseStructureDynamic, BasePaperLabelableVisualized]
+  parent: [ BaseStructureDynamic, BasePaperLabelableVisualized ]
   id: GasCanister
   name: gas canister
   description: A canister that can contain any type of gas. It can be attached to connector ports using a wrench.
@@ -16,7 +16,7 @@
         - state: grey
         - state: paper
           visible: false
-          map: ["enum.PaperLabelVisuals.Layer"]
+          map: [ "enum.PaperLabelVisuals.Layer" ]
     - type: Appearance
     - type: GenericVisualizer
       visuals:
@@ -55,19 +55,21 @@
       key: enum.GasCanisterUiKey.Key
     - type: UIRequiresLock
       userInterfaceKeys:
-        - enum.GasCanisterUiKey.Key
+      - enum.GasCanisterUiKey.Key
     - type: UserInterface
       interfaces:
         enum.GasCanisterUiKey.Key:
           type: GasCanisterBoundUserInterface
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
+        - trigger:
+            !type:DamageTrigger
             damage: 600
           behaviors:
             - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
+              acts: [ "Destruction" ]
+        - trigger:
+            !type:DamageTrigger
             damage: 300
           behaviors:
             - !type:PlaySoundBehavior
@@ -79,7 +81,7 @@
                   min: 1
                   max: 1
             - !type:DoActsBehavior
-              acts: ["Destruction"]
+              acts: [ "Destruction" ]
             - !type:DumpCanisterBehavior
     - type: Damageable
       damageContainer: Inorganic
@@ -89,13 +91,14 @@
     - type: Fixtures
       fixtures:
         fix1:
-          shape: !type:PhysShapeAabb
+          shape:
+            !type:PhysShapeAabb
             bounds: "-0.25,-0.25,0.25,0.25"
           density: 190
           mask:
-            - SmallMobMask
+          - SmallMobMask
           layer:
-            - MachineLayer
+          - MachineLayer
     - type: AtmosDevice
       requireAnchored: false
       joinSystem: true
@@ -105,7 +108,8 @@
         paper_label: !type:ContainerSlot
     - type: NodeContainer
       nodes:
-        port: !type:PortablePipeNode
+        port:
+          !type:PortablePipeNode
           nodeGroupID: Pipe
           rotationsEnabled: false
           volume: 1
@@ -125,7 +129,7 @@
       locked: false
     - type: GuideHelp
       guides:
-        - GasCanisters
+      - GasCanisters
     - type: Paintable
       group: Canisters
 
@@ -135,7 +139,7 @@
   name: storage canister
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: storage
     - type: GasCanister
@@ -144,26 +148,29 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                StorageCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior # Filled canisters, contain 1871.71051 moles each
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            StorageCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
 
+# Filled canisters, contain 1871.71051 moles each
 
 - type: entity
   parent: GasCanister
@@ -171,37 +178,40 @@
   name: air canister
   description: A canister that can contain any type of gas. This one is supposed to contain air mixture. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"      layers:
-        - state: air
-    - type: GasCanister
-      gasMixture:
-        volume: 1500
-        moles:
-          Oxygen: 581.56 # oxygen 21%
-          Nitrogen: 2187.79 # nitrogen 79%
-        temperature: 293.15
-    - type: Destructible
-      thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                AirCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+  - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    layers:
+      - state: air
+  - type: GasCanister
+    gasMixture:
+      volume: 1500
+      moles:
+        Oxygen: 581.56 # oxygen 21%
+        Nitrogen: 2187.79 # nitrogen 79%
+      temperature: 293.15
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 600
+      behaviors:
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+    - trigger:
+        !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          AirCanisterBroken:
+            min: 1
+            max: 1
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:DumpCanisterBehavior
 
 - type: entity
   parent: GasCanister
@@ -209,36 +219,39 @@
   name: oxygen canister
   description: A canister that can contain any type of gas. This one is supposed to contain oxygen. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"      layers:
-        - state: oxygen
-    - type: GasCanister
-      gasMixture:
-        volume: 1500
-        moles:
-          Oxygen: 2769.36 # oxygen
-        temperature: 293.15
-    - type: Destructible
-      thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                OxygenCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+  - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    layers:
+      - state: oxygen
+  - type: GasCanister
+    gasMixture:
+      volume: 1500
+      moles:
+        Oxygen: 2769.36 # oxygen
+      temperature: 293.15
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 600
+      behaviors:
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+    - trigger:
+        !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          OxygenCanisterBroken:
+            min: 1
+            max: 1
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:DumpCanisterBehavior
 
 - type: entity
   id: LiquidOxygenCanister
@@ -246,14 +259,14 @@
   name: liquid oxygen canister
   description: A canister that can contain any type of gas. This one is supposed to contain liquid oxygen. It can be attached to connector ports using a wrench.
   components:
-    - type: GasCanister
-      gasMixture:
-        volume: 1500
-        moles:
-          Oxygen: 18710.71051 # oxygen
-        temperature: 72
-    - type: AccessReader
-      access: [["Atmospherics"]]
+  - type: GasCanister
+    gasMixture:
+      volume: 1500
+      moles:
+        Oxygen: 18710.71051 # oxygen
+      temperature: 72
+  - type: AccessReader
+    access: [["Atmospherics"]]
 
 - type: entity
   parent: GasCanister
@@ -262,7 +275,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain nitrogen. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: nitrogen
     - type: GasCanister
@@ -273,25 +286,27 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                NitrogenCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            NitrogenCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
 
 - type: entity
   id: LiquidNitrogenCanister
@@ -299,14 +314,14 @@
   name: liquid nitrogen canister
   description: A canister that can contain any type of gas. This one is supposed to contain liquid nitrogen. It can be attached to connector ports using a wrench.
   components:
-    - type: GasCanister
-      gasMixture:
-        volume: 1500
-        moles:
-          Nitrogen: 18710.71051 # nitrogen
-        temperature: 72
-    - type: AccessReader
-      access: [["Atmospherics"]]
+  - type: GasCanister
+    gasMixture:
+      volume: 1500
+      moles:
+        Nitrogen: 18710.71051 # nitrogen
+      temperature: 72
+  - type: AccessReader
+    access: [["Atmospherics"]]
 
 - type: entity
   parent: GasCanister
@@ -315,7 +330,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain carbon dioxide. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: carbon_dioxide
     - type: GasCanister
@@ -326,25 +341,27 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                CarbonDioxideCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            CarbonDioxideCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
     - type: Lock
       locked: true
 
@@ -354,14 +371,14 @@
   name: liquid carbon dioxide canister
   description: A canister that can contain any type of gas. This one is supposed to contain liquid carbon dioxide. It can be attached to connector ports using a wrench.
   components:
-    - type: GasCanister
-      gasMixture:
-        volume: 1500
-        moles:
-          CarbonDioxide: 18710.71051 # CO2
-        temperature: 72
-    - type: AccessReader
-      access: [["Atmospherics"]]
+  - type: GasCanister
+    gasMixture:
+      volume: 1500
+      moles:
+        CarbonDioxide: 18710.71051 # CO2
+      temperature: 72
+  - type: AccessReader
+    access: [["Atmospherics"]]
 
 - type: entity
   parent: GasCanister
@@ -370,7 +387,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain plasma. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: plasma
     - type: GasCanister
@@ -381,25 +398,27 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                PlasmaCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            PlasmaCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
     - type: Lock
       locked: true
 
@@ -410,7 +429,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain tritium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: tritium
     - type: GasCanister
@@ -421,25 +440,27 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                TritiumCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            TritiumCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
     - type: Lock
       locked: true
 
@@ -450,7 +471,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain water vapor. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: water_vapor
     - type: GasCanister
@@ -461,25 +482,27 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                WaterVaporCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            WaterVaporCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
 
 - type: entity
   parent: GasCanister
@@ -488,7 +511,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain ammonia. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: ammonia
     - type: GasCanister
@@ -499,25 +522,27 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                AmmoniaCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            AmmoniaCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
     - type: Lock
       locked: true
 
@@ -528,7 +553,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain nitrous oxide. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: nitrous_oxide
     - type: GasCanister
@@ -539,25 +564,27 @@
         temperature: 293.15
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                NitrousOxideCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            NitrousOxideCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
     - type: Lock
       locked: true
 
@@ -567,38 +594,41 @@
   name: frezon canister
   description: A canister that can contain any type of gas. This one is supposed to contain frezon. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"      layers:
-        - state: frezon
-    - type: GasCanister
-      gasMixture:
-        volume: 1500
-        moles:
-          Frezon: 2769.36 # Frezon
-        temperature: 293.15
-    - type: Destructible
-      thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 600
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 300
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                FrezonCanisterBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:DumpCanisterBehavior
-    - type: Lock
-      locked: true
+  - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    layers:
+    - state: frezon
+  - type: GasCanister
+    gasMixture:
+      volume: 1500
+      moles:
+        Frezon: 2769.36 # Frezon
+      temperature: 293.15
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 600
+      behaviors:
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+    - trigger:
+        !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          FrezonCanisterBroken:
+            min: 1
+            max: 1
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:DumpCanisterBehavior
+  - type: Lock
+    locked: true
 
 # Broke Entities
 
@@ -610,24 +640,26 @@
   components:
     - type: Destructible
       thresholds:
-        - trigger: !type:DamageTrigger
-            damage: 200
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-        - trigger: !type:DamageTrigger
-            damage: 100
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: MetalBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                SheetPlasteel1:
-                  min: 1
-                  max: 2
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
+      - trigger:
+          !type:DamageTrigger
+          damage: 200
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            SheetPlasteel1:
+              min: 1
+              max: 2
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
     - type: Damageable
       damageContainer: Inorganic
       damageModifierSet: Metallic
@@ -640,13 +672,14 @@
     - type: Fixtures
       fixtures:
         fix1:
-          shape: !type:PhysShapeAabb
+          shape:
+            !type:PhysShapeAabb
             bounds: "-0.4,-0.3,0.4,0.3"
           density: 190
           mask:
-            - MachineMask
+          - MachineMask
           layer:
-            - MachineLayer
+          - MachineLayer
     - type: PhysicalComposition
       materialComposition:
         Steel: 500
@@ -656,96 +689,99 @@
 - type: entity
   parent: GasCanisterBrokenBase
   id: StorageCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: storage-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: AirCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
-    - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"      state: air-1
+  - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    state: air-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: OxygenCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
-    - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"      state: oxygen-1
+  - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    state: oxygen-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: NitrogenCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: nitrogen-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: CarbonDioxideCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: carbon_dioxide-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: PlasmaCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: plasma-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: TritiumCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: tritium-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: WaterVaporCanisterBroken
   name: broken water vapor canister
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: water_vapor-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: AmmoniaCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: ammonia-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: NitrousOxideCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: nitrous_oxide-1
 
 - type: entity
   parent: GasCanisterBrokenBase
   id: FrezonCanisterBroken
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
-    - type: Sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"      state: frezon-1
+  - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    state: frezon-1
