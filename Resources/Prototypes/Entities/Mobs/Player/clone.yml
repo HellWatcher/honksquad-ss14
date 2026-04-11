@@ -17,6 +17,7 @@
   - NpcFactionMember
   # traits
   - Ageusia # HONK
+  - AlcoholTolerance # HONK
   - BlackAndWhiteOverlay
   - BoomingVoice # HONK
   - Clumsy
