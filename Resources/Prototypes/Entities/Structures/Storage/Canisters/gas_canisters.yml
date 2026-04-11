@@ -139,8 +139,9 @@
   name: storage canister
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
-        - state: yellow
+        - state: storage
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -178,8 +179,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain air mixture. It can be attached to connector ports using a wrench.
   components:
   - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     layers:
-      - state: grey
+      - state: air
   - type: GasCanister
     gasMixture:
       volume: 1500
@@ -218,8 +220,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain oxygen. It can be attached to connector ports using a wrench.
   components:
   - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     layers:
-      - state: blue
+      - state: oxygen
   - type: GasCanister
     gasMixture:
       volume: 1500
@@ -272,8 +275,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain nitrogen. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
-        - state: red
+        - state: nitrogen
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -326,8 +330,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain carbon dioxide. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
-        - state: black
+        - state: carbon_dioxide
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -382,8 +387,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain plasma. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
-        - state: orange
+        - state: plasma
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -423,8 +429,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain tritium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
-        - state: green
+        - state: tritium
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -464,6 +471,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain water vapor. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
         - state: water_vapor
     - type: GasCanister
@@ -503,8 +511,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain ammonia. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
-        - state: greenys
+        - state: ammonia
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -544,8 +553,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain nitrous oxide. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       layers:
-        - state: redws
+        - state: nitrous_oxide
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -585,6 +595,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain frezon. It can be attached to connector ports using a wrench.
   components:
   - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     layers:
     - state: frezon
   - type: GasCanister
@@ -681,7 +692,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: yellow-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: storage-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -689,7 +701,8 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
-    state: grey-1
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    state: air-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -697,7 +710,8 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
-    state: blue-1
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+    state: oxygen-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -705,7 +719,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: red-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: nitrogen-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -713,7 +728,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: black-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: carbon_dioxide-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -721,7 +737,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: orange-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: plasma-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -729,7 +746,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: green-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: tritium-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -738,6 +756,7 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
       state: water_vapor-1
 
 - type: entity
@@ -746,7 +765,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: greenys-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: ammonia-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -754,7 +774,8 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: Sprite
-      state: redws-1
+      sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
+      state: nitrous_oxide-1
 
 - type: entity
   parent: GasCanisterBrokenBase
@@ -762,4 +783,5 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
+    sprite: "@RussStation/Structures/Storage/canister.rsi" # HONK: SS13 per-gas canister sprite
     state: frezon-1

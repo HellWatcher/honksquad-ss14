@@ -1,0 +1,148 @@
+{
+  "_comment": "Gas table for Tools/canister_sprite_baker.py. Template values: default (1 color), stripe (2), double_stripe (2), hazard (2). Colors taken from russtation canister.dm per-gas defines.",
+  "gases": {
+    "air": {
+      "template": "default",
+      "colors": [
+        "#c6c0b5"
+      ]
+    },
+    "ammonia": {
+      "template": "double_stripe",
+      "colors": [
+        "#a8c84e",
+        "#e9ff5c"
+      ]
+    },
+    "antinoblium": {
+      "template": "double_stripe",
+      "colors": [
+        "#333333",
+        "#fefb30"
+      ]
+    },
+    "bz": {
+      "template": "double_stripe",
+      "colors": [
+        "#9b5d7f",
+        "#d0d2a0"
+      ]
+    },
+    "carbon_dioxide": {
+      "template": "double_stripe",
+      "colors": [
+        "#4e4c48",
+        "#eaeaea"
+      ]
+    },
+    "frezon": {
+      "template": "double_stripe",
+      "colors": [
+        "#6696ee",
+        "#fefb30"
+      ]
+    },
+    "halon": {
+      "template": "double_stripe",
+      "colors": [
+        "#9b5d7f",
+        "#368bff"
+      ]
+    },
+    "healium": {
+      "template": "double_stripe",
+      "colors": [
+        "#009823",
+        "#ff0e00"
+      ]
+    },
+    "helium": {
+      "template": "double_stripe",
+      "colors": [
+        "#9b5d7f",
+        "#368bff"
+      ]
+    },
+    "hydrogen": {
+      "template": "double_stripe",
+      "colors": [
+        "#eaeaea",
+        "#be3455"
+      ]
+    },
+    "miasma": {
+      "template": "double_stripe",
+      "colors": [
+        "#009823",
+        "#f7d5d3"
+      ]
+    },
+    "nitrium": {
+      "template": "default",
+      "colors": [
+        "#7b4732"
+      ]
+    },
+    "nitrogen": {
+      "template": "double_stripe",
+      "colors": [
+        "#e9ff5c",
+        "#f4fce8"
+      ]
+    },
+    "nitrous_oxide": {
+      "template": "double_stripe",
+      "colors": [
+        "#c63e3b",
+        "#f7d5d3"
+      ]
+    },
+    "oxygen": {
+      "template": "stripe",
+      "colors": [
+        "#2786e5",
+        "#e8fefe"
+      ]
+    },
+    "plasma": {
+      "template": "hazard",
+      "colors": [
+        "#f62800",
+        "#ffee00"
+      ]
+    },
+    "pluoxium": {
+      "template": "default",
+      "colors": [
+        "#2786e5"
+      ]
+    },
+    "proto_nitrate": {
+      "template": "double_stripe",
+      "colors": [
+        "#008200",
+        "#33cc33"
+      ]
+    },
+    "storage": {
+      "template": "default",
+      "colors": [
+        "#6b6b80"
+      ]
+    },
+    "tritium": {
+      "template": "hazard",
+      "colors": [
+        "#3fcd40",
+        "#ffee00"
+      ]
+    },
+    "water_vapor": {
+      "template": "double_stripe",
+      "colors": [
+        "#4c4e4d",
+        "#f7d5d3"
+      ]
+    }
+  }
+}
