@@ -16,6 +16,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
 using Robust.Shared.Collections;
 using Robust.Shared.Containers;
+using Robust.Client.Player; //HONK
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
@@ -24,6 +25,7 @@ namespace Content.Client.UserInterface.Systems.Storage.Controls;
 public sealed class StorageWindow : BaseWindow
 {
     [Dependency] private readonly IEntityManager _entity = default!;
+    [Dependency] private readonly IPlayerManager _player = default!; //HONK
     private readonly StorageUIController _storageController;
 
     public EntityUid? StorageEntity;
@@ -183,7 +185,7 @@ public sealed class StorageWindow : BaseWindow
 
         if (UserInterfaceManager.GetUIController<StorageUIController>().WindowTitle)
         {
-            _titleLabel.Text = Identity.Name(entity.Value, _entity);
+            _titleLabel.Text = Identity.Name(entity.Value, _entity, _player.LocalEntity);
             _titleContainer.Visible = true;
         }
         else
