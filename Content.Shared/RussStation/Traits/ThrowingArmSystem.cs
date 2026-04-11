@@ -12,6 +12,7 @@ public sealed class ThrowingArmSystem : EntitySystem
 
     private void OnBeforeThrow(EntityUid uid, ThrowingArmComponent component, ref BeforeThrowEvent args)
     {
-        args.ThrowSpeed *= component.ThrowSpeedMultiplier;
+        args.Direction *= component.ThrowMultiplier;
+        args.ThrowSpeed *= component.ThrowMultiplier;
     }
 }
