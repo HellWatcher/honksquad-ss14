@@ -26,10 +26,34 @@
       "name": "antinoblium-1"
     },
     {
+      "name": "bounty"
+    },
+    {
       "name": "bz"
     },
     {
       "name": "bz-1"
+    },
+    {
+      "name": "can-connector"
+    },
+    {
+      "name": "can-o0"
+    },
+    {
+      "name": "can-o1"
+    },
+    {
+      "name": "can-o2"
+    },
+    {
+      "name": "can-o3"
+    },
+    {
+      "name": "can-open"
+    },
+    {
+      "name": "captains_paper"
     },
     {
       "name": "carbon_dioxide"
@@ -74,6 +98,12 @@
       "name": "hyper_noblium-1"
     },
     {
+      "name": "invoice"
+    },
+    {
+      "name": "locked"
+    },
+    {
       "name": "nitrium"
     },
     {
@@ -96,6 +126,9 @@
     },
     {
       "name": "oxygen-1"
+    },
+    {
+      "name": "paper"
     },
     {
       "name": "plasma"
@@ -126,6 +159,9 @@
     },
     {
       "name": "tritium-1"
+    },
+    {
+      "name": "unlocked"
     },
     {
       "name": "water_vapor"
