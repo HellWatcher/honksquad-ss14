@@ -188,36 +188,42 @@
             tags:
               - Plunger
               - GoldenPlunger
+          insertOnInteract: false # HONK - consistent alt-click insertion
           priority: 8
         wetfloorsign_slot4:
           name: janitorial-trolley-slot-component-slot-name-sign
           whitelist:
             tags:
               - WetFloorSign
+          insertOnInteract: false # HONK - consistent alt-click insertion
           priority: 7
         wetfloorsign_slot3:
           name: janitorial-trolley-slot-component-slot-name-sign
           whitelist:
             tags:
               - WetFloorSign
+          insertOnInteract: false # HONK - consistent alt-click insertion
           priority: 7
         wetfloorsign_slot2:
           name: janitorial-trolley-slot-component-slot-name-sign
           whitelist:
             tags:
               - WetFloorSign
+          insertOnInteract: false # HONK - consistent alt-click insertion
           priority: 7
         wetfloorsign_slot1:
           name: janitorial-trolley-slot-component-slot-name-sign
           whitelist:
             tags:
               - WetFloorSign
+          insertOnInteract: false # HONK - consistent alt-click insertion
           priority: 7
         lightreplacer_slot:
           name: janitorial-trolley-slot-component-slot-name-lightreplacer
           whitelist:
             components:
               - LightReplacer
+          insertOnInteract: false # HONK - consistent alt-click insertion
           priority: 6
         spraybottle_slot:
           name: janitorial-trolley-slot-component-slot-name-spray
@@ -238,6 +244,7 @@
           whitelist:
             tags:
               - TrashBag
+          insertOnInteract: false # HONK - consistent alt-click insertion
           priority: 3 # Higher than drinking priority
     - type: Fixtures
       fixtures:
@@ -265,6 +272,10 @@
       solution: bucket
     - type: RefillableSolution
       solution: bucket
+    # HONK START - Allow dragging sinks/drains onto the trolley to refill the bucket.
+    - type: DumpableSolution
+      solution: bucket
+    # HONK END
     - type: ExaminableSolution
       solution: bucket
     - type: Damageable
@@ -351,6 +362,10 @@
       interfaces:
         enum.StorageUiKey.Key:
           type: StorageBoundUserInterface
+        # HONK START - Radial eject menu for quick item removal
+        enum.ItemSlotEjectMenuUiKey.Key:
+          type: ItemSlotEjectMenuBoundUserInterface
+        # HONK END
     - type: Edible
       edible: Drink
       solution: bucket
@@ -371,6 +386,12 @@
         wetfloorsign_slot1: !type:ContainerSlot {}
         lightreplacer_slot: !type:ContainerSlot {}
         spraybottle_slot:  !type:ContainerSlot {}
+    # HONK START - Empty-hand eject + alt-click radial eject menu
+    - type: ItemSlotEjectMenu
+    # HONK END
+    # HONK START - Left-click inserts into trash bag if item doesn't fit a trolley slot
+    - type: JanitorialTrolley
+    # HONK END
     - type: GuideHelp
       guides:
       - Janitorial
