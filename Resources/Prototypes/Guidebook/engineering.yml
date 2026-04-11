@@ -50,6 +50,9 @@
   - AtmosphericUpsets
   - AtmosTools
   - Gasses
+  # HONK START - Exotic gases guidebook entry (#105)
+  - ExoticGases
+  # HONK END
 
 - type: guideEntry
   id: GasManipulation
