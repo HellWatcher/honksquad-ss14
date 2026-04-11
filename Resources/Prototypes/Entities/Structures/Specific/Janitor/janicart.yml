@@ -264,6 +264,10 @@
     solution: bucket
   - type: RefillableSolution
     solution: bucket
+  # HONK START - Allow dragging sinks/drains onto the trolley to refill the bucket.
+  - type: DumpableSolution
+    solution: bucket
+  # HONK END
   - type: ExaminableSolution
     solution: bucket
   - type: Damageable
