@@ -35,7 +35,7 @@
   name: reagent-name-nitrium
   desc: reagent-desc-nitrium
   physicalDesc: reagent-physical-desc-gaseous
-  flavor: burning
+  flavor: spicy
   color: "#a52a2a"
   metabolisms:
     Respiration:

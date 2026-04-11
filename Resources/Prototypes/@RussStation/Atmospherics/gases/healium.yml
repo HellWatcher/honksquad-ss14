@@ -25,7 +25,7 @@
   name: reagent-name-healium
   desc: reagent-desc-healium
   physicalDesc: reagent-physical-desc-gaseous
-  flavor: rubbery
+  flavor: slimy
   color: "#fa8072"
   metabolisms:
     Respiration:
@@ -34,10 +34,11 @@
           effectProto: StatusEffectForcedSleeping
           time: 3
           type: Update
+        - !type:EvenHealthChange
+          damage:
+            Brute: -2
+            Burn: -2
         - !type:HealthChange
           damage:
-            groups:
-              Burn: -2
-              Brute: -2
             types:
               Poison: -5

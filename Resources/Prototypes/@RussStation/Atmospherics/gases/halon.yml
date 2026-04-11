@@ -24,7 +24,7 @@
   name: reagent-name-halon
   desc: reagent-desc-halon
   physicalDesc: reagent-physical-desc-gaseous
-  flavor: acrid
+  flavor: sharp
   color: "#800080"
   metabolisms:
     Bloodstream:

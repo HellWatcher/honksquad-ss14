@@ -56,7 +56,7 @@
   name: reagent-name-proto-nitrate
   desc: reagent-desc-proto-nitrate
   physicalDesc: reagent-physical-desc-gaseous
-  flavor: acidic
+  flavor: acid
   color: "#adff2f"
   metabolisms:
     Respiration:
