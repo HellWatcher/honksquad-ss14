@@ -1,5 +1,43 @@
 trait-ageusia-name = Ageusia
 trait-ageusia-desc = You can't taste anything.
-
 trait-blood-deficiency-name = Blood Deficiency
 trait-blood-deficiency-desc = Your blood runs thin.
+trait-scarred-eye-name = Scarred Eye
+trait-scarred-eye-desc = An old wound left one of your eyes barely functional.
+trait-papyrophobia-name = Papyrophobia
+trait-papyrophobia-desc = Something about paper just sets you off. You can't bring yourself to read it or put pen to it.
+papyrophobia-popup = You recoil from the paper.
+trait-negotiator-name = Negotiator
+trait-negotiator-desc = You negotiated a better contract. Your paycheck is 50% higher.
+trait-prosopagnosia-name = Prosopagnosia
+trait-prosopagnosia-desc = Every face is a stranger's face.
+trait-softspoken-name = Soft-Spoken
+trait-softspoken-desc = You've always been a little quiet.
+trait-touchy-name = Touchy
+trait-touchy-desc = You have to get close to really see anything.
+trait-indebted-name = Indebted
+trait-indebted-desc = You owe the company more than you'd like to admit.
+trait-booming-voice-name = Booming Voice
+trait-booming-voice-desc = Your voice carries further than most.
+trait-iron-jaw-name = Iron Jaw
+trait-iron-jaw-desc = You can take a hit.
+trait-steady-hand-name = Steady Hand
+trait-steady-hand-desc = Your hands are rock steady.
+trait-pooraim-name = Poor Aim
+trait-pooraim-desc = Your hands just won't stay steady.
+trait-glassjaw-name = Glass Jaw
+trait-glassjaw-desc = One good hit and you're seeing stars.
+trait-vegetarian-name = Vegetarian
+trait-vegetarian-desc = Meat just doesn't sit right with you.
+trait-vegetarian-nausea = You feel nauseous... that was meat!
+trait-lightstep-name = Light Step
+trait-lightstep-desc = You move with a soft tread, barely making a sound.
+trait-freerunning-name = Freerunning
+trait-freerunning-desc = You vault over obstacles like they're not even there.
+trait-self-aware-name = Self-Aware
+trait-self-aware-desc = You have an innate sense for the state of your own body.
+self-aware-total-damage = [bold][color=#FF5555]Total damage:[/color] [color=#FFB84D]{$amount}[/color][/bold]
+self-aware-blood-level = [bold][color=bisque]Blood level:[/color] [color=#e65353]{$percent}%[/color][/bold]
+self-aware-damage-type = [color={$color}]{$type}: {$amount}[/color]
+self-aware-wound-bleeding = [color=#e65353]Bleeding: {$rate}/s[/color]
+self-aware-wound-entry = [color={$color}]{$name} (Tier {$tier})[/color]
