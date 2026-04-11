@@ -20,9 +20,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain antinoblium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: antinoblium
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -35,9 +35,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain BZ. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: bz
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -50,9 +50,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain halon. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: halon
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -65,9 +65,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain healium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: healium
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -80,9 +80,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain helium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: helium
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -95,9 +95,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain hydrogen. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: hydrogen
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -110,9 +110,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain hyper-noblium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: hyper_noblium
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -125,9 +125,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain nitrium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: nitrium
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -140,9 +140,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain pluoxium. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: pluoxium
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -155,9 +155,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain proto-nitrate. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: proto_nitrate
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
@@ -170,9 +170,9 @@
   description: A canister that can contain any type of gas. This one is supposed to contain zauker. It can be attached to connector ports using a wrench.
   components:
     - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister.rsi"
       layers:
         - state: zauker
-          sprite: "@RussStation/Structures/Storage/canister.rsi"
     - type: GasCanister
       gasMixture:
         volume: 1500
