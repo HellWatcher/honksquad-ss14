@@ -1,0 +1,4 @@
+- type: guideEntry
+  id: ExoticGases
+  name: guide-entry-exotic-gases
+  text: "/ServerInfo/Guidebook/Engineering/ExoticGases.xml"
