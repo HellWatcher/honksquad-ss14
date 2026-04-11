@@ -43,5 +43,7 @@ self-aware-blood-level = [bold][color=bisque]Blood level:[/color] [color=#e65353
 self-aware-damage-type = [color={$color}]{$type}: {$amount}[/color]
 self-aware-wound-bleeding = [color=#e65353]Bleeding: {$rate}/s[/color]
 self-aware-wound-entry = [color={$color}]{$name} (Tier {$tier})[/color]
+trait-tough-name = Tough
+trait-tough-desc = You can take a beating.
 trait-alcohol-tolerance-name = Hard Drinker
 trait-alcohol-tolerance-desc = You can hold your liquor.

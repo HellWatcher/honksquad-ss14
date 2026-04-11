@@ -37,4 +37,11 @@ public sealed partial class WoundComponent : Component
 
     [DataField]
     public ProtoId<AlertPrototype> BurnAlert = "Burn";
+
+    /// <summary>
+    /// Scales the effective spike amount checked against wound thresholds.
+    /// Higher values make wounds harder to trigger (used by the Tough quirk).
+    /// </summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public float ThresholdMultiplier = 1f;
 }
