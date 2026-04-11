@@ -67,6 +67,6 @@ public sealed class SkittishSystem : EntitySystem
         if (lockComp != null)
             _lock.Lock(other, null, lockComp);
 
-        _popup.PopupEntity(Loc.GetString("skittish-hide", ("container", other)), uid, uid);
+        _popup.PopupEntity(Loc.GetString("trait-skittish-hide", ("container", other)), uid, uid);
     }
 }
