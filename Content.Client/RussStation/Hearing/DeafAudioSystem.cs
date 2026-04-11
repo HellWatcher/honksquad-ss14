@@ -65,12 +65,16 @@ public sealed class DeafAudioSystem : EntitySystem
 
     private void OnRemove(EntityUid uid, DeafableComponent comp, ComponentRemove args)
     {
-        SetDeaf(false);
+        // Ignore non-local entities so that a distant NPC losing DeafableComponent
+        // does not unhook our override while the local player is still deaf.
+        if (uid == _player.LocalEntity)
+            SetDeaf(false);
     }
 
     private void OnDeafnessChanged(EntityUid uid, DeafableComponent comp, ref DeafnessChangedEvent args)
     {
-        SetDeaf(args.Deaf);
+        if (uid == _player.LocalEntity)
+            SetDeaf(args.Deaf);
     }
 
     private void SetDeaf(bool deaf)
