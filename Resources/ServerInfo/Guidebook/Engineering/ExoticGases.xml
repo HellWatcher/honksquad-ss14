@@ -1,0 +1,112 @@
+<Document>
+  # Exotic Gases
+
+  Atmos can synthesize a handful of exotic gases from the common ones. Most form at specific temperatures, and several feed into each other, so you can build reaction chains once the basic inputs are on hand. A full reference of every reaction is at the bottom of the page.
+
+  ## Hydrogen
+  <Box>
+    <GuideEntityEmbed Entity="HydrogenCanister" Caption=""/>
+  </Box>
+
+  A light, highly flammable gas. Above fire temperature (373.15 K), hydrogen burns with oxygen into water vapor. It is not radioactive like tritium, and the burn is hot but not catastrophic, so a small leak with an ignition source will not instantly melt a room. A large leak still will.
+
+  Hydrogen is also a required input for Proto-Nitrate synthesis and can be produced as a byproduct of nitrium decomposition.
+
+  ## Helium
+  <Box>
+    <GuideEntityEmbed Entity="HeliumCanister" Caption=""/>
+  </Box>
+
+  An inert noble gas. Helium does not react with anything on its own and has no direct effect on crew who inhale it. It shows up as a byproduct of proto-nitrate decomposing BZ.
+
+  ## BZ
+  <Box>
+    <GuideEntityEmbed Entity="BZCanister" Caption=""/>
+  </Box>
+
+  A hallucinogenic gas with mild neurological side effects. Inhaling BZ causes hallucinations and brain damage, so it makes a nasty area denial tool.
+
+  BZ forms when nitrous oxide and plasma are mixed below 40°C (313.15 K). Because N2O is a sedative on its own, producing BZ also gives atmos a way to neutralize ambient nitrous oxide leaks.
+
+  BZ is also a required catalyst for nitrium formation and a reactant for healium.
+
+  ## Pluoxium
+  <Box>
+    <GuideEntityEmbed Entity="PluoxiumCanister" Caption=""/>
+  </Box>
+
+  A hyper-efficient oxygenator. One mole of pluoxium oxygenates the bloodstream as much as eight moles of plain oxygen. That makes it a huge space-saver for internals on long away missions or in hostile atmospheres.
+
+  Pluoxium forms at cryogenic temperatures (50 K to 273 K) from a mix of carbon dioxide, oxygen, and tritium. The synthesis chain is the main use for the CO2 canister most stations never touch.
+
+  Pluoxium is also the primary input for Proto-Nitrate, so stockpiling it unlocks the rest of the exotic chain.
+
+  ## Halon
+  <Box>
+    <GuideEntityEmbed Entity="HalonCanister" Caption=""/>
+  </Box>
+
+  A fire suppressant gas. Halon actively removes oxygen from hot atmospheres above 70°C (343.15 K), with each mole of halon scrubbing up to twenty moles of oxygen. Released into a burning room, halon snuffs out the fire by starving it.
+
+  Halon has no known formation reaction and must be ordered from cargo or found in roundstart supplies. It is mildly caustic if inhaled, so use a mask when venting it.
+
+  ## Antinoblium
+  <Box>
+    <GuideEntityEmbed Entity="AntinobliumCanister" Caption=""/>
+  </Box>
+
+  A dense, dark-red noble gas with no current reactions. Antinoblium is a placeholder for future hyper-noblium chemistry, but right now its main use is as a high-value trade good (10 spesos per mole) or as a curio for atmos techs who want every canister in the room.
+
+  ## Healium
+  <Box>
+    <GuideEntityEmbed Entity="HealiumCanister" Caption=""/>
+  </Box>
+
+  A powerful medical gas. Inhaling healium heals brute, burn, and poison damage but forces the victim to sleep while it is in the bloodstream. Useful for emergency field stabilization or, in large quantities, for knocking out a crowd.
+
+  Healium forms from BZ and frezon anywhere between 25 K and 300 K. Both inputs are hard to produce, which keeps healium rare despite how strong it is.
+
+  ## Nitrium
+  <Box>
+    <GuideEntityEmbed Entity="NitriumCanister" Caption=""/>
+  </Box>
+
+  A stimulant gas. Inhaling nitrium grants a 25% movement speed boost at the cost of slow toxin buildup, so it is great for sprinting across the station but not for long-term use.
+
+  Nitrium forms only at extreme temperatures (1500 K or higher) from tritium, nitrogen, and a small amount of BZ as a catalyst. The reaction is endothermic, which pulls heat out of the tile and makes it tricky to sustain in a burn chamber.
+
+  Cold nitrium is unstable: below 70°C (343.15 K) it slowly decomposes in the presence of oxygen, releasing hydrogen and nitrogen. Keep it hot or keep it sealed.
+
+  ## Proto-Nitrate
+  <Box>
+    <GuideEntityEmbed Entity="ProtoNitrateCanister" Caption=""/>
+  </Box>
+
+  Proto-nitrate reacts more than any other exotic gas. It takes part in four separate reactions.
+
+  Proto-Nitrate forms from pluoxium and hydrogen at very high temperatures (5000 K to 10000 K). Once you have some, you can feed it back into three other reactions:
+
+  - With excess hydrogen (150 mol or more), it converts more hydrogen into more proto-nitrate. The reaction feeds itself.
+  - With tritium between 150 K and 340 K, it de-irradiates the tritium into plain hydrogen, useful for cleaning up after a sloppy burn.
+  - With BZ between 260 K and 280 K, it decomposes the BZ into nitrogen, helium, and plasma.
+
+  Inhaling proto-nitrate is mildly toxic, so keep it sealed.
+
+  ## Synthesis Reference
+
+  Quick-reference table of every exotic reaction and its required conditions:
+
+  - [bold]Hydrogen Fire[/bold]: H2 + O2 → Water Vapor, above 373.15 K. Exothermic.
+  - [bold]BZ Formation[/bold]: N2O + Plasma → BZ, below 313.15 K.
+  - [bold]Pluoxium Formation[/bold]: CO2 + O2 + Tritium → Pluoxium, 50 K to 273 K.
+  - [bold]Halon Oxygen Removal[/bold]: Halon + O2 → (O2 consumed), above 343.15 K. Endothermic, used for fire suppression.
+  - [bold]Healium Formation[/bold]: BZ + Frezon → Healium, 25 K to 300 K. Exothermic.
+  - [bold]Nitrium Formation[/bold]: Tritium + N2 + BZ → Nitrium, above 1500 K. Endothermic.
+  - [bold]Nitrium Decomposition[/bold]: Nitrium + O2 → Hydrogen + N2, below 343.15 K. Slow, exothermic.
+  - [bold]Proto-Nitrate Formation[/bold]: Pluoxium + Hydrogen → Proto-Nitrate, 5000 K to 10000 K. Exothermic.
+  - [bold]Proto-Nitrate Hydrogen Conversion[/bold]: Proto-Nitrate + large Hydrogen (150 mol+) → more Proto-Nitrate. Endothermic.
+  - [bold]Proto-Nitrate Tritium Conversion[/bold]: Proto-Nitrate + Tritium → Hydrogen, 150 K to 340 K. Exothermic.
+  - [bold]Proto-Nitrate BZ Decomposition[/bold]: Proto-Nitrate + BZ → N2 + Helium + Plasma, 260 K to 280 K. Exothermic.
+
+  Most of these reactions are temperature-gated, so a working atmos setup usually needs a heater, a freezer, and a mixer to cover the full range.
+</Document>
