@@ -1,5 +1,4 @@
 # Gas abbreviations
-gas-miasma-abbreviation = MIA
 gas-hydrogen-abbreviation = H₂
 gas-helium-abbreviation = He
 gas-bz-abbreviation = BZ
@@ -11,7 +10,6 @@ gas-nitrium-abbreviation = NTR
 gas-proto-nitrate-abbreviation = PN
 
 # Gas display names
-gases-miasma = Miasma
 gases-hydrogen = Hydrogen
 gases-helium = Helium
 gases-bz = BZ

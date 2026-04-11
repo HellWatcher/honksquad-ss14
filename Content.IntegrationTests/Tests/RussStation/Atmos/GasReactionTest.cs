@@ -12,8 +12,8 @@ namespace Content.IntegrationTests.Tests.RussStation.Atmos;
 /// Covers the fork's <see cref="IGasReactionEffect"/> implementations in
 /// <c>Content.Server/RussStation/Atmos/Reactions</c>. Each reaction is
 /// exercised with a happy-path input and at least one no-reaction input,
-/// plus a handful of branch-specific cases where a reaction has more than
-/// one early return (BZ decomposition, miasma humidity block). Also covers
+/// plus branch-specific cases where a reaction has more than one early
+/// return (BZ decomposition). Also covers
 /// <see cref="ReactionHelper.AdjustEnergy"/> directly because every reaction
 /// depends on it.
 /// </summary>
@@ -83,56 +83,6 @@ public sealed class GasReactionTest
                 Assert.That(result, Is.EqualTo(ReactionResult.NoReaction));
                 Assert.That(mix.GetMoles(Gas.Oxygen), Is.EqualTo(50f).Within(Tol));
                 Assert.That(mix.GetMoles(Gas.WaterVapor), Is.Zero);
-            });
-        });
-
-    // ---- MiasmaOxidation ---------------------------------------------------
-
-    [Test]
-    public Task MiasmaOxidation_DryMiasma_ConvertsToOxygen() => TestReaction<MiasmaOxidationReaction>(
-        mix =>
-        {
-            mix.AdjustMoles(Gas.Miasma, 10f);
-        },
-        (result, mix, _) =>
-        {
-            // cleanedMoles = min(10, MiasmaOxidationRate=5) = 5
-            var startTemp = Atmospherics.T20C;
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Is.EqualTo(ReactionResult.Reacting));
-                Assert.That(mix.GetMoles(Gas.Miasma), Is.EqualTo(5f).Within(Tol));
-                Assert.That(mix.GetMoles(Gas.Oxygen), Is.EqualTo(5f).Within(Tol));
-                Assert.That(mix.Temperature, Is.GreaterThan(startTemp));
-            });
-        });
-
-    [Test]
-    public Task MiasmaOxidation_HighHumidity_DoesNotReact() => TestReaction<MiasmaOxidationReaction>(
-        mix =>
-        {
-            mix.AdjustMoles(Gas.Miasma, 9f);
-            mix.AdjustMoles(Gas.WaterVapor, 2f); // ratio 2/11 ≈ 0.18 > 0.1 blocks
-        },
-        (result, mix, _) =>
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Is.EqualTo(ReactionResult.NoReaction));
-                Assert.That(mix.GetMoles(Gas.Miasma), Is.EqualTo(9f).Within(Tol));
-                Assert.That(mix.GetMoles(Gas.Oxygen), Is.Zero);
-            });
-        });
-
-    [Test]
-    public Task MiasmaOxidation_EmptyMixture_DoesNotReact() => TestReaction<MiasmaOxidationReaction>(
-        _ => { },
-        (result, mix, _) =>
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Is.EqualTo(ReactionResult.NoReaction));
-                Assert.That(mix.TotalMoles, Is.Zero);
             });
         });
 

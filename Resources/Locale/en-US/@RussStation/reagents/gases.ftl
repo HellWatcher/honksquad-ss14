@@ -1,6 +1,3 @@
-reagent-name-miasma = Miasma
-reagent-desc-miasma = Biological pollutants found in the atmosphere. Toxic when inhaled.
-
 reagent-name-bz = BZ
 reagent-desc-bz = A powerful hallucinogenic nerve agent able to induce cognitive damage.
 

@@ -7,10 +7,6 @@ namespace Content.Server.RussStation.Atmos;
 /// </summary>
 public static class RussAtmospherics
 {
-    public const float MiasmaOxidationMinTemp = Atmospherics.T0C + 170f;
-    public const float MiasmaOxidationRate = 5f;
-    public const float MiasmaOxidationEnergyReleased = 100f;
-
     public const float HydrogenBurnRateDelta = 2f;
     public const float HydrogenOxygenFullburn = 10f;
 
