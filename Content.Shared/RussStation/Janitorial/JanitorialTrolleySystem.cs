@@ -1,19 +1,20 @@
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Interaction;
-using Content.Shared.RussStation.Janitorial;
+using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Storage;
 using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Verbs;
 using Content.Shared.Whitelist;
 
-namespace Content.Server.RussStation.Janitorial;
+namespace Content.Shared.RussStation.Janitorial;
 
 /// <summary>
-///     When a player left-clicks the trolley with an item that doesn't match any
-///     item slot whitelist, the system tries to insert it into the trash bag
-///     stored in the trolley's trash bag slot.
+///     Trolley-specific interactions: trash bag pass-through on left-click, and
+///     routes the drink interaction to ActivateInWorld (E) instead of the alt-verb.
 /// </summary>
 public sealed class JanitorialTrolleySystem : EntitySystem
 {
+    [Dependency] private readonly IngestionSystem _ingestion = default!;
     [Dependency] private readonly ItemSlotsSystem _itemSlots = default!;
     [Dependency] private readonly SharedStorageSystem _storage = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
@@ -23,6 +24,10 @@ public sealed class JanitorialTrolleySystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<JanitorialTrolleyComponent, InteractUsingEvent>(OnInteractUsing);
+        SubscribeLocalEvent<JanitorialTrolleyComponent, ActivateInWorldEvent>(OnActivate);
+        SubscribeLocalEvent<JanitorialTrolleyComponent, GetVerbsEvent<AlternativeVerb>>(
+            OnGetAltVerbs,
+            after: [typeof(IngestionSystem)]);
     }
 
     private void OnInteractUsing(EntityUid uid, JanitorialTrolleyComponent comp, InteractUsingEvent args)
@@ -54,5 +59,22 @@ public sealed class JanitorialTrolleySystem : EntitySystem
         // Try to insert the held item into the trash bag's storage.
         if (_storage.PlayerInsertEntityInWorld((trashBag, storage), args.User, args.Used))
             args.Handled = true;
+    }
+
+    private void OnActivate(EntityUid uid, JanitorialTrolleyComponent comp, ActivateInWorldEvent args)
+    {
+        if (args.Handled || !args.Complex)
+            return;
+
+        if (_ingestion.TryIngest(args.User, uid))
+            args.Handled = true;
+    }
+
+    // Remove the drink alt-verb so alt-click stays reserved for the eject menu.
+    // Drinking is handled by ActivateInWorld (E) above.
+    private void OnGetAltVerbs(EntityUid uid, JanitorialTrolleyComponent comp, GetVerbsEvent<AlternativeVerb> args)
+    {
+        var drinkText = Loc.GetString("ingestion-verb-drink");
+        args.Verbs.RemoveWhere(v => v.Text == drinkText);
     }
 }

@@ -2,18 +2,16 @@ using System.Linq;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
-using Content.Shared.RussStation.ItemSlots;
 using Content.Shared.Verbs;
-using Robust.Server.GameObjects;
 using Robust.Shared.Utility;
 
-namespace Content.Server.RussStation.ItemSlots;
+namespace Content.Shared.RussStation.ItemSlots;
 
 public sealed class ItemSlotEjectMenuSystem : EntitySystem
 {
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly ItemSlotsSystem _itemSlots = default!;
-    [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
 
     public override void Initialize()
     {
@@ -57,14 +55,23 @@ public sealed class ItemSlotEjectMenuSystem : EntitySystem
         if (args.Hands == null || !args.CanAccess || !args.CanInteract)
             return;
 
-        // Only show when hands are empty so alt-click with an item falls through to insert verbs.
-        if (args.Using != null)
-            return;
-
         if (!TryComp<ItemSlotsComponent>(uid, out var itemSlots))
             return;
 
-        // Only show the verb if there's at least one occupied slot.
+        // If the user is holding an item that fits any slot, let the upstream insert verbs win.
+        if (args.Using != null)
+        {
+            foreach (var slot in itemSlots.Slots.Values)
+            {
+                if (slot.InsertOnInteract)
+                    continue;
+
+                if (_itemSlots.CanInsert(uid, args.Using.Value, args.User, slot))
+                    return;
+            }
+        }
+
+        // Only show the radial menu verb if there's at least one occupied slot to eject.
         var hasOccupied = false;
         foreach (var slot in itemSlots.Slots.Values)
         {
