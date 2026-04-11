@@ -10,8 +10,8 @@
     "ammonia": {
       "template": "double_stripe",
       "colors": [
-        "#a8c84e",
-        "#e9ff5c"
+        "#009823",
+        "#f7d5d3"
       ]
     },
     "antinoblium": {
@@ -68,13 +68,6 @@
       "colors": [
         "#eaeaea",
         "#be3455"
-      ]
-    },
-    "miasma": {
-      "template": "double_stripe",
-      "colors": [
-        "#009823",
-        "#f7d5d3"
       ]
     },
     "nitrium": {
