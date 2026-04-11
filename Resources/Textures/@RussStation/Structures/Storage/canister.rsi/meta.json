@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Baked from tgstation (AGPL-3.0 code, CC-BY-SA-3.0 sprites) greyscale canister layers at icons/obj/pipes_n_cables/canisters.dmi.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "air"
+    },
+    {
+      "name": "air-1"
+    },
+    {
+      "name": "ammonia"
+    },
+    {
+      "name": "ammonia-1"
+    },
+    {
+      "name": "antinoblium"
+    },
+    {
+      "name": "antinoblium-1"
+    },
+    {
+      "name": "bz"
+    },
+    {
+      "name": "bz-1"
+    },
+    {
+      "name": "carbon_dioxide"
+    },
+    {
+      "name": "carbon_dioxide-1"
+    },
+    {
+      "name": "frezon"
+    },
+    {
+      "name": "frezon-1"
+    },
+    {
+      "name": "halon"
+    },
+    {
+      "name": "halon-1"
+    },
+    {
+      "name": "healium"
+    },
+    {
+      "name": "healium-1"
+    },
+    {
+      "name": "helium"
+    },
+    {
+      "name": "helium-1"
+    },
+    {
+      "name": "hydrogen"
+    },
+    {
+      "name": "hydrogen-1"
+    },
+    {
+      "name": "miasma"
+    },
+    {
+      "name": "miasma-1"
+    },
+    {
+      "name": "nitrium"
+    },
+    {
+      "name": "nitrium-1"
+    },
+    {
+      "name": "nitrogen"
+    },
+    {
+      "name": "nitrogen-1"
+    },
+    {
+      "name": "nitrous_oxide"
+    },
+    {
+      "name": "nitrous_oxide-1"
+    },
+    {
+      "name": "oxygen"
+    },
+    {
+      "name": "oxygen-1"
+    },
+    {
+      "name": "plasma"
+    },
+    {
+      "name": "plasma-1"
+    },
+    {
+      "name": "pluoxium"
+    },
+    {
+      "name": "pluoxium-1"
+    },
+    {
+      "name": "proto_nitrate"
+    },
+    {
+      "name": "proto_nitrate-1"
+    },
+    {
+      "name": "storage"
+    },
+    {
+      "name": "storage-1"
+    },
+    {
+      "name": "tritium"
+    },
+    {
+      "name": "tritium-1"
+    },
+    {
+      "name": "water_vapor"
+    },
+    {
+      "name": "water_vapor-1"
+    }
+  ]
+}
