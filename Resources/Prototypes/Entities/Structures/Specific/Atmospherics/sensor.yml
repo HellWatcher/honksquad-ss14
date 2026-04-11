@@ -25,6 +25,17 @@
       Ammonia: stationAmmonia
       NitrousOxide: stationNO
       Frezon: danger
+      # HONK START - fork gases default to danger so the air alarm UI has thresholds for every Gas enum value
+      Hydrogen: danger
+      Helium: danger
+      BZ: danger
+      Pluoxium: danger
+      Halon: danger
+      Antinoblium: danger
+      Healium: danger
+      Nitrium: danger
+      ProtoNitrate: danger
+      # HONK END
   - type: GuideHelp
     guides:
     - DeviceMonitoringAndControl

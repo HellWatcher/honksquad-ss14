@@ -15,6 +15,17 @@
       Ammonia: stationAmmonia
       NitrousOxide: stationNO
       Frezon: danger
+      # HONK START - fork gases default to danger so the air alarm UI has thresholds for every Gas enum value
+      Hydrogen: danger
+      Helium: danger
+      BZ: danger
+      Pluoxium: danger
+      Halon: danger
+      Antinoblium: danger
+      Healium: danger
+      Nitrium: danger
+      ProtoNitrate: danger
+      # HONK END
 
 - type: entity
   parent: [AirSensorVoxBase, AirSensor]
@@ -39,6 +50,17 @@
     - Ammonia
     - NitrousOxide
     - Frezon
+    # HONK START - fork gases, scrubbed out of vox atmospheres alongside the vanilla dangerous gases
+    - Hydrogen
+    - Helium
+    - BZ
+    - Pluoxium
+    - Halon
+    - Antinoblium
+    - Healium
+    - Nitrium
+    - ProtoNitrate
+    # HONK END
 
 # use this to prevent overriding filters with hardcoded defaults
 - type: entity
