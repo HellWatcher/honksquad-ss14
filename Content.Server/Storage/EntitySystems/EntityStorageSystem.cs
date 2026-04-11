@@ -6,6 +6,7 @@ using Content.Shared.Atmos;
 using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
 //HONK START - Airtight lockers when welded
+using Content.Shared.Tools.Components;
 using Content.Shared.Tools.Systems;
 //HONK END
 using Robust.Server.GameObjects;
@@ -37,6 +38,14 @@ public sealed class EntityStorageSystem : SharedEntityStorageSystem
 
     private void OnMapInit(EntityUid uid, EntityStorageComponent component, MapInitEvent args)
     {
+        //HONK START - 441 P1.3: sync Airtight from the initial weld state so map-placed pre-welded storages seal correctly
+        if (component.AirtightWhenWelded
+            && TryComp<WeldableComponent>(uid, out var weldable))
+        {
+            component.Airtight = weldable.IsWelded;
+        }
+        //HONK END
+
         if (!component.Open && component.Air.TotalMoles == 0)
         {
             // If we're closed on spawn and have no air already saved, we need to pull some air into our environment from where we spawned,
@@ -93,10 +102,14 @@ public sealed class EntityStorageSystem : SharedEntityStorageSystem
     }
 
     //HONK START - Airtight lockers when welded
-    // NOTE: This only fires on state change, so lockers placed pre-welded in maps
-    // won't become airtight until unwelded and re-welded.
+    // Only opted-in storages sync their Airtight to the weld state. Storages
+    // that are prototype-airtight (e.g. SuitStorageBase) leave AirtightWhenWelded
+    // unset and keep their configured value regardless of welding.
     private void OnWeldChanged(EntityUid uid, EntityStorageComponent component, ref WeldableChangedEvent args)
     {
+        if (!component.AirtightWhenWelded)
+            return;
+
         if (args.IsWelded)
         {
             component.Airtight = true;

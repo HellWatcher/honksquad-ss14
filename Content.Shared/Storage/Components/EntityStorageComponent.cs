@@ -108,6 +108,18 @@ public sealed partial class EntityStorageComponent : Component, IGasMixtureHolde
     [DataField]
     public bool Airtight = true;
 
+    //HONK START - 441 P1.3: opt-in sync of Airtight to the Weldable state
+    /// <summary>
+    /// When true, <see cref="Airtight"/> is kept in sync with the entity's
+    /// <see cref="Content.Shared.Tools.Components.WeldableComponent.IsWelded"/>
+    /// state. Welding seals the container, unwelding vents it. Applied at
+    /// <see cref="MapInitEvent"/> so map-placed pre-welded storages are sealed
+    /// correctly on spawn.
+    /// </summary>
+    [DataField]
+    public bool AirtightWhenWelded;
+    //HONK END
+
     /// <summary>
     /// Whether or not the entitystorage is open or closed.
     /// </summary>
