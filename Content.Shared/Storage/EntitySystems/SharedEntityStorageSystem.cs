@@ -92,9 +92,11 @@ public abstract class SharedEntityStorageSystem : EntitySystem
         if (target.Open)
             args.Cancelled = true;
 
+        // HONK START - We don't want to disable (un)locking from the inside for gameplay reasons.
         // Cannot (un)lock from the inside. Maybe a bad idea? Security jocks could trap nerds in lockers?
-        if (target.Contents.Contains(args.User))
-            args.Cancelled = true;
+        // if (target.Contents.Contains(args.User))
+        //     args.Cancelled = true;
+        // HONK END
     }
 
     private void OnDestruction(EntityUid uid, EntityStorageComponent component, DestructionEventArgs args)

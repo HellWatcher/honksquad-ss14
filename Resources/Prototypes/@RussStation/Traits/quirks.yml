@@ -311,3 +311,15 @@
     - wounds
   components:
     - type: Tough
+
+- type: trait
+  id: Skittish
+  name: trait-skittish-name
+  description: trait-skittish-desc
+  category: Movement
+  cost: 8
+  blacklist:
+    components:
+      - BorgChassis
+  components:
+    - type: Skittish
