@@ -4,6 +4,8 @@
   specificHeat: 30
   heatCapacityRatio: 1.4
   molarMass: 80
+  gasOverlaySprite: /Textures/Effects/atmospherics.rsi
+  gasOverlayState: proto_nitrate
   color: adff2f
   reagent: ProtoNitrate
   pricePerMole: 2.5

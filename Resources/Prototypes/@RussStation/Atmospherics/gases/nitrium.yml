@@ -4,6 +4,8 @@
   specificHeat: 10
   heatCapacityRatio: 1.4
   molarMass: 50
+  gasOverlaySprite: /Textures/Effects/atmospherics.rsi
+  gasOverlayState: nitrium
   color: a52a2a
   reagent: Nitrium
   pricePerMole: 2.5

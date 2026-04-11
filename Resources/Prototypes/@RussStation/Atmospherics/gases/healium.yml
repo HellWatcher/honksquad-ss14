@@ -4,6 +4,8 @@
   specificHeat: 10
   heatCapacityRatio: 1.4
   molarMass: 50
+  gasOverlaySprite: /Textures/Effects/atmospherics.rsi
+  gasOverlayState: healium
   color: fa8072
   reagent: Healium
   pricePerMole: 2
