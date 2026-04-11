@@ -107,8 +107,7 @@
     components:
       - Blindable
   components:
-    - type: PermanentBlindness
-      blindness: 4
+    - type: ScarredEye
 
 - type: trait
   id: Illiterate
