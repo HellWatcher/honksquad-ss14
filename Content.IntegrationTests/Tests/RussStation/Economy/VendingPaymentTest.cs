@@ -143,7 +143,6 @@ public sealed class VendingPaymentTest : InteractionTest
     /// Mobs holding physical spesos should be able to pay with them.
     /// </summary>
     [Test]
-    [Ignore("Cash payment fails in integration test environment (pre-existing issue).")]
     public async Task CashPaymentTest()
     {
         await SpawnTarget(VendingMachineProtoId);
@@ -154,8 +153,11 @@ public sealed class VendingPaymentTest : InteractionTest
 
         Assert.That(items.First().Amount, Is.EqualTo(5));
 
-        // Put spesos in the player's hand
-        var spesos = await SpawnEntity("SpaceCash100", SEntMan.GetCoordinates(PlayerCoords));
+        // Put spesos in the player's hand. SpawnEntity rewrites any entity
+        // with a StackComponent into a stack spawn using EntitySpecifier.Quantity,
+        // so the "SpaceCash100" suffix is cosmetic -- the quantity must be
+        // passed explicitly or the player ends up holding a single credit.
+        var spesos = await SpawnEntity(("SpaceCash", 500), SEntMan.GetCoordinates(PlayerCoords));
         await Server.WaitPost(() =>
         {
             var hands = SEntMan.System<SharedHandsSystem>();
