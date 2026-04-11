@@ -377,6 +377,16 @@
     endAnnouncement: station-event-gas-leak-end-announcement
     weight: 8
   - type: GasLeakRule
+    # HONK START - tritium and frezon are too spicy for a random event;
+    # halon, BZ, and nitrium are fork gases that fit the "annoying but survivable" bar
+    leakableGases:
+    - Ammonia
+    - Plasma
+    - WaterVapor
+    - Halon
+    - BZ
+    - Nitrium
+    # HONK END
 
 - type: entity
   id: KudzuGrowth
