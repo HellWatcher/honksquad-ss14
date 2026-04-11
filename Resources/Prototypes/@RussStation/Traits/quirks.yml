@@ -12,6 +12,23 @@
     - type: Ageusia
 
 - type: trait
+  id: ScarredEye
+  name: trait-scarred-eye-name
+  description: trait-scarred-eye-desc
+  traitGear: ClothingEyesEyepatch
+  category: Senses
+  cost: -2
+  tags:
+    - sight
+  excludedTags:
+    - sight
+  whitelist:
+    components:
+      - Blindable
+  components:
+    - type: ScarredEye
+
+- type: trait
   id: Papyrophobia
   name: trait-papyrophobia-name
   description: trait-papyrophobia-desc

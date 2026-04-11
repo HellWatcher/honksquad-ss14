@@ -1,5 +1,7 @@
 trait-ageusia-name = Ageusia
 trait-ageusia-desc = You can't taste anything.
+trait-scarred-eye-name = Scarred Eye
+trait-scarred-eye-desc = An old wound left one of your eyes barely functional.
 trait-papyrophobia-name = Papyrophobia
 trait-papyrophobia-desc = Something about paper just sets you off. You can't bring yourself to read it or put pen to it.
 papyrophobia-popup = You recoil from the paper.
