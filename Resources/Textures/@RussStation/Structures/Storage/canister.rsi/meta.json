@@ -68,6 +68,12 @@
       "name": "hydrogen-1"
     },
     {
+      "name": "hyper_noblium"
+    },
+    {
+      "name": "hyper_noblium-1"
+    },
+    {
       "name": "nitrium"
     },
     {
@@ -126,6 +132,12 @@
     },
     {
       "name": "water_vapor-1"
+    },
+    {
+      "name": "zauker"
+    },
+    {
+      "name": "zauker-1"
     }
   ]
 }

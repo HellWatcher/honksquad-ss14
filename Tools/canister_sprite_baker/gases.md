@@ -38,9 +38,11 @@ SS13 generic canister color from `canister.dm`.
 | healium       | double_stripe | `#009823` | `#ff0e00` | `HealiumCanister`      |
 | helium        | double_stripe | `#9b5d7f` | `#368bff` | `HeliumCanister`       |
 | hydrogen      | double_stripe | `#eaeaea` | `#be3455` | `HydrogenCanister`     |
+| hyper_noblium | double_stripe | `#6399fc` | `#b2b2b2` | `HyperNobliumCanister` |
 | nitrium       | default       | `#7b4732` |           | `NitriumCanister`      |
 | pluoxium      | default       | `#2786e5` |           | `PluoxiumCanister`     |
 | proto_nitrate | double_stripe | `#008200` | `#33cc33` | `ProtoNitrateCanister` |
+| zauker        | double_stripe | `#009a00` | `#006600` | `ZaukerCanister`       |
 
 ## Templates
 
