@@ -1,5 +1,7 @@
 trait-ageusia-name = Ageusia
 trait-ageusia-desc = You can't taste anything.
+trait-blood-deficiency-name = Blood Deficiency
+trait-blood-deficiency-desc = Your blood runs thin.
 trait-scarred-eye-name = Scarred Eye
 trait-scarred-eye-desc = An old wound left one of your eyes barely functional.
 trait-papyrophobia-name = Papyrophobia

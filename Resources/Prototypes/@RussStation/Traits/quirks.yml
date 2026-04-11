@@ -222,3 +222,19 @@
     - awareness
   components:
     - type: SelfAware
+
+- type: trait
+  id: BloodDeficiency
+  name: trait-blood-deficiency-name
+  description: trait-blood-deficiency-desc
+  category: Combat
+  cost: -6
+  tags:
+    - blood
+  excludedTags:
+    - blood
+  whitelist:
+    components:
+      - Bloodstream
+  components:
+    - type: BloodDeficiency
