@@ -6,5 +6,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class ScarredEyeComponent : Component
 {
     [DataField]
-    public int Blindness = 4;
+    public int Blindness = 2;
 }
