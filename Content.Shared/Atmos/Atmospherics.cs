@@ -184,6 +184,19 @@ namespace Content.Shared.Atmos
             [Gas.Plasma] = Loc.GetString("gas-plasma-abbreviation"),
             [Gas.Tritium] = Loc.GetString("gas-tritium-abbreviation"),
             [Gas.WaterVapor] = Loc.GetString("gas-water-vapor-abbreviation"),
+            // HONK START - Fork gas abbreviations
+            [Gas.Hydrogen] = Loc.GetString("gas-hydrogen-abbreviation"),
+            [Gas.Helium] = Loc.GetString("gas-helium-abbreviation"),
+            [Gas.BZ] = Loc.GetString("gas-bz-abbreviation"),
+            [Gas.Pluoxium] = Loc.GetString("gas-pluoxium-abbreviation"),
+            [Gas.Halon] = Loc.GetString("gas-halon-abbreviation"),
+            [Gas.Antinoblium] = Loc.GetString("gas-antinoblium-abbreviation"),
+            [Gas.Healium] = Loc.GetString("gas-healium-abbreviation"),
+            [Gas.Nitrium] = Loc.GetString("gas-nitrium-abbreviation"),
+            [Gas.ProtoNitrate] = Loc.GetString("gas-proto-nitrate-abbreviation"),
+            [Gas.HyperNoblium] = Loc.GetString("gas-hyper-noblium-abbreviation"),
+            [Gas.Zauker] = Loc.GetString("gas-zauker-abbreviation"),
+            // HONK END
         };
 
         #region Excited Groups
@@ -213,7 +226,9 @@ namespace Content.Shared.Atmos
         /// <summary>
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
-        public const int TotalNumberOfGases = 9;
+        // HONK START - Fork gases
+        public const int TotalNumberOfGases = 20;
+        // HONK END
 
         /// <summary>
         ///     This is the actual length of the gases arrays in mixtures.
@@ -377,6 +392,19 @@ namespace Content.Shared.Atmos
         WaterVapor = 5,
         Ammonia = 6,
         NitrousOxide = 7,
-        Frezon = 8
+        Frezon = 8,
+        // HONK START - Fork gases
+        Hydrogen = 9,
+        Helium = 10,
+        BZ = 11,
+        Pluoxium = 12,
+        Halon = 13,
+        Antinoblium = 14,
+        Healium = 15,
+        Nitrium = 16,
+        ProtoNitrate = 17,
+        HyperNoblium = 18,
+        Zauker = 19,
+        // HONK END
     }
 }

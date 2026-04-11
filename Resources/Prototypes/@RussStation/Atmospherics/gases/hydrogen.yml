@@ -1,0 +1,20 @@
+- type: gas
+  id: Hydrogen
+  name: gases-hydrogen
+  specificHeat: 15
+  heatCapacityRatio: 1.4
+  molarMass: 2
+  color: ffffff
+  reagent: Hydrogen
+  pricePerMole: 0.5
+  isFuel: true
+
+- type: gasReaction
+  id: HydrogenFire
+  priority: -3
+  minimumTemperature: 373.149 # Atmospherics.FireMinimumTemperatureToExist
+  minimumRequirements:
+    Hydrogen: 0.01
+    Oxygen: 0.01
+  effects:
+    - !type:HydrogenFireReaction {}

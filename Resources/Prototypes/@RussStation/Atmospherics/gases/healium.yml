@@ -1,0 +1,45 @@
+- type: gas
+  id: Healium
+  name: gases-healium
+  specificHeat: 10
+  heatCapacityRatio: 1.4
+  molarMass: 50
+  gasOverlaySprite: /Textures/Effects/atmospherics.rsi
+  gasOverlayState: healium
+  color: fa8072
+  reagent: Healium
+  pricePerMole: 2
+
+- type: gasReaction
+  id: HealiumFormation
+  priority: 4
+  minimumTemperature: 25 # RussAtmospherics.HealiumFormationMinTemp
+  maximumTemperature: 300 # RussAtmospherics.HealiumFormationMaxTemp
+  minimumRequirements:
+    BZ: 0.01
+    Frezon: 0.01
+  effects:
+    - !type:HealiumFormationReaction {}
+
+- type: reagent
+  id: Healium
+  name: reagent-name-healium
+  desc: reagent-desc-healium
+  physicalDesc: reagent-physical-desc-gaseous
+  flavor: slimy
+  color: "#fa8072"
+  metabolisms:
+    Respiration:
+      effects:
+        - !type:ModifyStatusEffect
+          effectProto: StatusEffectForcedSleeping
+          time: 3
+          type: Update
+        - !type:EvenHealthChange
+          damage:
+            Brute: -2
+            Burn: -2
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: -5

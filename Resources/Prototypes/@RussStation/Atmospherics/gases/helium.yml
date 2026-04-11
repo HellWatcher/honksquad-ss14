@@ -1,0 +1,8 @@
+- type: gas
+  id: Helium
+  name: gases-helium
+  specificHeat: 15
+  heatCapacityRatio: 1.66
+  molarMass: 4
+  color: f0f8ff
+  pricePerMole: 1.5

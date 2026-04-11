@@ -1,0 +1,34 @@
+- type: gas
+  id: BZ
+  name: gases-bz
+  specificHeat: 20
+  heatCapacityRatio: 1.4
+  molarMass: 58
+  color: 9370db
+  reagent: BZ
+  pricePerMole: 1.5
+
+- type: gasReaction
+  id: BZFormation
+  priority: 4
+  maximumTemperature: 313.15 # Atmospherics.BZFormationMaxTemp
+  minimumRequirements:
+    NitrousOxide: 10
+    Plasma: 10
+  effects:
+    - !type:BZFormationReaction {}
+
+- type: reagent
+  id: BZ
+  name: reagent-name-bz
+  desc: reagent-desc-bz
+  physicalDesc: reagent-physical-desc-gaseous
+  flavor: bitter
+  color: "#9370db"
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 1.5
