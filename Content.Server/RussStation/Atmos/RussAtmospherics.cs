@@ -10,6 +10,10 @@ public static class RussAtmospherics
     public const float HydrogenBurnRateDelta = 2f;
     public const float HydrogenOxygenFullburn = 10f;
 
+    // Hydrogen burns hot but not as hot as tritium. Upstream's FireHydrogenEnergyReleased
+    // (2.84 MJ/mol) is tuned for the rate-limited tritium reaction and would nuke tiles here.
+    public const float HydrogenFireEnergyReleased = 200000f;
+
     public const float BZFormationMaxTemp = Atmospherics.T0C + 40f;
     public const float BZFormationRate = 0.4f;
 

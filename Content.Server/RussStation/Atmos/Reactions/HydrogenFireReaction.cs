@@ -37,7 +37,7 @@ public sealed partial class HydrogenFireReaction : IGasReactionEffect
         mixture.AdjustMoles(Gas.Oxygen, -burned * 0.5f);
         mixture.AdjustMoles(Gas.WaterVapor, burned);
 
-        energyReleased += burned * Atmospherics.FireHydrogenEnergyReleased;
+        energyReleased += burned * RussAtmospherics.HydrogenFireEnergyReleased;
         mixture.ReactionResults[(byte)GasReaction.Fire] += burned;
 
         if (energyReleased > 0)
