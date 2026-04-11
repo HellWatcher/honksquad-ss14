@@ -11,9 +11,6 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Input;
 using Content.Shared.Interaction;
-//HONK START - Escalated grab: drop-to-release pull
-using Content.Shared.Interaction.Events;
-//HONK END
 using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Item;
 using Content.Shared.Mobs;
@@ -81,9 +78,6 @@ public sealed class PullingSystem : EntitySystem
         SubscribeLocalEvent<PullerComponent, EntGotInsertedIntoContainerMessage>(OnPullerContainerInsert);
         SubscribeLocalEvent<PullerComponent, EntityUnpausedEvent>(OnPullerUnpaused);
         SubscribeLocalEvent<PullerComponent, VirtualItemDeletedEvent>(OnVirtualItemDeleted);
-        //HONK START - Drop virtual item releases pull
-        SubscribeLocalEvent<VirtualItemComponent, DroppedEvent>(OnVirtualItemDropped);
-        //HONK END
         SubscribeLocalEvent<PullerComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
         SubscribeLocalEvent<PullerComponent, DropHandItemsEvent>(OnDropHandItems);
         SubscribeLocalEvent<PullerComponent, StopPullingAlertEvent>(OnStopPullingAlert);
@@ -266,20 +260,6 @@ public sealed class PullingSystem : EntitySystem
             TryStopPull(args.BlockingEntity, comp);
         }
     }
-
-    //HONK START - Drop virtual item releases pull
-    private void OnVirtualItemDropped(EntityUid uid, VirtualItemComponent component, DroppedEvent args)
-    {
-        if (!TryComp<PullerComponent>(args.User, out var puller))
-            return;
-
-        if (puller.Pulling != component.BlockingEntity)
-            return;
-
-        if (TryComp(component.BlockingEntity, out PullableComponent? pullable))
-            TryStopPull(component.BlockingEntity, pullable, user: args.User);
-    }
-    //HONK END
 
     private void AddPullVerbs(EntityUid uid, PullableComponent component, GetVerbsEvent<Verb> args)
     {
