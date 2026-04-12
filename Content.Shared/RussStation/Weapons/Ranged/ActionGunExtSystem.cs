@@ -48,9 +48,11 @@ public sealed class ActionGunExtSystem : EntitySystem
         if (ext.OnShootSound == null)
             return;
 
-        // Find the action entity for prediction.
-        TryComp<ActionGunComponent>(args.User, out var actionGun);
+        // Only fire when the shot is from the mob's action gun, not a regular
+        // held weapon. Otherwise every humanoid plays the spit sound on any shot.
+        if (!TryComp<ActionGunComponent>(args.User, out var actionGun) || actionGun.Gun != gun.Owner)
+            return;
 
-        _audio.PlayPredicted(ext.OnShootSound, args.User, actionGun?.ActionEntity);
+        _audio.PlayPredicted(ext.OnShootSound, args.User, actionGun.ActionEntity);
     }
 }
