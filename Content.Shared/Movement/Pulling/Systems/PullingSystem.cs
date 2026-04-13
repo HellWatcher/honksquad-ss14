@@ -509,16 +509,20 @@ public sealed class PullingSystem : EntitySystem
 
         if (pullable.Comp.Puller == pullerUid)
         {
-            //HONK START - Escalated grab: re-pulling your own target escalates the
-            // grab instead of stopping it. Upstream's toggle-off semantics conflict
-            // with the escalated grab system (the same input has to either drop the
-            // pull or step the grab up a tier, not both), and toggle-off-on-re-pull
-            // also isn't standard SS13 behaviour. Stopping a pull lives on the
-            // dedicated release keybind, see OnReleasePulledObject.
+            //HONK START - Escalated grab hook. Re-pulling your own target should
+            // step the grab up a tier instead of dropping the pull, but the same
+            // input can't do both, and toggle-off-on-re-pull isn't standard SS13
+            // behaviour anyway. Raise a fork hook; if no subscriber handles it
+            // (escalated grab disabled, no GrabState for this pair, etc.) fall
+            // through to upstream's TryStopPull so vanilla behaviour is the
+            // default. The dedicated release keybind path lives in
+            // OnReleasePulledObject.
             var ev = new PullGrabEscalateAttemptEvent(pullerUid, pullable.Owner);
             RaiseLocalEvent(pullable.Owner, ref ev);
-            return true;
+            if (ev.Handled)
+                return true;
             //HONK END
+            return TryStopPull(pullable, pullable.Comp);
         }
 
         return TryStartPull(pullerUid, pullable, pullableComp: pullable);

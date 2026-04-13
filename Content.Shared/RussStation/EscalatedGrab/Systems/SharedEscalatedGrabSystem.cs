@@ -28,7 +28,8 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
     private void OnEscalateAttempt(EntityUid uid, PullableComponent component, ref PullGrabEscalateAttemptEvent args)
     {
-        TryEscalate(args.Puller, args.Pulled);
+        if (TryEscalate(args.Puller, args.Pulled))
+            args.Handled = true;
     }
 
     private void OnAttemptStopPulling(EntityUid uid, PullableComponent component, ref AttemptStopPullingEvent args)
