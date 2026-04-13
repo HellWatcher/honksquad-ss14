@@ -509,7 +509,12 @@ public sealed class PullingSystem : EntitySystem
 
         if (pullable.Comp.Puller == pullerUid)
         {
-            //HONK START - Escalated grab: escalate instead of toggle-off
+            //HONK START - Escalated grab: re-pulling your own target escalates the
+            // grab instead of stopping it. Upstream's toggle-off semantics conflict
+            // with the escalated grab system (the same input has to either drop the
+            // pull or step the grab up a tier, not both), and toggle-off-on-re-pull
+            // also isn't standard SS13 behaviour. Stopping a pull lives on the
+            // dedicated release keybind, see OnReleasePulledObject.
             var ev = new PullGrabEscalateAttemptEvent(pullerUid, pullable.Owner);
             RaiseLocalEvent(pullable.Owner, ref ev);
             return true;
