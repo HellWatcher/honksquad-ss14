@@ -5,11 +5,8 @@ namespace Content.Shared.Pulling.Events;
 /// </summary>
 
 [ByRefEvent]
-//HONK START - Escalated grab: added Force parameter
-public record struct AttemptStopPullingEvent(EntityUid? User = null, bool Force = false)
+public record struct AttemptStopPullingEvent(EntityUid? User = null)
 {
     public readonly EntityUid? User = User;
-    public readonly bool Force = Force;
-    //HONK END
     public bool Cancelled;
 }

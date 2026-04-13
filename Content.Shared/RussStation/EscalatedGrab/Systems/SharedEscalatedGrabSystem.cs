@@ -3,7 +3,6 @@ using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Events;
 using Content.Shared.RussStation.EscalatedGrab.Events;
 using Content.Shared.Popups;
-using Content.Shared.Pulling.Events;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.EscalatedGrab.Systems;
@@ -22,7 +21,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<PullableComponent, PullGrabEscalateAttemptEvent>(OnEscalateAttempt);
-        SubscribeLocalEvent<PullableComponent, AttemptStopPullingEvent>(OnAttemptStopPulling);
+        SubscribeLocalEvent<PullerComponent, PullReleaseRequestedEvent>(OnPullReleaseRequested);
         SubscribeLocalEvent<GrabStateComponent, PullStoppedMessage>(OnPullStopped);
     }
 
@@ -32,17 +31,9 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
             args.Handled = true;
     }
 
-    private void OnAttemptStopPulling(EntityUid uid, PullableComponent component, ref AttemptStopPullingEvent args)
+    private void OnPullReleaseRequested(EntityUid uid, PullerComponent component, ref PullReleaseRequestedEvent args)
     {
-        if (args.Cancelled || args.User == null)
-            return;
-
-        // Release keybind clears escalation and lets the pull stop.
-        if (args.Force)
-        {
-            ClearEscalation(args.User.Value);
-            return;
-        }
+        ClearEscalation(args.Puller);
     }
 
     private void OnPullStopped(EntityUid uid, GrabStateComponent component, PullStoppedMessage args)

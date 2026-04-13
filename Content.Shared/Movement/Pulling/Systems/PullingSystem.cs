@@ -277,7 +277,7 @@ public sealed class PullingSystem : EntitySystem
             return;
 
         if (TryComp(component.BlockingEntity, out PullableComponent? pullable))
-            TryStopPull(component.BlockingEntity, pullable, user: args.User, force: true);
+            TryStopPull(component.BlockingEntity, pullable, user: args.User);
     }
     //HONK END
 
@@ -451,9 +451,12 @@ public sealed class PullingSystem : EntitySystem
             return;
         }
 
-        //HONK START - Force release on keybind
-        TryStopPull(pullerComp.Pulling.Value, pullableComp, user: player, force: true);
+        //HONK START - Escalated grab: request release so fork can clear escalation
+        var releaseReq = new PullReleaseRequestedEvent(player, pullerComp.Pulling.Value);
+        RaiseLocalEvent(player, ref releaseReq);
         //HONK END
+
+        TryStopPull(pullerComp.Pulling.Value, pullableComp, user: player);
     }
 
     public bool CanPull(EntityUid puller, EntityUid pullableUid, PullerComponent? pullerComp = null)
@@ -636,16 +639,14 @@ public sealed class PullingSystem : EntitySystem
         return true;
     }
 
-    //HONK START - Escalated grab: added force parameter
-    public bool TryStopPull(EntityUid pullableUid, PullableComponent pullable, EntityUid? user = null, bool force = false)
+    public bool TryStopPull(EntityUid pullableUid, PullableComponent pullable, EntityUid? user = null)
     {
         var pullerUidNull = pullable.Puller;
 
         if (pullerUidNull == null)
             return true;
 
-        var msg = new AttemptStopPullingEvent(user, force);
-        //HONK END
+        var msg = new AttemptStopPullingEvent(user);
         RaiseLocalEvent(pullableUid, ref msg, true);
 
         if (msg.Cancelled)
