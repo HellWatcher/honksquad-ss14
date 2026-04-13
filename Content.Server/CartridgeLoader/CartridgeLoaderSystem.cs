@@ -198,6 +198,14 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
         if (!_containerSystem.TryGetContainer(loaderUid, InstalledContainerId, out var container))
             return false;
 
+        //HONK START - Idempotency: skip if this cartridge prototype is already installed (#441 P2.4)
+        foreach (var existing in container.ContainedEntities)
+        {
+            if (MetaData(existing).EntityPrototype?.ID == prototype)
+                return true;
+        }
+        //HONK END
+
         if (container.Count >= loader.DiskSpace)
             return false;
 

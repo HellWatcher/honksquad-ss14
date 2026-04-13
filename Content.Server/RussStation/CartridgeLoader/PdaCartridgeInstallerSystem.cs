@@ -1,20 +1,23 @@
 using System.Linq;
 using Content.Server.CartridgeLoader;
+using Content.Shared.CartridgeLoader;
 using Content.Shared.PDA;
 using Content.Shared.RussStation.CartridgeLoader;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server.RussStation.CartridgeLoader;
 
 /// <summary>
-/// Contributes fork-specific cartridges to the initial install set on PDAs,
+/// Installs fork-specific cartridges on all PDAs at map init,
 /// driven by ForkCartridgeSetPrototype definitions rather than per-entity YAML.
-/// Hooks the upstream CartridgeLoaderInitialProgramsEvent seam, so cartridges
-/// land in the same install pass as PreinstalledPrograms — no after-ordering,
-/// no idempotency tracking against already-installed state.
+/// Relies on <see cref="CartridgeLoaderSystem.InstallProgram"/> being idempotent
+/// (HONK in upstream): duplicate calls for the same prototype no-op, so this
+/// system doesn't need ordering or its own bookkeeping set.
 /// </summary>
 public sealed class PdaCartridgeInstallerSystem : EntitySystem
 {
+    [Dependency] private readonly CartridgeLoaderSystem _cartridgeLoader = default!;
     [Dependency] private readonly IPrototypeManager _protoManager = default!;
     [Dependency] private readonly IComponentFactory _compFactory = default!;
 
@@ -22,12 +25,12 @@ public sealed class PdaCartridgeInstallerSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<CartridgeLoaderInitialProgramsEvent>(OnInitialPrograms);
+        SubscribeLocalEvent<PdaComponent, MapInitEvent>(OnMapInit);
     }
 
-    private void OnInitialPrograms(ref CartridgeLoaderInitialProgramsEvent args)
+    private void OnMapInit(EntityUid uid, PdaComponent pda, MapInitEvent args)
     {
-        if (!HasComp<PdaComponent>(args.Loader))
+        if (!TryComp<CartridgeLoaderComponent>(uid, out var loader))
             return;
 
         var sets = _protoManager.EnumeratePrototypes<ForkCartridgeSetPrototype>()
@@ -35,11 +38,11 @@ public sealed class PdaCartridgeInstallerSystem : EntitySystem
 
         foreach (var set in sets)
         {
-            if (!MatchesFilter(args.Loader, set))
+            if (!MatchesFilter(uid, set))
                 continue;
 
             foreach (var cartridge in set.Cartridges)
-                args.Programs.Add(cartridge);
+                _cartridgeLoader.InstallProgram(uid, cartridge, deinstallable: false, loader: loader);
         }
     }
 
