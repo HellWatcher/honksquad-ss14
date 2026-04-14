@@ -20,9 +20,7 @@ illiterate-cannot-read = You can't read this!
 trait-self-aware-name = Self-Aware
 trait-self-aware-desc = You have an innate sense for the state of your own body.
 self-aware-examine-verb = Diagnose self
-self-aware-no-damage = You feel perfectly healthy.
 self-aware-damage-header = [bold]Self-diagnosis:[/bold]
-self-aware-damage-type = - [color=red]{$type}[/color]: {$amount}
 trait-freerunning-name = Freerunning
 trait-freerunning-desc = You vault over obstacles like they're not even there.
 trait-lightstep-name = Light Step
@@ -51,11 +49,7 @@ trait-iron-jaw-desc = You can take a hit.
 trait-steady-hand-name = Steady Hand
 trait-steady-hand-desc = Your hands are rock steady.
 self-aware-no-damage = You feel no injuries.
-self-aware-damage-type = [color=red]{$type}[/color]: {$amount}
 self-aware-bleed-rate = [color=red]Bleeding[/color]: {$current}/{$max} u/s
-self-aware-blood-level = [color=red]Blood level[/color]: {$percent}%
-self-aware-total-damage = [bold]Total damage: {$amount}[/bold]
-self-aware-blood-level = [bold]Blood level: {$percent}%[/bold]
 self-aware-total-damage = [bold][color=#FF5555]Total damage:[/color] [color=#FFB84D]{$amount}[/color][/bold]
 self-aware-blood-level = [bold][color=bisque]Blood level:[/color] [color=#e65353]{$percent}%[/color][/bold]
 self-aware-damage-type = [color={$color}]{$type}: {$amount}[/color]
