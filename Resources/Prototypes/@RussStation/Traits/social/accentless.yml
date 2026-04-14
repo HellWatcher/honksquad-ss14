@@ -1,0 +1,18 @@
+- type: trait
+  id: Accentless
+  name: trait-accentless-name
+  description: trait-accentless-desc
+  category: Social
+  cost: 2
+  tags:
+    - speech
+    - accent
+  excludedTags:
+    - accent
+  components:
+    - type: Accentless
+      removes:
+        - type: LizardAccent
+        - type: MothAccent
+        - type: ReplacementAccent
+          accent: scottish

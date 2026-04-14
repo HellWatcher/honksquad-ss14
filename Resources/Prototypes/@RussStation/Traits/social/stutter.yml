@@ -1,0 +1,17 @@
+# Display name shortened to "Stutter" for the trait list UI; the prototype id
+# stays as "SocialAnxiety" so existing player save data keeps working.
+- type: trait
+  id: SocialAnxiety
+  name: trait-socialanxiety-name
+  description: trait-socialanxiety-desc
+  category: Social
+  cost: 2
+  tags:
+    - speech
+    - accent
+  components:
+    - type: StutteringAccent
+      matchRandomProb: 0.1
+      fourRandomProb: 0
+      threeRandomProb: 0
+      cutRandomProb: 0

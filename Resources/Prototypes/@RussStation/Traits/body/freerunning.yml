@@ -1,0 +1,12 @@
+- type: trait
+  id: Freerunning
+  name: trait-freerunning-name
+  description: trait-freerunning-desc
+  category: Body
+  cost: 8
+  tags:
+    - climbing
+  excludedTags:
+    - climbing
+  components:
+    - type: Freerunning

@@ -1,0 +1,12 @@
+- type: trait
+  id: Negotiator
+  name: trait-negotiator-name
+  description: trait-negotiator-desc
+  category: Social
+  cost: 1
+  tags:
+    - wage
+  excludedTags:
+    - wage
+  components:
+    - type: Negotiator

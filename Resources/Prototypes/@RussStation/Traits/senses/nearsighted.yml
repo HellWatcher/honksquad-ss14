@@ -1,0 +1,19 @@
+# Display name shortened to "Nearsighted" for the trait list UI; the prototype id
+# stays as "PoorVision" so existing player save data keeps working.
+- type: trait
+  id: PoorVision
+  name: trait-poor-vision-name
+  description: trait-poor-vision-desc
+  traitGear: ClothingEyesGlasses
+  category: Senses
+  cost: -2
+  tags:
+    - sight
+  excludedTags:
+    - sight
+  whitelist:
+    components:
+      - Blindable
+  components:
+    - type: PermanentBlindness
+      blindness: 4

@@ -1,0 +1,12 @@
+- type: trait
+  id: Vegetarian
+  name: trait-vegetarian-name
+  description: trait-vegetarian-desc
+  category: Diet
+  cost: 0
+  tags:
+    - diet
+  excludedTags:
+    - diet
+  components:
+    - type: Vegetarian

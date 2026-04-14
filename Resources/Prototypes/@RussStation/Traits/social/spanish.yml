@@ -1,0 +1,13 @@
+# Display name shortened to "Spanish" for the trait list UI; the prototype id
+# stays as "SpanishAccent" so existing player save data keeps working.
+- type: trait
+  id: SpanishAccent
+  name: trait-spanish-name
+  description: trait-spanish-desc
+  category: Social
+  cost: 1
+  tags:
+    - speech
+    - accent
+  components:
+    - type: SpanishAccent

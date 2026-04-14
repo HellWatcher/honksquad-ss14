@@ -1,0 +1,13 @@
+# Display name shortened to "Lisp" for the trait list UI; the prototype id
+# stays as "FrontalLisp" so existing player save data keeps working.
+- type: trait
+  id: FrontalLisp
+  name: trait-frontal-lisp-name
+  description: trait-frontal-lisp-desc
+  category: Social
+  cost: 2
+  tags:
+    - speech
+    - accent
+  components:
+    - type: FrontalLisp

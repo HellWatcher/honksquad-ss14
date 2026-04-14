@@ -1,6 +1,6 @@
 - type: traitCategory
-  id: Combat
-  name: trait-category-combat
+  id: Body
+  name: trait-category-body
 
 - type: traitCategory
   id: Diet
@@ -9,6 +9,10 @@
 - type: traitCategory
   id: Movement
   name: trait-category-movement
+
+- type: traitCategory
+  id: Phobia
+  name: trait-category-phobia
 
 - type: traitCategory
   id: Senses

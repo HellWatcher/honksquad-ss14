@@ -1,0 +1,17 @@
+# Display name shortened to "Anemic" for the trait list UI; the prototype id
+# stays as "BloodDeficiency" so existing player save data keeps working.
+- type: trait
+  id: BloodDeficiency
+  name: trait-blood-deficiency-name
+  description: trait-blood-deficiency-desc
+  category: Body
+  cost: -6
+  tags:
+    - blood
+  excludedTags:
+    - blood
+  whitelist:
+    components:
+      - Bloodstream
+  components:
+    - type: BloodDeficiency

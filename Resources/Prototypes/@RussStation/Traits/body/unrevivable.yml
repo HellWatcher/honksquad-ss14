@@ -1,0 +1,9 @@
+- type: trait
+  id: Unrevivable
+  name: trait-unrevivable-name
+  description: trait-unrevivable-desc
+  category: Body
+  cost: -4
+  components:
+    - type: Unrevivable
+      cloneable: true

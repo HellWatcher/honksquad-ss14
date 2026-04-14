@@ -1,35 +1,8 @@
-# If you add a new trait, make sure to add the corresponding component to the whitelist in \Resources\Prototypes\Entities\Mobs\Player\clone.yml so it gets copied to clones correctly!
-
-- type: trait
-  id: Pacifist
-  name: trait-pacifist-name
-  description: trait-pacifist-desc
-  category: Combat # HONK - Reassigned from Quirks
-  cost: -8 # HONK - Negative quirk, refunds points
-  components:
-  - type: Pacified
-
-- type: trait
-  id: LightweightDrunk
-  name: trait-lightweight-name
-  description: trait-lightweight-desc
-  category: Diet # HONK - Reassigned from Quirks
-  cost: -2 # HONK - Negative quirk, refunds points
-  # HONK START - Tag for mutual exclusion with AlcoholTolerance
-  tags:
-    - alcohol
-  excludedTags:
-    - alcohol
-  # HONK END
-  components:
-  - type: LightweightDrunk
-    boozeStrengthMultiplier: 2
-
-- type: trait
-  id: Snoring
-  name: trait-snoring-name
-  description: trait-snoring-desc
-  category: Social # HONK - Reassigned from Quirks
-  cost: 0 # HONK
-  components:
-  - type: Snoring
+# HONK - Every former trait in this file was migrated to per-trait files under
+# Resources/Prototypes/@RussStation/Traits/<category>/<trait>.yml so the fork can
+# own costs, tags, and category assignments without fighting upstream on every
+# rebase. Prototype ids are unchanged so existing player save data still resolves.
+#
+# This file is intentionally empty. When upstream adds a new quirk trait the
+# addition lands here as either a clean diff or a conflict against this comment,
+# either way it will be visible during rebase and can be migrated to a fork file.

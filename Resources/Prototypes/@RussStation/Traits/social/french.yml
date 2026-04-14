@@ -1,0 +1,13 @@
+# Display name shortened to "French" for the trait list UI; the prototype id
+# stays as "FrenchAccent" so existing player save data keeps working.
+- type: trait
+  id: FrenchAccent
+  name: trait-french-name
+  description: trait-french-desc
+  category: Social
+  cost: 1
+  tags:
+    - speech
+    - accent
+  components:
+    - type: FrenchAccent
