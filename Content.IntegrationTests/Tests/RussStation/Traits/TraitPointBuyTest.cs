@@ -290,4 +290,188 @@ public sealed class TraitPointBuyTest
 
         await pair.CleanReturnAsync();
     }
+
+    /// <summary>
+    /// Cross-set exclusion: an upstream trait and a fork quirk wired on the same tag domain
+    /// must reject the second pick. Uses real prototypes (Muted from upstream disabilities,
+    /// BoomingVoice from fork quirks). Muted excludes "speech", BoomingVoice carries it.
+    /// </summary>
+    [Test]
+    public async Task TagExclusion_UpstreamMutedRejectsForkBoomingVoice()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies();
+
+            profile = profile.WithTraitPreference("Muted", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("Muted")));
+
+            profile = profile.WithTraitPreference("BoomingVoice", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("BoomingVoice")),
+                "BoomingVoice should be rejected when Muted is already taken (shared speech tag).");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Sight-domain cross-set: upstream Blindness blocks fork ScarredEye via shared "sight" tag.
+    /// </summary>
+    [Test]
+    public async Task TagExclusion_BlindnessRejectsScarredEye()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies();
+
+            profile = profile.WithTraitPreference("Blindness", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("Blindness")));
+
+            profile = profile.WithTraitPreference("ScarredEye", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("ScarredEye")),
+                "ScarredEye should be rejected when Blindness is already taken (shared sight tag).");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Awareness cross-set: upstream PainNumbness blocks fork SelfAware via shared "awareness" tag.
+    /// PainNumbness hides damage; SelfAware reveals exact damage. Functionally opposite, so they share a domain.
+    /// </summary>
+    [Test]
+    public async Task TagExclusion_PainNumbnessRejectsSelfAware()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies();
+
+            profile = profile.WithTraitPreference("PainNumbness", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("PainNumbness")));
+
+            profile = profile.WithTraitPreference("SelfAware", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("SelfAware")),
+                "SelfAware should be rejected when PainNumbness is already taken (shared awareness tag).");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Asymmetric mobility/sprint exclusion (forward): ImpairedMobility excludes "sprint",
+    /// Skittish carries "sprint" as one of its tags. ImpairedMobility selected first.
+    /// </summary>
+    [Test]
+    public async Task TagExclusion_ImpairedMobilityRejectsSkittish()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies();
+
+            profile = profile.WithTraitPreference("ImpairedMobility", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("ImpairedMobility")));
+
+            profile = profile.WithTraitPreference("Skittish", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("Skittish")),
+                "Skittish should be rejected when ImpairedMobility is already taken (sprint excluded).");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Asymmetric mobility/sprint exclusion (reverse): Skittish selected first, then ImpairedMobility.
+    /// Bidirectional logic must still remove Skittish via ImpairedMobility's sprint exclude.
+    /// </summary>
+    [Test]
+    public async Task TagExclusion_SkittishRejectsImpairedMobility()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies();
+
+            profile = profile.WithTraitPreference("Skittish", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("Skittish")));
+
+            profile = profile.WithTraitPreference("ImpairedMobility", protoMan);
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("ImpairedMobility")),
+                "ImpairedMobility should still be selectable.");
+            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("Skittish")),
+                "Skittish should be removed when ImpairedMobility is added (sprint tag excluded).");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Coexistence sanity: SoftSpoken and an accent both carry the "speech" tag but neither excludes it.
+    /// They should coexist — speaking softly with a French accent is fine.
+    /// </summary>
+    [Test]
+    public async Task TagCoexistence_SoftSpokenAndAccent()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies();
+
+            profile = profile.WithTraitPreference("SoftSpoken", protoMan);
+            profile = profile.WithTraitPreference("FrenchAccent", protoMan);
+
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("SoftSpoken")));
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("FrenchAccent")),
+                "SoftSpoken and an accent share the speech tag but neither excludes it; they should coexist.");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Coexistence sanity: unrelated domains shouldn't collide. Muted (speech) and Tough (wounds)
+    /// share no tags, so both should sit in the profile together.
+    /// </summary>
+    [Test]
+    public async Task TagCoexistence_MutedAndTough()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies();
+
+            profile = profile.WithTraitPreference("Muted", protoMan);
+            profile = profile.WithTraitPreference("Tough", protoMan);
+
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("Muted")));
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("Tough")),
+                "Muted (speech domain) and Tough (wounds domain) share no tags and should coexist.");
+        });
+
+        await pair.CleanReturnAsync();
+    }
 }

@@ -30,5 +30,6 @@
   name: trait-snoring-name
   description: trait-snoring-desc
   category: Social # HONK - Reassigned from Quirks
+  cost: 0 # HONK
   components:
   - type: Snoring

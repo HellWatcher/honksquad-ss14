@@ -221,9 +221,10 @@
   category: Social
   cost: -2
   tags:
-    - voice-volume
+    - speech
+    - volume
   excludedTags:
-    - voice-volume
+    - volume
   components:
     - type: SoftSpoken
 
@@ -260,9 +261,10 @@
   category: Social
   cost: 2
   tags:
-    - voice-volume
+    - speech
+    - volume
   excludedTags:
-    - voice-volume
+    - volume
   components:
     - type: BoomingVoice
 
@@ -291,12 +293,19 @@
     - accuracy
   components:
     - type: SteadyHand
+
+- type: trait
   id: Papyrophobia
   name: trait-papyrophobia-name
   description: trait-papyrophobia-desc
+  category: Senses
   cost: -2
+  tags:
     - paper
+    - phobia
+  excludedTags:
     - paper
+  components:
     - type: Papyrophobia
 
 - type: trait
@@ -318,6 +327,9 @@
   description: trait-skittish-desc
   category: Movement
   cost: 8
+  tags:
+    - mobility
+    - sprint
   blacklist:
     components:
       - BorgChassis
