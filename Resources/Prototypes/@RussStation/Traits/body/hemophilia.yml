@@ -7,4 +7,4 @@
   specials:
     - !type:ApplyStatusEffectSpecial
       statusEffects:
-        - StatusEffectHemophiliaTrait
+        - TraitStatusEffectHemophilia

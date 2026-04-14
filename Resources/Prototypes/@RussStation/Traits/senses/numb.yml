@@ -13,4 +13,4 @@
   specials:
     - !type:ApplyStatusEffectSpecial
       statusEffects:
-        - PainNumbnessTraitStatusEffect
+        - TraitStatusEffectPainNumbness
