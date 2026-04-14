@@ -41,6 +41,16 @@ wound-bleed-piercing-3 = Hemorrhaging
 wound-examine-entry = {$name} (Tier {$tier})
 wound-examine-header = [bold]Wounds:[/bold]
 
+# Flavor lines pushed onto the health-verb examine for external observers.
+# Self-Aware characters get a clinical readout via SelfAwareSystem instead.
+wound-examine-fracture-1 = [color=#CED2D1]{ CAPITALIZE(SUBJECT($target)) } { CONJUGATE-BE($target) } favoring an injured limb.[/color]
+wound-examine-fracture-2 = [color=#FF8787]{ CAPITALIZE(SUBJECT($target)) } { CONJUGATE-HAVE($target) } a clearly broken bone.[/color]
+wound-examine-fracture-3 = [color=#FF3636]{ CAPITALIZE(POSS-ADJ($target)) } bones look horribly shattered.[/color]
+
+wound-examine-burn-1 = [color=#FFA8A8]{ CAPITALIZE(SUBJECT($target)) } { CONJUGATE-HAVE($target) } angry red burns.[/color]
+wound-examine-burn-2 = [color=#FF6868]{ CAPITALIZE(SUBJECT($target)) } { CONJUGATE-HAVE($target) } severe burns across { POSS-ADJ($target) } skin.[/color]
+wound-examine-burn-3 = [color=#FF2121]{ CAPITALIZE(POSS-ADJ($target)) } flesh is charred and blistered.[/color]
+
 # HUD Alerts
 alerts-wound-fracture-name = { $severity ->
     [0] Hairline Fracture

@@ -1,7 +1,7 @@
 using Content.Shared.Alert;
-using Content.Shared.Examine;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.HealthExaminable;
 using Content.Shared.Movement.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
@@ -20,7 +20,6 @@ public sealed class WoundEffectsSystem : EntitySystem
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly SharedWoundSystem _wounds = default!;
-    [Dependency] private readonly WoundDisplaySystem _display = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
 
@@ -42,7 +41,7 @@ public sealed class WoundEffectsSystem : EntitySystem
         SubscribeLocalEvent<WoundComponent, WoundsClearedEvent>(OnWoundsCleared);
         SubscribeLocalEvent<WoundComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<WoundComponent, ComponentShutdown>(OnShutdown);
-        SubscribeLocalEvent<WoundComponent, ExaminedEvent>(OnExamined);
+        SubscribeLocalEvent<WoundComponent, HealthBeingExaminedEvent>(OnHealthExamined);
     }
 
     private void OnStartup(EntityUid uid, WoundComponent comp, ComponentStartup args)
@@ -62,21 +61,25 @@ public sealed class WoundEffectsSystem : EntitySystem
             args.ModifySpeed(MovementSlowMultiplier);
     }
 
-    private void OnExamined(EntityUid uid, WoundComponent comp, ExaminedEvent args)
+    private void OnHealthExamined(EntityUid uid, WoundComponent comp, ref HealthBeingExaminedEvent args)
     {
-        var wounds = _display.GetWoundDisplayInfo(uid, comp);
-        if (wounds.Count == 0)
-            return;
-
-        using (args.PushGroup(nameof(WoundEffectsSystem)))
+        // Bleeding is already surfaced on the health-examine path by SharedBloodstreamSystem,
+        // so we only flavor-text fractures and burns here. Self-Aware viewers get a separate
+        // clinical readout via SelfAwareSystem and don't go through this event.
+        var fractureTier = _wounds.GetWorstTier(comp, WoundCategory.Fracture);
+        if (fractureTier > 0)
         {
-            args.PushMarkup(Loc.GetString("wound-examine-header"));
+            args.Message.PushNewline();
+            args.Message.AddMarkupOrThrow(
+                Loc.GetString($"wound-examine-fracture-{fractureTier}", ("target", uid)));
+        }
 
-            foreach (var wound in wounds)
-            {
-                var name = Loc.GetString(wound.LocKey);
-                args.PushMarkup($"  - {name}");
-            }
+        var burnTier = _wounds.GetWorstTier(comp, WoundCategory.Burn);
+        if (burnTier > 0)
+        {
+            args.Message.PushNewline();
+            args.Message.AddMarkupOrThrow(
+                Loc.GetString($"wound-examine-burn-{burnTier}", ("target", uid)));
         }
     }
 
