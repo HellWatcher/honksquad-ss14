@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Server.RussStation.Surgery;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
@@ -9,9 +10,8 @@ using Robust.Shared.Map;
 
 namespace Content.IntegrationTests.Tests.RussStation.Surgery;
 
-[TestFixture]
 [TestOf(typeof(SurgerySystem))]
-public sealed class OrganInsertionTest
+public sealed class OrganInsertionTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -52,11 +52,10 @@ public sealed class OrganInsertionTest
     [Test]
     public async Task NullCategoryDuplicateBlockedTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entMan = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -82,8 +81,6 @@ public sealed class OrganInsertionTest
             Assert.That(body.Organs.ContainedEntities, Does.Not.Contain(implant2),
                 "Duplicate null-category organ of same prototype should be blocked.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -93,11 +90,10 @@ public sealed class OrganInsertionTest
     [Test]
     public async Task DifferentNullCategoryPrototypesAllowedTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entMan = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -119,8 +115,6 @@ public sealed class OrganInsertionTest
             Assert.That(body.Organs.ContainedEntities, Does.Contain(implantB),
                 "Different null-category prototypes should both be allowed.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -130,11 +124,10 @@ public sealed class OrganInsertionTest
     [Test]
     public async Task SameCategoryDuplicateBlockedTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entMan = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -156,8 +149,6 @@ public sealed class OrganInsertionTest
             Assert.That(body.Organs.ContainedEntities, Does.Not.Contain(heart2),
                 "Second heart (same category) should be blocked.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     private static void RaiseInteract(

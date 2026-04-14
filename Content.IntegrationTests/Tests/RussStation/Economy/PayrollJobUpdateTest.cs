@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Server.RussStation.Economy;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
@@ -9,9 +10,8 @@ using Robust.Shared.Map;
 
 namespace Content.IntegrationTests.Tests.RussStation.Economy;
 
-[TestFixture]
 [TestOf(typeof(PayrollSystem))]
-public sealed class PayrollJobUpdateTest
+public sealed class PayrollJobUpdateTest : GameTest
 {
     /// <summary>
     /// Verifies that when a role is added mid-round via RoleAddedEvent,
@@ -22,8 +22,7 @@ public sealed class PayrollJobUpdateTest
     [Test]
     public async Task RoleAddedUpdatesJobIdTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entMan = server.ResolveDependency<IEntityManager>();
 
@@ -49,8 +48,6 @@ public sealed class PayrollJobUpdateTest
             Assert.That(balance.JobId, Is.EqualTo("StationEngineer"),
                 "JobId should be updated to the new role after RoleAddedEvent.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -60,8 +57,7 @@ public sealed class PayrollJobUpdateTest
     [Test]
     public async Task NonJobRoleDoesNotClearJobIdTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entMan = server.ResolveDependency<IEntityManager>();
 
@@ -84,7 +80,5 @@ public sealed class PayrollJobUpdateTest
             Assert.That(balance.JobId, Is.EqualTo("StationEngineer"),
                 "JobId should remain unchanged when a non-job role is added.");
         });
-
-        await pair.CleanReturnAsync();
     }
 }

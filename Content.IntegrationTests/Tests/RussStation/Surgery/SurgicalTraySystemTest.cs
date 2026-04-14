@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.Foldable;
 using Content.Shared.Friction;
 using Content.Shared.RussStation.Surgery.Components;
@@ -6,9 +7,8 @@ using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Surgery;
 
-[TestFixture]
 [TestOf(typeof(SurgicalTraySystem))]
-public sealed class SurgicalTraySystemTest
+public sealed class SurgicalTraySystemTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -38,11 +38,10 @@ public sealed class SurgicalTraySystemTest
     [Test]
     public async Task FoldTogglesFrictionTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -64,8 +63,6 @@ public sealed class SurgicalTraySystemTest
             Assert.That(foldableSystem.TrySetFolded(tray, foldable, false), Is.True);
             Assert.That(friction.Modifier, Is.EqualTo(0.4f).Within(0.001f), "Unfolded friction restored");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -74,11 +71,10 @@ public sealed class SurgicalTraySystemTest
     [Test]
     public async Task DefaultFrictionValuesTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -88,7 +84,5 @@ public sealed class SurgicalTraySystemTest
             Assert.That(comp.FoldedFriction, Is.EqualTo(0.8f));
             Assert.That(comp.UnfoldedFriction, Is.EqualTo(0.4f));
         });
-
-        await pair.CleanReturnAsync();
     }
 }

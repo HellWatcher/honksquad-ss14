@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.DragDrop;
 using Content.Shared.Foldable;
 using Content.Shared.Hands.Components;
@@ -5,9 +6,8 @@ using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Foldable;
 
-[TestFixture]
 [TestOf(typeof(DeployFoldableSystem))]
-public sealed class DeployFoldableDragDropTest
+public sealed class DeployFoldableDragDropTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -43,11 +43,10 @@ public sealed class DeployFoldableDragDropTest
     [Test]
     public async Task CanDropFoldableOntoSelfTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -61,8 +60,6 @@ public sealed class DeployFoldableDragDropTest
             Assert.That(canDrop.Handled, Is.True, "CanDropTargetEvent should be handled");
             Assert.That(canDrop.CanDrop, Is.True, "Should allow dropping foldable onto self");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -72,11 +69,10 @@ public sealed class DeployFoldableDragDropTest
     [Test]
     public async Task CannotDropAlreadyFoldedOntoSelfTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -96,8 +92,6 @@ public sealed class DeployFoldableDragDropTest
 
             Assert.That(canDrop.CanDrop, Is.False, "Should not allow dropping already-folded entity onto self");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -107,11 +101,10 @@ public sealed class DeployFoldableDragDropTest
     [Test]
     public async Task CannotDropNonFoldableOntoSelfTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -124,8 +117,6 @@ public sealed class DeployFoldableDragDropTest
 
             Assert.That(canDrop.CanDrop, Is.False, "Should not handle non-foldable entities");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -134,11 +125,10 @@ public sealed class DeployFoldableDragDropTest
     [Test]
     public async Task DropFoldableOntoSelfFoldsEntityTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -155,8 +145,6 @@ public sealed class DeployFoldableDragDropTest
             Assert.That(dropEvent.Handled, Is.True, "DragDropTargetEvent should be handled");
             Assert.That(foldComp.IsFolded, Is.True, "Entity should be folded after drag-drop onto self");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -166,11 +154,10 @@ public sealed class DeployFoldableDragDropTest
     [Test]
     public async Task CannotDropOntoOtherPlayerTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -184,7 +171,5 @@ public sealed class DeployFoldableDragDropTest
 
             Assert.That(canDrop.CanDrop, Is.False, "Should not allow dropping onto a different player");
         });
-
-        await pair.CleanReturnAsync();
     }
 }

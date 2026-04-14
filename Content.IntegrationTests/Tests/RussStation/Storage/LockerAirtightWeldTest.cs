@@ -1,11 +1,11 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.Storage.Components;
 using Content.Shared.Tools.Systems;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Storage;
 
-[TestFixture]
-public sealed class LockerAirtightWeldTest
+public sealed class LockerAirtightWeldTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -24,10 +24,9 @@ public sealed class LockerAirtightWeldTest
     [Test]
     public async Task WeldingTogglesAirtight()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -48,8 +47,6 @@ public sealed class LockerAirtightWeldTest
 
             Assert.That(storage.Airtight, Is.False, "Locker should not be airtight after unwelding");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -59,10 +56,9 @@ public sealed class LockerAirtightWeldTest
     [Test]
     public async Task DefaultLockerNotAirtight()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -71,7 +67,5 @@ public sealed class LockerAirtightWeldTest
 
             Assert.That(storage.Airtight, Is.False);
         });
-
-        await pair.CleanReturnAsync();
     }
 }

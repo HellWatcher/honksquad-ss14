@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Server.Botany.Components;
 using Content.Shared.RussStation.Botany.Components;
 using Robust.Shared.Containers;
@@ -5,9 +6,8 @@ using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Botany;
 
-[TestFixture]
 [TestOf(typeof(SeedExtractorStorageComponent))]
-public sealed class SeedExtractorStorageTest
+public sealed class SeedExtractorStorageTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -34,10 +34,9 @@ public sealed class SeedExtractorStorageTest
     [Test]
     public async Task ComponentRegistered()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -48,8 +47,6 @@ public sealed class SeedExtractorStorageTest
             var comp = entityManager.GetComponent<SeedExtractorStorageComponent>(extractor);
             Assert.That(comp.SeedContainerId, Is.EqualTo("seed_extractor_seeds"));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -58,11 +55,10 @@ public sealed class SeedExtractorStorageTest
     [Test]
     public async Task SeedInsertionIntoContainer()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
         var containerSystem = server.ResolveDependency<IEntityManager>().System<SharedContainerSystem>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -76,8 +72,6 @@ public sealed class SeedExtractorStorageTest
             Assert.That(container.ContainedEntities, Has.Count.EqualTo(1));
             Assert.That(container.ContainedEntities[0], Is.EqualTo(seed));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -86,10 +80,9 @@ public sealed class SeedExtractorStorageTest
     [Test]
     public async Task SeedEntityHasSeedComponent()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -97,8 +90,6 @@ public sealed class SeedExtractorStorageTest
 
             Assert.That(entityManager.HasComponent<SeedComponent>(seed), Is.True);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -107,11 +98,10 @@ public sealed class SeedExtractorStorageTest
     [Test]
     public async Task MultipleSeedsCanBeStored()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
         var containerSystem = server.ResolveDependency<IEntityManager>().System<SharedContainerSystem>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -128,7 +118,5 @@ public sealed class SeedExtractorStorageTest
             Assert.That(containerSystem.Insert(seed3, container), Is.True);
             Assert.That(container.ContainedEntities, Has.Count.EqualTo(3));
         });
-
-        await pair.CleanReturnAsync();
     }
 }
