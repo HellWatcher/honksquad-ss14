@@ -319,10 +319,12 @@ public sealed class TraitPointBuyTest
     }
 
     /// <summary>
-    /// Sight-domain cross-set: upstream Blindness blocks fork ScarredEye via shared "sight" tag.
+    /// Sight-domain cross-set: Blindness and ScarredEye both carry "sight" as a tag and an
+    /// excludedTag, so the two cannot coexist. The newer pick wins (matches the synthetic
+    /// TagExclusion_AddingTraitRemovesConflicting semantic).
     /// </summary>
     [Test]
-    public async Task TagExclusion_BlindnessRejectsScarredEye()
+    public async Task TagExclusion_BlindnessAndScarredEyeMutuallyExclusive()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
@@ -336,19 +338,22 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("Blindness")));
 
             profile = profile.WithTraitPreference("ScarredEye", protoMan);
-            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("ScarredEye")),
-                "ScarredEye should be rejected when Blindness is already taken (shared sight tag).");
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("ScarredEye")),
+                "Newer ScarredEye should be present.");
+            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("Blindness")),
+                "Blindness should be removed by newer ScarredEye (shared sight tag).");
         });
 
         await pair.CleanReturnAsync();
     }
 
     /// <summary>
-    /// Awareness cross-set: upstream PainNumbness blocks fork SelfAware via shared "awareness" tag.
-    /// PainNumbness hides damage; SelfAware reveals exact damage. Functionally opposite, so they share a domain.
+    /// Awareness cross-set: PainNumbness and SelfAware are functional opposites and both
+    /// carry "awareness" as a tag and an excludedTag, so the two cannot coexist. The newer
+    /// pick wins.
     /// </summary>
     [Test]
-    public async Task TagExclusion_PainNumbnessRejectsSelfAware()
+    public async Task TagExclusion_PainNumbnessAndSelfAwareMutuallyExclusive()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
@@ -362,8 +367,10 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("PainNumbness")));
 
             profile = profile.WithTraitPreference("SelfAware", protoMan);
-            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("SelfAware")),
-                "SelfAware should be rejected when PainNumbness is already taken (shared awareness tag).");
+            Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("SelfAware")),
+                "Newer SelfAware should be present.");
+            Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("PainNumbness")),
+                "PainNumbness should be removed by newer SelfAware (shared awareness tag).");
         });
 
         await pair.CleanReturnAsync();
