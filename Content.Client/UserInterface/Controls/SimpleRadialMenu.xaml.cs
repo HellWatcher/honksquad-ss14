@@ -9,6 +9,9 @@ using Robust.Client.UserInterface.XAML;
 using Robust.Client.Input;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
+//HONK START - shared icon scaling helper
+using Content.Client.RussStation.UserInterface;
+//HONK END
 
 namespace Content.Client.UserInterface.Controls;
 
@@ -178,24 +181,16 @@ public sealed partial class SimpleRadialMenu : RadialMenu
         return entView;
     }
 
-    // HONK START - Auto-scale 16x16 textures to fill 64x64 button area
+    // HONK START - Pixel-aware fit so any sprite size fills the button box, not just 16/32 px
     private static Control CreateTexture(SpriteSpecifier spriteSpecifier, SpriteSystem sprites)
     {
         var texture = sprites.Frame0(spriteSpecifier);
 
-        var scale = Vector2.One;
-        if (texture.Width <= 16)
-            scale *= 4;
-        else if (texture.Width <= 32)
-            scale *= 2;
-
-        var imageControl = new TextureRect
+        return new TextureRect
         {
             Texture = texture,
-            TextureScale = scale,
+            TextureScale = IconScaling.FitScale(texture.Size, ButtonSize),
         };
-
-        return imageControl;
     }
     // HONK END
 

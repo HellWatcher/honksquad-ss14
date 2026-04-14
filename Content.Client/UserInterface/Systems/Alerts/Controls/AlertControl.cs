@@ -7,6 +7,9 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+//HONK START - shared icon scaling helper
+using Content.Client.RussStation.UserInterface;
+//HONK END
 
 namespace Content.Client.UserInterface.Systems.Alerts.Controls
 {
@@ -104,13 +107,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
                 _sprite.LayerSetSprite((_spriteViewEntity, sprite), layer, icon);
 
                 //HONK START - Rescale on severity change
-                var pixelSize = sprite[layer].PixelSize;
-                var maxSide = Math.Max(pixelSize.X, pixelSize.Y);
-                if (maxSide > 0)
-                {
-                    var scale = 64f / maxSide;
-                    _icon.Scale = new Vector2(scale, scale);
-                }
+                _icon.Scale = IconScaling.FitScale(sprite[layer].PixelSize, 64f);
                 //HONK END
             }
         }
@@ -143,13 +140,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
                     _sprite.LayerSetSprite((_spriteViewEntity, sprite), layer, icon);
 
                 //HONK START - Dynamic scale so any sprite size fills the 64x64 alert slot
-                var pixelSize = sprite[layer].PixelSize;
-                var maxSide = Math.Max(pixelSize.X, pixelSize.Y);
-                if (maxSide > 0)
-                {
-                    var scale = 64f / maxSide;
-                    _icon.Scale = new Vector2(scale, scale);
-                }
+                _icon.Scale = IconScaling.FitScale(sprite[layer].PixelSize, 64f);
                 //HONK END
             }
 
