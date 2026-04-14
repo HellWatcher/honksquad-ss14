@@ -19,6 +19,10 @@
     interfaces:
       enum.HealthAnalyzerUiKey.Key:
         type: HealthAnalyzerBoundUserInterface
+      # HONK START - Alt-verb reagent scanner UI
+      enum.HealthAnalyzerUiKey.Reagents:
+        type: HealthAnalyzerReagentBoundUserInterface
+      # HONK END
   - type: ItemToggle
     onUse: false
   - type: HealthAnalyzer

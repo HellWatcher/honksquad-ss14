@@ -1,0 +1,15 @@
+<controls:FancyWindow
+    xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+    MinWidth="320"
+    MaxHeight="525">
+    <ScrollContainer
+        Margin="5 5 5 5"
+        ReturnMeasure="True"
+        VerticalExpand="True">
+        <BoxContainer Orientation="Vertical" Name="Body" SeparationOverride="6">
+            <Label Name="TargetLabel" StyleClasses="LabelHeading" />
+            <BoxContainer Orientation="Vertical" Name="GroupContainer" SeparationOverride="8" />
+        </BoxContainer>
+    </ScrollContainer>
+</controls:FancyWindow>
