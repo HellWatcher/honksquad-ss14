@@ -36,6 +36,7 @@
   cost: -2
   tags:
     - paper
+    - phobia
   excludedTags:
     - paper
   components:
@@ -74,9 +75,10 @@
   category: Social
   cost: -2
   tags:
-    - voice-volume
+    - speech
+    - volume
   excludedTags:
-    - voice-volume
+    - volume
   components:
     - type: SoftSpoken
 
@@ -113,9 +115,10 @@
   category: Social
   cost: 2
   tags:
-    - voice-volume
+    - speech
+    - volume
   excludedTags:
-    - voice-volume
+    - volume
   components:
     - type: BoomingVoice
 
@@ -310,6 +313,9 @@
   description: trait-skittish-desc
   category: Movement
   cost: 8
+  tags:
+    - mobility
+    - sprint
   blacklist:
     components:
       - BorgChassis

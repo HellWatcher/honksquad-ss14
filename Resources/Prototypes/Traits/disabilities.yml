@@ -6,7 +6,8 @@
   description: trait-blindness-desc
   traitGear: WhiteCane
   category: Disabilities
-  # HONK START - Tag-based exclusion
+  # HONK START - Cost + tag-based exclusion
+  cost: -8
   tags:
   - sight
   excludedTags:
@@ -24,7 +25,8 @@
   description: trait-poor-vision-desc
   traitGear: ClothingEyesGlasses
   category: Disabilities
-  # HONK START - Tag-based exclusion
+  # HONK START - Cost + tag-based exclusion
+  cost: -2
   tags:
   - sight
   excludedTags:
@@ -42,6 +44,7 @@
   name: trait-narcolepsy-name
   description: trait-narcolepsy-desc
   category: Disabilities
+  cost: -4 # HONK
   components:
     - type: Narcolepsy
       maxTimeBetweenIncidents: 600
@@ -54,6 +57,7 @@
   name: trait-unrevivable-name
   description: trait-unrevivable-desc
   category: Disabilities
+  cost: -4 # HONK
   components:
     - type: Unrevivable
       cloneable: true
@@ -63,6 +67,13 @@
   name: trait-monochromacy-name
   description: trait-monochromacy-desc
   category: Disabilities
+  # HONK START - Cost + tag-based exclusion (shares sight domain)
+  cost: -1
+  tags:
+  - sight
+  excludedTags:
+  - sight
+  # HONK END
   components:
   - type: BlackAndWhiteOverlay
 
@@ -71,7 +82,8 @@
   name: trait-muted-name
   description: trait-muted-desc
   category: Disabilities
-  # HONK START - Tag-based exclusion (can't speak, blocks all speech traits)
+  # HONK START - Cost + tag-based exclusion (silences all speech)
+  cost: -4
   tags:
   - speech
   excludedTags:
@@ -88,6 +100,7 @@
   name: trait-paracusia-name
   description: trait-paracusia-desc
   category: Disabilities
+  cost: -1 # HONK
   components:
     - type: Paracusia
       minTimeBetweenIncidents: 0.1
@@ -101,6 +114,13 @@
   name: trait-painnumbness-name
   description: trait-painnumbness-desc
   category: Disabilities
+  # HONK START - Cost + tag-based exclusion (perception trait, opposite of SelfAware)
+  cost: -2
+  tags:
+  - awareness
+  excludedTags:
+  - awareness
+  # HONK END
   specials:
   - !type:ApplyStatusEffectSpecial
     statusEffects:
@@ -111,6 +131,7 @@
   name: trait-hemophilia-name
   description: trait-hemophilia-desc
   category: Disabilities
+  cost: -2 # HONK
   specials:
   - !type:ApplyStatusEffectSpecial
     statusEffects:
@@ -122,5 +143,12 @@
   description: trait-impaired-mobility-desc
   traitGear: OffsetCane
   category: Disabilities
+  # HONK START - Cost + tag-based exclusion (broad mobility marker, blocks sprint-dependent traits)
+  cost: -4
+  tags:
+  - mobility
+  excludedTags:
+  - sprint
+  # HONK END
   components:
     - type: ImpairedMobility
