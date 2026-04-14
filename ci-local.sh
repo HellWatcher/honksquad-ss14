@@ -134,7 +134,7 @@ fi
 if [ "$SKIP_LINT" = false ]; then
     echo "--- YAML Linter ---"
     step_start
-    if dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build 2>&1 | tee /dev/stderr | grep -q "0 errors"; then
+    if dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build 2>&1 | tee /dev/stderr; [ "${PIPESTATUS[0]}" -eq 0 ]; then
         step_end "YAML Linter"
         pass "YAML Linter" "${STEP_TIMES["YAML Linter"]}"
     else
