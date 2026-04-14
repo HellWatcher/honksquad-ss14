@@ -30,32 +30,8 @@
   - PermanentBlindness
   - Snoring
   - Unrevivable
-  # HONK START - fork-added trait components copied to clones
-  - Ageusia
-  - AlcoholTolerance
-  - BlockWriting
-  - BloodDeficiency
-  - BoomingVoice
-  - Frail
-  - Freerunning
-  - GlassJaw
-  - Indebted
-  - IronJaw
-  - LightStep
-  - Negotiator
-  - Papyrophobia
-  - PoorAim
-  - Prosopagnosia
-  - ScarredEye
-  - SelfAware
-  - Skittish
-  - SoftSpoken
-  - SteadyHand
-  - ThrowingArm
-  - Touchy
-  - Tough
-  - Vegetarian
-  - WeakArm
+  # HONK START - fork traits live in Resources/Prototypes/@RussStation/Cloning/clone_extensions.yml
+  # and are copied by RussStationCloningSystem on CloningEvent.
   # HONK END
   # accents
   - Accentless
