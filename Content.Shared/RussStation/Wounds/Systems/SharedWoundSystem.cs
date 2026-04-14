@@ -1,5 +1,6 @@
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Rejuvenate;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Prototypes;
@@ -19,6 +20,7 @@ public abstract class SharedWoundSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<WoundComponent, DamageChangedEvent>(OnDamageChanged);
+        SubscribeLocalEvent<WoundComponent, RejuvenateEvent>(OnRejuvenate);
         SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
         CacheWoundTypes();
     }
@@ -36,6 +38,17 @@ public abstract class SharedWoundSystem : EntitySystem
         {
             _woundTypes.Add(proto);
         }
+    }
+
+    private void OnRejuvenate(EntityUid uid, WoundComponent comp, RejuvenateEvent args)
+    {
+        if (comp.ActiveWounds.Count == 0 && comp.BleedSourceDamageType is null)
+            return;
+
+        comp.ActiveWounds.Clear();
+        comp.BleedSourceDamageType = null;
+        Dirty(uid, comp);
+        RaiseLocalEvent(uid, new WoundsClearedEvent());
     }
 
     private void OnDamageChanged(EntityUid uid, WoundComponent comp, DamageChangedEvent args)
