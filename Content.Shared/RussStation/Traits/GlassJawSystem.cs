@@ -1,3 +1,4 @@
+using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Events;
 using Content.Shared.Damage.Systems;
 
@@ -17,6 +18,9 @@ public sealed class GlassJawSystem : EntitySystem
 
     private void OnMapInit(EntityUid uid, GlassJawComponent component, MapInitEvent args)
     {
+        if (!HasComp<StaminaComponent>(uid))
+            return;
+
         _stamina.RefreshStaminaCritThreshold((uid, null));
     }
 
