@@ -1,0 +1,13 @@
+# Display name shortened to "German" for the trait list UI; the prototype id
+# stays as "GermanAccent" so existing player save data keeps working.
+- type: trait
+  id: GermanAccent
+  name: trait-german-name
+  description: trait-german-desc
+  category: Social
+  cost: 1
+  tags:
+    - speech
+    - accent
+  components:
+    - type: GermanAccent

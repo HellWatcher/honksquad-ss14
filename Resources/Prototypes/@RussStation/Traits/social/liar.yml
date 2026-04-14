@@ -1,0 +1,12 @@
+- type: trait
+  id: Liar
+  name: trait-liar-name
+  description: trait-liar-desc
+  category: Social
+  cost: 1
+  tags:
+    - speech
+    - accent
+  components:
+    - type: ReplacementAccent
+      accent: liar

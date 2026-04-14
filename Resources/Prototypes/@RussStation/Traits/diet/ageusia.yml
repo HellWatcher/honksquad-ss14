@@ -1,0 +1,12 @@
+- type: trait
+  id: Ageusia
+  name: trait-ageusia-name
+  description: trait-ageusia-desc
+  category: Diet
+  cost: 0
+  tags:
+    - taste
+  excludedTags:
+    - taste
+  components:
+    - type: Ageusia

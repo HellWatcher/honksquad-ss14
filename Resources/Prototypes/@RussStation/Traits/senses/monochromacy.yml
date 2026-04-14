@@ -1,0 +1,12 @@
+- type: trait
+  id: Monochromacy
+  name: trait-monochromacy-name
+  description: trait-monochromacy-desc
+  category: Senses
+  cost: -1
+  tags:
+    - sight
+  excludedTags:
+    - sight
+  components:
+    - type: BlackAndWhiteOverlay

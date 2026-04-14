@@ -1,0 +1,12 @@
+- type: trait
+  id: SteadyHand
+  name: trait-steady-hand-name
+  description: trait-steady-hand-desc
+  category: Body
+  cost: 4
+  tags:
+    - accuracy
+  excludedTags:
+    - accuracy
+  components:
+    - type: SteadyHand

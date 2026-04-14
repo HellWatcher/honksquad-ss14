@@ -1,0 +1,14 @@
+# Display name shortened to "Pitcher" for the trait list UI; the prototype id
+# stays as "ThrowingArm" so existing player save data keeps working.
+- type: trait
+  id: ThrowingArm
+  name: trait-throwing-arm-name
+  description: trait-throwing-arm-desc
+  category: Body
+  cost: 2
+  tags:
+    - throwing
+  excludedTags:
+    - throwing
+  components:
+    - type: ThrowingArm

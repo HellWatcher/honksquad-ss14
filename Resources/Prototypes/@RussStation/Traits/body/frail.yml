@@ -1,0 +1,12 @@
+- type: trait
+  id: Frail
+  name: trait-frail-name
+  description: trait-frail-desc
+  category: Body
+  cost: -4
+  tags:
+    - wounds
+  excludedTags:
+    - wounds
+  components:
+    - type: Frail

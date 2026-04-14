@@ -1,0 +1,12 @@
+- type: trait
+  id: Touchy
+  name: trait-touchy-name
+  description: trait-touchy-desc
+  category: Senses
+  cost: -2
+  tags:
+    - examine-range
+  excludedTags:
+    - examine-range
+  components:
+    - type: Touchy

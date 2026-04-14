@@ -1,0 +1,16 @@
+- type: trait
+  id: Blindness
+  name: trait-blindness-name
+  description: trait-blindness-desc
+  traitGear: WhiteCane
+  category: Senses
+  cost: -8
+  tags:
+    - sight
+  excludedTags:
+    - sight
+  whitelist:
+    components:
+      - Blindable
+  components:
+    - type: PermanentBlindness
