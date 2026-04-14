@@ -5,6 +5,7 @@ namespace Content.Shared.Radiation.Systems;
 // HONK - Fork-side partial that exposes Slope/Enabled setters for
 // RadiationSourceComponent without modifying the upstream file. Type-permission
 // access checks pass because partial classes share a single CLR type identity.
+// Canonical example of the [Access] policy documented in CLAUDE.md (see issue #472).
 public abstract partial class SharedRadiationSystem
 {
     public void SetSlope(Entity<RadiationSourceComponent?> entity, float slope)
