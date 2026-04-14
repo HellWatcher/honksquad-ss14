@@ -103,7 +103,11 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
             _ => strategy.ClosestSkinColor(new Color(random.NextFloat(1), random.NextFloat(1), random.NextFloat(1), 1)),
         };
 
-        return new HumanoidCharacterAppearance(newEyeColor, newSkinColor, new());
+        //HONK START - Normalize so Random() output is round-trip stable. The constructor's
+        // 8-bit ClampColor can push the strategy's HSV output just outside its valid range,
+        // and a later EnsureVerified would then snap it to ClosestSkinColor mid-round-trip.
+        return EnsureValid(new HumanoidCharacterAppearance(newEyeColor, newSkinColor, new()), species, sex);
+        //HONK END
     }
 
     public static Color ClampColor(Color color)
