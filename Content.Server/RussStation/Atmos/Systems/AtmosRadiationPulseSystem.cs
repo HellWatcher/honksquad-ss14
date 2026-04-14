@@ -1,4 +1,5 @@
 using Content.Shared.Radiation.Components;
+using Content.Shared.Radiation.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -20,6 +21,7 @@ namespace Content.Server.RussStation.Atmos.Systems;
 public sealed class AtmosRadiationPulseSystem : EntitySystem
 {
     [Dependency] private readonly SharedMapSystem _map = default!;
+    [Dependency] private readonly SharedRadiationSystem _radiation = default!;
 
     private readonly Dictionary<(EntityUid Grid, Vector2i Tile), float> _pending = new();
 
@@ -109,9 +111,9 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
         var (intensity, slope) = RadiationBlobMath.GradientParams(tiles);
 
         var source = EnsureComp<RadiationSourceComponent>(uid);
-        source.Intensity = intensity;
-        source.Slope = slope;
-        source.Enabled = true;
+        _radiation.SetIntensity((uid, source), intensity);
+        _radiation.SetSlope((uid, source), slope);
+        _radiation.SetEnabled((uid, source), true);
 
         var despawn = EnsureComp<TimedDespawnComponent>(uid);
         despawn.Lifetime = PulseLifetime;
