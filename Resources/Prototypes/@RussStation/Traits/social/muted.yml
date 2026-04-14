@@ -1,0 +1,15 @@
+- type: trait
+  id: Muted
+  name: trait-muted-name
+  description: trait-muted-desc
+  category: Social
+  cost: -4
+  tags:
+    - speech
+  excludedTags:
+    - speech
+  blacklist:
+    components:
+      - BorgChassis
+  components:
+    - type: Muted

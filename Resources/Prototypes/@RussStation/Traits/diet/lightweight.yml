@@ -1,0 +1,15 @@
+# Display name shortened to "Lightweight" for the trait list UI; the prototype id
+# stays as "LightweightDrunk" so existing player save data keeps working.
+- type: trait
+  id: LightweightDrunk
+  name: trait-lightweight-name
+  description: trait-lightweight-desc
+  category: Diet
+  cost: -2
+  tags:
+    - alcohol
+  excludedTags:
+    - alcohol
+  components:
+    - type: LightweightDrunk
+      boozeStrengthMultiplier: 2

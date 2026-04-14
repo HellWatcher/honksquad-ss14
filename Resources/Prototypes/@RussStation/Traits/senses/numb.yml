@@ -1,0 +1,16 @@
+# Display name shortened to "Numb" for the trait list UI; the prototype id stays
+# as "PainNumbness" so existing player save data keeps working.
+- type: trait
+  id: PainNumbness
+  name: trait-painnumbness-name
+  description: trait-painnumbness-desc
+  category: Senses
+  cost: -2
+  tags:
+    - awareness
+  excludedTags:
+    - awareness
+  specials:
+    - !type:ApplyStatusEffectSpecial
+      statusEffects:
+        - PainNumbnessTraitStatusEffect

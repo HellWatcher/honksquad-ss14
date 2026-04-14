@@ -1,0 +1,15 @@
+# Display name shortened to "Hobbled" for the trait list UI; the prototype id
+# stays as "ImpairedMobility" so existing player save data keeps working.
+- type: trait
+  id: ImpairedMobility
+  name: trait-impaired-mobility-name
+  description: trait-impaired-mobility-desc
+  traitGear: OffsetCane
+  category: Movement
+  cost: -4
+  tags:
+    - mobility
+  excludedTags:
+    - sprint
+  components:
+    - type: ImpairedMobility

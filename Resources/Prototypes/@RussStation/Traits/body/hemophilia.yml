@@ -1,0 +1,10 @@
+- type: trait
+  id: Hemophilia
+  name: trait-hemophilia-name
+  description: trait-hemophilia-desc
+  category: Body
+  cost: -2
+  specials:
+    - !type:ApplyStatusEffectSpecial
+      statusEffects:
+        - StatusEffectHemophiliaTrait

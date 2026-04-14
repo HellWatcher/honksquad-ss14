@@ -1,0 +1,14 @@
+# Display name shortened to "Scottish" for the trait list UI; the prototype id
+# stays as "ScottishAccent" so existing player save data keeps working.
+- type: trait
+  id: ScottishAccent
+  name: trait-scottish-name
+  description: trait-scottish-desc
+  category: Social
+  cost: 1
+  tags:
+    - speech
+    - accent
+  components:
+    - type: ReplacementAccent
+      accent: scottish

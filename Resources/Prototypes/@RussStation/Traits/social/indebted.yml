@@ -1,0 +1,12 @@
+- type: trait
+  id: Indebted
+  name: trait-indebted-name
+  description: trait-indebted-desc
+  category: Social
+  cost: -1
+  tags:
+    - wage
+  excludedTags:
+    - wage
+  components:
+    - type: Indebted

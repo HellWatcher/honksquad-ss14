@@ -1,0 +1,15 @@
+# Display name shortened to "Loud Voice" for the trait list UI; the prototype id
+# stays as "BoomingVoice" so existing player save data keeps working.
+- type: trait
+  id: BoomingVoice
+  name: trait-booming-voice-name
+  description: trait-booming-voice-desc
+  category: Social
+  cost: 2
+  tags:
+    - speech
+    - volume
+  excludedTags:
+    - volume
+  components:
+    - type: BoomingVoice

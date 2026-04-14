@@ -1,0 +1,12 @@
+- type: trait
+  id: PoorAim
+  name: trait-pooraim-name
+  description: trait-pooraim-desc
+  category: Body
+  cost: -4
+  tags:
+    - accuracy
+  excludedTags:
+    - accuracy
+  components:
+    - type: PoorAim

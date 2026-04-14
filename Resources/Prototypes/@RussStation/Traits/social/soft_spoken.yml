@@ -1,0 +1,13 @@
+- type: trait
+  id: SoftSpoken
+  name: trait-softspoken-name
+  description: trait-softspoken-desc
+  category: Social
+  cost: -2
+  tags:
+    - speech
+    - volume
+  excludedTags:
+    - volume
+  components:
+    - type: SoftSpoken

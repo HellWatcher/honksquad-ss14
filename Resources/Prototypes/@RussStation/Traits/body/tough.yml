@@ -1,0 +1,12 @@
+- type: trait
+  id: Tough
+  name: trait-tough-name
+  description: trait-tough-desc
+  category: Body
+  cost: 3
+  tags:
+    - wounds
+  excludedTags:
+    - wounds
+  components:
+    - type: Tough

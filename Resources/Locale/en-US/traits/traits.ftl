@@ -1,7 +1,7 @@
 trait-blindness-name = Blindness
 trait-blindness-desc = You are legally blind, and can't see clearly past a few meters in front of you.
 
-trait-poor-vision-name = Short-sighted
+trait-poor-vision-name = Nearsighted
 trait-poor-vision-desc = Your eyes are not what they once were, you have difficulty seeing things far away without corrective glasses.
 
 trait-narcolepsy-name = Narcolepsy
@@ -30,31 +30,31 @@ trait-unrevivable-desc = You are unable to be revived by defibrillators.
 trait-accentless-name = Accentless
 trait-accentless-desc = You don't have the accent that your species would usually have.
 
-trait-frontal-lisp-name = Frontal Lisp
+trait-frontal-lisp-name = Lisp
 trait-frontal-lisp-desc = You thpeak with a lithp.
 
 trait-socialanxiety-name = Stutter
 trait-socialanxiety-desc = You speak with a stutter.
 
-trait-southern-name = Southern Drawl
+trait-southern-name = Southern
 trait-southern-desc = You have a different way of speakin'.
 
 trait-snoring-name = Snoring
 trait-snoring-desc = You will snore while sleeping.
 
-trait-liar-name = Pathological Liar
+trait-liar-name = Liar
 trait-liar-desc = You can hardly bring yourself to tell the truth. Sometimes you lie anyway.
 
-trait-german-name = German Accent
+trait-german-name = German
 trait-german-desc = You seem to come from space Germany.
 
-trait-french-name = French Accent
+trait-french-name = French
 trait-french-desc = Your accent seems to have a certain «je ne sais quoi».
 
-trait-spanish-name = Spanish Accent
+trait-spanish-name = Spanish
 trait-spanish-desc = Hola señor, donde esta la biblioteca.
 
-trait-scottish-name = Scottish Accent
+trait-scottish-name = Scottish
 trait-scottish-desc = Ye're speaking like ae proper Scot!
 
 trait-painnumbness-name = Numb
@@ -63,5 +63,5 @@ trait-painnumbness-desc = You lack any sense of feeling pain, being unaware of h
 trait-hemophilia-name = Hemophilia
 trait-hemophilia-desc = Your body fails to make blood clots.
 
-trait-impaired-mobility-name = Impaired Mobility
+trait-impaired-mobility-name = Hobbled
 trait-impaired-mobility-desc = You have difficulty moving without a mobility aid.

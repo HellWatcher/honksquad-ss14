@@ -1,0 +1,13 @@
+# Display name shortened to "Southern" for the trait list UI; the prototype id
+# stays as "SouthernAccent" so existing player save data keeps working.
+- type: trait
+  id: SouthernAccent
+  name: trait-southern-name
+  description: trait-southern-desc
+  category: Social
+  cost: 1
+  tags:
+    - speech
+    - accent
+  components:
+    - type: SouthernAccent

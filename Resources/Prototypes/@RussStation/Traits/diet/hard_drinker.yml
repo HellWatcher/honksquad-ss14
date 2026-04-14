@@ -1,0 +1,14 @@
+# Display name shortened to "Hard Drinker" for the trait list UI; the prototype id
+# stays as "AlcoholTolerance" so existing player save data keeps working.
+- type: trait
+  id: AlcoholTolerance
+  name: trait-alcohol-tolerance-name
+  description: trait-alcohol-tolerance-desc
+  category: Diet
+  cost: 2
+  tags:
+    - alcohol
+  excludedTags:
+    - alcohol
+  components:
+    - type: AlcoholTolerance

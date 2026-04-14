@@ -1,0 +1,8 @@
+- type: trait
+  id: Pacifist
+  name: trait-pacifist-name
+  description: trait-pacifist-desc
+  category: Social
+  cost: -8
+  components:
+    - type: Pacified

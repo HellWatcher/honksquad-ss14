@@ -1,0 +1,8 @@
+- type: trait
+  id: Snoring
+  name: trait-snoring-name
+  description: trait-snoring-desc
+  category: Body
+  cost: 0
+  components:
+    - type: Snoring

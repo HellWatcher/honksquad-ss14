@@ -1,0 +1,13 @@
+- type: trait
+  id: Papyrophobia
+  name: trait-papyrophobia-name
+  description: trait-papyrophobia-desc
+  category: Phobia
+  cost: -2
+  tags:
+    - paper
+    - phobia
+  excludedTags:
+    - paper
+  components:
+    - type: Papyrophobia

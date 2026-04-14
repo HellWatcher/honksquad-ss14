@@ -1,7 +1,4 @@
-- type: traitCategory
-  id: Disabilities
-  name: trait-category-disabilities
-
-- type: traitCategory
-  id: SpeechTraits
-  name: trait-category-speech
+# HONK - The Disabilities and SpeechTraits categories were folded into the fork's
+# unified category set (Body / Diet / Movement / Phobia / Senses / Social) defined
+# in @RussStation/Traits/categories.yml. Every former member trait was reassigned.
+# This file is intentionally empty so upstream additions land here as a clean conflict.
