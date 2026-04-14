@@ -23,12 +23,10 @@ internal sealed class CarryingSystem : SharedCarryingSystem
     {
         base.FrameUpdate(frameTime);
 
-        var query = EntityQueryEnumerator<BeingCarriedComponent, CarriableComponent, TransformComponent>();
-        while (query.MoveNext(out var uid, out _, out var carriable, out var xform))
+        var query = EntityQueryEnumerator<BeingCarriedComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var being, out var xform))
         {
-            if (carriable.CarriedBy is not { } carrier)
-                continue;
-
+            var carrier = being.Carrier;
             if (!TryComp<CarrierComponent>(carrier, out var carrierComp))
                 continue;
 

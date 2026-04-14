@@ -61,7 +61,7 @@ public sealed class CarryingTest : GameTest
 ";
 
     /// <summary>
-    /// Verifies CarrierComponent defaults: carrying is null, speed modifiers are set.
+    /// Verifies CarrierComponent defaults: speed modifiers are set, no active marker present.
     /// </summary>
     [Test]
     public async Task CarrierComponentDefaults()
@@ -75,14 +75,14 @@ public sealed class CarryingTest : GameTest
             var carrier = entityManager.SpawnEntity("CarryTestCarrier", mapData.GridCoords);
             var comp = entityManager.GetComponent<CarrierComponent>(carrier);
 
-            Assert.That(comp.Carrying, Is.Null);
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False);
             Assert.That(comp.WalkSpeedModifier, Is.EqualTo(0.75f));
             Assert.That(comp.SprintSpeedModifier, Is.EqualTo(0.6f));
         });
     }
 
     /// <summary>
-    /// Verifies CarriableComponent defaults: not being carried.
+    /// Verifies CarriableComponent is a permission tag with no active marker by default.
     /// </summary>
     [Test]
     public async Task CarriableComponentDefaults()
@@ -94,9 +94,9 @@ public sealed class CarryingTest : GameTest
         await server.WaitAssertion(() =>
         {
             var target = entityManager.SpawnEntity("CarryTestTarget", mapData.GridCoords);
-            var comp = entityManager.GetComponent<CarriableComponent>(target);
 
-            Assert.That(comp.CarriedBy, Is.Null);
+            Assert.That(entityManager.HasComponent<CarriableComponent>(target), Is.True);
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False);
         });
     }
 

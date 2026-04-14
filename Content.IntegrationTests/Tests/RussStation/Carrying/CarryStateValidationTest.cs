@@ -1,18 +1,17 @@
-using Content.IntegrationTests.Fixtures;
 using Content.Shared.Buckle.Components;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
 using Content.Shared.RussStation.Carrying.Components;
+using Content.Shared.RussStation.Carrying.Systems;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Carrying;
 
+[TestFixture]
 [TestOf(typeof(ActiveCarrierComponent))]
-public sealed class CarryStateValidationTest : GameTest
+public sealed class CarryStateValidationTest
 {
-    // Orphan-cleanup tests emit an expected WARN log ("Cleaned orphaned carry state")
-    // which GameTest teardown would otherwise treat as a test failure. Destructive
-    // pairs skip the ReportErrorLogs step entirely.
-    public override PoolSettings PoolSettings => new() { Connected = true, Destructive = true };
-
     [TestPrototypes]
     private const string Prototypes = @"
 - type: entity
@@ -73,75 +72,80 @@ public sealed class CarryStateValidationTest : GameTest
 ";
 
     /// <summary>
-    /// ActiveCarrierComponent with no actual carry target is orphaned state.
-    /// The periodic validation should remove it within a second.
+    /// Deleting the target entity mid-carry must not leave the carrier holding a stale
+    /// ActiveCarrierComponent. Previously this depended on shutdown order between
+    /// CarriableComponent and BeingCarriedComponent and could leave an orphan that a
+    /// periodic validation tick had to clean up; the marker now owns its own carrier
+    /// reference so the shutdown path no longer races.
     /// </summary>
     [Test]
-    public async Task OrphanedActiveCarrierGetsCleaned()
+    public async Task TargetDeletionCleansCarrierState()
     {
-        var server = Server;
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await Pair.CreateTestMap();
+        var carrying = server.System<SharedCarryingSystem>();
+        var mobState = server.System<MobStateSystem>();
+        var mapData = await pair.CreateTestMap();
 
         EntityUid carrier = default;
 
         await server.WaitAssertion(() =>
         {
             carrier = entityManager.SpawnEntity("CarryValidationCarrier", mapData.GridCoords);
+            var target = entityManager.SpawnEntity("CarryValidationTarget", mapData.GridCoords);
 
-            // Add the active marker without setting up a real carry to simulate corruption.
-            entityManager.EnsureComponent<ActiveCarrierComponent>(carrier);
-            var carrierComp = entityManager.GetComponent<CarrierComponent>(carrier);
-            Assert.That(carrierComp.Carrying, Is.Null);
-            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True);
-        });
+            // Carry() requires the target to be incapacitated.
+            mobState.ChangeMobState(target, MobState.Critical);
 
-        // Wait for the 1-second validation tick to fire.
-        await Pair.RunSeconds(2);
+            carrying.Carry(carrier, target);
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True,
+                "Carry() should have wired up the carrier marker");
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.True,
+                "Carry() should have wired up the target marker");
 
-        await server.WaitAssertion(() =>
-        {
+            entityManager.DeleteEntity(target);
+
             Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False,
-                "Orphaned ActiveCarrierComponent should be cleaned by validation");
+                "Deleting the target must remove the carrier marker, regardless of component shutdown order");
         });
+
+        await pair.CleanReturnAsync();
     }
 
     /// <summary>
-    /// Same as <see cref="OrphanedActiveCarrierGetsCleaned"/> but with a target entity
-    /// spawned alongside, verifying cleanup still works in a populated environment.
-    /// Tests the Carrying=null + ActiveCarrierComponent corruption path, which is the
-    /// most common way carry state gets orphaned (partial cleanup by another system).
+    /// Symmetric case: deleting the carrier must clear the target's BeingCarriedComponent
+    /// without leaving an orphan, so the target can be carried again by someone else.
     /// </summary>
     [Test]
-    public async Task DeletedTargetGetsCleaned()
+    public async Task CarrierDeletionCleansTargetState()
     {
-        var server = Server;
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await Pair.CreateTestMap();
+        var carrying = server.System<SharedCarryingSystem>();
+        var mobState = server.System<MobStateSystem>();
+        var mapData = await pair.CreateTestMap();
 
-        EntityUid carrier = default;
-
-        await server.WaitAssertion(() =>
-        {
-            carrier = entityManager.SpawnEntity("CarryValidationCarrier", mapData.GridCoords);
-            entityManager.SpawnEntity("CarryValidationTarget", mapData.GridCoords);
-
-            var carrierComp = entityManager.GetComponent<CarrierComponent>(carrier);
-            entityManager.EnsureComponent<ActiveCarrierComponent>(carrier);
-
-            // [Access] prevents writing to Carrying from tests, so we test the
-            // Carrying=null orphan case directly, which is the most common corruption.
-            Assert.That(carrierComp.Carrying, Is.Null);
-            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True);
-        });
-
-        await Pair.RunSeconds(2);
+        EntityUid target = default;
 
         await server.WaitAssertion(() =>
         {
-            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False,
-                "ActiveCarrierComponent should be removed when Carrying is null");
+            var carrier = entityManager.SpawnEntity("CarryValidationCarrier", mapData.GridCoords);
+            target = entityManager.SpawnEntity("CarryValidationTarget", mapData.GridCoords);
+
+            mobState.ChangeMobState(target, MobState.Critical);
+
+            carrying.Carry(carrier, target);
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.True);
+
+            entityManager.DeleteEntity(carrier);
+
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False,
+                "Deleting the carrier must remove the target marker, regardless of component shutdown order");
         });
+
+        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -151,9 +155,10 @@ public sealed class CarryStateValidationTest : GameTest
     [Test]
     public async Task BuckleAttemptAllowedWhileCarried()
     {
-        var server = Server;
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await Pair.CreateTestMap();
+        var mapData = await pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -175,6 +180,8 @@ public sealed class CarryStateValidationTest : GameTest
             Assert.That(ev.Cancelled, Is.False,
                 "Buckling should be allowed while carried (carry gets dropped, buckle goes through)");
         });
+
+        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -184,9 +191,10 @@ public sealed class CarryStateValidationTest : GameTest
     [Test]
     public async Task BuckleAttemptUnaffectedWhenNotCarried()
     {
-        var server = Server;
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await Pair.CreateTestMap();
+        var mapData = await pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -208,5 +216,7 @@ public sealed class CarryStateValidationTest : GameTest
             Assert.That(ev.Cancelled, Is.False,
                 "BuckleAttemptEvent should not be affected when entity is not being carried");
         });
+
+        await pair.CleanReturnAsync();
     }
 }

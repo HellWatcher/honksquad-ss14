@@ -4,15 +4,15 @@ using Robust.Shared.GameStates;
 namespace Content.Shared.RussStation.Carrying.Components;
 
 /// <summary>
-/// Indicates this entity can fireman carry another entity.
+/// Indicates this entity can fireman carry another entity, and configures
+/// the speed penalties and visual offset while doing so.
+/// The active relationship lives on <see cref="ActiveCarrierComponent"/>;
+/// this component is config-only.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent]
 [Access(typeof(SharedCarryingSystem))]
 public sealed partial class CarrierComponent : Component
 {
-    [AutoNetworkedField, DataField]
-    public EntityUid? Carrying;
-
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WalkSpeedModifier = 0.75f;
 

@@ -4,12 +4,10 @@ using Robust.Shared.GameStates;
 namespace Content.Shared.RussStation.Carrying.Components;
 
 /// <summary>
-/// Indicates this entity can be fireman carried.
+/// Indicates this entity can be fireman carried (permission tag).
+/// The active relationship lives on <see cref="BeingCarriedComponent"/>;
+/// this component carries no per-carry state.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent]
 [Access(typeof(SharedCarryingSystem))]
-public sealed partial class CarriableComponent : Component
-{
-    [AutoNetworkedField, DataField]
-    public EntityUid? CarriedBy;
-}
+public sealed partial class CarriableComponent : Component;
