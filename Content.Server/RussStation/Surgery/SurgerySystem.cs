@@ -35,6 +35,9 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
 
+    [Dependency] private readonly EntityQuery<SurgeryDrapedComponent> _drapedQuery = default!;
+    [Dependency] private readonly EntityQuery<ActiveSurgeryComponent> _activeSurgeryQuery = default!;
+
     private List<string> _cachedProcedureIds = new();
 
     public override void Initialize()
@@ -85,7 +88,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
         // Draping tool on non-draped patient -> open procedure selection
         if (_tool.HasQuality(used, DrapingQuality)
-            && !HasComp<SurgeryDrapedComponent>(target))
+            && !_drapedQuery.HasComp(target))
         {
             if (!_standing.IsDown(target.Owner))
             {
@@ -101,8 +104,8 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
 
         // Organ used on draped patient with active surgery -> insert directly
-        if (HasComp<OrganComponent>(used) && HasComp<SurgeryDrapedComponent>(target) &&
-            HasComp<ActiveSurgeryComponent>(target))
+        if (HasComp<OrganComponent>(used) && _drapedQuery.HasComp(target) &&
+            _activeSurgeryQuery.HasComp(target))
         {
             TryInsertOrgan(user, target, used);
             args.Handled = true;
@@ -110,11 +113,11 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
 
         // Tool used on draped patient -> surgery interaction
-        if (!HasComp<ToolComponent>(used) || !HasComp<SurgeryDrapedComponent>(target))
+        if (!HasComp<ToolComponent>(used) || !_drapedQuery.HasComp(target))
             return;
 
         // Cautery universal close on active surgery
-        if (IsCauteryTool(used) && HasComp<ActiveSurgeryComponent>(target))
+        if (IsCauteryTool(used) && _activeSurgeryQuery.HasComp(target))
         {
             StartCauteryClose(user, target, used);
             args.Handled = true;
@@ -122,7 +125,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
 
         // Active surgery: advance step
-        if (TryComp<ActiveSurgeryComponent>(target, out var active) && active.ProcedureId != null)
+        if (_activeSurgeryQuery.TryComp(target, out var active) && active.ProcedureId != null)
         {
             TryAdvanceStep(user, target, used, active);
             args.Handled = true;
@@ -183,7 +186,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             return;
 
         // Validate: patient must still be down and not already draped
-        if (HasComp<SurgeryDrapedComponent>(target.Value))
+        if (_drapedQuery.HasComp(target.Value))
         {
             _popup.PopupEntity(Loc.GetString("surgery-already-draped"), target.Value, surgeon);
             return;
