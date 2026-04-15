@@ -47,6 +47,16 @@ public abstract class SharedCarryingSystem : EntitySystem
     [Dependency] private readonly StandingStateSystem _standing = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
+    [Dependency] private readonly EntityQuery<CarrierComponent> _carrierQuery = default!;
+    [Dependency] private readonly EntityQuery<CarriableComponent> _carriableQuery = default!;
+    [Dependency] private readonly EntityQuery<BeingCarriedComponent> _beingCarriedQuery = default!;
+    [Dependency] private readonly EntityQuery<ActiveCarrierComponent> _activeCarrierQuery = default!;
+    [Dependency] private readonly EntityQuery<PullerComponent> _pullerQuery = default!;
+    [Dependency] private readonly EntityQuery<PullableComponent> _pullableQuery = default!;
+    [Dependency] private readonly EntityQuery<BuckleComponent> _buckleQuery = default!;
+    [Dependency] private readonly EntityQuery<PhysicsComponent> _physicsQuery = default!;
+    [Dependency] private readonly EntityQuery<KnockedDownComponent> _knockedDownQuery = default!;
+
     // Carriers currently setting up or tearing down a carry. While in this set,
     // OnVirtualItemDeleted won't call Drop(), preventing double-drop cascades.
     private readonly HashSet<EntityUid> _transitioning = new();
@@ -107,7 +117,7 @@ public abstract class SharedCarryingSystem : EntitySystem
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/pickup.svg.192dpi.png")),
             Act = () =>
             {
-                if (TryComp<CarrierComponent>(args.User, out var carrier) && CanCarry(args.User, args.Target))
+                if (_carrierQuery.TryGetComponent(args.User, out var carrier) && CanCarry(args.User, args.Target))
                     StartCarryDoAfter(args.User, args.Target, carrier);
             },
         });
@@ -115,7 +125,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     private void AddDropVerb(EntityUid uid, BeingCarriedComponent component, GetVerbsEvent<InteractionVerb> args)
     {
-        if (!TryComp<CarriableComponent>(uid, out var carriable) || carriable.CarriedBy != args.User)
+        if (!_carriableQuery.TryGetComponent(uid, out var carriable) || carriable.CarriedBy != args.User)
             return;
 
         args.Verbs.Add(new InteractionVerb
@@ -156,7 +166,7 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (!CanCarry(args.User, uid))
             return;
 
-        if (!TryComp<CarrierComponent>(args.User, out var carrierComp))
+        if (!_carrierQuery.TryGetComponent(args.User, out var carrierComp))
             return;
 
         StartCarryDoAfter(args.User, uid, carrierComp);
@@ -172,10 +182,10 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (carrier == target)
             return false;
 
-        if (!TryComp<CarrierComponent>(carrier, out var carrierComp) || carrierComp.Carrying != null)
+        if (!_carrierQuery.TryGetComponent(carrier, out var carrierComp) || carrierComp.Carrying != null)
             return false;
 
-        if (!TryComp<CarriableComponent>(target, out var carriableComp) || carriableComp.CarriedBy != null)
+        if (!_carriableQuery.TryGetComponent(target, out var carriableComp) || carriableComp.CarriedBy != null)
             return false;
 
         if (_standing.IsDown(carrier) || _mobState.IsIncapacitated(carrier))
@@ -184,7 +194,7 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (!_mobState.IsIncapacitated(target))
             return false;
 
-        if (TryComp<BuckleComponent>(target, out var buckle) && buckle.Buckled)
+        if (_buckleQuery.TryGetComponent(target, out var buckle) && buckle.Buckled)
             return false;
 
         if (!_actionBlocker.CanInteract(carrier, target))
@@ -197,7 +207,7 @@ public abstract class SharedCarryingSystem : EntitySystem
         // The pull's virtual item will be freed when the pull stops during Carry(),
         // so count it as available.
         var freeHands = _hands.CountFreeHands(carrier);
-        var pullingTarget = TryComp<PullerComponent>(carrier, out var pullerCheck) && pullerCheck.Pulling == target;
+        var pullingTarget = _pullerQuery.TryGetComponent(carrier, out var pullerCheck) && pullerCheck.Pulling == target;
         var effectiveFreeHands = freeHands + (pullingTarget ? 1 : 0);
         if (effectiveFreeHands < 2)
             return false;
@@ -250,11 +260,11 @@ public abstract class SharedCarryingSystem : EntitySystem
         // guard, those deletions would call Drop() while we're still setting up.
         _transitioning.Add(carrier);
 
-        if (TryComp<PullableComponent>(target, out var pullable) && pullable.Puller != null)
+        if (_pullableQuery.TryGetComponent(target, out var pullable) && pullable.Puller != null)
             _pulling.TryStopPull(target, pullable);
 
-        if (TryComp<PullerComponent>(carrier, out var puller) && puller.Pulling != null
-            && TryComp<PullableComponent>(puller.Pulling.Value, out var pullerPullable))
+        if (_pullerQuery.TryGetComponent(carrier, out var puller) && puller.Pulling != null
+            && _pullableQuery.TryGetComponent(puller.Pulling.Value, out var pullerPullable))
             _pulling.TryStopPull(puller.Pulling.Value, pullerPullable);
 
         carrierComp.Carrying = target;
@@ -291,7 +301,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
         _standing.Down(target, playSound: false, dropHeldItems: false, force: true);
 
-        if (TryComp<PhysicsComponent>(target, out var physics))
+        if (_physicsQuery.TryGetComponent(target, out var physics))
             _physics.ResetDynamics(target, physics);
 
         _movementSpeed.RefreshMovementSpeedModifiers(carrier);
@@ -310,7 +320,7 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (!Resolve(carrier, ref carrierComp) || carrierComp.Carrying is not { } target)
             return;
 
-        if (!TryComp<CarriableComponent>(target, out var carriableComp))
+        if (!_carriableQuery.TryGetComponent(target, out var carriableComp))
             return;
 
         carrierComp.Carrying = null;
@@ -339,7 +349,7 @@ public abstract class SharedCarryingSystem : EntitySystem
         _movementSpeed.RefreshMovementSpeedModifiers(carrier);
         _actionBlocker.UpdateCanMove(target);
 
-        if (!_mobState.IsIncapacitated(target) && !HasComp<KnockedDownComponent>(target))
+        if (!_mobState.IsIncapacitated(target) && !_knockedDownQuery.HasComponent(target))
             _standing.Stand(target);
 
         _popup.PopupClient(Loc.GetString("carrying-drop-carrier", ("target", target)), carrier, carrier);
@@ -356,7 +366,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     private void OnRefreshMoveSpeed(EntityUid uid, ActiveCarrierComponent component, RefreshMovementSpeedModifiersEvent args)
     {
-        if (!TryComp<CarrierComponent>(uid, out var carrier) || carrier.Carrying == null)
+        if (!_carrierQuery.TryGetComponent(uid, out var carrier) || carrier.Carrying == null)
             return;
 
         args.ModifySpeed(carrier.WalkSpeedModifier, carrier.SprintSpeedModifier);
@@ -375,20 +385,20 @@ public abstract class SharedCarryingSystem : EntitySystem
     {
         if (args.NewMobState == MobState.Alive)
         {
-            if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
+            if (_carriableQuery.TryGetComponent(uid, out var carriable) && carriable.CarriedBy is { } carrier)
                 Drop(carrier);
         }
     }
 
     private void OnCarriedStood(EntityUid uid, BeingCarriedComponent component, StoodEvent args)
     {
-        if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
+        if (_carriableQuery.TryGetComponent(uid, out var carriable) && carriable.CarriedBy is { } carrier)
             Drop(carrier);
     }
 
     private void OnCarriedBuckled(EntityUid uid, BeingCarriedComponent component, ref BuckledEvent args)
     {
-        if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
+        if (_carriableQuery.TryGetComponent(uid, out var carriable) && carriable.CarriedBy is { } carrier)
             Drop(carrier);
     }
 
@@ -410,7 +420,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     private void OnCarriedInserted(EntityUid uid, BeingCarriedComponent component, EntGotInsertedIntoContainerMessage args)
     {
-        if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
+        if (_carriableQuery.TryGetComponent(uid, out var carriable) && carriable.CarriedBy is { } carrier)
             Drop(carrier);
     }
 
@@ -425,7 +435,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     private void OnBeingCarriedShutdown(EntityUid uid, BeingCarriedComponent component, ComponentShutdown args)
     {
-        if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier && TryComp<CarrierComponent>(carrier, out var carrierComp))
+        if (_carriableQuery.TryGetComponent(uid, out var carriable) && carriable.CarriedBy is { } carrier && _carrierQuery.TryGetComponent(carrier, out var carrierComp))
         {
             carrierComp.Carrying = null;
             Dirty(carrier, carrierComp);
@@ -441,7 +451,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     private void OnActiveCarrierShutdown(EntityUid uid, ActiveCarrierComponent component, ComponentShutdown args)
     {
-        if (TryComp<CarrierComponent>(uid, out var carrier) && carrier.Carrying is { } target && TryComp<CarriableComponent>(target, out var carriable))
+        if (_carrierQuery.TryGetComponent(uid, out var carrier) && carrier.Carrying is { } target && _carriableQuery.TryGetComponent(target, out var carriable))
         {
             carriable.CarriedBy = null;
             Dirty(target, carriable);
@@ -463,7 +473,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     private void OnCarriedBuckleAttempt(EntityUid uid, BeingCarriedComponent component, ref BuckleAttemptEvent args)
     {
-        if (TryComp<CarriableComponent>(uid, out var carriable) && carriable.CarriedBy is { } carrier)
+        if (_carriableQuery.TryGetComponent(uid, out var carriable) && carriable.CarriedBy is { } carrier)
             Drop(carrier);
     }
 
@@ -496,7 +506,7 @@ public abstract class SharedCarryingSystem : EntitySystem
                 // Target escaped the carrier. Try a normal Drop first, then
                 // fall back to orphan cleanup if Drop couldn't fully resolve it.
                 Drop(uid, carrier);
-                if (HasComp<ActiveCarrierComponent>(uid))
+                if (_activeCarrierQuery.HasComponent(uid))
                     CleanOrphanedCarryState(uid, carrier);
             }
         }
@@ -516,7 +526,7 @@ public abstract class SharedCarryingSystem : EntitySystem
 
         if (target != null && Exists(target.Value) && !Terminating(target.Value))
         {
-            if (TryComp<CarriableComponent>(target.Value, out var carriable))
+            if (_carriableQuery.TryGetComponent(target.Value, out var carriable))
             {
                 carriable.CarriedBy = null;
                 Dirty(target.Value, carriable);
@@ -541,7 +551,7 @@ public abstract class SharedCarryingSystem : EntitySystem
             _joints.RefreshRelay(target.Value);
             _actionBlocker.UpdateCanMove(target.Value);
 
-            if (!_mobState.IsIncapacitated(target.Value) && !HasComp<KnockedDownComponent>(target.Value))
+            if (!_mobState.IsIncapacitated(target.Value) && !_knockedDownQuery.HasComponent(target.Value))
                 _standing.Stand(target.Value);
         }
 
