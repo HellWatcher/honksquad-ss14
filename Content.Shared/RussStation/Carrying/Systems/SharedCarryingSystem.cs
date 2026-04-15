@@ -49,7 +49,6 @@ public abstract class SharedCarryingSystem : EntitySystem
 
     [Dependency] private readonly EntityQuery<CarrierComponent> _carrierQuery = default!;
     [Dependency] private readonly EntityQuery<CarriableComponent> _carriableQuery = default!;
-    [Dependency] private readonly EntityQuery<BeingCarriedComponent> _beingCarriedQuery = default!;
     [Dependency] private readonly EntityQuery<ActiveCarrierComponent> _activeCarrierQuery = default!;
     [Dependency] private readonly EntityQuery<PullerComponent> _pullerQuery = default!;
     [Dependency] private readonly EntityQuery<PullableComponent> _pullableQuery = default!;
