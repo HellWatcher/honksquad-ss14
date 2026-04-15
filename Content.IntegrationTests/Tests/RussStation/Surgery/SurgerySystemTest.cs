@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Server.RussStation.Surgery;
 using Content.Shared.Buckle;
 using Content.Shared.Buckle.Components;
@@ -10,9 +11,8 @@ using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests.RussStation.Surgery;
 
-[TestFixture]
 [TestOf(typeof(SharedSurgerySystem))]
-public sealed class SurgerySystemTest
+public sealed class SurgerySystemTest : GameTest
 {
     private const string TestProcedureId = "SurgeryTestProcedure";
     private const string TestProcedureMajorId = "SurgeryTestProcedureMajor";
@@ -162,8 +162,7 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task ProcedurePrototypesLoadTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoManager = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -173,8 +172,6 @@ public sealed class SurgerySystemTest
             Assert.That(proto.Steps[0].Quality.Id, Is.EqualTo("Slicing"));
             Assert.That(proto.Steps[1].Quality.Id, Is.EqualTo("Retracting"));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -184,8 +181,7 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task AllProcedurePrototypesValidTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoManager = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -207,8 +203,6 @@ public sealed class SurgerySystemTest
                 }
             }
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -217,12 +211,11 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task ToolMatchesStepTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
         var protoManager = server.ResolveDependency<IPrototypeManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -240,8 +233,6 @@ public sealed class SurgerySystemTest
             Assert.That(surgerySystem.ToolMatchesStep(retractor, proto.Steps[0]), Is.False);
             Assert.That(surgerySystem.ToolMatchesStep(retractor, proto.Steps[1]), Is.True);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -251,12 +242,11 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task ToolMatchesStepIgnoresTierTagTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
         var protoManager = server.ResolveDependency<IPrototypeManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -269,8 +259,6 @@ public sealed class SurgerySystemTest
             // ToolMatchesStep only checks the quality, so this matches
             Assert.That(surgerySystem.ToolMatchesStep(nonTool, proto!.Steps[0]), Is.True);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -279,11 +267,10 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task IsCauteryToolTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -295,8 +282,6 @@ public sealed class SurgerySystemTest
             Assert.That(surgerySystem.IsCauteryTool(cautery), Is.True);
             Assert.That(surgerySystem.IsCauteryTool(scalpel), Is.False);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -306,11 +291,10 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task SurfaceSpeedModifierTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -328,8 +312,6 @@ public sealed class SurgerySystemTest
             Assert.That(buckleSystem.TryBuckle(patient, patient, table, buckleComp: buckle), Is.True);
             Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(1f));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -339,11 +321,10 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task NonSurgerySurfaceReturnsDefaultModifierTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -359,8 +340,6 @@ public sealed class SurgerySystemTest
             Assert.That(buckleSystem.TryBuckle(patient, patient, chair, buckleComp: buckle), Is.True);
             Assert.That(surgerySystem.GetSurfaceSpeedModifier(patient), Is.EqualTo(2f));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -371,11 +350,10 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task DrapeSpeedModifierTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -390,8 +368,6 @@ public sealed class SurgerySystemTest
             entityManager.AddComponent<SurgeryDrapedComponent>(patient);
             Assert.That(surgerySystem.GetDrapeSpeedModifier(patient), Is.EqualTo(1.5f));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -413,8 +389,7 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task BaseStepDurationFallbackTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoManager = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -430,8 +405,6 @@ public sealed class SurgerySystemTest
             // Clamping step also uses centralized default (2.0)
             Assert.That(SharedSurgerySystem.GetBaseStepDuration(majorProto.Steps[1]), Is.EqualTo(2.0f));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -440,12 +413,11 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task StepDurationCombinesAllModifiersTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
         var protoManager = server.ResolveDependency<IPrototypeManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -481,8 +453,6 @@ public sealed class SurgerySystemTest
             Assert.That(surgerySystem.GetStepDuration(step, patient, SurgeryDifficulty.Minor).TotalSeconds,
                 Is.EqualTo(1.2).Within(0.001));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -491,8 +461,7 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task ProcedureDifficultyLoadsTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoManager = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -503,8 +472,6 @@ public sealed class SurgerySystemTest
             protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureMajorId, out var major);
             Assert.That(major!.Difficulty, Is.EqualTo(SurgeryDifficulty.Major));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -514,11 +481,10 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task ToolTierModifierAllBranchesTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -534,8 +500,6 @@ public sealed class SurgerySystemTest
             Assert.That(surgerySystem.GetToolTierModifier(experimental), Is.EqualTo(0.7f), "Experimental tier");
             Assert.That(surgerySystem.GetToolTierModifier(improvised), Is.EqualTo(1.5f), "Improvised (no tier tag)");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -545,12 +509,11 @@ public sealed class SurgerySystemTest
     [Test]
     public async Task ToolTierAffectsStepDurationTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
 
         var entityManager = server.ResolveDependency<IEntityManager>();
         var protoManager = server.ResolveDependency<IPrototypeManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -585,7 +548,5 @@ public sealed class SurgerySystemTest
             Assert.That(baseDuration * surgerySystem.GetToolTierModifier(improvisedTool),
                 Is.EqualTo(1.5f).Within(0.001f));
         });
-
-        await pair.CleanReturnAsync();
     }
 }

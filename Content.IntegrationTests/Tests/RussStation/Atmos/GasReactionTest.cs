@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Server.Atmos;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.RussStation.Atmos;
@@ -17,22 +18,20 @@ namespace Content.IntegrationTests.Tests.RussStation.Atmos;
 /// <see cref="ReactionHelper.AdjustEnergy"/> directly because every reaction
 /// depends on it.
 /// </summary>
-[TestFixture]
-public sealed class GasReactionTest
+public sealed class GasReactionTest : GameTest
 {
     private const double Tol = 1e-3;
 
     /// <summary>
-    /// Spins up a server pool, builds a fresh mixture, runs the reaction, and
-    /// hands the result to <paramref name="assert"/>. Keeps each test body tiny.
+    /// Builds a fresh mixture, runs the reaction, and hands the result to
+    /// <paramref name="assert"/>. Keeps each test body tiny.
     /// </summary>
-    private static async Task TestReaction<T>(
+    private async Task TestReaction<T>(
         Action<GasMixture> setup,
         Action<ReactionResult, GasMixture, AtmosphereSystem> assert)
         where T : IGasReactionEffect, new()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var atmos = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<AtmosphereSystem>();
 
         await server.WaitAssertion(() =>
@@ -42,8 +41,6 @@ public sealed class GasReactionTest
             var result = new T().React(mix, null, atmos, 1f);
             assert(result, mix, atmos);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     // ---- HydrogenFire ------------------------------------------------------
@@ -519,8 +516,7 @@ public sealed class GasReactionTest
     [Test]
     public async Task AdjustEnergy_PositiveEnergy_HeatsMixture()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var atmos = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<AtmosphereSystem>();
 
         await server.WaitAssertion(() =>
@@ -531,15 +527,12 @@ public sealed class GasReactionTest
             ReactionHelper.AdjustEnergy(mix, atmos, oldCap, 100_000f, 1f);
             Assert.That(mix.Temperature, Is.GreaterThan(300f));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     [Test]
     public async Task AdjustEnergy_NegativeEnergy_CoolsMixture()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var atmos = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<AtmosphereSystem>();
 
         await server.WaitAssertion(() =>
@@ -550,15 +543,12 @@ public sealed class GasReactionTest
             ReactionHelper.AdjustEnergy(mix, atmos, oldCap, -50_000f, 1f);
             Assert.That(mix.Temperature, Is.LessThan(300f));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     [Test]
     public async Task AdjustEnergy_ExtremeNegativeEnergy_ClampsToTCMB()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var atmos = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<AtmosphereSystem>();
 
         await server.WaitAssertion(() =>
@@ -569,15 +559,12 @@ public sealed class GasReactionTest
             ReactionHelper.AdjustEnergy(mix, atmos, oldCap, -1_000_000_000f, 1f);
             Assert.That(mix.Temperature, Is.EqualTo(Atmospherics.TCMB).Within(Tol));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     [Test]
     public async Task AdjustEnergy_HeatScaleHalves_HalvesEnergyApplied()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var atmos = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<AtmosphereSystem>();
 
         await server.WaitAssertion(() =>
@@ -602,7 +589,5 @@ public sealed class GasReactionTest
                 Assert.That(delta2, Is.EqualTo(delta1 / 2f).Within(0.1));
             });
         });
-
-        await pair.CleanReturnAsync();
     }
 }

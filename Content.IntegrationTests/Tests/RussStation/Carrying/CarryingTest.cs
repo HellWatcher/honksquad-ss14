@@ -1,11 +1,11 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.RussStation.Carrying.Components;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Carrying;
 
-[TestFixture]
 [TestOf(typeof(CarrierComponent))]
-public sealed class CarryingTest
+public sealed class CarryingTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -66,10 +66,9 @@ public sealed class CarryingTest
     [Test]
     public async Task CarrierComponentDefaults()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -80,8 +79,6 @@ public sealed class CarryingTest
             Assert.That(comp.WalkSpeedModifier, Is.EqualTo(0.75f));
             Assert.That(comp.SprintSpeedModifier, Is.EqualTo(0.6f));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -90,10 +87,9 @@ public sealed class CarryingTest
     [Test]
     public async Task CarriableComponentDefaults()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -102,8 +98,6 @@ public sealed class CarryingTest
 
             Assert.That(comp.CarriedBy, Is.Null);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -113,10 +107,9 @@ public sealed class CarryingTest
     [Test]
     public async Task ComponentsRegistered()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -128,8 +121,6 @@ public sealed class CarryingTest
             Assert.That(entityManager.HasComponent<CarriableComponent>(target), Is.True);
             Assert.That(entityManager.HasComponent<CarrierComponent>(target), Is.False);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -139,10 +130,9 @@ public sealed class CarryingTest
     [Test]
     public async Task MarkerComponentsAbsentByDefault()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -152,7 +142,5 @@ public sealed class CarryingTest
             Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False);
             Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False);
         });
-
-        await pair.CleanReturnAsync();
     }
 }

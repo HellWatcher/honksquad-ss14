@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.RussStation.Weapons.Ranged;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
@@ -8,9 +9,8 @@ namespace Content.IntegrationTests.Tests.RussStation.Weapons;
 /// Tests for ActionGunExtComponent (fork-owned popup and sound fields for ActionGun entities).
 /// Uses the real game prototypes to avoid the complexity of setting up test action pipelines.
 /// </summary>
-[TestFixture]
 [TestOf(typeof(ActionGunExtComponent))]
-public sealed class ActionGunExtTest
+public sealed class ActionGunExtTest : GameTest
 {
     /// <summary>
     /// Verifies that the spit ActionGun entity (from species_appearance.yml) loads
@@ -19,8 +19,7 @@ public sealed class ActionGunExtTest
     [Test]
     public async Task SpitPrototypeHasExtFields()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoManager = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -42,8 +41,6 @@ public sealed class ActionGunExtTest
             Assert.That(actionSpitExists, Is.True, "ActionSpit prototype should exist");
             Assert.That(projectileSpitExists, Is.True, "ProjectileSpit prototype should exist");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -53,10 +50,9 @@ public sealed class ActionGunExtTest
     [Test]
     public async Task ActionGunExtComponentDefaultValues()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -66,7 +62,5 @@ public sealed class ActionGunExtTest
             Assert.That(comp.PopupText, Is.Null, "PopupText should default to null");
             Assert.That(comp.OnShootSound, Is.Null, "OnShootSound should default to null");
         });
-
-        await pair.CleanReturnAsync();
     }
 }
