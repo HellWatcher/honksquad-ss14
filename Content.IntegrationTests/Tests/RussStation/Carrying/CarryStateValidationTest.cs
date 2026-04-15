@@ -1,13 +1,18 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.Buckle.Components;
 using Content.Shared.RussStation.Carrying.Components;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Carrying;
 
-[TestFixture]
 [TestOf(typeof(ActiveCarrierComponent))]
-public sealed class CarryStateValidationTest
+public sealed class CarryStateValidationTest : GameTest
 {
+    // Orphan-cleanup tests emit an expected WARN log ("Cleaned orphaned carry state")
+    // which GameTest teardown would otherwise treat as a test failure. Destructive
+    // pairs skip the ReportErrorLogs step entirely.
+    public override PoolSettings PoolSettings => new() { Connected = true, Destructive = true };
+
     [TestPrototypes]
     private const string Prototypes = @"
 - type: entity
@@ -74,10 +79,9 @@ public sealed class CarryStateValidationTest
     [Test]
     public async Task OrphanedActiveCarrierGetsCleaned()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         EntityUid carrier = default;
 
@@ -93,15 +97,13 @@ public sealed class CarryStateValidationTest
         });
 
         // Wait for the 1-second validation tick to fire.
-        await pair.RunSeconds(2);
+        await Pair.RunSeconds(2);
 
         await server.WaitAssertion(() =>
         {
             Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False,
                 "Orphaned ActiveCarrierComponent should be cleaned by validation");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -113,10 +115,9 @@ public sealed class CarryStateValidationTest
     [Test]
     public async Task DeletedTargetGetsCleaned()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         EntityUid carrier = default;
 
@@ -134,15 +135,13 @@ public sealed class CarryStateValidationTest
             Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True);
         });
 
-        await pair.RunSeconds(2);
+        await Pair.RunSeconds(2);
 
         await server.WaitAssertion(() =>
         {
             Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False,
                 "ActiveCarrierComponent should be removed when Carrying is null");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -152,10 +151,9 @@ public sealed class CarryStateValidationTest
     [Test]
     public async Task BuckleAttemptAllowedWhileCarried()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -177,8 +175,6 @@ public sealed class CarryStateValidationTest
             Assert.That(ev.Cancelled, Is.False,
                 "Buckling should be allowed while carried (carry gets dropped, buckle goes through)");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -188,10 +184,9 @@ public sealed class CarryStateValidationTest
     [Test]
     public async Task BuckleAttemptUnaffectedWhenNotCarried()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -213,7 +208,5 @@ public sealed class CarryStateValidationTest
             Assert.That(ev.Cancelled, Is.False,
                 "BuckleAttemptEvent should not be affected when entity is not being carried");
         });
-
-        await pair.CleanReturnAsync();
     }
 }

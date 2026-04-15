@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Server.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Content.Shared.VendingMachines;
@@ -7,9 +8,8 @@ namespace Content.IntegrationTests.Tests.RussStation.Economy;
 /// <summary>
 /// Verifies that emag and contraband vending items are not priced.
 /// </summary>
-[TestFixture]
 [TestOf(typeof(VendingPaymentSystem))]
-public sealed class VendingContrabandPricingTest
+public sealed class VendingContrabandPricingTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -51,8 +51,7 @@ public sealed class VendingContrabandPricingTest
     [Test]
     public async Task EmagAndContrabandItemsHaveNoPriceTest()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entMan = server.EntMan;
 
         await server.WaitAssertion(() =>
@@ -78,7 +77,5 @@ public sealed class VendingContrabandPricingTest
 
             entMan.DeleteEntity(vendor);
         });
-
-        await pair.CleanReturnAsync();
     }
 }

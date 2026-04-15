@@ -1,3 +1,4 @@
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.RussStation.EscalatedGrab;
@@ -7,9 +8,8 @@ using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.EscalatedGrab;
 
-[TestFixture]
 [TestOf(typeof(SharedEscalatedGrabSystem))]
-public sealed class EscalatedGrabTest
+public sealed class EscalatedGrabTest : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -47,10 +47,9 @@ public sealed class EscalatedGrabTest
     [Test]
     public async Task DefaultStageIsPull()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -61,8 +60,6 @@ public sealed class EscalatedGrabTest
 
             Assert.That(grabSystem.GetStage(puller, target), Is.EqualTo(GrabStage.Pull));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -71,10 +68,9 @@ public sealed class EscalatedGrabTest
     [Test]
     public async Task TryEscalateSetsAggressive()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -87,8 +83,6 @@ public sealed class EscalatedGrabTest
             Assert.That(entityManager.HasComponent<GrabStateComponent>(puller), Is.True);
             Assert.That(grabSystem.GetStage(puller, target), Is.EqualTo(GrabStage.Aggressive));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -97,10 +91,9 @@ public sealed class EscalatedGrabTest
     [Test]
     public async Task TryEscalateSameTargetIdempotent()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -113,8 +106,6 @@ public sealed class EscalatedGrabTest
             Assert.That(grabSystem.TryEscalate(puller, target), Is.True);
             Assert.That(grabSystem.GetStage(puller, target), Is.EqualTo(GrabStage.Aggressive));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -123,10 +114,9 @@ public sealed class EscalatedGrabTest
     [Test]
     public async Task HasStageChecksMinimum()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -145,8 +135,6 @@ public sealed class EscalatedGrabTest
             Assert.That(grabSystem.HasStage(puller, target, GrabStage.Pull), Is.True);
             Assert.That(grabSystem.HasStage(puller, target, GrabStage.Aggressive), Is.True);
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -155,10 +143,9 @@ public sealed class EscalatedGrabTest
     [Test]
     public async Task ClearEscalationResetsStage()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -174,8 +161,6 @@ public sealed class EscalatedGrabTest
             Assert.That(entityManager.HasComponent<GrabStateComponent>(puller), Is.False);
             Assert.That(grabSystem.GetStage(puller, target), Is.EqualTo(GrabStage.Pull));
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -184,10 +169,9 @@ public sealed class EscalatedGrabTest
     [Test]
     public async Task GetStagePerTarget()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var mapData = await pair.CreateTestMap();
+        var mapData = await Pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
@@ -203,7 +187,5 @@ public sealed class EscalatedGrabTest
             // Different target should still be Pull (GrabStateComponent tracks one target)
             Assert.That(grabSystem.GetStage(puller, target2), Is.EqualTo(GrabStage.Pull));
         });
-
-        await pair.CleanReturnAsync();
     }
 }

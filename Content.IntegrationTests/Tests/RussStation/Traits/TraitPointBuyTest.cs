@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Content.IntegrationTests.Fixtures;
 using Content.Shared.Preferences;
 using Content.Shared.Traits;
 using Robust.Shared.Prototypes;
@@ -9,9 +10,8 @@ namespace Content.IntegrationTests.Tests.RussStation.Traits;
 /// Tests for the global trait point budget system (PR #376)
 /// and tag-based quirk exclusion system (PR #381).
 /// </summary>
-[TestFixture]
 [TestOf(typeof(HumanoidCharacterProfile))]
-public sealed class TraitPointBuyTest
+public sealed class TraitPointBuyTest : GameTest
 {
     // Test trait prototypes with tags and costs for integration testing.
     // MaxTraitPoints CVar defaults to 10.
@@ -78,8 +78,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_AddingTraitRemovesConflicting()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -97,8 +96,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("TestTraitA")),
                 "Conflicting trait should be removed when excluded by new trait.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -107,8 +104,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_NonConflictingTraitsCoexist()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -122,8 +118,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("TestTraitC")),
                 "Non-conflicting traits should both be present.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -132,8 +126,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_TraitsWithoutTagNeverConflict()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -147,8 +140,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("TestTraitNoTag")),
                 "Trait without a tag should never be excluded.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -157,8 +148,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task GetValidTraits_FiltersConflictingTraits()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -174,8 +164,6 @@ public sealed class TraitPointBuyTest
             Assert.That(valid, Does.Not.Contain(new ProtoId<TraitPrototype>("TestTraitB")),
                 "Second conflicting trait should be filtered out.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -184,8 +172,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task GlobalBudget_RejectsOverBudgetTrait()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -201,8 +188,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("TestTraitA")),
                 "Trait should be rejected when it would exceed global budget.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -211,8 +196,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task GlobalBudget_NegativeCostTraitsAlwaysAllowed()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -232,8 +216,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("TestTraitCheap")),
                 "After negative-cost trait, budget should have room for more.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -242,8 +224,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task CategoryCap_RejectsOverCategoryLimit()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -260,8 +241,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("TestTraitC")),
                 "Traits at exactly the category cap should be allowed.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -270,8 +249,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task GetValidTraits_RespectsGlobalBudget()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -287,8 +265,6 @@ public sealed class TraitPointBuyTest
             Assert.That(valid, Does.Not.Contain(new ProtoId<TraitPrototype>("TestTraitA")),
                 "Second trait should be filtered when it exceeds global budget.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -299,8 +275,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_UpstreamMutedRejectsForkBoomingVoice()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -314,8 +289,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("BoomingVoice")),
                 "BoomingVoice should be rejected when Muted is already taken (shared speech tag).");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -326,8 +299,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_BlindnessAndScarredEyeMutuallyExclusive()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -343,8 +315,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("Blindness")),
                 "Blindness should be removed by newer ScarredEye (shared sight tag).");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -355,8 +325,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_PainNumbnessAndSelfAwareMutuallyExclusive()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -372,8 +341,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("PainNumbness")),
                 "PainNumbness should be removed by newer SelfAware (shared awareness tag).");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -383,8 +350,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_ImpairedMobilityRejectsSkittish()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -398,8 +364,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("Skittish")),
                 "Skittish should be rejected when ImpairedMobility is already taken (sprint excluded).");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -409,8 +373,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagExclusion_SkittishRejectsImpairedMobility()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -426,8 +389,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Not.Contain(new ProtoId<TraitPrototype>("Skittish")),
                 "Skittish should be removed when ImpairedMobility is added (sprint tag excluded).");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -437,8 +398,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagCoexistence_SoftSpokenAndAccent()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -452,8 +412,6 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("FrenchAccent")),
                 "SoftSpoken and an accent share the speech tag but neither excludes it; they should coexist.");
         });
-
-        await pair.CleanReturnAsync();
     }
 
     /// <summary>
@@ -463,8 +421,7 @@ public sealed class TraitPointBuyTest
     [Test]
     public async Task TagCoexistence_MutedAndTough()
     {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
+        var server = Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
@@ -478,7 +435,5 @@ public sealed class TraitPointBuyTest
             Assert.That(profile.TraitPreferences, Does.Contain(new ProtoId<TraitPrototype>("Tough")),
                 "Muted (speech domain) and Tough (wounds domain) share no tags and should coexist.");
         });
-
-        await pair.CleanReturnAsync();
     }
 }
