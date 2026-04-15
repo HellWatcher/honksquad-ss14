@@ -22,6 +22,7 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
 {
     [Dependency] private readonly SharedMapSystem _map = default!;
     [Dependency] private readonly SharedRadiationSystem _radiation = default!;
+    [Dependency] private readonly EntityQuery<MapGridComponent> _gridQuery = default!;
 
     private readonly Dictionary<(EntityUid Grid, Vector2i Tile), float> _pending = new();
 
@@ -79,7 +80,7 @@ public sealed class AtmosRadiationPulseSystem : EntitySystem
             if (_blob.Count == 0)
                 continue;
 
-            if (!TryComp<MapGridComponent>(key.Grid, out var grid))
+            if (!_gridQuery.TryGetComponent(key.Grid, out var grid))
                 continue;
 
             var chunks = RadiationBlobMath.Subdivide(_blob);
