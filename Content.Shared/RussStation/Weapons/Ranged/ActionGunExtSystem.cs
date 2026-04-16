@@ -19,6 +19,9 @@ public sealed class ActionGunExtSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
 
+    [Dependency] private readonly EntityQuery<ActionGunExtComponent> _extQuery = default!;
+    [Dependency] private readonly EntityQuery<ActionGunComponent> _actionGunQuery = default!;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -42,7 +45,7 @@ public sealed class ActionGunExtSystem : EntitySystem
     /// </summary>
     private void OnGunShot(Entity<GunComponent> gun, ref GunShotEvent args)
     {
-        if (!TryComp<ActionGunExtComponent>(args.User, out var ext))
+        if (!_extQuery.TryComp(args.User, out var ext))
             return;
 
         if (ext.OnShootSound == null)
@@ -50,7 +53,7 @@ public sealed class ActionGunExtSystem : EntitySystem
 
         // Only fire when the shot is from the mob's action gun, not a regular
         // held weapon. Otherwise every humanoid plays the spit sound on any shot.
-        if (!TryComp<ActionGunComponent>(args.User, out var actionGun) || actionGun.Gun != gun.Owner)
+        if (!_actionGunQuery.TryComp(args.User, out var actionGun) || actionGun.Gun != gun.Owner)
             return;
 
         _audio.PlayPredicted(ext.OnShootSound, args.User, actionGun.ActionEntity);
