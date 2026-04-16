@@ -11,7 +11,9 @@
     HandheldHealthAnalyzer: 3
     Scalpel: 2
     SawElectric: 2
+    # HONK START - Uncommented upstream placeholder; BoneSetter is implemented in @RussStation surgery
     BoneSetter: 2
+    # HONK END
     NitrousOxideTankFilled: 2
     ClothingMaskBreathMedical: 5
     ClothingHeadHatWeldingMaskFlame: 1

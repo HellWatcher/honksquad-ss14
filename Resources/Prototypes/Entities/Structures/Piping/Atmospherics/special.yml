@@ -11,8 +11,9 @@
   - type: Physics
     bodyType: Static
   - type: Sprite
-    # HONK - render under dynamic objects like canisters
+    # HONK START - render under dynamic objects like canisters
     drawdepth: FloorObjects
+    # HONK END
     sprite: Structures/Piping/Atmospherics/tinyfan.rsi
     state: icon
   - type: Fixtures
@@ -40,8 +41,9 @@
   - type: Physics
     bodyType: Static
   - type: Sprite
-    # HONK - render under dynamic objects like canisters
+    # HONK START - render under dynamic objects like canisters
     drawdepth: FloorObjects
+    # HONK END
     sprite: Structures/Piping/Atmospherics/directionalfan.rsi
     state: icon
   - type: Fixtures

@@ -28,7 +28,7 @@
     storedRotation: 90
   - type: MeleeWeapon
     damage:
-      types:
+       types:
         Heat: 5
     soundHit:
       path: /Audio/Effects/lightburn.ogg
@@ -243,6 +243,7 @@
     - Clamping
   # HONK END
 
+# HONK START - Implements BoneSetter (upstream had it commented out as a placeholder)
 - type: entity
   name: bone setter
   id: BoneSetter
@@ -254,7 +255,6 @@
   - type: Item
     heldPrefix: setter
     storedRotation: 90
-  # HONK START - Surgery tool quality + tier + type tag
   - type: Tag
     tags:
     - SurgeryTool
@@ -263,7 +263,7 @@
   - type: Tool
     qualities:
     - BoneSetting
-  # HONK END
+# HONK END
 
 # Saws
 

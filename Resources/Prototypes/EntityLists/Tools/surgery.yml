@@ -6,7 +6,9 @@
   - ScalpelLaser
   - Retractor
   - Hemostat
+  # HONK START - BoneSetter is the fork's surgical setter entity
   - BoneSetter
+  # HONK END
   - SawAdvanced
   # HONK START - Surgical drape
   - SurgicalDrape

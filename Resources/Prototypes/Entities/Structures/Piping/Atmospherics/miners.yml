@@ -26,8 +26,9 @@
       - Anchorable
     - type: Pullable
     - type: Sprite
-      # HONK - render under dynamic objects like canisters
+      # HONK START - render under dynamic objects like canisters
       drawdepth: FloorObjects
+      # HONK END
       sprite: Structures/Piping/Atmospherics/miners.rsi
       state: miner
     - type: AtmosDevice
