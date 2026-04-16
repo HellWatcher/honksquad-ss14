@@ -1,14 +1,14 @@
-name: YAML Drift Report
+name: HONK / C# audit (weekly report)
 
 on:
   schedule:
-    # Weekly on Mondays at 07:00 UTC
-    - cron: '0 7 * * 1'
+    # Weekly on Mondays at 07:15 UTC
+    - cron: '15 7 * * 1'
   workflow_dispatch:
 
 jobs:
   report:
-    name: Full drift scan
+    name: Full C# audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
@@ -20,27 +20,26 @@ jobs:
           git remote add upstream https://github.com/space-wizards/space-station-14.git
           git fetch --no-tags --depth=1 upstream master
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Run full drift scan
+      - name: Run full C# audit
         id: scan
         run: |
           set +e
-          python3 scripts/scan-yaml-drift.py \
+          python3 scripts/honk/cs_audit.py \
             --fork-ref origin/release \
             --upstream-ref upstream/master \
-            > drift-report.txt 2>&1
+            > cs-report.txt 2>&1
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
 
-          DRIFT_COUNT=$(grep -cE '^\s+\S+\.ya?ml' drift-report.txt || true)
+          DRIFT_COUNT=$(grep -cE '^\s+\S+\.cs' cs-report.txt || true)
           echo "drift_count=$DRIFT_COUNT" >> "$GITHUB_OUTPUT"
 
           {
             echo "report<<REPORT_EOF"
-            cat drift-report.txt
+            cat cs-report.txt
             echo "REPORT_EOF"
           } >> "$GITHUB_OUTPUT"
 
@@ -50,7 +49,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ISSUE=$(gh issue list --label "yaml-drift" --state open --json number --jq '.[0].number // empty')
+          ISSUE=$(gh issue list --label "cs-drift" --state open --json number --jq '.[0].number // empty')
           echo "issue_number=$ISSUE" >> "$GITHUB_OUTPUT"
 
       - name: Create issue
@@ -59,28 +58,30 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue create \
-            --title "Upstream YAML drift: ${{ steps.scan.outputs.drift_count }} file(s) need cleanup" \
-            --label "yaml-drift" \
+            --title "Upstream C# drift: ${{ steps.scan.outputs.drift_count }} file(s) need cleanup" \
+            --label "cs-drift" \
             --body "$(cat <<'EOF'
-          The weekly drift scan found upstream YAML files on `release` that have diverged from `upstream/master` outside `HONK START`/`HONK END` markers.
+          The weekly audit found upstream C# files on `release` that have diverged from `upstream/master` outside `//HONK START` / `//HONK END` markers, or have malformed HONK blocks.
 
-          These are mostly pre-existing and merge cleanly today, but every drifted line is a future rebase hazard. Wrap fork changes in HONK markers and restore upstream formatting for the rest.
+          Unmarked fork changes in upstream C# files are hard to locate at rebase time. Wrap them in HONK markers so they stand out.
 
-          ### Scan output
+          ### Audit output
           ```
           ${{ steps.scan.outputs.report }}
           ```
 
           ### To fix a single file
-          ```bash
-          git fetch upstream master
-          git checkout upstream/master -- Resources/Prototypes/path/to/file.yml
-          # re-apply fork changes wrapped in `# HONK START ... # HONK END`
+          Prefer the partial-class pattern (`Content.Shared/RussStation/<Subsystem>/<UpstreamSystemName>.Honk.cs`) where possible — it keeps the upstream file untouched. When the upstream file must be edited, wrap every fork change:
+
+          ```csharp
+          //HONK START - Brief description of why
+          // fork-specific code
+          //HONK END
           ```
 
-          See CLAUDE.md § *YAML Formatting in Upstream Files* for the policy.
+          See CLAUDE.md § *HONK Marker Comments* and § *Access Analyzer Policy (RA0002)*.
 
-          Created by the [YAML Drift Report](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
+          Created by the [HONK / C# audit (weekly report)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
           EOF
           )"
 
@@ -91,7 +92,7 @@ jobs:
         run: |
           gh issue comment ${{ steps.existing.outputs.issue_number }} \
             --body "$(cat <<'EOF'
-          Still drifting — **${{ steps.scan.outputs.drift_count }} file(s)** flagged by the latest scan.
+          Still drifting — **${{ steps.scan.outputs.drift_count }} file(s)** flagged by the latest audit.
 
           ```
           ${{ steps.scan.outputs.report }}
@@ -106,7 +107,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ISSUE=$(gh issue list --label "yaml-drift" --state open --json number --jq '.[0].number // empty')
+          ISSUE=$(gh issue list --label "cs-drift" --state open --json number --jq '.[0].number // empty')
           if [ -n "$ISSUE" ]; then
-            gh issue close "$ISSUE" --comment "Drift scan is clean. Closing."
+            gh issue close "$ISSUE" --comment "C# audit is clean. Closing."
           fi

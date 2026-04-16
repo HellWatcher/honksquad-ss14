@@ -1,4 +1,4 @@
-name: YAML Drift Check
+name: HONK / C# audit (PR)
 
 on:
   pull_request:
@@ -6,8 +6,8 @@ on:
     branches: [release]
 
 jobs:
-  drift:
-    name: YAML Drift Check
+  audit:
+    name: C# audit
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
     steps:
@@ -20,14 +20,13 @@ jobs:
           git remote add upstream https://github.com/space-wizards/space-station-14.git
           git fetch --no-tags --depth=1 upstream master
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Scan for upstream YAML drift introduced by this PR
+      - name: Scan for upstream C# drift introduced by this PR
         run: |
-          python3 scripts/scan-yaml-drift.py \
+          python3 scripts/honk/cs_audit.py \
             --pr-mode origin/${{ github.base_ref }} \
             --fork-ref HEAD \
             --upstream-ref upstream/master

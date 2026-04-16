@@ -1,0 +1,32 @@
+name: HONK / YAML drift (PR)
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [release]
+
+jobs:
+  drift:
+    name: YAML drift
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream remote and fetch master
+        run: |
+          git remote add upstream https://github.com/space-wizards/space-station-14.git
+          git fetch --no-tags --depth=1 upstream master
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Scan for upstream YAML drift introduced by this PR
+        run: |
+          python3 scripts/honk/yaml_drift.py \
+            --pr-mode origin/${{ github.base_ref }} \
+            --fork-ref HEAD \
+            --upstream-ref upstream/master

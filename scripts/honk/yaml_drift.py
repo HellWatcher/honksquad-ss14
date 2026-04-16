@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Scan upstream YAML files on the fork for drift vs upstream.
+"""Scan upstream YAML files on the fork for drift vs upstream.
 
 Categorizes each file as one of:
   IDENTICAL           — fork matches upstream exactly
@@ -17,47 +16,34 @@ Modes:
                       running on a PR to catch newly-introduced drift.
 
 Exit code is non-zero when drift is found (REFORMAT-ONLY, MIXED,
-or CONTENT-NO-HONK).
+or CONTENT-NO-HONK in full scan; new drift introduced in PR mode).
 
 Usage:
-  python3 scripts/scan-yaml-drift.py
-  python3 scripts/scan-yaml-drift.py --pr-mode origin/release
+  python3 scripts/honk/yaml_drift.py
+  python3 scripts/honk/yaml_drift.py --pr-mode origin/release
 """
 
 from __future__ import annotations
 
 import argparse
-import re
-import subprocess
 import sys
 from dataclasses import dataclass
 
+from common import (
+    DRIFT_CATEGORIES,
+    HONK_LINE,
+    HONK_START,
+    balanced_honk,
+    git_show,
+    is_fork_owned,
+    pr_new_drift,
+    sh,
+    strip_honk_blocks,
+    whitespace_normalize,
+)
+
 DEFAULT_FORK_REF = "origin/release"
 DEFAULT_UPSTREAM_REF = "upstream/master"
-
-# Paths we skip: fork-owned YAML and machine-generated map YAML.
-FORK_OWNED = re.compile(r"(^|/)@RussStation/|^Resources/Maps/")
-
-HONK_START = re.compile(r"HONK\s*START", re.IGNORECASE)
-HONK_END = re.compile(r"HONK\s*END", re.IGNORECASE)
-HONK_LINE = re.compile(r"//\s*HONK\b|#\s*HONK\b", re.IGNORECASE)
-
-DRIFT_CATEGORIES = ("REFORMAT-ONLY", "MIXED", "CONTENT-NO-HONK")
-
-
-def sh(*args: str) -> str:
-    return subprocess.check_output(args, text=True, stderr=subprocess.DEVNULL)
-
-
-def git_show(ref: str, path: str) -> str | None:
-    try:
-        return subprocess.check_output(
-            ["git", "show", f"{ref}:{path}"],
-            text=True,
-            stderr=subprocess.DEVNULL,
-        )
-    except subprocess.CalledProcessError:
-        return None
 
 
 def is_in_scope(path: str) -> bool:
@@ -65,7 +51,7 @@ def is_in_scope(path: str) -> bool:
         return False
     if not path.startswith("Resources/Prototypes/"):
         return False
-    if FORK_OWNED.search(path):
+    if is_fork_owned(path):
         return False
     return True
 
@@ -76,7 +62,6 @@ def list_all_yaml(fork_ref: str) -> list[str]:
 
 
 def list_changed_yaml(base_ref: str, fork_ref: str) -> list[str]:
-    # diff-filter=d excludes deletions — deleted files can't drift.
     out = sh(
         "git",
         "diff",
@@ -85,37 +70,6 @@ def list_changed_yaml(base_ref: str, fork_ref: str) -> list[str]:
         f"{base_ref}...{fork_ref}",
     )
     return [line for line in out.splitlines() if is_in_scope(line)]
-
-
-def strip_honk_blocks(text: str) -> str:
-    """Remove HONK START..HONK END blocks and single-line HONK comments."""
-    out_lines = []
-    in_block = False
-    for line in text.splitlines():
-        if HONK_START.search(line):
-            in_block = True
-            continue
-        if HONK_END.search(line):
-            in_block = False
-            continue
-        if in_block:
-            continue
-        if HONK_LINE.search(line):
-            # single-line HONK marker sitting alone on a line — drop it
-            continue
-        out_lines.append(line)
-    return "\n".join(out_lines)
-
-
-def whitespace_normalize(text: str) -> str:
-    """Collapse all whitespace within each line, drop blank lines. Used to
-    compare content while ignoring reformatting."""
-    out = []
-    for line in text.splitlines():
-        collapsed = re.sub(r"\s+", " ", line).strip()
-        if collapsed:
-            out.append(collapsed)
-    return "\n".join(out)
 
 
 @dataclass
@@ -133,6 +87,10 @@ def classify(path: str, fork_ref: str, upstream_ref: str) -> Result:
         return Result(path, "MISSING-ON-FORK")
     if upstream is None:
         return Result(path, "FORK-NEW")
+
+    ok, msg = balanced_honk(release)
+    if not ok:
+        return Result(path, "MALFORMED-HONK", msg)
 
     if release == upstream:
         return Result(path, "IDENTICAL")
@@ -166,6 +124,7 @@ def print_summary(results: list[Result], *, verbose: bool) -> None:
             "REFORMAT-ONLY",
             "MIXED",
             "CONTENT-NO-HONK",
+            "MALFORMED-HONK",
             "MISSING-ON-FORK",
         ]
         for cat in order:
@@ -173,7 +132,8 @@ def print_summary(results: list[Result], *, verbose: bool) -> None:
             print(f"  {cat:<20s} {len(items):>5d}")
         print()
 
-    for cat in DRIFT_CATEGORIES:
+    reportable = ("MALFORMED-HONK",) + DRIFT_CATEGORIES
+    for cat in reportable:
         items = buckets.get(cat, [])
         if not items:
             continue
@@ -182,35 +142,6 @@ def print_summary(results: list[Result], *, verbose: bool) -> None:
             suffix = f"  [{r.detail}]" if r.detail else ""
             print(f"  {r.path}{suffix}")
         print()
-
-
-def drift_lines(fork_text: str, upstream_text: str) -> set[str]:
-    """Return the set of non-HONK lines present in the fork but not upstream.
-
-    Whitespace-normalized. Blank lines are dropped. This is the file's
-    upstream-relative drift footprint: lines the fork added or changed outside
-    HONK-wrapped regions."""
-    fork_norm = whitespace_normalize(strip_honk_blocks(fork_text))
-    upstream_norm = whitespace_normalize(upstream_text)
-    fork_set = {ln for ln in fork_norm.split("\n") if ln}
-    upstream_set = {ln for ln in upstream_norm.split("\n") if ln}
-    return fork_set - upstream_set
-
-
-def new_drift_on_path(
-    path: str, base_ref: str, fork_ref: str, upstream_ref: str
-) -> set[str]:
-    """Return lines of drift that fork_ref introduces vs base_ref.
-
-    Computes the drift footprint at each side against upstream, then subtracts.
-    A non-empty return means the PR added unmarked content or reformatted
-    upstream lines that weren't drifting before."""
-    head = git_show(fork_ref, path) or ""
-    base = git_show(base_ref, path) or ""
-    upstream = git_show(upstream_ref, path)
-    if upstream is None:
-        return set()
-    return drift_lines(head, upstream) - drift_lines(base, upstream)
 
 
 def parse_args() -> argparse.Namespace:
@@ -263,10 +194,14 @@ def main() -> int:
     if pr_mode:
         new_drift: list[tuple[Result, set[str]]] = []
         preexisting_drift: list[Result] = []
+        malformed: list[Result] = []
         for r in results:
+            if r.category == "MALFORMED-HONK":
+                malformed.append(r)
+                continue
             if r.category not in DRIFT_CATEGORIES:
                 continue
-            added = new_drift_on_path(r.path, args.pr_mode, fork_ref, args.upstream_ref)
+            added = pr_new_drift(r.path, args.pr_mode, fork_ref, args.upstream_ref)
             if added:
                 new_drift.append((r, added))
             else:
@@ -281,6 +216,14 @@ def main() -> int:
                 print(f"  {r.path}  [{r.category}]")
             print()
 
+        failed = False
+        if malformed:
+            print(f"=== MALFORMED HONK BLOCKS ({len(malformed)}) ===")
+            for r in malformed:
+                print(f"  {r.path}  [{r.detail}]")
+            print()
+            failed = True
+
         if new_drift:
             print(f"=== NEW DRIFT INTRODUCED BY THIS PR ({len(new_drift)}) ===")
             for entry in new_drift:
@@ -291,10 +234,13 @@ def main() -> int:
                 if len(added) > 5:
                     print(f"      ... ({len(added) - 5} more)")
             print()
+            failed = True
+
+        if failed:
             print(
-                "FAIL: this PR introduces upstream YAML drift.\n"
-                "Wrap fork changes in `# HONK START ... # HONK END` and do not "
-                "reformat surrounding upstream lines. See CLAUDE.md § "
+                "FAIL: this PR has HONK problems.\n"
+                "Wrap fork changes in `# HONK START ... # HONK END` and ensure "
+                "every START has a matching END. See CLAUDE.md § "
                 "'YAML Formatting in Upstream Files'."
             )
             return 1
@@ -302,7 +248,11 @@ def main() -> int:
         print("OK: no new upstream YAML drift introduced by this PR.")
         return 0
 
-    drift_count = sum(1 for r in results if r.category in DRIFT_CATEGORIES)
+    drift_count = sum(
+        1
+        for r in results
+        if r.category in DRIFT_CATEGORIES or r.category == "MALFORMED-HONK"
+    )
     return 1 if drift_count else 0
 
 
