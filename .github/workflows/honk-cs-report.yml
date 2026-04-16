@@ -15,10 +15,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Add upstream remote and fetch master
+      - name: Add upstream remote and fetch stable
         run: |
-          git remote add upstream https://github.com/space-wizards/space-station-14.git
-          git fetch --no-tags --depth=1 upstream master
+          git remote add wizden https://github.com/space-wizards/space-station-14.git
+          git fetch --no-tags --depth=1 wizden stable
 
       - uses: actions/setup-python@v5
         with:
@@ -30,7 +30,7 @@ jobs:
           set +e
           python3 scripts/honk/cs_audit.py \
             --fork-ref origin/release \
-            --upstream-ref upstream/master \
+            --upstream-ref wizden/stable \
             > cs-report.txt 2>&1
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
 
@@ -61,7 +61,7 @@ jobs:
             --title "Upstream C# drift: ${{ steps.scan.outputs.drift_count }} file(s) need cleanup" \
             --label "cs-drift" \
             --body "$(cat <<'EOF'
-          The weekly audit found upstream C# files on `release` that have diverged from `upstream/master` outside `//HONK START` / `//HONK END` markers, or have malformed HONK blocks.
+          The weekly audit found upstream C# files on `release` that have diverged from `wizden/stable` outside `//HONK START` / `//HONK END` markers, or have malformed HONK blocks.
 
           Unmarked fork changes in upstream C# files are hard to locate at rebase time. Wrap them in HONK markers so they stand out.
 

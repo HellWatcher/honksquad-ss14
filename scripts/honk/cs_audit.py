@@ -35,7 +35,7 @@ from common import (
 )
 
 DEFAULT_FORK_REF = "origin/release"
-DEFAULT_UPSTREAM_REF = "upstream/master"
+DEFAULT_UPSTREAM_REF = "wizden/stable"
 
 CS_ROOTS = (
     "Content.Client/",
