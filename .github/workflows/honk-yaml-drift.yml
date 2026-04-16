@@ -7,7 +7,7 @@ on:
 
 jobs:
   drift:
-    name: YAML drift
+    name: HONK YAML drift
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
     steps:

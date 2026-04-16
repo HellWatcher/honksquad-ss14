@@ -8,7 +8,7 @@ on:
 
 jobs:
   report:
-    name: Full C# audit
+    name: Full HONK C# audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2

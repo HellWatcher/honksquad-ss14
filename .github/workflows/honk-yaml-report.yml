@@ -8,7 +8,7 @@ on:
 
 jobs:
   report:
-    name: Full YAML drift scan
+    name: Full HONK YAML drift scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
