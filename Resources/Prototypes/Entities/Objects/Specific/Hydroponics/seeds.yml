@@ -22,7 +22,9 @@
     - type: Item
       size: Tiny
     - type: StaticPrice
-      price: 3 # HONK - lowered so vending price lands at 5 spesos (3 × 1.5 markup, rounded up)
+      # HONK START - lowered so vending price lands at 5 spesos (3 × 1.5 markup, rounded up)
+      price: 3
+      # HONK END
     - type: PhysicalComposition
 
 - type: entity

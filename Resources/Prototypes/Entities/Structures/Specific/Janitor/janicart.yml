@@ -179,42 +179,54 @@
           tags:
           - Plunger
           - GoldenPlunger
-        insertOnInteract: false # HONK - consistent alt-click insertion
+        # HONK START - consistent alt-click insertion
+        insertOnInteract: false
+        # HONK END
         priority: 8
       wetfloorsign_slot4:
         name: janitorial-trolley-slot-component-slot-name-sign
         whitelist:
           tags:
           - WetFloorSign
-        insertOnInteract: false # HONK - consistent alt-click insertion
+        # HONK START - consistent alt-click insertion
+        insertOnInteract: false
+        # HONK END
         priority: 7
       wetfloorsign_slot3:
         name: janitorial-trolley-slot-component-slot-name-sign
         whitelist:
           tags:
           - WetFloorSign
-        insertOnInteract: false # HONK - consistent alt-click insertion
+        # HONK START - consistent alt-click insertion
+        insertOnInteract: false
+        # HONK END
         priority: 7
       wetfloorsign_slot2:
         name: janitorial-trolley-slot-component-slot-name-sign
         whitelist:
           tags:
           - WetFloorSign
-        insertOnInteract: false # HONK - consistent alt-click insertion
+        # HONK START - consistent alt-click insertion
+        insertOnInteract: false
+        # HONK END
         priority: 7
       wetfloorsign_slot1:
         name: janitorial-trolley-slot-component-slot-name-sign
         whitelist:
           tags:
           - WetFloorSign
-        insertOnInteract: false # HONK - consistent alt-click insertion
+        # HONK START - consistent alt-click insertion
+        insertOnInteract: false
+        # HONK END
         priority: 7
       lightreplacer_slot:
         name: janitorial-trolley-slot-component-slot-name-lightreplacer
         whitelist:
           components:
           - LightReplacer
-        insertOnInteract: false # HONK - consistent alt-click insertion
+        # HONK START - consistent alt-click insertion
+        insertOnInteract: false
+        # HONK END
         priority: 6
       spraybottle_slot:
         name: janitorial-trolley-slot-component-slot-name-spray
@@ -236,7 +248,9 @@
           tags:
           - TrashBag
           - TrashBagBlue
-        insertOnInteract: false # HONK - consistent alt-click insertion
+        # HONK START - consistent alt-click insertion
+        insertOnInteract: false
+        # HONK END
         priority: 3 # Higher than drinking priority
   - type: Fixtures
     fixtures:

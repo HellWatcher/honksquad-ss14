@@ -18,45 +18,45 @@
   - RandomPrice
   - CreamPied
   # traits
-  - Ageusia # HONK
-  - AlcoholTolerance # HONK
   - BlackAndWhiteOverlay
-  - BlockWriting # HONK
   - Clumsy
-  - Frail # HONK
-  - Freerunning # HONK
-  - Papyrophobia # HONK
-  - LightStep # HONK
-  - Vegetarian # HONK
   - ImpairedMobility
   # - LegsParalyzed (you get healed)
   - LightweightDrunk
   - Muted
   - Narcolepsy
-  - Negotiator # HONK
   - Pacified
-  - PoorAim # HONK
   - Paracusia
   - PermanentBlindness
-  - SelfAware # HONK
   - Snoring
-  - ThrowingArm # HONK
   - Unrevivable
-  - WeakArm # HONK
-  - BloodDeficiency # HONK
-  - Vegetarian # HONK
-  - GlassJaw # HONK
-  - Prosopagnosia # HONK
-  - SoftSpoken # HONK
-  - Touchy # HONK
-  - Indebted # HONK
-  - BoomingVoice # HONK
-  - IronJaw # HONK
-  - SteadyHand # HONK
-  - Papyrophobia # HONK
-  - ScarredEye # HONK
-  - Tough # HONK
-  - Skittish # HONK
+  # HONK START - fork-added trait components copied to clones
+  - Ageusia
+  - AlcoholTolerance
+  - BlockWriting
+  - BloodDeficiency
+  - BoomingVoice
+  - Frail
+  - Freerunning
+  - GlassJaw
+  - Indebted
+  - IronJaw
+  - LightStep
+  - Negotiator
+  - Papyrophobia
+  - PoorAim
+  - Prosopagnosia
+  - ScarredEye
+  - SelfAware
+  - Skittish
+  - SoftSpoken
+  - SteadyHand
+  - ThrowingArm
+  - Touchy
+  - Tough
+  - Vegetarian
+  - WeakArm
+  # HONK END
   # accents
   - Accentless
   - BackwardsAccent
