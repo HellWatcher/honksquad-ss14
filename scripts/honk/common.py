@@ -51,7 +51,8 @@ def is_fork_owned(path: str) -> bool:
 
 
 def strip_honk_blocks(text: str) -> str:
-    """Drop HONK START..HONK END blocks and single-line HONK comments."""
+    """Drop HONK START..HONK END blocks. Inline HONK comments are *not*
+    stripped — they're disallowed and surface as drift."""
     out_lines = []
     in_block = False
     for line in text.splitlines():
@@ -63,10 +64,22 @@ def strip_honk_blocks(text: str) -> str:
             continue
         if in_block:
             continue
-        if HONK_LINE.search(line):
-            continue
         out_lines.append(line)
     return "\n".join(out_lines)
+
+
+def inline_honk_lines(text: str) -> list[int]:
+    """Line numbers (1-indexed) of inline HONK comments — HONK markers that
+    aren't a START or END of a block. Block-style `HONK START ... HONK END`
+    is the only accepted form; bare `// HONK` or `# HONK` is a violation."""
+    violations = []
+    for i, line in enumerate(text.splitlines(), 1):
+        if not HONK_LINE.search(line):
+            continue
+        if HONK_START.search(line) or HONK_END.search(line):
+            continue
+        violations.append(i)
+    return violations
 
 
 def whitespace_normalize(text: str) -> str:
@@ -114,6 +127,22 @@ def drift_lines(fork_text: str, reference_text: str) -> set[str]:
     fork_set = {ln for ln in fork_norm.split("\n") if ln}
     reference_set = {ln for ln in reference_norm.split("\n") if ln}
     return fork_set - reference_set
+
+
+def pr_new_inline(path: str, base_ref: str, fork_ref: str) -> set[str]:
+    """Inline HONK lines present in fork_ref but not in base_ref.
+
+    Compared by whitespace-normalized line text. Used in PR mode to separate
+    inline HONK the PR itself introduces from lines that were already on base."""
+    head = git_show(fork_ref, path) or ""
+    base = git_show(base_ref, path) or ""
+
+    def _lines(text: str) -> set[str]:
+        lines = text.splitlines()
+        inline = inline_honk_lines(text)
+        return {re.sub(r"\s+", " ", lines[n - 1]).strip() for n in inline}
+
+    return _lines(head) - _lines(base)
 
 
 def pr_new_drift(

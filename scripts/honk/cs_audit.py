@@ -23,12 +23,13 @@ from dataclasses import dataclass
 
 from common import (
     DRIFT_CATEGORIES,
-    HONK_LINE,
     HONK_START,
     balanced_honk,
     git_show,
+    inline_honk_lines,
     is_fork_owned,
     pr_new_drift,
+    pr_new_inline,
     sh,
     strip_honk_blocks,
     whitespace_normalize,
@@ -98,10 +99,17 @@ def classify(path: str, fork_ref: str, upstream_ref: str) -> Result:
     if not ok:
         return Result(path, "MALFORMED-HONK", msg)
 
+    inline = inline_honk_lines(release)
+    if inline:
+        preview = ", ".join(f"line {n}" for n in inline[:3])
+        if len(inline) > 3:
+            preview += f" (+{len(inline) - 3} more)"
+        return Result(path, "INLINE-HONK", preview)
+
     if release == upstream:
         return Result(path, "IDENTICAL")
 
-    has_honk = bool(HONK_START.search(release) or HONK_LINE.search(release))
+    has_honk = bool(HONK_START.search(release))
 
     stripped_release = strip_honk_blocks(release)
     norm_stripped = whitespace_normalize(stripped_release)
@@ -130,6 +138,7 @@ def print_summary(results: list[Result], *, verbose: bool) -> None:
             "REFORMAT-ONLY",
             "MIXED",
             "CONTENT-NO-HONK",
+            "INLINE-HONK",
             "MALFORMED-HONK",
             "MISSING-ON-FORK",
         ]
@@ -138,7 +147,7 @@ def print_summary(results: list[Result], *, verbose: bool) -> None:
             print(f"  {cat:<20s} {len(items):>5d}")
         print()
 
-    reportable = ("MALFORMED-HONK",) + DRIFT_CATEGORIES
+    reportable = ("MALFORMED-HONK", "INLINE-HONK") + DRIFT_CATEGORIES
     for cat in reportable:
         items = buckets.get(cat, [])
         if not items:
@@ -201,9 +210,18 @@ def main() -> int:
         new_drift: list[tuple[Result, set[str]]] = []
         preexisting_drift: list[Result] = []
         malformed: list[Result] = []
+        new_inline: list[tuple[Result, set[str]]] = []
+        preexisting_inline: list[Result] = []
         for r in results:
             if r.category == "MALFORMED-HONK":
                 malformed.append(r)
+                continue
+            if r.category == "INLINE-HONK":
+                added_inline = pr_new_inline(r.path, args.pr_mode, fork_ref)
+                if added_inline:
+                    new_inline.append((r, added_inline))
+                else:
+                    preexisting_inline.append(r)
                 continue
             if r.category not in DRIFT_CATEGORIES:
                 continue
@@ -213,13 +231,13 @@ def main() -> int:
             else:
                 preexisting_drift.append(r)
 
-        if preexisting_drift:
-            print(
-                f"=== PRE-EXISTING DRIFT ({len(preexisting_drift)}, "
-                "not introduced by this PR) ==="
-            )
+        if preexisting_drift or preexisting_inline:
+            total = len(preexisting_drift) + len(preexisting_inline)
+            print(f"=== PRE-EXISTING DRIFT ({total}, " "not introduced by this PR) ===")
             for r in preexisting_drift:
                 print(f"  {r.path}  [{r.category}]")
+            for r in preexisting_inline:
+                print(f"  {r.path}  [INLINE-HONK: {r.detail}]")
             print()
 
         failed = False
@@ -227,6 +245,20 @@ def main() -> int:
             print(f"=== MALFORMED HONK BLOCKS ({len(malformed)}) ===")
             for r in malformed:
                 print(f"  {r.path}  [{r.detail}]")
+            print()
+            failed = True
+
+        if new_inline:
+            print(
+                f"=== NEW INLINE HONK COMMENTS INTRODUCED BY THIS PR "
+                f"({len(new_inline)}) ==="
+            )
+            for result, added_inline in new_inline:
+                print(f"  {result.path}  [{result.detail}]")
+                for line in sorted(added_inline)[:3]:
+                    print(f"      + {line[:160]}")
+                if len(added_inline) > 3:
+                    print(f"      ... ({len(added_inline) - 3} more)")
             print()
             failed = True
 
@@ -245,8 +277,9 @@ def main() -> int:
         if failed:
             print(
                 "FAIL: this PR has HONK problems.\n"
-                "Wrap fork changes in `//HONK START ... //HONK END` and ensure "
-                "every START has a matching END. See CONTRIBUTING.md § "
+                "Wrap fork changes in `//HONK START ... //HONK END` blocks — "
+                "inline `//HONK` comments are not accepted. Every START must "
+                "have a matching END. See CONTRIBUTING.md § "
                 "'Marking your changes'."
             )
             return 1
@@ -257,7 +290,8 @@ def main() -> int:
     drift_count = sum(
         1
         for r in results
-        if r.category in DRIFT_CATEGORIES or r.category == "MALFORMED-HONK"
+        if r.category in DRIFT_CATEGORIES
+        or r.category in ("MALFORMED-HONK", "INLINE-HONK")
     )
     return 1 if drift_count else 0
 
