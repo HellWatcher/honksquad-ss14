@@ -9,7 +9,7 @@ git config core.hooksPath .githooks
 ## `pre-commit`
 
 Rejects commits that make whitespace-only changes to upstream YAML files.
-See `CLAUDE.md` § "YAML Formatting in Upstream Files".
+See [CONTRIBUTING.md](../CONTRIBUTING.md) § "YAML indentation".
 
 Upstream YAML is anything under `Resources/Prototypes/` that isn't under
 `@RussStation/` and isn't a map file under `Resources/Maps/`.

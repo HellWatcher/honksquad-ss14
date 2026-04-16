@@ -70,16 +70,10 @@ jobs:
           ${{ steps.scan.outputs.report }}
           ```
 
-          ### To fix a single file
-          Prefer the partial-class pattern (`Content.Shared/RussStation/<Subsystem>/<UpstreamSystemName>.Honk.cs`) where possible — it keeps the upstream file untouched. When the upstream file must be edited, wrap every fork change:
+          ### To fix a file
+          Wrap every fork change in `//HONK START` / `//HONK END` markers. Where possible, move the fork code into a new file under `Content.*/RussStation/` so the upstream file stays untouched.
 
-          ```csharp
-          //HONK START - Brief description of why
-          // fork-specific code
-          //HONK END
-          ```
-
-          See CLAUDE.md § *HONK Marker Comments* and § *Access Analyzer Policy (RA0002)*.
+          See [CONTRIBUTING.md](/CONTRIBUTING.md) § *Marking your changes* and § *Where new files go*.
 
           Created by the [HONK / C# audit (weekly report)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
           EOF

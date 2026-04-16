@@ -246,8 +246,8 @@ def main() -> int:
             print(
                 "FAIL: this PR has HONK problems.\n"
                 "Wrap fork changes in `//HONK START ... //HONK END` and ensure "
-                "every START has a matching END. See CLAUDE.md § "
-                "'HONK Marker Comments'."
+                "every START has a matching END. See CONTRIBUTING.md § "
+                "'Marking your changes'."
             )
             return 1
 

@@ -70,14 +70,10 @@ jobs:
           ${{ steps.scan.outputs.report }}
           ```
 
-          ### To fix a single file
-          ```bash
-          git fetch upstream master
-          git checkout upstream/master -- Resources/Prototypes/path/to/file.yml
-          # re-apply fork changes wrapped in `# HONK START ... # HONK END`
-          ```
+          ### To fix a file
+          Restore it from the upstream ref (`git checkout <upstream>/master -- <path>`), then re-apply fork changes wrapped in `# HONK START ... # HONK END` markers. Don't let a formatter touch surrounding lines.
 
-          See CLAUDE.md § *YAML Formatting in Upstream Files* for the policy.
+          See [CONTRIBUTING.md](/CONTRIBUTING.md) § *Marking your changes* and § *YAML indentation*.
 
           Created by the [HONK / YAML drift (weekly report)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
           EOF

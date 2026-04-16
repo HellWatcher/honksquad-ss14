@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Enforce the fork's "no upstream YAML reformats" rule.
-# See CLAUDE.md § "YAML Formatting in Upstream Files".
+# See CONTRIBUTING.md § "YAML indentation".
 #
 # Rejects any commit where a staged upstream YAML file has a whitespace-only
 # diff (i.e. every staged change is reformatting, nothing is new content).
@@ -37,7 +37,7 @@ while IFS= read -r file; do
     if [ -z "$content_diff" ]; then
         echo "pre-commit: $file"
         echo "            whitespace-only change to upstream YAML (rejected)"
-        echo "            See CLAUDE.md § 'YAML Formatting in Upstream Files'."
+        echo "            See CONTRIBUTING.md § 'YAML indentation'."
         echo "            If intentional (upstream sync merge), bypass with:"
         echo "              git commit --no-verify"
         exit_code=1

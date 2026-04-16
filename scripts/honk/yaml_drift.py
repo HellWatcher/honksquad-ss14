@@ -240,8 +240,9 @@ def main() -> int:
             print(
                 "FAIL: this PR has HONK problems.\n"
                 "Wrap fork changes in `# HONK START ... # HONK END` and ensure "
-                "every START has a matching END. See CLAUDE.md § "
-                "'YAML Formatting in Upstream Files'."
+                "every START has a matching END. Upstream YAML indentation "
+                "must not be reformatted — see CONTRIBUTING.md § "
+                "'Marking your changes' and § 'YAML indentation'."
             )
             return 1
 
