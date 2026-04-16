@@ -121,7 +121,7 @@ public sealed class PayrollSystem : EntitySystem
     }
 
     private static readonly SoundSpecifier PaycheckSound =
-        new SoundPathSpecifier("/Audio/Machines/chime.ogg", AudioParams.Default.WithVolume(-4f));
+        new SoundPathSpecifier("/Audio/Machines/twobeep.ogg", AudioParams.Default.WithVolume(-6f));
 
     private void PlayPdaChime(EntityUid mob)
     {
