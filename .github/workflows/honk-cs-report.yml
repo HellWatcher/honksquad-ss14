@@ -26,7 +26,7 @@ jobs:
         id: scan
         run: |
           set +e
-          python3 scripts/honk/cs_audit.py \
+          python3 Tools/honk/cs_audit.py \
             --fork-ref origin/release \
             --upstream-ref origin/upstream/stable \
             > cs-report.txt 2>&1

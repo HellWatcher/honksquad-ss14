@@ -24,7 +24,7 @@ jobs:
 
       - name: Scan for upstream C# drift introduced by this PR
         run: |
-          python3 scripts/honk/cs_audit.py \
+          python3 Tools/honk/cs_audit.py \
             --pr-mode origin/${{ github.base_ref }} \
             --fork-ref HEAD \
             --upstream-ref origin/upstream/stable

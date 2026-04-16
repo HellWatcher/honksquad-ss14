@@ -51,7 +51,7 @@ For YAML, use `#` comments:
 # HONK END
 ```
 
-**Only block-style markers are accepted.** Every `HONK START` must have a matching `HONK END`. Inline `// HONK` or `# HONK` trailing comments on a line of content are not accepted — the audit scripts under `scripts/honk/` flag them as violations and the `HONK audit` CI jobs block the PR.
+**Only block-style markers are accepted.** Every `HONK START` must have a matching `HONK END`. Inline `// HONK` or `# HONK` trailing comments on a line of content are not accepted — the audit scripts under `Tools/honk/` flag them as violations and the `HONK audit` CI jobs block the PR.
 
 If a single line needs marking, wrap it:
 

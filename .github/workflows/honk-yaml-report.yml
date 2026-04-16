@@ -26,7 +26,7 @@ jobs:
         id: scan
         run: |
           set +e
-          python3 scripts/honk/yaml_drift.py \
+          python3 Tools/honk/yaml_drift.py \
             --fork-ref origin/release \
             --upstream-ref origin/upstream/stable \
             > drift-report.txt 2>&1

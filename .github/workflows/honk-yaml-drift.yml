@@ -24,7 +24,7 @@ jobs:
 
       - name: Scan for upstream YAML drift introduced by this PR
         run: |
-          python3 scripts/honk/yaml_drift.py \
+          python3 Tools/honk/yaml_drift.py \
             --pr-mode origin/${{ github.base_ref }} \
             --fork-ref HEAD \
             --upstream-ref origin/upstream/stable
