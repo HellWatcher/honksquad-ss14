@@ -1,0 +1,38 @@
+# Fork-side trait registration for cloning.
+#
+# Components listed here are copied from the original to the clone whenever a
+# humanoid is cloned, regardless of which CloningSettings the cloner used.
+# RussStationCloningSystem reads this prototype on every CloningEvent and
+# applies the same copy-iff-original-has-it rule that the upstream CloneComponents
+# loop uses.
+#
+# Add new fork traits here instead of editing
+# Resources/Prototypes/Entities/Mobs/Player/clone.yml.
+- type: cloningSettings
+  id: RussStationBodyExtensions
+  components:
+    # traits
+    - Ageusia
+    - AlcoholTolerance
+    - BloodDeficiency
+    - BoomingVoice
+    - Frail
+    - Freerunning
+    - GlassJaw
+    - Indebted
+    - IronJaw
+    - LightStep
+    - Negotiator
+    - Papyrophobia
+    - PoorAim
+    - Prosopagnosia
+    - ScarredEye
+    - SelfAware
+    - Skittish
+    - SoftSpoken
+    - SteadyHand
+    - ThrowingArm
+    - Touchy
+    - Tough
+    - Vegetarian
+    - WeakArm
