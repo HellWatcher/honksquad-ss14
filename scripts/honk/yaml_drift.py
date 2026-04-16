@@ -43,7 +43,7 @@ from common import (
 )
 
 DEFAULT_FORK_REF = "origin/release"
-DEFAULT_UPSTREAM_REF = "wizden/stable"
+DEFAULT_UPSTREAM_REF = "origin/upstream/stable"
 
 
 def is_in_scope(path: str) -> bool:

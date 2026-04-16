@@ -15,10 +15,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Add upstream remote and fetch stable
-        run: |
-          git remote add wizden https://github.com/space-wizards/space-station-14.git
-          git fetch --no-tags --depth=1 wizden stable
+      - name: Fetch upstream/stable mirror
+        run: git fetch --no-tags --depth=1 origin upstream/stable
 
       - uses: actions/setup-python@v5
         with:
@@ -29,4 +27,4 @@ jobs:
           python3 scripts/honk/cs_audit.py \
             --pr-mode origin/${{ github.base_ref }} \
             --fork-ref HEAD \
-            --upstream-ref wizden/stable
+            --upstream-ref origin/upstream/stable
