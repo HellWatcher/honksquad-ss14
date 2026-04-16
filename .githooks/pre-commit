@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Enforce the fork's "no upstream YAML reformats" rule.
+# See CONTRIBUTING.md § "YAML indentation".
+#
+# Rejects any commit where a staged upstream YAML file has a whitespace-only
+# diff (i.e. every staged change is reformatting, nothing is new content).
+# Fork-owned YAML under @RussStation/ and map YAML are exempt.
+#
+# Bypass: `git commit --no-verify` (use only if the reformat is genuinely
+# intentional, e.g. an upstream-sync merge commit).
+
+set -u
+
+is_upstream_yaml() {
+    case "$1" in
+        *.yml|*.yaml) ;;
+        *) return 1 ;;
+    esac
+    case "$1" in
+        *@RussStation/*|Resources/Maps/*) return 1 ;;
+    esac
+    return 0
+}
+
+exit_code=0
+
+while IFS= read -r file; do
+    is_upstream_yaml "$file" || continue
+    [ -f "$file" ] || continue
+
+    all_diff=$(git diff --cached -U0 --no-color -- "$file")
+    [ -n "$all_diff" ] || continue
+
+    content_diff=$(git diff --cached -U0 --no-color \
+        --ignore-all-space --ignore-blank-lines -- "$file")
+
+    if [ -z "$content_diff" ]; then
+        echo "pre-commit: $file"
+        echo "            whitespace-only change to upstream YAML (rejected)"
+        echo "            See CONTRIBUTING.md § 'YAML indentation'."
+        echo "            If intentional (upstream sync merge), bypass with:"
+        echo "              git commit --no-verify"
+        exit_code=1
+    fi
+done < <(git diff --cached --name-only --diff-filter=ACM)
+
+exit $exit_code

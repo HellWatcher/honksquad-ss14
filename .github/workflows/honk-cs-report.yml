@@ -1,0 +1,105 @@
+name: HONK / C# audit (weekly report)
+
+on:
+  schedule:
+    # Weekly on Mondays at 07:15 UTC
+    - cron: '15 7 * * 1'
+  workflow_dispatch:
+
+jobs:
+  report:
+    name: Full HONK C# audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch upstream/stable mirror
+        run: git fetch --no-tags --depth=1 origin upstream/stable
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run full C# audit
+        id: scan
+        run: |
+          set +e
+          python3 scripts/honk/cs_audit.py \
+            --fork-ref origin/release \
+            --upstream-ref origin/upstream/stable \
+            > cs-report.txt 2>&1
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+          DRIFT_COUNT=$(grep -cE '^\s+\S+\.cs' cs-report.txt || true)
+          echo "drift_count=$DRIFT_COUNT" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "report<<REPORT_EOF"
+            cat cs-report.txt
+            echo "REPORT_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Check for existing open issue
+        if: steps.scan.outputs.exit_code != '0'
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --label "cs-drift" --state open --json number --jq '.[0].number // empty')
+          echo "issue_number=$ISSUE" >> "$GITHUB_OUTPUT"
+
+      - name: Create issue
+        if: steps.scan.outputs.exit_code != '0' && steps.existing.outputs.issue_number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Upstream C# drift: ${{ steps.scan.outputs.drift_count }} file(s) need cleanup" \
+            --label "cs-drift" \
+            --body "$(cat <<'EOF'
+          The weekly audit found upstream C# files on `release` that have diverged from `origin/upstream/stable` outside `//HONK START` / `//HONK END` markers, or have malformed HONK blocks.
+
+          Unmarked fork changes in upstream C# files are hard to locate at rebase time. Wrap them in HONK markers so they stand out.
+
+          ### Audit output
+          ```
+          ${{ steps.scan.outputs.report }}
+          ```
+
+          ### To fix a file
+          Wrap every fork change in `//HONK START` / `//HONK END` markers. Where possible, move the fork code into a new file under `Content.*/RussStation/` so the upstream file stays untouched.
+
+          See [CONTRIBUTING.md](/CONTRIBUTING.md) § *Marking your changes* and § *Where new files go*.
+
+          Created by the [HONK / C# audit (weekly report)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
+          EOF
+          )"
+
+      - name: Update existing issue
+        if: steps.scan.outputs.exit_code != '0' && steps.existing.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ steps.existing.outputs.issue_number }} \
+            --body "$(cat <<'EOF'
+          Still drifting — **${{ steps.scan.outputs.drift_count }} file(s)** flagged by the latest audit.
+
+          ```
+          ${{ steps.scan.outputs.report }}
+          ```
+
+          From [run ${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+          EOF
+          )"
+
+      - name: Close issue if drift is gone
+        if: steps.scan.outputs.exit_code == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --label "cs-drift" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$ISSUE" ]; then
+            gh issue close "$ISSUE" --comment "C# audit is clean. Closing."
+          fi

@@ -34,7 +34,7 @@ Instead, add new files (components, systems, events) and use ECS event subscript
 
 ### Marking your changes
 
-Wrap fork changes in upstream C# files with marker comments so they're easy to find during rebase:
+Wrap fork changes in upstream C# files with paired block markers so they're easy to find during rebase:
 
 ```csharp
 //HONK START - Brief description
@@ -49,6 +49,22 @@ For YAML, use `#` comments:
 - type: SomeComponent
   someField: value
 # HONK END
+```
+
+**Only block-style markers are accepted.** Every `HONK START` must have a matching `HONK END`. Inline `// HONK` or `# HONK` trailing comments on a line of content are not accepted — the audit scripts under `scripts/honk/` flag them as violations and the `HONK audit` CI jobs block the PR.
+
+If a single line needs marking, wrap it:
+
+```yaml
+# HONK START
+someField: forkValue
+# HONK END
+```
+
+Not:
+
+```yaml
+someField: forkValue # HONK  <-- rejected
 ```
 
 ### YAML indentation

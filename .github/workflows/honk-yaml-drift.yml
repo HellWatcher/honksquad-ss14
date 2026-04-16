@@ -1,0 +1,30 @@
+name: HONK / YAML drift (PR)
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [release]
+
+jobs:
+  drift:
+    name: HONK YAML drift
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch upstream/stable mirror
+        run: git fetch --no-tags --depth=1 origin upstream/stable
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Scan for upstream YAML drift introduced by this PR
+        run: |
+          python3 scripts/honk/yaml_drift.py \
+            --pr-mode origin/${{ github.base_ref }} \
+            --fork-ref HEAD \
+            --upstream-ref origin/upstream/stable

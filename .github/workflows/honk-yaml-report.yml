@@ -1,0 +1,105 @@
+name: HONK / YAML drift (weekly report)
+
+on:
+  schedule:
+    # Weekly on Mondays at 07:00 UTC
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+jobs:
+  report:
+    name: Full HONK YAML drift scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch upstream/stable mirror
+        run: git fetch --no-tags --depth=1 origin upstream/stable
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run full drift scan
+        id: scan
+        run: |
+          set +e
+          python3 scripts/honk/yaml_drift.py \
+            --fork-ref origin/release \
+            --upstream-ref origin/upstream/stable \
+            > drift-report.txt 2>&1
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+          DRIFT_COUNT=$(grep -cE '^\s+\S+\.ya?ml' drift-report.txt || true)
+          echo "drift_count=$DRIFT_COUNT" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "report<<REPORT_EOF"
+            cat drift-report.txt
+            echo "REPORT_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Check for existing open issue
+        if: steps.scan.outputs.exit_code != '0'
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --label "yaml-drift" --state open --json number --jq '.[0].number // empty')
+          echo "issue_number=$ISSUE" >> "$GITHUB_OUTPUT"
+
+      - name: Create issue
+        if: steps.scan.outputs.exit_code != '0' && steps.existing.outputs.issue_number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Upstream YAML drift: ${{ steps.scan.outputs.drift_count }} file(s) need cleanup" \
+            --label "yaml-drift" \
+            --body "$(cat <<'EOF'
+          The weekly drift scan found upstream YAML files on `release` that have diverged from `origin/upstream/stable` outside `HONK START`/`HONK END` markers.
+
+          These are mostly pre-existing and merge cleanly today, but every drifted line is a future rebase hazard. Wrap fork changes in HONK markers and restore upstream formatting for the rest.
+
+          ### Scan output
+          ```
+          ${{ steps.scan.outputs.report }}
+          ```
+
+          ### To fix a file
+          Restore it from the upstream ref (`git checkout <upstream>/master -- <path>`), then re-apply fork changes wrapped in `# HONK START ... # HONK END` markers. Don't let a formatter touch surrounding lines.
+
+          See [CONTRIBUTING.md](/CONTRIBUTING.md) § *Marking your changes* and § *YAML indentation*.
+
+          Created by the [HONK / YAML drift (weekly report)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
+          EOF
+          )"
+
+      - name: Update existing issue
+        if: steps.scan.outputs.exit_code != '0' && steps.existing.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ steps.existing.outputs.issue_number }} \
+            --body "$(cat <<'EOF'
+          Still drifting — **${{ steps.scan.outputs.drift_count }} file(s)** flagged by the latest scan.
+
+          ```
+          ${{ steps.scan.outputs.report }}
+          ```
+
+          From [run ${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+          EOF
+          )"
+
+      - name: Close issue if drift is gone
+        if: steps.scan.outputs.exit_code == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --label "yaml-drift" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$ISSUE" ]; then
+            gh issue close "$ISSUE" --comment "Drift scan is clean. Closing."
+          fi
