@@ -52,9 +52,9 @@ namespace Content.Client.Stylesheets
             IoCManager.InjectDependencies(FontManager);
             FontManager.Initialize();
             FontManager.FontsChanged += RebuildStylesheets;
-            // HONK END
 
             BuildStylesheets();
+            // HONK END
 
             // warn about unused sheetlets
             if (UnusedSheetlets.Count > 0)
