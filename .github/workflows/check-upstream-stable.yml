@@ -6,8 +6,12 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  issues: write
+
 jobs:
-  check-upstream:
+  sync-mirror:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -28,81 +32,76 @@ jobs:
           REMOTE_SHA=$(git rev-parse wizden/stable)
 
           if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
-            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
-          else
+            echo "status=current" >> "$GITHUB_OUTPUT"
+          elif git merge-base --is-ancestor "$LOCAL_SHA" wizden/stable; then
             BEHIND_COUNT=$(git rev-list --count origin/upstream/stable..wizden/stable)
-            LATEST_COMMITS=$(git log --oneline origin/upstream/stable..wizden/stable | head -20)
-            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+            echo "status=behind" >> "$GITHUB_OUTPUT"
             echo "behind_count=$BEHIND_COUNT" >> "$GITHUB_OUTPUT"
             echo "local_sha=$LOCAL_SHA" >> "$GITHUB_OUTPUT"
             echo "remote_sha=$REMOTE_SHA" >> "$GITHUB_OUTPUT"
-            {
-              echo "latest_commits<<COMMITS_EOF"
-              echo "$LATEST_COMMITS"
-              echo "COMMITS_EOF"
-            } >> "$GITHUB_OUTPUT"
+          else
+            echo "status=diverged" >> "$GITHUB_OUTPUT"
+            echo "local_sha=$LOCAL_SHA" >> "$GITHUB_OUTPUT"
+            echo "remote_sha=$REMOTE_SHA" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Check for existing open issue
-        if: steps.compare.outputs.up_to_date == 'false'
-        id: existing
+      - name: Auto-advance mirror (fast-forward)
+        if: steps.compare.outputs.status == 'behind'
+        run: |
+          git push origin wizden/stable:upstream/stable
+          echo "Advanced origin/upstream/stable by ${{ steps.compare.outputs.behind_count }} commits"
+          echo "  ${{ steps.compare.outputs.local_sha }} -> ${{ steps.compare.outputs.remote_sha }}"
+
+      - name: Close resolved sync issues
+        if: steps.compare.outputs.status == 'behind' || steps.compare.outputs.status == 'current'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ISSUE=$(gh issue list --label "upstream-sync" --state open --json number --jq '.[0].number // empty')
-          echo "issue_number=$ISSUE" >> "$GITHUB_OUTPUT"
+          ISSUES=$(gh issue list --label "upstream-sync" --state open --json number --jq '.[].number')
+          for num in $ISSUES; do
+            gh issue close "$num" --comment "Mirror auto-advanced to wizden/stable. Closing."
+          done
 
-      - name: Create or update issue
-        if: steps.compare.outputs.up_to_date == 'false' && steps.existing.outputs.issue_number == ''
+      - name: Open issue on divergence (wizden force-pushed)
+        if: steps.compare.outputs.status == 'diverged'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue create \
-            --title "Upstream stable has ${{ steps.compare.outputs.behind_count }} new commits" \
-            --label "upstream-sync" \
-            --body "$(cat <<'EOF'
-          Wizden \`stable\` has moved ahead of our \`upstream/stable\` branch.
+          EXISTING=$(gh issue list --label "upstream-sync" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$(cat <<EOF
+          Mirror still diverged from wizden/stable. Automatic fast-forward is not possible.
 
-          **Behind by:** ${{ steps.compare.outputs.behind_count }} commits
           **Our SHA:** \`${{ steps.compare.outputs.local_sha }}\`
           **Wizden SHA:** \`${{ steps.compare.outputs.remote_sha }}\`
 
-          ### Recent upstream commits
-          ```
-          ${{ steps.compare.outputs.latest_commits }}
-          ```
-
-          ### To sync
-          ```bash
+          This likely means wizden force-pushed stable. A maintainer must manually verify and force-push:
+          \`\`\`bash
           git fetch wizden stable
-          git checkout upstream/stable
-          git reset --hard wizden/stable
-          git push --force origin upstream/stable
-
-          git checkout release
-          git merge upstream/stable
-          # resolve conflicts
-          git push origin release
-          ```
-
-          This issue was created automatically by the [Check Upstream Stable](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
+          git push --force origin wizden/stable:upstream/stable
+          \`\`\`
           EOF
           )"
+          else
+            gh issue create \
+              --title "upstream/stable has diverged from wizden/stable (manual intervention needed)" \
+              --label "upstream-sync" \
+              --body "$(cat <<EOF
+          The \`origin/upstream/stable\` mirror cannot be fast-forwarded to \`wizden/stable\`.
+          This means wizden force-pushed their stable branch.
 
-      - name: Update existing issue
-        if: steps.compare.outputs.up_to_date == 'false' && steps.existing.outputs.issue_number != ''
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh issue comment ${{ steps.existing.outputs.issue_number }} \
-            --body "$(cat <<'EOF'
-          Still behind — now **${{ steps.compare.outputs.behind_count }} commits** behind wizden/stable.
-
+          **Our SHA:** \`${{ steps.compare.outputs.local_sha }}\`
           **Wizden SHA:** \`${{ steps.compare.outputs.remote_sha }}\`
 
-          ### Latest upstream commits
-          ```
-          ${{ steps.compare.outputs.latest_commits }}
-          ```
+          A maintainer must manually verify the new wizden/stable tip and force-push:
+          \`\`\`bash
+          git fetch wizden stable
+          git log --oneline origin/upstream/stable..wizden/stable | head -20
+          # verify the commits look correct, then:
+          git push --force origin wizden/stable:upstream/stable
+          \`\`\`
+
+          This issue was created by the [Check Upstream Stable](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow.
           EOF
           )"
+          fi
