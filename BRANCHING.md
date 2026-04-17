@@ -6,7 +6,7 @@ This document describes the branching strategy for the HonkSquad SS14 fork, desi
 
 **`wizden/stable` is the only upstream source for this fork.** Never merge `wizden/master`, `upstream/master`, or any non-stable upstream branch into `staging`, `release`, or any branch destined for `release`. The `release-base-integrity` CI job (`.github/workflows/check-release-base.yml`) enforces this, blocking any push or PR whose merge-base with `origin/upstream/stable` is not itself reachable from `wizden/stable`.
 
-Every fork-authored commit must use the `honksquad:` subject prefix. The `commit-prefix` CI job enforces this for authors listed in `Tools/honk/fork_authors.txt`.
+Every fork-authored commit must use the `honksquad:` subject prefix. The `commit-prefix` CI job enforces this automatically: commits reachable from `origin/upstream/stable` are exempt (upstream), everything else must carry the prefix.
 
 If release drifts onto a non-stable base, the recovery procedure is a full resync: reclassify every commit as fork-preserve or upstream-drop, replay the fork commits onto a clean `wizden/stable` base, force-push release, and rebase all open PRs with `git rebase --onto origin/release <pre-resync-tag>`.
 
