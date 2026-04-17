@@ -70,7 +70,7 @@ jobs:
       - name: Fetch upstream/stable
         run: git fetch --no-tags origin upstream/stable
 
-      - name: Check every new commit for honksquad: prefix
+      - name: "Check every new commit for honksquad: prefix"
         run: |
           BASE="origin/${{ github.base_ref }}"
           RANGE="${BASE}..HEAD"
