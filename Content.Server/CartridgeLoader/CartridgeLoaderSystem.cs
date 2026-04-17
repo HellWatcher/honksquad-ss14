@@ -382,14 +382,14 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
         //inline set instead of running after MapInit and deduping against installed state.
         var toInstall = new HashSet<string>(component.PreinstalledPrograms);
         var ev = new CartridgeLoaderInitialProgramsEvent(uid, toInstall);
-        RaiseLocalEvent(uid, ref ev);
-        //HONK END
+        RaiseLocalEvent(uid, ref ev, broadcast: true);
 
         // TODO remove this and use container fill.
         foreach (var prototype in toInstall)
         {
             InstallProgram(uid, prototype, deinstallable: false);
         }
+        //HONK END
     }
 
     private void OnUsed(EntityUid uid, CartridgeLoaderComponent component, AfterInteractEvent args)
