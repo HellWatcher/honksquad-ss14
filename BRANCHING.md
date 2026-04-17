@@ -8,7 +8,7 @@ This document describes the branching strategy for the HonkSquad SS14 fork, desi
 
 Every fork-authored commit must use the `honksquad:` subject prefix. The `commit-prefix` CI job enforces this for authors listed in `Tools/honk/fork_authors.txt`.
 
-If you need to reverse a master-based drift, see `docs/plans/2026-04-16-upstream-stable-resync.md`.
+If release drifts onto a non-stable base, the recovery procedure is a full resync: reclassify every commit as fork-preserve or upstream-drop, replay the fork commits onto a clean `wizden/stable` base, force-push release, and rebase all open PRs with `git rebase --onto origin/release <pre-resync-tag>`.
 
 ## Cross-repository PRs
 
