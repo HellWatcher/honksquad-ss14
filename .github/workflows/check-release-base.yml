@@ -1,0 +1,106 @@
+name: Release base integrity
+
+on:
+  pull_request:
+    branches: [release]
+  push:
+    branches: [release]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  base-integrity:
+    name: Release is based on upstream/stable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch upstream/stable mirror
+        run: git fetch --no-tags origin upstream/stable
+
+      - name: Fetch wizden/stable (authoritative)
+        run: |
+          git remote add wizden https://github.com/space-wizards/space-station-14.git || true
+          git fetch --no-tags wizden stable
+
+      - name: Verify mirror matches wizden/stable
+        run: |
+          MIRROR=$(git rev-parse origin/upstream/stable)
+          WIZDEN=$(git rev-parse wizden/stable)
+          if [ "$MIRROR" != "$WIZDEN" ]; then
+            echo "::error::origin/upstream/stable ($MIRROR) does not match wizden/stable ($WIZDEN)"
+            echo "The mirror is stale. Advance it with the check-upstream-stable workflow."
+            exit 1
+          fi
+
+      - name: Verify release merge-base is on upstream/stable
+        run: |
+          BASE=$(git merge-base HEAD origin/upstream/stable)
+          if ! git merge-base --is-ancestor "$BASE" wizden/stable; then
+            echo "::error::release is based on a commit ($BASE) that is not reachable from wizden/stable."
+            echo "This means release has merged wizden/master (or another non-stable branch)."
+            exit 1
+          fi
+
+      - name: Reject red-flag merge subjects
+        run: |
+          RANGE="origin/upstream/stable..HEAD"
+          BAD=$(git log --format="%H %s" $RANGE | \
+            grep -iE "upstream/master|wizden/master|stable ->? master|into staging.*master" || true)
+          if [ -n "$BAD" ]; then
+            echo "::error::Commit subjects reference wizden/master. Release must only merge wizden/stable."
+            echo "$BAD"
+            exit 1
+          fi
+
+  commit-prefix:
+    name: "honksquad: prefix on fork commits"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch upstream/stable
+        run: git fetch --no-tags origin upstream/stable
+
+      - name: Check every new commit for honksquad: prefix
+        run: |
+          BASE="origin/${{ github.base_ref }}"
+          RANGE="${BASE}..HEAD"
+
+          FAILED=0
+          while IFS=$'\t' read -r sha subject; do
+            # Exempt merge commits
+            if [[ "$subject" =~ ^Merge\ (pull\ request|branch|remote-tracking) ]]; then
+              continue
+            fi
+
+            # Exempt upstream commits (reachable from upstream/stable)
+            if git merge-base --is-ancestor "$sha" origin/upstream/stable 2>/dev/null; then
+              continue
+            fi
+
+            # Everything else is a fork commit and must have the prefix
+            if ! [[ "$subject" =~ ^honksquad: ]]; then
+              AUTHOR=$(git log -1 --format="%an" "$sha")
+              echo "::error::Commit $sha by \"$AUTHOR\" is missing the honksquad: prefix."
+              echo "  Subject: $subject"
+              echo "  Fix: git rebase -i $BASE and prepend 'honksquad: ' to this commit's subject."
+              FAILED=1
+            fi
+          done < <(git log --format="%H%x09%s" $RANGE)
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo ""
+            echo "Every fork-authored commit must start with 'honksquad:' (e.g., 'honksquad: feat: add feature')."
+            echo "Upstream commits (reachable from origin/upstream/stable) are automatically exempt."
+          fi
+
+          exit $FAILED
