@@ -78,7 +78,7 @@ jobs:
           FAILED=0
           while IFS=$'\t' read -r sha subject; do
             # Exempt merge commits
-            if [[ "$subject" =~ ^Merge\ (pull\ request|branch|remote-tracking) ]]; then
+            if [[ "$subject" =~ ^Merge\ (pull\ request|branch|remote-tracking|[0-9a-f]) ]]; then
               continue
             fi
 
