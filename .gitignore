@@ -313,6 +313,7 @@ Resources/MapImages
 # HONK START - Fork-specific ignores
 # AI tooling
 CLAUDE.md
+.claude/
 .serena/
 .prettierignore
 /docs/
