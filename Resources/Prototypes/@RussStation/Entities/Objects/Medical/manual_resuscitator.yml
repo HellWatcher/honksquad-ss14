@@ -23,5 +23,4 @@
       price: 25
     - type: GuideHelp
       guides:
-        - ManualResuscitator
         - MedicalDoctor

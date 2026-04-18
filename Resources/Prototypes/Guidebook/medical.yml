@@ -15,10 +15,6 @@
   id: MedicalDoctor
   name: guide-entry-medicaldoctor
   text: "/ServerInfo/Guidebook/Medical/MedicalDoctor.xml"
-  # HONK START - Manual resuscitator guidebook entry
-  children:
-  - ManualResuscitator
-  # HONK END
 
 - type: guideEntry
   id: Cloning
