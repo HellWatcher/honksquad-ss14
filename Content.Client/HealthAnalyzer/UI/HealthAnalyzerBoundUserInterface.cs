@@ -19,8 +19,6 @@ namespace Content.Client.HealthAnalyzer.UI
             base.Open();
 
             _window = this.CreateWindow<HealthAnalyzerWindow>();
-
-            _window.Title = EntMan.GetComponent<MetaDataComponent>(Owner).EntityName;
         }
 
         protected override void ReceiveMessage(BoundUserInterfaceMessage message)

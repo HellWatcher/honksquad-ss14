@@ -4,28 +4,26 @@ using Robust.Shared.Serialization;
 namespace Content.Shared.RussStation.MedicalScanner;
 
 [Serializable, NetSerializable]
-public sealed class HealthAnalyzerReagentScannedMessage : BoundUserInterfaceMessage
-{
-    public HealthAnalyzerReagentState State;
-
-    public HealthAnalyzerReagentScannedMessage(HealthAnalyzerReagentState state)
-    {
-        State = state;
-    }
-}
-
-[Serializable, NetSerializable]
-public struct HealthAnalyzerReagentState
+public sealed class HealthAnalyzerReagentState : BoundUserInterfaceState
 {
     public NetEntity Target;
     public string TargetName;
     public List<HealthAnalyzerReagentGroup> Groups;
+    public bool Active;
 
-    public HealthAnalyzerReagentState(NetEntity target, string targetName, List<HealthAnalyzerReagentGroup> groups)
+    /// <summary>
+    /// One-shot tab hint applied by the BUI when the state arrives. Null on ongoing
+    /// update ticks so the player can keep whichever tab they manually switched to.
+    /// </summary>
+    public HealthAnalyzerTab? PreferredTab;
+
+    public HealthAnalyzerReagentState(NetEntity target, string targetName, List<HealthAnalyzerReagentGroup> groups, bool active = true, HealthAnalyzerTab? preferredTab = null)
     {
         Target = target;
         TargetName = targetName;
         Groups = groups;
+        Active = active;
+        PreferredTab = preferredTab;
     }
 }
 

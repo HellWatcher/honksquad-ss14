@@ -18,16 +18,17 @@
   - type: UserInterface
     interfaces:
       enum.HealthAnalyzerUiKey.Key:
-        type: HealthAnalyzerBoundUserInterface
-      # HONK START - Alt-verb reagent scanner UI
-      enum.HealthAnalyzerUiKey.Reagents:
-        type: HealthAnalyzerReagentBoundUserInterface
-      # HONK END
+        # HONK START - tabbed BUI with Health + Reagents tabs
+        type: HealthAnalyzerTabbedBoundUserInterface
+        # HONK END
   - type: ItemToggle
     onUse: false
   - type: HealthAnalyzer
     scanningEndSound:
       path: "/Audio/Items/Medical/healthscanner.ogg"
+  # HONK START - Reagents tab live-update state
+  - type: HealthAnalyzerReagentScanner
+  # HONK END
   - type: Tag
     tags:
     - DiscreteHealthAnalyzer

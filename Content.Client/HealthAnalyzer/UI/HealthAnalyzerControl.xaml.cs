@@ -111,10 +111,7 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
 
         // Alerts
 
-        //HONK START - Wound alerts
-        var hasWounds = state.Wounds is { Count: > 0 };
-        var showAlerts = state.Unrevivable == true || state.Bleeding == true || hasWounds;
-        //HONK END
+        var showAlerts = state.Unrevivable == true || state.Bleeding == true;
 
         AlertsDivider.Visible = showAlerts;
         AlertsContainer.Visible = showAlerts;
@@ -137,29 +134,6 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
                 Margin = new Thickness(0, 4),
                 MaxWidth = 300
             });
-
-        //HONK START - Wound entries in alerts
-        if (hasWounds)
-        {
-            foreach (var wound in state.Wounds!)
-            {
-                var color = wound.Tier switch
-                {
-                    >= 3 => Color.Red,
-                    2 => Color.Orange,
-                    _ => Color.Yellow,
-                };
-
-                AlertsContainer.AddChild(new RichTextLabel
-                {
-                    Text = Loc.GetString(wound.LocKey),
-                    Margin = new Thickness(0, 4),
-                    MaxWidth = 300,
-                    Modulate = color,
-                });
-            }
-        }
-        //HONK END
 
         // Damage Groups
 

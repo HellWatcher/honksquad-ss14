@@ -1,0 +1,36 @@
+<controls:FancyWindow
+    xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+    xmlns:ui="clr-namespace:Content.Client.HealthAnalyzer.UI"
+    xmlns:russMed="clr-namespace:Content.Client.RussStation.MedicalScanner"
+    MinWidth="320"
+    MaxHeight="560">
+    <TabContainer Name="Tabs" Margin="0 0 0 0">
+        <ScrollContainer Name="HealthTab" Margin="5 5 5 5" ReturnMeasure="True" VerticalExpand="True">
+            <BoxContainer Orientation="Vertical">
+                <BoxContainer Name="HealthEmptyView" Visible="False" Orientation="Vertical" SeparationOverride="0">
+                    <BoxContainer Orientation="Horizontal" Margin="0 0 0 5">
+                        <SpriteView OverrideDirection="South" Scale="2 2" Name="HealthEmptySpriteView" Access="Public" SetSize="64 64" />
+                        <TextureRect Name="HealthEmptyNoDataTex" SetSize="64 64" Visible="False" Stretch="KeepAspectCentered" TexturePath="/Textures/Interface/Misc/health_analyzer_out_of_range.png"/>
+                        <BoxContainer Margin="5 0 0 0" Orientation="Vertical" VerticalAlignment="Top">
+                            <RichTextLabel Name="HealthEmptyNameLabel" SetWidth="150" />
+                            <Label Name="HealthEmptySpeciesLabel" VerticalAlignment="Top" StyleClasses="LabelSubText" />
+                        </BoxContainer>
+                        <Label Margin="0 0 5 0" HorizontalExpand="True" HorizontalAlignment="Right" VerticalExpand="True"
+                               VerticalAlignment="Top" Name="HealthEmptyScanModeLabel" />
+                    </BoxContainer>
+                    <PanelContainer StyleClasses="LowDivider" />
+                    <Label Text="{Loc 'health-analyzer-window-no-patient-data-text'}"
+                           HorizontalAlignment="Center" Margin="0 5 0 0" />
+                </BoxContainer>
+                <ui:HealthAnalyzerControl Name="HealthAnalyzer" />
+            </BoxContainer>
+        </ScrollContainer>
+        <ScrollContainer Name="ReagentsTab" Margin="5 5 5 5" ReturnMeasure="True" VerticalExpand="True">
+            <russMed:HealthAnalyzerReagentControl Name="Reagents" />
+        </ScrollContainer>
+        <ScrollContainer Name="WoundsTab" Margin="5 5 5 5" ReturnMeasure="True" VerticalExpand="True">
+            <russMed:HealthAnalyzerWoundControl Name="Wounds" />
+        </ScrollContainer>
+    </TabContainer>
+</controls:FancyWindow>

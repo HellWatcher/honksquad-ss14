@@ -26,7 +26,9 @@ using Content.Shared.RussStation.Wounds.Systems;
 
 namespace Content.Server.Medical;
 
-public sealed class HealthAnalyzerSystem : EntitySystem
+//HONK START - partial so fork can extend in RussStation/Medical/HealthAnalyzerSystem.Honk.cs
+public sealed partial class HealthAnalyzerSystem : EntitySystem
+//HONK END
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly PowerCellSystem _cell = default!;
@@ -38,7 +40,9 @@ public sealed class HealthAnalyzerSystem : EntitySystem
     [Dependency] private readonly TransformSystem _transformSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
-    [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!; //HONK
+    //HONK START
+    [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!;
+    //HONK END
 
     public override void Initialize()
     {
@@ -266,7 +270,9 @@ public sealed class HealthAnalyzerSystem : EntitySystem
             null,
             bleeding,
             unrevivable,
-            wounds //HONK
+            //HONK START
+            wounds
+            //HONK END
         );
     }
 }
