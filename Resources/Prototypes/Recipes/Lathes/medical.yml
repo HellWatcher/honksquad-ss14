@@ -127,6 +127,16 @@
   materials:
     Steel: 300
 
+# HONK START - Manual resuscitator recipe
+- type: latheRecipe
+  id: ManualResuscitator
+  result: ManualResuscitator
+  completetime: 1
+  materials:
+    Plastic: 150
+    Glass: 50
+# HONK END
+
 - type: latheRecipe
   id: Medkit
   result: Medkit

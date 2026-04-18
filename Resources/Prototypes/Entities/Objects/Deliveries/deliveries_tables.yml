@@ -105,6 +105,9 @@
       - id: Ointment
       - id: Gauze
       - id: Bloodpack
+      # HONK START - Manual resuscitator for CPR-style oxyloss recovery
+      - id: ManualResuscitator
+      # HONK END
     - id: SyndicateBusinessCard
       weight: 0.5
 

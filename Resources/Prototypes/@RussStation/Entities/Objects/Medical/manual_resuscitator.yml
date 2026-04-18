@@ -1,0 +1,26 @@
+- type: entity
+  id: ManualResuscitator
+  parent: BaseItem
+  name: manual resuscitator
+  description: A hand-squeezed bag valve mask. Clamp it over a downed crewmate's mouth to buy them time until a medic arrives.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Medical/manual_resuscitator.rsi"
+      state: icon
+    - type: Item
+      size: Small
+      shape:
+      - 0,0,1,0
+    - type: Tag
+      tags:
+        - Resuscitator
+    - type: ManualResuscitator
+      heal:
+        types:
+          Asphyxiation: -5
+    - type: DoAfter
+    - type: StaticPrice
+      price: 25
+    - type: GuideHelp
+      guides:
+        - MedicalDoctor

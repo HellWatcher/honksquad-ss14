@@ -52,6 +52,9 @@
   - OffsetCane
   - OffsetCaneWood
   - JetInjector
+  # HONK START - Manual resuscitator recipe
+  - ManualResuscitator
+  # HONK END
 
 - type: latheRecipePack
   id: RollerBedsStatic

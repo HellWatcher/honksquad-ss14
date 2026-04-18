@@ -15,6 +15,9 @@
       - id: Bloodpack
       - id: Gauze
         weight: 0.5
+      # HONK START - Manual resuscitator for CPR-style oxyloss recovery
+      - id: ManualResuscitator
+      # HONK END
 
 - type: entity
   parent: LockerMedicine

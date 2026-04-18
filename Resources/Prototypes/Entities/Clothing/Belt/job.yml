@@ -220,6 +220,9 @@
       - DiscreteHealthAnalyzer
       - SurgeryTool
       - Dropper
+      # HONK START - Manual resuscitator
+      - Resuscitator
+      # HONK END
       components:
       - Injector
       - Pill

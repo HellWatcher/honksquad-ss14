@@ -107,6 +107,9 @@
         - id: Brutepack
         - id: Ointment
         - id: Gauze
+        # HONK START - Manual resuscitator for CPR-style oxyloss recovery
+        - id: ManualResuscitator
+        # HONK END
         # Reagents reflect the bottles in CoreMedicineReagentBottleTable
         - id: ChemistryBottleSaline
         - id: ChemistryBottleBicaridine
@@ -129,6 +132,9 @@
         - id: Bloodpack
           amount: 2
         - id: Gauze
+        # HONK START - Manual resuscitator for CPR-style oxyloss recovery
+        - id: ManualResuscitator
+        # HONK END
         # Reagents focused on emergency response rather than outright healing
         - id: ChemistryBottleInaprovaline
           amount: 2

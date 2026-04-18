@@ -50,3 +50,7 @@
 
 - type: Tag
   id: SurgeryDrape
+
+# Medical belt whitelist tag for the manual resuscitator.
+- type: Tag
+  id: Resuscitator

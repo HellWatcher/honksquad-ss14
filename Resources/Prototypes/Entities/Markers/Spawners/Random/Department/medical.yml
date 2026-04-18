@@ -21,6 +21,9 @@
         - Gauze
         - EmergencyMedipen
         - PillCanisterIron
+        # HONK START - Manual resuscitator for CPR-style oxyloss recovery
+        - ManualResuscitator
+        # HONK END
       chance: 0.9
       offset: 0.0
 
@@ -55,6 +58,9 @@
         - Gauze
         - EmergencyMedipen
         - ChemistryBottleEpinephrine
+        # HONK START - Manual resuscitator for CPR-style oxyloss recovery
+        - ManualResuscitator
+        # HONK END
         - PillCanisterTricordrazine
         - PillCanisterCharcoal
         - PillCanisterHyronalin

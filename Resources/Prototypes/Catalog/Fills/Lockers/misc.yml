@@ -292,6 +292,9 @@
     - id: Ointment
     - id: Gauze
     - id: ChemistryBottleUnstableMutagen
+    # HONK START - Manual resuscitator for CPR-style oxyloss recovery
+    - id: ManualResuscitator
+    # HONK END
 
 - type: entityTable
   id: ToiletCisternWeaponsTable
