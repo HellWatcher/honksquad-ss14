@@ -1,0 +1,29 @@
+<Document>
+# Manual Resuscitator
+
+A hand-squeezed bag valve mask for buying time on a downed crewmate until real medical help arrives.
+
+<Box>
+<GuideEntityEmbed Entity="ManualResuscitator"/>
+</Box>
+
+## When to use it
+
+Use it on someone in [color=#a4885c]critical condition[/color] who's suffocating. It won't help a patient who's breathing on their own, and it can't be used on yourself.
+
+## How it works
+
+Clamp it over the patient's mouth and keep the action going. Every few seconds of uninterrupted squeezing shaves off some of their oxygen damage. Move, take damage, or drop the tool and the cycle breaks. The tool stops automatically once the patient is out of crit or their oxygen damage is low enough that they'd recover on their own.
+
+It only treats [color=#a4885c]suffocation[/color]. It will not fix bleeding, burns, poisoning, or bruise damage, and it is no substitute for a defibrillator on the actually dead.
+
+## Where to find one
+
+Stocked in medical belts, medkits, NanoMed vendors, and medical storage. Also printable at a medical lathe.
+
+<Box>
+<GuideEntityEmbed Entity="ClothingBeltMedicalFilled"/>
+<GuideEntityEmbed Entity="MedkitFilled"/>
+</Box>
+
+</Document>

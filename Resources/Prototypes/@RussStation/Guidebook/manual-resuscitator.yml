@@ -1,0 +1,4 @@
+- type: guideEntry
+  id: ManualResuscitator
+  name: guide-entry-manual-resuscitator
+  text: "/ServerInfo/Guidebook/@RussStation/ManualResuscitator.xml"
