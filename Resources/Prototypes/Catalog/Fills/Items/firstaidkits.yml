@@ -12,9 +12,6 @@
         - id: Ointment
         - id: Gauze
         - id: PillCanisterTricordrazine
-        # HONK START - Manual resuscitator for CPR-style oxyloss recovery
-        - id: ManualResuscitator
-        # HONK END
       # see https://github.com/tgstation/blob/master/code/game/objects/items/storage/firstaid.dm for example contents
 
 - type: entity
@@ -74,9 +71,6 @@
         - id: EmergencyMedipen
         - id: SyringeInaprovaline
         - id: PillCanisterDexalin
-        # HONK START - Manual resuscitator for CPR-style oxyloss recovery
-        - id: ManualResuscitator
-        # HONK END
 
 - type: entity
   id: MedkitRadiationFilled
