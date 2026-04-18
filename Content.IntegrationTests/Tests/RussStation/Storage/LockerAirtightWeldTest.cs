@@ -14,6 +14,7 @@ public sealed class LockerAirtightWeldTest : GameTest
   components:
   - type: EntityStorage
     airtight: false
+    airtightWhenWelded: true
   - type: Weldable
 ";
 
