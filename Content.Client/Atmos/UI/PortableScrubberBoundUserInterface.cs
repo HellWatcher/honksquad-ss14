@@ -25,6 +25,11 @@ public sealed class PortableScrubberBoundUserInterface : BoundUserInterface
         {
             SendMessage(new PortableScrubberToggleFilterGasMessage(gas));
         };
+
+        _window.ToggleStatusButton.OnToggled += _ =>
+        {
+            SendMessage(new PortableScrubberToggleEnabledMessage());
+        };
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)
@@ -33,6 +38,7 @@ public sealed class PortableScrubberBoundUserInterface : BoundUserInterface
         if (_window == null || state is not PortableScrubberBoundUserInterfaceState cast)
             return;
 
+        _window.SetActive(cast.Enabled);
         _window.UpdateState(cast);
     }
 

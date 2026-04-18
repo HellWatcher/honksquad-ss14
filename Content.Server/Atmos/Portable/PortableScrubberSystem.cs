@@ -46,6 +46,7 @@ namespace Content.Server.Atmos.Portable
             SubscribeLocalEvent<PortableScrubberComponent, GasAnalyzerScanEvent>(OnScrubberAnalyzed);
             //HONK START - Portable scrubber filter UI
             SubscribeLocalEvent<PortableScrubberComponent, PortableScrubberToggleFilterGasMessage>(OnToggleFilterGas);
+            SubscribeLocalEvent<PortableScrubberComponent, PortableScrubberToggleEnabledMessage>(OnToggleEnabled);
             SubscribeLocalEvent<PortableScrubberComponent, BoundUIOpenedEvent>(OnUIOpened);
             //HONK END
         }
@@ -58,6 +59,11 @@ namespace Content.Server.Atmos.Portable
         private void OnDeviceUpdated(EntityUid uid, PortableScrubberComponent component, ref AtmosDeviceUpdateEvent args)
         {
             var timeDelta = args.dt;
+
+            //HONK START - Portable scrubber filter UI: keep volume readout live
+            if (_userInterfaceSystem.IsUiOpen(uid, PortableScrubberUiKey.Key))
+                UpdateUI(uid, component);
+            //HONK END
 
             if (!component.Enabled)
                 return;
@@ -109,12 +115,21 @@ namespace Content.Server.Atmos.Portable
             portableNode.ConnectionsEnabled = (args.Anchored && _gasPortableSystem.FindGasPortIn(Transform(uid).GridUid, Transform(uid).Coordinates, out _));
 
             _appearance.SetData(uid, PortableScrubberVisuals.IsDraining, portableNode.ConnectionsEnabled);
+
+            //HONK START - Portable scrubber filter UI: keep switch gating in sync
+            if (!args.Anchored)
+                component.Enabled = false;
+            UpdateUI(uid, component);
+            //HONK END
         }
 
         private void OnPowerChanged(EntityUid uid, PortableScrubberComponent component, ref PowerChangedEvent args)
         {
             UpdateAppearance(uid, IsFull(component), args.Powered);
             component.Enabled = args.Powered;
+            //HONK START - Portable scrubber filter UI
+            UpdateUI(uid, component);
+            //HONK END
         }
 
         /// <summary>
@@ -182,10 +197,27 @@ namespace Content.Server.Atmos.Portable
             UpdateUI(uid, component);
         }
 
+        private void OnToggleEnabled(EntityUid uid, PortableScrubberComponent component, PortableScrubberToggleEnabledMessage args)
+        {
+            if (!Transform(uid).Anchored)
+            {
+                UpdateUI(uid, component);
+                return;
+            }
+
+            component.Enabled = !component.Enabled;
+
+            _adminLogger.Add(LogType.AtmosFilterChanged, LogImpact.Low,
+                $"Player {ToPrettyString(args.Actor):player} set portable scrubber {ToPrettyString(uid):entity} enabled={component.Enabled}");
+
+            UpdateAppearance(uid, IsFull(component), component.Enabled);
+            UpdateUI(uid, component);
+        }
+
         private void UpdateUI(EntityUid uid, PortableScrubberComponent component)
         {
             _userInterfaceSystem.SetUiState(uid, PortableScrubberUiKey.Key,
-                new PortableScrubberBoundUserInterfaceState(component.FilterGases, component.Enabled));
+                new PortableScrubberBoundUserInterfaceState(component.FilterGases, component.Enabled, Transform(uid).Anchored, component.Air.Pressure, component.MaxPressure));
         }
         //HONK END
     }

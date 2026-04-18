@@ -18,7 +18,7 @@ public sealed partial class PortableScrubberWindow : DefaultWindow
 
     public event Action<Gas>? OnGasToggled;
 
-    private readonly Dictionary<Gas, Button> _gasButtons = new();
+    private readonly Dictionary<Gas, CheckBox> _gasChecks = new();
 
     public PortableScrubberWindow()
     {
@@ -32,28 +32,39 @@ public sealed partial class PortableScrubberWindow : DefaultWindow
             ProtoId<GasPrototype> gasProtoId = atmosphereSystem.GetGas(gas);
             var gasName = _prototypeManager.Index(gasProtoId).Name;
 
-            var button = new Button
+            var check = new CheckBox
             {
                 Text = Loc.GetString(gasName),
-                ToggleMode = true,
                 HorizontalExpand = true,
             };
 
-            button.OnToggled += _ =>
-            {
-                OnGasToggled?.Invoke(gas);
-            };
+            check.OnToggled += _ => OnGasToggled?.Invoke(gas);
 
-            _gasButtons[gas] = button;
-            GasContainer.AddChild(button);
+            _gasChecks[gas] = check;
+            GasContainer.AddChild(check);
         }
+    }
+
+    public void SetActive(bool active)
+    {
+        ToggleStatusButton.Pressed = active;
     }
 
     public void UpdateState(PortableScrubberBoundUserInterfaceState state)
     {
-        foreach (var (gas, button) in _gasButtons)
-        {
-            button.Pressed = state.FilterGases.Contains(gas);
-        }
+        ToggleStatusButton.Disabled = !state.Anchored;
+        ToggleStatusButton.ToolTip = state.Anchored
+            ? null
+            : Loc.GetString("portable-scrubber-ui-not-anchored");
+
+        foreach (var (gas, check) in _gasChecks)
+            check.Pressed = state.FilterGases.Contains(gas);
+
+        var fraction = state.MaxPressure > 0f ? state.Pressure / state.MaxPressure : 0f;
+        PressureBar.Value = Math.Clamp(fraction, 0f, 1f);
+        PressureLabel.Text = Loc.GetString("portable-scrubber-ui-pressure-value",
+            ("pressure", (int) state.Pressure),
+            ("max", (int) state.MaxPressure),
+            ("percent", (int) Math.Round(fraction * 100)));
     }
 }
