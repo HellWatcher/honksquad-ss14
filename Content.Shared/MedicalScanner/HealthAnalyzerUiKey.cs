@@ -5,8 +5,8 @@ namespace Content.Shared.MedicalScanner;
 [Serializable, NetSerializable]
 public enum HealthAnalyzerUiKey : byte
 {
-    Key,
-    //HONK START - Separate UI for the alt-verb reagent scanner.
-    Reagents,
+    Key
+    //HONK START - Alt-verb reagent scanner UI
+    , Reagents
     //HONK END
 }
