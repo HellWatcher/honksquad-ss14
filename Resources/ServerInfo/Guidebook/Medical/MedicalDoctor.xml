@@ -44,6 +44,9 @@ Many stations are stocked with kits in storage, and all medics have some equipme
 <GuideEntityEmbed Entity="EmergencyMedipen"/>
 <GuideEntityEmbed Entity="Bloodpack"/>
 <GuideEntityEmbed Entity="Gauze"/>
+<!-- HONK START - Manual resuscitator icon -->
+<GuideEntityEmbed Entity="ManualResuscitator"/>
+<!-- HONK END -->
 </Box>
 
 ## Basic Treatment and Triage
@@ -73,14 +76,5 @@ Not counting airloss, Defibrillator's can be used to revive patients under 200 t
 <GuideEntityEmbed Entity="Defibrillator"/>
 <GuideEntityEmbed Entity="Ointment"/>
 </Box>
-
-<!-- HONK START - Manual resuscitator reference -->
-## Before the Defibrillator
-A manual resuscitator buys time for a crewmate who's suffocating in crit but still breathing. Clamp it over their mouth and keep squeezing, every few seconds of uninterrupted use shaves off some of their oxygen damage. Move away, drop it, or take a hit and the cycle breaks. It only treats suffocation, so it won't fix bleeding or burns, and it is no substitute for a defibrillator on the dead. Stocked in medical belts, medkits, and NanoMed vendors.
-
-<Box>
-<GuideEntityEmbed Entity="ManualResuscitator"/>
-</Box>
-<!-- HONK END -->
 
 </Document>
