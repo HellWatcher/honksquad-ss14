@@ -96,10 +96,12 @@ public sealed class MutationSystem : EntitySystem
 
         // Hybrids have a high chance of being seedless. Balances very
         // effective hybrid crossings.
-        if (a.Name != result.Name && Random(0.7f))
+        //HONK START - 0.7f guaranteed seedless on most hybrids, which made cross-breeding a dead end. Disabled.
+        if (a.Name != result.Name && Random(0f))
         {
             result.Seedless = true;
         }
+        //HONK END
 
         return result;
     }
