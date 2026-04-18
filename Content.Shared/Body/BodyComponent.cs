@@ -9,7 +9,9 @@ namespace Content.Shared.Body;
 /// <seealso cref="BodySystem" />
 /// <seealso cref="SharedVisualBodySystem" />
 [RegisterComponent, NetworkedComponent]
-[Access(typeof(BodySystem), Other = AccessPermissions.ReadWrite)] //HONK: surgery system writes body state
+// HONK START - surgery system writes body state
+[Access(typeof(BodySystem), Other = AccessPermissions.ReadWrite)]
+// HONK END
 public sealed partial class BodyComponent : Component
 {
     public const string ContainerID = "body_organs";
