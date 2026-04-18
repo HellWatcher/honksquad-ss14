@@ -24,7 +24,9 @@
       effect: !type:PlantMutateSpeciesChange
       persists: false
     - name: Unviable
-      baseOdds: 0.109
+      # HONK START - Unviable was 3x the odds of any other stat mutation. Knock it down to match.
+      baseOdds: 0.036
+      # HONK END
       persists: false
       effect: !type:PlantChangeStat
         targetValue: Viable
@@ -149,7 +151,9 @@
         maxValue: 100
         steps: 5
     - name: ChangeSeedless
-      baseOdds: 0.036
+      # HONK START - Seedless requires hard-to-source chems to fix. Halved odds.
+      baseOdds: 0.018
+      # HONK END
       persists: false
       effect: !type:PlantChangeStat
         targetValue: Seedless
@@ -159,7 +163,9 @@
       effect: !type:PlantChangeStat
         targetValue: Ligneous
     - name: Kudzufication
-      baseOdds: 0.036
+      # HONK START - Kudzu is permanent, unfixable, and kills the tray. Quartered odds.
+      baseOdds: 0.009
+      # HONK END
       persists: false
       effect: !type:PlantChangeStat
         targetValue: TurnIntoKudzu

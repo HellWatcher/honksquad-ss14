@@ -120,7 +120,10 @@
     - !type:PlantAdjustPests
       probability: 0.025
       amount: 1
-    - !type:RobustHarvest {}
+    # HONK START - Default threshold is 30 (out of 50 cap), so any RH pump guarantees Seedless. Push it to near-cap so the trait is a tradeoff for maxing potency, not a certainty.
+    - !type:RobustHarvest
+        potencySeedlessThreshold: 49
+    # HONK END
   metabolisms:
     Bloodstream:
       effects:
