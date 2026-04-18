@@ -1,0 +1,14 @@
+<BoxContainer
+    xmlns="https://spacestation14.io"
+    Orientation="Horizontal"
+    Margin="0 0 0 5">
+    <SpriteView OverrideDirection="South" Scale="2 2" Name="SpriteView" Access="Public" SetSize="64 64" />
+    <TextureRect Name="NoDataTex" SetSize="64 64" Visible="False" Stretch="KeepAspectCentered"
+                 TexturePath="/Textures/Interface/Misc/health_analyzer_out_of_range.png" />
+    <BoxContainer Margin="5 0 0 0" Orientation="Vertical" VerticalAlignment="Top">
+        <RichTextLabel Name="NameLabel" SetWidth="150" />
+        <Label Name="SpeciesLabel" VerticalAlignment="Top" StyleClasses="LabelSubText" />
+    </BoxContainer>
+    <Label Margin="0 0 5 0" HorizontalExpand="True" HorizontalAlignment="Right" VerticalExpand="True"
+           VerticalAlignment="Top" Name="ScanModeLabel" />
+</BoxContainer>

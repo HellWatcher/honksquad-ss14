@@ -2,6 +2,7 @@ using System.Linq;
 using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Server.Medical.Components;
+using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components;
@@ -208,61 +209,60 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
             AddSolution(groups, target, bloodstream.MetabolitesSolutionName, ref bloodstream.MetabolitesSolution,
                 Loc.GetString("health-analyzer-reagent-group-metabolites"));
 
-            // Two-pass so labels can drop the index when there's only one organ of a kind.
-            var stomachs = new List<(EntityUid Uid, StomachComponent Comp)>();
-            var stomachQuery = EntityQueryEnumerator<StomachComponent, Robust.Shared.GameObjects.TransformComponent>();
-            while (stomachQuery.MoveNext(out var stomachUid, out var stomach, out _))
-            {
-                if (IsOwnedBy(stomachUid, target))
-                    stomachs.Add((stomachUid, stomach));
-            }
+            AddOrganSolutions<StomachComponent>(groups, target,
+                "health-analyzer-reagent-group-stomach",
+                "health-analyzer-reagent-group-stomach-indexed",
+                (uid, stomach) =>
+                {
+                    var handle = stomach.Solution;
+                    return _solutions.ResolveSolution(uid, StomachSystem.DefaultSolutionName, ref handle, out var sol)
+                        ? sol : null;
+                });
 
-            for (var i = 0; i < stomachs.Count; i++)
-            {
-                var (stomachUid, stomach) = stomachs[i];
-                var label = stomachs.Count > 1
-                    ? Loc.GetString("health-analyzer-reagent-group-stomach-indexed", ("index", i + 1))
-                    : Loc.GetString("health-analyzer-reagent-group-stomach");
-                AddSolution(groups, stomachUid, StomachSystem.DefaultSolutionName, ref stomach.Solution, label);
-            }
-
-            var lungs = new List<(EntityUid Uid, LungComponent Comp)>();
-            var lungQuery = EntityQueryEnumerator<LungComponent, Robust.Shared.GameObjects.TransformComponent>();
-            while (lungQuery.MoveNext(out var lungUid, out var lung, out _))
-            {
-                if (IsOwnedBy(lungUid, target))
-                    lungs.Add((lungUid, lung));
-            }
-
-            for (var i = 0; i < lungs.Count; i++)
-            {
-                var (lungUid, lung) = lungs[i];
-                var label = lungs.Count > 1
-                    ? Loc.GetString("health-analyzer-reagent-group-lung-indexed", ("index", i + 1))
-                    : Loc.GetString("health-analyzer-reagent-group-lung");
-                // LungComponent is [Access]-locked to LungSystem; copy Solution into a local
-                // so ResolveSolution's ref parameter doesn't write back through the locked field.
-                var lungHandle = lung.Solution;
-                if (_solutions.ResolveSolution(lungUid, lung.SolutionName, ref lungHandle, out var lungSolution))
-                    AddSolutionFromSolution(groups, lungSolution, label);
-            }
+            AddOrganSolutions<LungComponent>(groups, target,
+                "health-analyzer-reagent-group-lung",
+                "health-analyzer-reagent-group-lung-indexed",
+                (uid, lung) =>
+                {
+                    // LungComponent is [Access]-locked to LungSystem; copy Solution into a local
+                    // so ResolveSolution's ref parameter doesn't write back through the locked field.
+                    var handle = lung.Solution;
+                    return _solutions.ResolveSolution(uid, lung.SolutionName, ref handle, out var sol)
+                        ? sol : null;
+                });
         }
 
         var displayName = Identity.Name(target, EntityManager);
         return new HealthAnalyzerReagentState(GetNetEntity(target), displayName, groups);
     }
 
-    private bool IsOwnedBy(EntityUid child, EntityUid root)
+    private void AddOrganSolutions<TOrgan>(
+        List<HealthAnalyzerReagentGroup> groups,
+        EntityUid body,
+        string singleKey,
+        string indexedKey,
+        Func<EntityUid, TOrgan, Solution?> resolve)
+        where TOrgan : IComponent
     {
-        var xform = Transform(child);
-        var parent = xform.ParentUid;
-        while (parent.IsValid())
+        if (!TryComp<BodyComponent>(body, out var bodyComp) || bodyComp.Organs is null)
+            return;
+
+        var organs = new List<(EntityUid Uid, TOrgan Comp)>();
+        foreach (var organ in bodyComp.Organs.ContainedEntities)
         {
-            if (parent == root)
-                return true;
-            parent = Transform(parent).ParentUid;
+            if (TryComp<TOrgan>(organ, out var comp))
+                organs.Add((organ, comp));
         }
-        return false;
+
+        for (var i = 0; i < organs.Count; i++)
+        {
+            var (uid, comp) = organs[i];
+            var label = organs.Count > 1
+                ? Loc.GetString(indexedKey, ("index", i + 1))
+                : Loc.GetString(singleKey);
+            if (resolve(uid, comp) is { } sol)
+                AddSolutionFromSolution(groups, sol, label);
+        }
     }
 
     private void AddSolution(List<HealthAnalyzerReagentGroup> groups, EntityUid owner, string name,
