@@ -1,13 +1,12 @@
 using System.Linq;
 using Content.Server.Body.Components;
+using Content.Server.Body.Systems;
 using Content.Server.Medical.Components;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components;
-using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Chemistry.Reagent;
-using Content.Shared.DoAfter;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.EntityConditions;
@@ -19,34 +18,37 @@ using Content.Shared.EntityEffects.Effects.Solution;
 using Content.Shared.EntityEffects.Effects.StatusEffects;
 using Content.Shared.EntityEffects.Effects.Transform;
 using Content.Shared.FixedPoint;
-using Content.Shared.Fluids.Components;
 using Content.Shared.IdentityManagement;
+using Content.Shared.Interaction.Events;
+using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.MedicalScanner;
-using Content.Shared.PowerCell;
 using Content.Shared.RussStation.MedicalScanner;
-using Content.Shared.Verbs;
 using Robust.Server.GameObjects;
-using Robust.Shared.Audio.Systems;
+using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
+using UpstreamHealthAnalyzerSystem = Content.Server.Medical.HealthAnalyzerSystem;
 
 namespace Content.Server.RussStation.MedicalScanner;
 
 /// <summary>
-/// Adds an alt-verb on bloodstream / puddle / solution-container entities that
-/// runs a do-after and opens a separate Health Analyzer UI listing reagents
-/// (with an overdose flag).
+/// Reagent tab of the tabbed health analyzer UI. Drives the Reagents tab via
+/// <see cref="HealthAnalyzerReagentScannerComponent"/>, which sits next to upstream's
+/// <see cref="HealthAnalyzerComponent"/> so both systems can subscribe to the same
+/// events without colliding in the (component, event) subscription slot.
+///
+/// Scans only fire for mobs: upstream's AfterInteract runs its DoAfter, and we piggyback
+/// on <see cref="HealthAnalyzerDoAfterEvent"/> to push reagent state (bloodstream /
+/// metabolites / stomachs / lungs) alongside the Health tab.
 /// </summary>
 public sealed class HealthAnalyzerReagentSystem : EntitySystem
 {
+    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutions = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly PowerCellSystem _cell = default!;
+    [Dependency] private readonly TransformSystem _transform = default!;
 
-    // Cache of reagent id -> dose thresholds derived from self-referencing ReagentConditions.
-    // Each effect's Min is bucketed as either harmful or beneficial based on the effect type.
     private readonly Dictionary<string, ReagentDoseThresholds> _thresholdCache = new();
 
     public readonly record struct ReagentDoseThresholds(
@@ -59,13 +61,49 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<BloodstreamComponent, GetVerbsEvent<AlternativeVerb>>(OnGetMobVerbs);
-        SubscribeLocalEvent<PuddleComponent, GetVerbsEvent<AlternativeVerb>>(OnGetSolutionVerbs);
-        SubscribeLocalEvent<SolutionContainerManagerComponent, GetVerbsEvent<AlternativeVerb>>(OnGetSolutionVerbs);
 
-        SubscribeLocalEvent<HealthAnalyzerComponent, HealthAnalyzerReagentDoAfterEvent>(OnDoAfter);
+        // Piggyback upstream's DoAfter so one scan populates both Health and Reagents tabs.
+        SubscribeLocalEvent<HealthAnalyzerReagentScannerComponent, HealthAnalyzerDoAfterEvent>(OnHealthDoAfter,
+            after: new[] { typeof(UpstreamHealthAnalyzerSystem) });
+
+        SubscribeLocalEvent<HealthAnalyzerReagentScannerComponent, DroppedEvent>(OnDropped);
+        SubscribeLocalEvent<HealthAnalyzerReagentScannerComponent, EntGotInsertedIntoContainerMessage>(OnInsertedIntoContainer);
+        SubscribeLocalEvent<HealthAnalyzerReagentScannerComponent, ItemToggledEvent>(OnToggled);
 
         SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
+    }
+
+    public override void Update(float frameTime)
+    {
+        // Mirrors upstream HealthAnalyzerSystem.Update: rate limit, range-check, edge-paused on range exit.
+        var query = EntityQueryEnumerator<HealthAnalyzerReagentScannerComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var scanner, out var xform))
+        {
+            if (scanner.ReagentScanTarget is not { } target)
+                continue;
+
+            if (scanner.NextReagentUpdate > _timing.CurTime)
+                continue;
+
+            if (Deleted(target))
+            {
+                StopReagentScan((uid, scanner));
+                continue;
+            }
+
+            scanner.NextReagentUpdate = _timing.CurTime + scanner.ReagentUpdateInterval;
+
+            var targetCoords = Transform(target).Coordinates;
+            if (scanner.MaxReagentScanRange != null
+                && !_transform.InRange(targetCoords, xform.Coordinates, scanner.MaxReagentScanRange.Value))
+            {
+                PauseReagentScan((uid, scanner), target);
+                continue;
+            }
+
+            scanner.IsReagentScanActive = true;
+            PushReagentState(uid, target, active: true);
+        }
     }
 
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs args)
@@ -74,70 +112,84 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
             _thresholdCache.Clear();
     }
 
-    private void OnGetMobVerbs(EntityUid uid, BloodstreamComponent comp, GetVerbsEvent<AlternativeVerb> args)
-        => TryAddVerb(uid, args);
-
-    private void OnGetSolutionVerbs<T>(EntityUid uid, T comp, GetVerbsEvent<AlternativeVerb> args) where T : Component
-        => TryAddVerb(uid, args);
-
-    private void TryAddVerb(EntityUid target, GetVerbsEvent<AlternativeVerb> args)
+    private void OnHealthDoAfter(Entity<HealthAnalyzerReagentScannerComponent> ent, ref HealthAnalyzerDoAfterEvent args)
     {
-        if (!args.CanAccess || !args.CanInteract || args.Hands == null)
+        // Upstream sets Handled on success; skip only if Cancelled / missing target.
+        if (args.Cancelled || args.Target is not { } target)
             return;
 
-        if (args.Using is not { } analyzer || !TryComp<HealthAnalyzerComponent>(analyzer, out var analyzerComp))
+        if (!_ui.HasUi(ent.Owner, HealthAnalyzerUiKey.Key))
             return;
 
-        var user = args.User;
-        var targetCapture = target;
+        // Drop any prior scan pin so switching targets doesn't keep streaming the old mob.
+        StopReagentScan(ent);
 
-        var verb = new AlternativeVerb
+        // Only track live reagent updates if the mob actually exposes reagents worth watching.
+        // PreferredTab = Health so a fresh scan defaults back to the Health tab even if the
+        // player had switched to Reagents on a prior scan.
+        if (!HasComp<BloodstreamComponent>(target))
         {
-            Text = Loc.GetString("health-analyzer-verb-scan-reagents"),
-            Icon = new Robust.Shared.Utility.SpriteSpecifier.Texture(new Robust.Shared.Utility.ResPath("/Textures/Interface/VerbIcons/dot.svg.192dpi.png")),
-            Act = () => StartScan(user, (analyzer, analyzerComp), targetCapture),
-        };
-        args.Verbs.Add(verb);
-    }
-
-    private void StartScan(EntityUid user, Entity<HealthAnalyzerComponent> analyzer, EntityUid target)
-    {
-        if (!_cell.HasDrawCharge(analyzer.Owner, user: user))
-            return;
-
-        _audio.PlayPvs(analyzer.Comp.ScanningBeginSound, analyzer);
-
-        _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, user, analyzer.Comp.ScanDelay,
-            new HealthAnalyzerReagentDoAfterEvent(), analyzer, target: target, used: analyzer)
-        {
-            NeedHand = true,
-            BreakOnMove = true,
-        });
-    }
-
-    private void OnDoAfter(Entity<HealthAnalyzerComponent> analyzer, ref HealthAnalyzerReagentDoAfterEvent args)
-    {
-        if (args.Handled || args.Cancelled || args.Target is not { } target)
-            return;
-
-        if (!_cell.HasDrawCharge(analyzer.Owner, user: args.User))
-            return;
-
-        if (!analyzer.Comp.Silent)
-            _audio.PlayPvs(analyzer.Comp.ScanningEndSound, analyzer);
-
-        if (!_ui.HasUi(analyzer.Owner, HealthAnalyzerUiKey.Reagents))
-        {
-            args.Handled = true;
+            PushEmptyReagentState(ent.Owner, target, preferredTab: HealthAnalyzerTab.Health);
             return;
         }
 
-        var state = BuildState(target);
-        _ui.OpenUi(analyzer.Owner, HealthAnalyzerUiKey.Reagents, args.User);
-        _ui.ServerSendUiMessage(analyzer.Owner, HealthAnalyzerUiKey.Reagents,
-            new HealthAnalyzerReagentScannedMessage(state), args.User);
+        ent.Comp.ReagentScanTarget = target;
+        ent.Comp.NextReagentUpdate = _timing.CurTime + ent.Comp.ReagentUpdateInterval;
+        ent.Comp.IsReagentScanActive = true;
+        PushReagentState(ent.Owner, target, active: true, preferredTab: HealthAnalyzerTab.Health);
+    }
 
-        args.Handled = true;
+    private void PushEmptyReagentState(EntityUid analyzer, EntityUid target, HealthAnalyzerTab? preferredTab = null)
+    {
+        if (!_ui.HasUi(analyzer, HealthAnalyzerUiKey.Key))
+            return;
+
+        var displayName = Identity.Name(target, EntityManager);
+        var empty = new HealthAnalyzerReagentState(GetNetEntity(target), displayName,
+            new List<HealthAnalyzerReagentGroup>(), active: true, preferredTab: preferredTab);
+        _ui.SetUiState(analyzer, HealthAnalyzerUiKey.Key, empty);
+    }
+
+    private void PushReagentState(EntityUid analyzer, EntityUid target, bool active, HealthAnalyzerTab? preferredTab = null)
+    {
+        if (!_ui.HasUi(analyzer, HealthAnalyzerUiKey.Key))
+            return;
+
+        var state = BuildState(target);
+        state.Active = active;
+        state.PreferredTab = preferredTab;
+        _ui.SetUiState(analyzer, HealthAnalyzerUiKey.Key, state);
+    }
+
+    private void PauseReagentScan(Entity<HealthAnalyzerReagentScannerComponent> ent, EntityUid target)
+    {
+        if (!ent.Comp.IsReagentScanActive)
+            return;
+
+        ent.Comp.IsReagentScanActive = false;
+        PushReagentState(ent.Owner, target, active: false);
+    }
+
+    private void StopReagentScan(Entity<HealthAnalyzerReagentScannerComponent> ent)
+    {
+        ent.Comp.ReagentScanTarget = null;
+        ent.Comp.IsReagentScanActive = false;
+    }
+
+    private void OnDropped(Entity<HealthAnalyzerReagentScannerComponent> ent, ref DroppedEvent args)
+    {
+        StopReagentScan(ent);
+        if (_ui.HasUi(ent.Owner, HealthAnalyzerUiKey.Key))
+            _ui.CloseUi(ent.Owner, HealthAnalyzerUiKey.Key);
+    }
+
+    private void OnInsertedIntoContainer(Entity<HealthAnalyzerReagentScannerComponent> ent, ref EntGotInsertedIntoContainerMessage args)
+        => StopReagentScan(ent);
+
+    private void OnToggled(Entity<HealthAnalyzerReagentScannerComponent> ent, ref ItemToggledEvent args)
+    {
+        if (!args.Activated)
+            StopReagentScan(ent);
     }
 
     public HealthAnalyzerReagentState BuildState(EntityUid target)
@@ -146,38 +198,53 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
 
         if (TryComp<BloodstreamComponent>(target, out var bloodstream))
         {
+            // Reagent OD/UD thresholds are calibrated against whole-reagent doses in the blood.
+            // Metabolites are the trickle of in-progress metabolism output — their quantities
+            // never reach those thresholds, so flagging them would be misleading noise. Only the
+            // Blood group gets dose flags; metabolites / stomach / lung / puddle / container
+            // entries pass false and render plain "{reagent}: Nu" without the dose chrome.
             AddSolution(groups, target, bloodstream.BloodSolutionName, ref bloodstream.BloodSolution,
-                Loc.GetString("health-analyzer-reagent-group-blood"));
+                Loc.GetString("health-analyzer-reagent-group-blood"), showDoseFlags: true);
             AddSolution(groups, target, bloodstream.MetabolitesSolutionName, ref bloodstream.MetabolitesSolution,
                 Loc.GetString("health-analyzer-reagent-group-metabolites"));
 
-            // Stomachs live on body parts. Walk the body and find all StomachComponents.
-            var stomachIndex = 1;
+            // Two-pass so labels can drop the index when there's only one organ of a kind.
+            var stomachs = new List<(EntityUid Uid, StomachComponent Comp)>();
             var stomachQuery = EntityQueryEnumerator<StomachComponent, Robust.Shared.GameObjects.TransformComponent>();
-            while (stomachQuery.MoveNext(out var stomachUid, out var stomach, out var xform))
+            while (stomachQuery.MoveNext(out var stomachUid, out var stomach, out _))
             {
-                if (!IsOwnedBy(stomachUid, target))
-                    continue;
+                if (IsOwnedBy(stomachUid, target))
+                    stomachs.Add((stomachUid, stomach));
+            }
 
-                var label = Loc.GetString("health-analyzer-reagent-group-stomach", ("index", stomachIndex++));
+            for (var i = 0; i < stomachs.Count; i++)
+            {
+                var (stomachUid, stomach) = stomachs[i];
+                var label = stomachs.Count > 1
+                    ? Loc.GetString("health-analyzer-reagent-group-stomach-indexed", ("index", i + 1))
+                    : Loc.GetString("health-analyzer-reagent-group-stomach");
                 AddSolution(groups, stomachUid, StomachSystem.DefaultSolutionName, ref stomach.Solution, label);
             }
-        }
 
-        if (TryComp<PuddleComponent>(target, out var puddle))
-        {
-            AddSolution(groups, target, puddle.SolutionName, ref puddle.Solution,
-                Loc.GetString("health-analyzer-reagent-group-puddle"));
-        }
-        else if (HasComp<SolutionContainerManagerComponent>(target))
-        {
-            // Generic solution container (drink, beaker, pill bottle, ...)
-            foreach (var (solutionName, soln) in _solutions.EnumerateSolutions(target))
+            var lungs = new List<(EntityUid Uid, LungComponent Comp)>();
+            var lungQuery = EntityQueryEnumerator<LungComponent, Robust.Shared.GameObjects.TransformComponent>();
+            while (lungQuery.MoveNext(out var lungUid, out var lung, out _))
             {
-                var label = string.IsNullOrEmpty(solutionName)
-                    ? Loc.GetString("health-analyzer-reagent-group-container-unnamed")
-                    : Loc.GetString("health-analyzer-reagent-group-container-named", ("name", solutionName!));
-                AddSolutionFromEntity(groups, soln, label);
+                if (IsOwnedBy(lungUid, target))
+                    lungs.Add((lungUid, lung));
+            }
+
+            for (var i = 0; i < lungs.Count; i++)
+            {
+                var (lungUid, lung) = lungs[i];
+                var label = lungs.Count > 1
+                    ? Loc.GetString("health-analyzer-reagent-group-lung-indexed", ("index", i + 1))
+                    : Loc.GetString("health-analyzer-reagent-group-lung");
+                // LungComponent is [Access]-locked to LungSystem; copy Solution into a local
+                // so ResolveSolution's ref parameter doesn't write back through the locked field.
+                var lungHandle = lung.Solution;
+                if (_solutions.ResolveSolution(lungUid, lung.SolutionName, ref lungHandle, out var lungSolution))
+                    AddSolutionFromSolution(groups, lungSolution, label);
             }
         }
 
@@ -199,25 +266,16 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
     }
 
     private void AddSolution(List<HealthAnalyzerReagentGroup> groups, EntityUid owner, string name,
-        ref Entity<SolutionComponent>? handle, string label)
+        ref Entity<SolutionComponent>? handle, string label, bool showDoseFlags = false)
     {
         if (!_solutions.ResolveSolution(owner, name, ref handle, out var solution))
             return;
 
-        AddSolutionFromSolution(groups, solution, label);
+        AddSolutionFromSolution(groups, solution, label, showDoseFlags);
     }
 
-    private void AddSolutionFromEntity(List<HealthAnalyzerReagentGroup> groups,
-        Entity<SolutionComponent> handle, string label)
+    private void AddSolutionFromSolution(List<HealthAnalyzerReagentGroup> groups, Solution solution, string label, bool showDoseFlags = false)
     {
-        AddSolutionFromSolution(groups, handle.Comp.Solution, label);
-    }
-
-    private void AddSolutionFromSolution(List<HealthAnalyzerReagentGroup> groups, Solution solution, string label)
-    {
-        if (solution.Volume <= FixedPoint2.Zero)
-            return;
-
         var entries = new List<HealthAnalyzerReagentEntry>(solution.Contents.Count);
         foreach (var (id, qty) in solution.Contents
                      .Select(rq => (rq.Reagent.Prototype, rq.Quantity))
@@ -226,15 +284,15 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
             if (!_proto.TryIndex<ReagentPrototype>(id, out var protoData))
                 continue;
 
-            var thresholds = GetDoseThresholds(protoData);
-            // OD: a harmful effect is currently active. Either the quantity is at or above
-            // a min-gated harmful threshold, or at or below a max-gated harmful threshold
-            // (the "harmful while you have too little" pattern, e.g. Fresium freezing your insides).
-            var od = (thresholds.HarmfulMin.HasValue && qty >= thresholds.HarmfulMin.Value)
-                  || (thresholds.HarmfulMax.HasValue && qty <= thresholds.HarmfulMax.Value);
-            // UD: a beneficial gating threshold exists and the current quantity is below it.
-            // OD takes precedence so we don't double-flag.
-            var ud = !od && thresholds.BeneficialMin.HasValue && qty < thresholds.BeneficialMin.Value;
+            var od = false;
+            var ud = false;
+            if (showDoseFlags)
+            {
+                var thresholds = GetDoseThresholds(protoData);
+                od = (thresholds.HarmfulMin.HasValue && qty >= thresholds.HarmfulMin.Value)
+                     || (thresholds.HarmfulMax.HasValue && qty <= thresholds.HarmfulMax.Value);
+                ud = !od && thresholds.BeneficialMin.HasValue && qty < thresholds.BeneficialMin.Value;
+            }
             entries.Add(new HealthAnalyzerReagentEntry(id, protoData.LocalizedName, protoData.SubstanceColor, qty, od, ud));
         }
 
@@ -243,16 +301,7 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
 
     /// <summary>
     /// Walks a reagent's metabolisms looking for self-referencing <see cref="ReagentCondition"/>s
-    /// (i.e. the reagent gating its own effects by quantity) and buckets the bounds into
-    /// harmful or beneficial thresholds based on the effect type. Tracks both <c>min:</c> and
-    /// <c>max:</c> on harmful effects so "ideal range" reagents (e.g. Fresium, harmful both
-    /// when too low and too high) get flagged in either direction. The classifier recognises
-    /// pure-flavor effect types (emotes, popups, status effects, self-decay) as neutral so
-    /// reagents like Happiness — whose only gated effects are emotes — don't get false-flagged.
-    ///
-    /// Limitations: ignores <see cref="NestedCondition"/> wrappers, ignores cross-reagent gating,
-    /// ignores inverted <see cref="ReagentCondition"/>s, and doesn't track BeneficialMax (a
-    /// beneficial effect that fires only below a cap is rare and the UI has no good word for it).
+    /// and buckets the bounds into harmful or beneficial thresholds based on the effect type.
     /// </summary>
     public ReagentDoseThresholds GetDoseThresholds(ReagentPrototype proto)
     {
@@ -289,8 +338,6 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
                     {
                         if (selfMin is { } hMin && (harmfulMin is null || hMin < harmfulMin.Value))
                             harmfulMin = hMin;
-                        // Take the largest max across harmful effects so the union of
-                        // "harmful below" ranges covers any qty <= harmfulMax.
                         if (selfMax is { } hMax && (harmfulMax is null || hMax > harmfulMax.Value))
                             harmfulMax = hMax;
                     }
@@ -313,7 +360,6 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
                 continue;
             if (rc.Reagent != reagentId)
                 continue;
-            // Inverted ReagentConditions flip the meaning; rather than guess, skip them.
             if (rc.Inverted)
                 continue;
 
@@ -325,13 +371,6 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
         return (min, max);
     }
 
-    /// <summary>
-    /// Buckets an effect into harmful, beneficial, or neutral. The default is harmful so
-    /// uncategorised side-effect types (Vomit, Drunk, Jitter, Polymorph, …) still get OD-flagged,
-    /// which matches the YAML tendency for self-gated effects to be downsides. Specific types
-    /// known to carry no inherent classification (pure-flavor emotes, popups, opaque status
-    /// effects, self-decay) opt out as neutral so they don't trigger false positives.
-    /// </summary>
     private static EffectClass ClassifyEffect(EntityEffect effect, string reagentId)
     {
         switch (effect)
@@ -342,9 +381,6 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
                 return ClassifyDamageValues(ehc.Damage.Values);
 
             case AdjustReagent ar:
-                // Self-targeted decay (negative amount) is metabolism speed-up, not harm.
-                // Self-targeted accumulation is harmful (the reagent makes more of itself).
-                // Cross-reagent adjustments are too context-dependent to classify here.
                 if (ar.Reagent == reagentId)
                     return ar.Amount < FixedPoint2.Zero ? EffectClass.Neutral : EffectClass.Harmful;
                 return EffectClass.Neutral;
@@ -356,9 +392,6 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
                     return EffectClass.Beneficial;
                 return EffectClass.Neutral;
 
-            // Pure flavor / opaque effects: no inherent harm or benefit we can read from
-            // the YAML alone. Resolving the referenced status proto would mean a deeper walk
-            // and is rarely worth it — defaulting to neutral avoids false-positive ODs.
             case PopupMessage:
             case Emote:
             case GenericStatusEffect:

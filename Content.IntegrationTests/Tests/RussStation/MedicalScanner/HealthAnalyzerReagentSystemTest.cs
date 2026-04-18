@@ -1,10 +1,12 @@
 using System.Linq;
 using Content.Server.RussStation.MedicalScanner;
+using Content.Shared.Body.Components;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.FixedPoint;
 using Robust.Shared.GameObjects;
+using Robust.Shared.Localization;
 using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests.RussStation.MedicalScanner;
@@ -15,13 +17,20 @@ public sealed class HealthAnalyzerReagentSystemTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
+# Minimal dummy with a bloodstream so BuildState's mob branch has something to populate.
+# BloodstreamSystem.OnComponentInit creates and pre-fills the bloodstream/metabolites
+# solutions, so the test can drop Bicaridine straight in without extra scaffolding.
 - type: entity
-  id: HealthAnalyzerReagentTestBeaker
+  id: HealthAnalyzerReagentMobDummy
   components:
   - type: SolutionContainerManager
-    solutions:
-      beaker:
-        maxVol: 50
+  - type: Bloodstream
+    bloodlossDamage:
+      types:
+        Bloodloss: 1
+    bloodlossHealDamage:
+      types:
+        Bloodloss: -1
 
 # Synthetic reagent whose only self-gated effect is a healing HealthChange,
 # so its threshold should be classified as beneficial (UD when below).
@@ -69,7 +78,7 @@ public sealed class HealthAnalyzerReagentSystemTest
 
 # Synthetic reagent that is harmful when too low (slow movement gated by max:)
 # AND harmful when too high (HealthChange gated by min:). Models the Fresium
-# 'no good range' pattern. Should OD-flag at every nonzero quantity.
+# 'no good range' pattern. Should produce both a HarmfulMin and a HarmfulMax.
 - type: reagent
   id: TestRangeHarmfulReagent
   name: reagent-name-nothing
@@ -113,84 +122,52 @@ public sealed class HealthAnalyzerReagentSystemTest
           min: 1
 ";
 
-    [Test]
-    public async Task BicaridineBelowAndAboveOverdoseFlagged()
-    {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
-        var entityManager = server.ResolveDependency<IEntityManager>();
-        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
-        var mapData = await pair.CreateTestMap();
-
-        await server.WaitAssertion(() =>
-        {
-            var beaker = entityManager.SpawnEntity("HealthAnalyzerReagentTestBeaker", mapData.GridCoords);
-            Assert.That(containerSystem.TryGetSolution(beaker, "beaker", out var solutionEnt, out _));
-
-            // Below OD threshold (Bicaridine min:15 in YAML, gating harmful Asphyxiation/Poison).
-            containerSystem.TryAddSolution(solutionEnt!.Value, new Solution("Bicaridine", FixedPoint2.New(10)));
-
-            var stateBelow = system.BuildState(beaker);
-            var groupBelow = stateBelow.Groups.Single();
-            var entryBelow = groupBelow.Reagents.Single(r => r.ReagentId == "Bicaridine");
-            Assert.That(entryBelow.Quantity, Is.EqualTo(FixedPoint2.New(10)));
-            Assert.That(entryBelow.Overdose, Is.False, "Bicaridine at 10u should not be flagged as overdose.");
-            Assert.That(entryBelow.Underdose, Is.False, "Bicaridine has no beneficial dose gate; should never be UD.");
-
-            // Top up past OD threshold.
-            containerSystem.TryAddSolution(solutionEnt.Value, new Solution("Bicaridine", FixedPoint2.New(10)));
-
-            var stateAbove = system.BuildState(beaker);
-            var groupAbove = stateAbove.Groups.Single();
-            var entryAbove = groupAbove.Reagents.Single(r => r.ReagentId == "Bicaridine");
-            Assert.That(entryAbove.Quantity, Is.EqualTo(FixedPoint2.New(20)));
-            Assert.That(entryAbove.Overdose, Is.True, "Bicaridine at 20u should be flagged as overdose.");
-        });
-
-        await pair.CleanReturnAsync();
-    }
-
-    [Test]
-    public async Task BeneficialGatedReagentFlagsUnderdose()
-    {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
-        var entityManager = server.ResolveDependency<IEntityManager>();
-        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
-        var mapData = await pair.CreateTestMap();
-
-        await server.WaitAssertion(() =>
-        {
-            var beaker = entityManager.SpawnEntity("HealthAnalyzerReagentTestBeaker", mapData.GridCoords);
-            Assert.That(containerSystem.TryGetSolution(beaker, "beaker", out var solutionEnt, out _));
-
-            // Below the beneficial activation threshold (TestUnderdoseReagent min:8).
-            containerSystem.TryAddSolution(solutionEnt!.Value, new Solution("TestUnderdoseReagent", FixedPoint2.New(5)));
-
-            var stateBelow = system.BuildState(beaker);
-            var entryBelow = stateBelow.Groups.Single().Reagents.Single(r => r.ReagentId == "TestUnderdoseReagent");
-            Assert.That(entryBelow.Underdose, Is.True, "Beneficial reagent below activation min should be UD.");
-            Assert.That(entryBelow.Overdose, Is.False);
-
-            // At the threshold the beneficial effect is active; no flag either way.
-            containerSystem.TryAddSolution(solutionEnt.Value, new Solution("TestUnderdoseReagent", FixedPoint2.New(5)));
-
-            var stateActive = system.BuildState(beaker);
-            var entryActive = stateActive.Groups.Single().Reagents.Single(r => r.ReagentId == "TestUnderdoseReagent");
-            Assert.That(entryActive.Quantity, Is.EqualTo(FixedPoint2.New(10)));
-            Assert.That(entryActive.Underdose, Is.False, "Beneficial reagent at/above activation should not be UD.");
-            Assert.That(entryActive.Overdose, Is.False);
-        });
-
-        await pair.CleanReturnAsync();
-    }
-
     private static readonly ProtoId<ReagentPrototype> Bicaridine = "Bicaridine";
 
+    // Test-only reagents from [TestPrototypes] above. Kept as `const string` (not
+    // ProtoId<T>) so the YAML linter skips them; passing via a named const also
+    // satisfies RA0033, which only rejects inline string literals.
+    private const string TestUnderdoseReagent = "TestUnderdoseReagent";
+    private const string TestNeutralFlavorReagent = "TestNeutralFlavorReagent";
+    private const string TestRangeHarmfulReagent = "TestRangeHarmfulReagent";
+    private const string TestSelfDecayReagent = "TestSelfDecayReagent";
+
     [Test]
-    public async Task OverdoseHeuristicMatchesYamlForBicaridine()
+    public async Task MobScanPopulatesBloodGroupWithOverdoseFlag()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var mob = entityManager.SpawnEntity("HealthAnalyzerReagentMobDummy", mapData.GridCoords);
+            var bloodstream = entityManager.GetComponent<BloodstreamComponent>(mob);
+            Assert.That(containerSystem.TryGetSolution(mob, bloodstream.BloodSolutionName,
+                out var bloodHandle, out _), "BloodstreamSystem should have created the blood solution on init.");
+
+            // Push past Bicaridine's 15u OD threshold. 20u is enough margin to leave the
+            // pre-filled blood below its own cap even after the BLOOD reference fills it.
+            containerSystem.TryAddSolution(bloodHandle!.Value, new Solution("Bicaridine", FixedPoint2.New(20)));
+
+            var state = system.BuildState(mob);
+            var bloodGroup = state.Groups.Single(g => g.Label == Loc.GetString("health-analyzer-reagent-group-blood"));
+            var bicaridine = bloodGroup.Reagents.Single(r => r.ReagentId == "Bicaridine");
+
+            Assert.That(bicaridine.Quantity, Is.EqualTo(FixedPoint2.New(20)));
+            Assert.That(bicaridine.Overdose, Is.True,
+                "Blood is the only group that carries dose flags; 20u Bicaridine should OD.");
+            Assert.That(bicaridine.Underdose, Is.False);
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task BicaridineThresholdsMatchYaml()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
@@ -200,9 +177,9 @@ public sealed class HealthAnalyzerReagentSystemTest
 
         await server.WaitAssertion(() =>
         {
-            var bicaridine = protoMan.Index(Bicaridine);
-            var thresholds = system.GetDoseThresholds(bicaridine);
-            Assert.That(thresholds.HarmfulMin, Is.Not.Null, "Expected Bicaridine to have a harmful dose threshold from its metabolism conditions.");
+            var thresholds = system.GetDoseThresholds(protoMan.Index(Bicaridine));
+            Assert.That(thresholds.HarmfulMin, Is.Not.Null,
+                "Bicaridine's metabolism gates harmful effects on a min threshold.");
             Assert.That(thresholds.HarmfulMin!.Value, Is.EqualTo(FixedPoint2.New(15)));
             Assert.That(thresholds.HarmfulMax, Is.Null, "Bicaridine has no self-gated max threshold.");
             Assert.That(thresholds.BeneficialMin, Is.Null, "Bicaridine has no self-gated beneficial effect.");
@@ -212,86 +189,84 @@ public sealed class HealthAnalyzerReagentSystemTest
     }
 
     [Test]
-    public async Task PureFlavorReagentNeverFlagged()
+    public async Task BeneficialGatedReagentClassifiesAsBeneficial()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
         var system = entityManager.System<HealthAnalyzerReagentSystem>();
-        var mapData = await pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
-            var beaker = entityManager.SpawnEntity("HealthAnalyzerReagentTestBeaker", mapData.GridCoords);
-            Assert.That(containerSystem.TryGetSolution(beaker, "beaker", out var solutionEnt, out _));
-
-            // Well above the gating min — but the gated effects are pure flavor, so neither flag should fire.
-            containerSystem.TryAddSolution(solutionEnt!.Value, new Solution("TestNeutralFlavorReagent", FixedPoint2.New(40)));
-
-            var state = system.BuildState(beaker);
-            var entry = state.Groups.Single().Reagents.Single(r => r.ReagentId == "TestNeutralFlavorReagent");
-            Assert.That(entry.Overdose, Is.False, "Pure-flavor (Emote/PopupMessage) reagents must not OD-flag.");
-            Assert.That(entry.Underdose, Is.False, "Pure-flavor reagents must not UD-flag.");
+            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestUnderdoseReagent));
+            Assert.That(thresholds.BeneficialMin, Is.Not.Null,
+                "Healing-gated reagents should surface a beneficial activation threshold.");
+            Assert.That(thresholds.BeneficialMin!.Value, Is.EqualTo(FixedPoint2.New(8)));
+            Assert.That(thresholds.HarmfulMin, Is.Null);
+            Assert.That(thresholds.HarmfulMax, Is.Null);
         });
 
         await pair.CleanReturnAsync();
     }
 
     [Test]
-    public async Task RangeHarmfulReagentFlagsBothLowAndHigh()
+    public async Task PureFlavorReagentProducesNoThresholds()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
         var system = entityManager.System<HealthAnalyzerReagentSystem>();
-        var mapData = await pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
-            var beaker = entityManager.SpawnEntity("HealthAnalyzerReagentTestBeaker", mapData.GridCoords);
-            Assert.That(containerSystem.TryGetSolution(beaker, "beaker", out var solutionEnt, out _));
-
-            // Inside the harmful-low range (max:10 walkSpeedModifier 0.5).
-            containerSystem.TryAddSolution(solutionEnt!.Value, new Solution("TestRangeHarmfulReagent", FixedPoint2.New(5)));
-            var stateLow = system.BuildState(beaker);
-            var entryLow = stateLow.Groups.Single().Reagents.Single(r => r.ReagentId == "TestRangeHarmfulReagent");
-            Assert.That(entryLow.Overdose, Is.True, "Below the max:10 slow gate, the harmful effect is active — should OD.");
-
-            // Push past the harmful-high gate (min:20 Poison).
-            containerSystem.TryAddSolution(solutionEnt.Value, new Solution("TestRangeHarmfulReagent", FixedPoint2.New(20)));
-            var stateHigh = system.BuildState(beaker);
-            var entryHigh = stateHigh.Groups.Single().Reagents.Single(r => r.ReagentId == "TestRangeHarmfulReagent");
-            Assert.That(entryHigh.Quantity, Is.EqualTo(FixedPoint2.New(25)));
-            Assert.That(entryHigh.Overdose, Is.True, "Above the min:20 poison gate, the harmful effect is active — should OD.");
+            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestNeutralFlavorReagent));
+            Assert.That(thresholds.HarmfulMin, Is.Null, "Emote/PopupMessage effects must not generate harmful thresholds.");
+            Assert.That(thresholds.HarmfulMax, Is.Null);
+            Assert.That(thresholds.BeneficialMin, Is.Null);
         });
 
         await pair.CleanReturnAsync();
     }
 
     [Test]
-    public async Task SelfDecayReagentNotFlaggedHarmful()
+    public async Task RangeHarmfulReagentProducesBothBounds()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
         var system = entityManager.System<HealthAnalyzerReagentSystem>();
-        var mapData = await pair.CreateTestMap();
 
         await server.WaitAssertion(() =>
         {
-            var beaker = entityManager.SpawnEntity("HealthAnalyzerReagentTestBeaker", mapData.GridCoords);
-            Assert.That(containerSystem.TryGetSolution(beaker, "beaker", out var solutionEnt, out _));
+            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestRangeHarmfulReagent));
+            Assert.That(thresholds.HarmfulMax, Is.Not.Null, "max-gated slow effect should surface as HarmfulMax.");
+            Assert.That(thresholds.HarmfulMax!.Value, Is.EqualTo(FixedPoint2.New(10)));
+            Assert.That(thresholds.HarmfulMin, Is.Not.Null, "min-gated poison effect should surface as HarmfulMin.");
+            Assert.That(thresholds.HarmfulMin!.Value, Is.EqualTo(FixedPoint2.New(20)));
+            Assert.That(thresholds.BeneficialMin, Is.Null);
+        });
 
-            // Well above the self-decay min:1 — should NOT OD-flag because self-decay is metabolism speed-up, not harm.
-            containerSystem.TryAddSolution(solutionEnt!.Value, new Solution("TestSelfDecayReagent", FixedPoint2.New(20)));
+        await pair.CleanReturnAsync();
+    }
 
-            var state = system.BuildState(beaker);
-            var entry = state.Groups.Single().Reagents.Single(r => r.ReagentId == "TestSelfDecayReagent");
-            Assert.That(entry.Overdose, Is.False, "Self-decaying AdjustReagent (negative amount) must not OD-flag.");
-            Assert.That(entry.Underdose, Is.False);
+    [Test]
+    public async Task SelfDecayReagentProducesNoThresholds()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var protoMan = server.ResolveDependency<IPrototypeManager>();
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+
+        await server.WaitAssertion(() =>
+        {
+            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestSelfDecayReagent));
+            Assert.That(thresholds.HarmfulMin, Is.Null, "Self-decaying AdjustReagent (negative amount) must not be harmful.");
+            Assert.That(thresholds.HarmfulMax, Is.Null);
+            Assert.That(thresholds.BeneficialMin, Is.Null);
         });
 
         await pair.CleanReturnAsync();
