@@ -401,6 +401,12 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (Terminating(uid))
             return;
 
+        // PlaceNextTo inside OnBeingCarriedShutdown fires a parent change mid-teardown.
+        // At that point this component is already Stopping; re-entering Drop would call
+        // RemComp on the Stopping ActiveCarrierComponent and trip LifeShutdown's assert.
+        if (component.LifeStage >= ComponentLifeStage.Stopping)
+            return;
+
         if (Transform(uid).ParentUid != component.Carrier)
             Drop(component.Carrier);
     }

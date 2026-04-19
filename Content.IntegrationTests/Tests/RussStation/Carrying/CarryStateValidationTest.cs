@@ -4,6 +4,7 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.RussStation.Carrying.Components;
 using Content.Shared.RussStation.Carrying.Systems;
+using Content.Shared.Standing;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Carrying;
@@ -143,6 +144,84 @@ public sealed class CarryStateValidationTest
 
             Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False,
                 "Deleting the carrier must remove the target marker, regardless of component shutdown order");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Dropping a live carry (both entities alive, not terminating) must run the
+    /// teardown cleanly. OnBeingCarriedShutdown calls PlaceNextTo to reparent the
+    /// target away from the carrier, which fires a parent-change message mid-shutdown.
+    /// Without a LifeStage guard on OnCarriedParentChanged that reparent re-enters
+    /// Drop and trips LifeShutdown's debug assert when it tries to RemComp an
+    /// already-Stopping ActiveCarrierComponent.
+    /// </summary>
+    [Test]
+    public async Task DropLiveCarryDoesNotRecurse()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var carrying = server.System<SharedCarryingSystem>();
+        var mobState = server.System<MobStateSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var carrier = entityManager.SpawnEntity("CarryValidationCarrier", mapData.GridCoords);
+            var target = entityManager.SpawnEntity("CarryValidationTarget", mapData.GridCoords);
+
+            mobState.ChangeMobState(target, MobState.Critical);
+            carrying.Carry(carrier, target);
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True);
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.True);
+
+            Assert.DoesNotThrow(() => carrying.Drop(carrier),
+                "Drop on a live carry must not recurse through OnCarriedParentChanged when PlaceNextTo reparents the target mid-shutdown");
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False,
+                "Carrier marker must be cleared after Drop");
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False,
+                "Target marker must be cleared after Drop");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// A DownedEvent on the carrier (fired e.g. from buckling the carrier into a chair
+    /// via StandingStateSystem.Down) triggers Drop. This exercises the same mid-shutdown
+    /// reparent as the fireman-carry crash path but entered from OnCarrierDowned rather
+    /// than OnVirtualItemDeleted.
+    /// </summary>
+    [Test]
+    public async Task CarrierDownedDropsCarryCleanly()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var carrying = server.System<SharedCarryingSystem>();
+        var mobState = server.System<MobStateSystem>();
+        var standing = server.System<StandingStateSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var carrier = entityManager.SpawnEntity("CarryValidationCarrier", mapData.GridCoords);
+            var target = entityManager.SpawnEntity("CarryValidationTarget", mapData.GridCoords);
+
+            mobState.ChangeMobState(target, MobState.Critical);
+            carrying.Carry(carrier, target);
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True);
+
+            Assert.DoesNotThrow(() => standing.Down(carrier),
+                "Downing the carrier must cleanly drop the carry without recursing through OnCarriedParentChanged");
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False);
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False);
         });
 
         await pair.CleanReturnAsync();
