@@ -420,8 +420,11 @@ public abstract class SharedCarryingSystem : EntitySystem
         var carrier = component.Carrier;
 
         // Remove the symmetric carrier-side marker first. Skip if the carrier is itself
-        // terminating — its own component shutdown is already running the symmetric path.
-        if (!Terminating(carrier) && HasComp<ActiveCarrierComponent>(carrier))
+        // terminating, or if its marker is already in shutdown — HasComp stays true during
+        // ComponentShutdown, so without the LifeStage guard the two handlers recurse.
+        if (!Terminating(carrier)
+            && TryComp<ActiveCarrierComponent>(carrier, out var activeComp)
+            && activeComp.LifeStage < ComponentLifeStage.Stopping)
             RemComp<ActiveCarrierComponent>(carrier);
 
         if (Exists(carrier) && !Terminating(carrier))
@@ -470,10 +473,12 @@ public abstract class SharedCarryingSystem : EntitySystem
     private void OnActiveCarrierShutdown(EntityUid uid, ActiveCarrierComponent component, ComponentShutdown args)
     {
         var target = component.Target;
-        // Skip if the target is itself terminating — its BeingCarriedComponent is either
-        // already in shutdown (we're being called from it) or will be when the deletion
-        // walk reaches it.
-        if (!Terminating(target) && HasComp<BeingCarriedComponent>(target))
+        // Skip if the target is itself terminating, or if its marker is already in shutdown.
+        // HasComp stays true during ComponentShutdown, so without the LifeStage guard the
+        // two handlers recurse when the teardown enters via BeingCarried first.
+        if (!Terminating(target)
+            && TryComp<BeingCarriedComponent>(target, out var carriedComp)
+            && carriedComp.LifeStage < ComponentLifeStage.Stopping)
             RemComp<BeingCarriedComponent>(target);
     }
 
