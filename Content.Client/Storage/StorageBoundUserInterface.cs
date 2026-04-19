@@ -21,6 +21,13 @@ public sealed class StorageBoundUserInterface : BoundUserInterface
 
     protected override void Open()
     {
+        // HONK START - Guard against duplicate Open() from _queuedBuis draining
+        // the same BUI twice (e.g. reconnect: OnUserInterfaceStartup queues an
+        // open, then an actor re-open queues a second). Without this, we call
+        // CreateStorageWindow -> RegisterControl twice and the engine asserts.
+        if (_window != null)
+            return;
+        // HONK END
         base.Open();
 
         _window = IoCManager.Resolve<IUserInterfaceManager>()
