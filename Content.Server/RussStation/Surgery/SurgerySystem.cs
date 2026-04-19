@@ -205,6 +205,13 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             return;
         }
 
+        // Validate: if the procedure only heals and the patient has no matching damage, refuse.
+        if (!ProcedureHasAnythingToTend(target.Value, proto))
+        {
+            _popup.PopupEntity(Loc.GetString("surgery-nothing-to-tend", ("target", target.Value)), target.Value, surgeon);
+            return;
+        }
+
         // Now drape the patient and take the bedsheet/drape
         var draped = EnsureComp<SurgeryDrapedComponent>(target.Value);
         draped.Bedsheet = bedsheet.Value;
@@ -354,13 +361,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         // Apply side effects
         ApplyStepEffects(patient, step);
 
-        // Popup
-        if (!string.IsNullOrEmpty(step.Popup) && args.User is { } user)
-            _popup.PopupEntity(Loc.GetString(step.Popup, ("user", user), ("target", patient)), patient);
-
-        // Trigger effect if this step has one
-        if (step.Effect != null)
-            HandleEffect(args.User, patient, step.Effect);
+        var suppressStepPopup = false;
 
         // Advance step (unless repeatable).
         // Repeatable steps with effects (like organ manipulation) need manual re-use,
@@ -379,8 +380,20 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             args.Repeat = healedSomething && StepCanStillHeal(patient, step);
 
             if (!args.Repeat)
+            {
+                // Swap the step popup for the completion popup so we don't double up.
+                suppressStepPopup = true;
                 _popup.PopupEntity(Loc.GetString("surgery-step-repeat-done"), patient);
+            }
         }
+
+        // Step popup (skipped on the terminal iteration of a repeatable step).
+        if (!suppressStepPopup && !string.IsNullOrEmpty(step.Popup) && args.User is { } user)
+            _popup.PopupEntity(Loc.GetString(step.Popup, ("user", user), ("target", patient)), patient);
+
+        // Trigger effect if this step has one
+        if (step.Effect != null)
+            HandleEffect(args.User, patient, step.Effect);
 
         // Procedure steps exhausted, wait for cautery to close
         if (active.CurrentStep >= proto.Steps.Count)

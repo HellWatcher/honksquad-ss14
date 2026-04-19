@@ -44,6 +44,7 @@ surgery-already-draped = The patient is already draped for surgery.
 surgery-drape-missing = The surgical drape is no longer available.
 surgery-procedure-invalid = The surgical procedure is no longer valid.
 surgery-busy = You are already doing something.
+surgery-nothing-to-tend = {CAPITALIZE(THE($target))} has no wounds that this procedure can treat.
 
 ## Guidebook
 guide-entry-surgery = Surgery

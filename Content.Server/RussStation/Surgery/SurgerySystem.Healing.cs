@@ -111,6 +111,38 @@ public sealed partial class SurgerySystem
         }
     }
 
+    /// <summary>
+    /// True if any healing step in the procedure has at least one target damage type
+    /// the patient currently carries above a small epsilon. Procedures whose only
+    /// useful effect is healing (tend-wounds) fail this check on an uninjured patient.
+    /// Procedures with no healing steps (e.g. organ manipulation) always pass.
+    /// </summary>
+    private bool ProcedureHasAnythingToTend(EntityUid patient, SurgeryProcedurePrototype proto)
+    {
+        if (!TryComp<DamageableComponent>(patient, out var damageable))
+            return true;
+
+        var hasHealingStep = false;
+        var currentDamage = _damageable.GetPositiveDamage((patient, damageable));
+        const float epsilon = 0.01f;
+
+        foreach (var step in proto.Steps)
+        {
+            if (step.Healing == null)
+                continue;
+
+            hasHealingStep = true;
+
+            foreach (var type in step.Healing.DamageDict.Keys)
+            {
+                if (currentDamage.DamageDict.TryGetValue(type, out var amount) && amount > FixedPoint2.New(epsilon))
+                    return true;
+            }
+        }
+
+        return !hasHealingStep;
+    }
+
     private bool StepCanStillHeal(EntityUid patient, SurgeryStep step)
     {
         if (step.Healing == null || (step.HealingFlat <= 0 && step.HealingMultiplier <= 0))
