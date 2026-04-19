@@ -6,6 +6,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.DragDrop;
 using Content.Shared.RussStation.EscalatedGrab;
 using Content.Shared.RussStation.EscalatedGrab.Systems;
+using Content.Shared.RussStation.Shared;
 using Content.Shared.Hands;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -29,7 +30,7 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared.RussStation.Carrying.Systems;
 
-public abstract class SharedCarryingSystem : EntitySystem
+public abstract class SharedCarryingSystem : PairedMarkerSystem
 {
     [Dependency] private readonly ActionBlockerSystem _actionBlocker = default!;
     [Dependency] private readonly SharedEscalatedGrabSystem _grab = default!;
@@ -401,10 +402,9 @@ public abstract class SharedCarryingSystem : EntitySystem
         if (Terminating(uid))
             return;
 
-        // PlaceNextTo inside OnBeingCarriedShutdown fires a parent change mid-teardown.
-        // At that point this component is already Stopping; re-entering Drop would call
-        // RemComp on the Stopping ActiveCarrierComponent and trip LifeShutdown's assert.
-        if (component.LifeStage >= ComponentLifeStage.Stopping)
+        // PlaceNextTo inside OnBeingCarriedShutdown fires a parent change mid-teardown;
+        // bail so we don't re-enter Drop on an already-Stopping component.
+        if (IsShuttingDown(component))
             return;
 
         if (Transform(uid).ParentUid != component.Carrier)
@@ -425,13 +425,10 @@ public abstract class SharedCarryingSystem : EntitySystem
     {
         var carrier = component.Carrier;
 
-        // Remove the symmetric carrier-side marker first. Skip if the carrier is itself
-        // terminating, or if its marker is already in shutdown — HasComp stays true during
-        // ComponentShutdown, so without the LifeStage guard the two handlers recurse.
-        if (!Terminating(carrier)
-            && TryComp<ActiveCarrierComponent>(carrier, out var activeComp)
-            && activeComp.LifeStage < ComponentLifeStage.Stopping)
-            RemComp<ActiveCarrierComponent>(carrier);
+        // Remove the symmetric carrier-side marker. TryRemovePaired skips if the carrier
+        // is terminating or its marker is already shutting down — without that guard the
+        // two handlers recurse (HasComp stays true during ComponentShutdown).
+        TryRemovePaired<ActiveCarrierComponent>(carrier);
 
         if (Exists(carrier) && !Terminating(carrier))
         {
@@ -478,14 +475,10 @@ public abstract class SharedCarryingSystem : EntitySystem
     /// </summary>
     private void OnActiveCarrierShutdown(EntityUid uid, ActiveCarrierComponent component, ComponentShutdown args)
     {
-        var target = component.Target;
-        // Skip if the target is itself terminating, or if its marker is already in shutdown.
-        // HasComp stays true during ComponentShutdown, so without the LifeStage guard the
-        // two handlers recurse when the teardown enters via BeingCarried first.
-        if (!Terminating(target)
-            && TryComp<BeingCarriedComponent>(target, out var carriedComp)
-            && carriedComp.LifeStage < ComponentLifeStage.Stopping)
-            RemComp<BeingCarriedComponent>(target);
+        // TryRemovePaired skips if the target is terminating or its marker is already
+        // shutting down — without that guard the two handlers recurse when teardown
+        // enters via BeingCarried first.
+        TryRemovePaired<BeingCarriedComponent>(component.Target);
     }
 
     private void OnDropHandItems(EntityUid uid, ActiveCarrierComponent component, DropHandItemsEvent args)
