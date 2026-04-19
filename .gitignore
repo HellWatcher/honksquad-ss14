@@ -317,6 +317,7 @@ CLAUDE.md
 .serena/
 .prettierignore
 /docs/
+Tools/honk/local/
 
 # Deploy
 deploy.sh
