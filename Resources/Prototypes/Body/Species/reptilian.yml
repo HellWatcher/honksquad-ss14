@@ -119,7 +119,10 @@
   name: Urist McScales
   components:
   - type: Puller
-    needsHands: false
+    # HONK START - Upstream Nubody (#42419) disabled NeedsHands on reptilians,
+    # which also disables the pull virtual item. Restore hand-based pulling.
+    needsHands: true
+    # HONK END
   - type: Butcherable
     butcheringType: Spike
     spawned:
