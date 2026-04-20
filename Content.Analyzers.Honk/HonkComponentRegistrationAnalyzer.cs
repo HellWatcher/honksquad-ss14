@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -7,11 +8,13 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Content.Analyzers.Honk;
 
 /// <summary>
-/// HONK0008: a non-abstract, non-<c>[Virtual]</c> class deriving from
+/// HONK0008: a non-abstract, non-<c>[Virtual]</c> fork class deriving from
 /// <c>Robust.Shared.GameObjects.Component</c> must carry a
 /// <c>[RegisterComponent]</c> attribute. Without it, the component is not
 /// registered with the factory: <c>AddComp</c>/<c>EnsureComp</c> throw at
-/// runtime and prototypes silently fail to attach it.
+/// runtime and prototypes silently fail to attach it. Scoped to fork files
+/// (path contains <c>/RussStation/</c> or ends in <c>.Honk.cs</c>) so
+/// upstream-only dead code is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HonkComponentRegistrationAnalyzer : DiagnosticAnalyzer
@@ -52,11 +55,32 @@ public sealed class HonkComponentRegistrationAnalyzer : DiagnosticAnalyzer
         if (HasVirtualAttribute(type))
             return;
 
+        if (!HasForkDeclaration(type))
+            return;
+
         foreach (var location in type.Locations)
         {
             if (location.IsInSource)
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, location, type.Name));
         }
+    }
+
+    private static bool HasForkDeclaration(INamedTypeSymbol type)
+    {
+        foreach (var location in type.Locations)
+        {
+            if (location.IsInSource && IsForkFile(location.SourceTree?.FilePath))
+                return true;
+        }
+        return false;
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+        var norm = path!.Replace('\\', '/');
+        return norm.Contains("/RussStation/") || norm.EndsWith(".Honk.cs", StringComparison.Ordinal);
     }
 
     private static bool InheritsComponent(INamedTypeSymbol type)

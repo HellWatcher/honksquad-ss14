@@ -26,11 +26,20 @@ public sealed class HonkComponentRegistrationAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, params DiagnosticResult[] expected)
+    private const string ForkPath = "Content.Shared/RussStation/SomeForkComponent.cs";
+
+    private static Task Verify(string code, string filePath, params DiagnosticResult[] expected)
     {
         var test = new VerifyCS
         {
-            TestState = { Sources = { Stubs, code } },
+            TestState =
+            {
+                Sources =
+                {
+                    Stubs,
+                    (filePath, code),
+                },
+            },
         };
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
@@ -45,9 +54,9 @@ public sealed class HonkComponentRegistrationAnalyzerTest
             public sealed class FooComponent : Component { }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0008", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 3, 21, 3, 33)
+                .WithSpan(ForkPath, 3, 21, 3, 33)
                 .WithArguments("FooComponent"));
     }
 
@@ -61,7 +70,7 @@ public sealed class HonkComponentRegistrationAnalyzerTest
             public sealed class FooComponent : Component { }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -73,7 +82,7 @@ public sealed class HonkComponentRegistrationAnalyzerTest
             public abstract class BaseThingComponent : Component { }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -87,7 +96,7 @@ public sealed class HonkComponentRegistrationAnalyzerTest
             public class SharedFooComponent : Component { }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -97,7 +106,7 @@ public sealed class HonkComponentRegistrationAnalyzerTest
             public sealed class SomeHelper { }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -111,9 +120,9 @@ public sealed class HonkComponentRegistrationAnalyzerTest
             public sealed class DerivedThingComponent : BaseThingComponent { }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0008", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 5, 21, 5, 42)
+                .WithSpan(ForkPath, 5, 21, 5, 42)
                 .WithArguments("DerivedThingComponent"));
     }
 
@@ -129,6 +138,34 @@ public sealed class HonkComponentRegistrationAnalyzerTest
             public sealed class DerivedThingComponent : BaseThingComponent { }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
+    }
+
+    [Test]
+    public async Task UpstreamFile_WithoutAttribute_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+
+            public sealed class SharedDisposalRouterComponent : Component { }
+            """;
+
+        await Verify(code, "Content.Shared/Disposal/Mailing/SharedDisposalRouterComponent.cs");
+    }
+
+    [Test]
+    public async Task HonkPartial_WithoutAttribute_Reports()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+
+            public sealed partial class FooComponent : Component { }
+            """;
+
+        const string path = "Content.Shared/Body/Components/FooComponent.Honk.cs";
+        await Verify(code, path,
+            new DiagnosticResult("HONK0008", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
+                .WithSpan(path, 3, 29, 3, 41)
+                .WithArguments("FooComponent"));
     }
 }
