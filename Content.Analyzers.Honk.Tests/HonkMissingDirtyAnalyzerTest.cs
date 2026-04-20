@@ -56,11 +56,14 @@ public sealed class HonkMissingDirtyAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, params DiagnosticResult[] expected)
+    private const string ForkPath = "Content.Shared/RussStation/NetworkingStuff.cs";
+    private const string UpstreamPath = "Content.Shared/Upstream/NetworkingStuff.cs";
+
+    private static Task Verify(string code, string filePath, params DiagnosticResult[] expected)
     {
         var test = new VerifyCS
         {
-            TestState = { Sources = { Stubs, code } },
+            TestState = { Sources = { Stubs, (filePath, code) } },
         };
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
@@ -82,9 +85,9 @@ public sealed class HonkMissingDirtyAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0010", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 8, 9, 8, 23)
+                .WithSpan(ForkPath, 8, 9, 8, 23)
                 .WithArguments("Value", "NetComp"));
     }
 
@@ -105,7 +108,7 @@ public sealed class HonkMissingDirtyAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -125,7 +128,7 @@ public sealed class HonkMissingDirtyAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -144,7 +147,7 @@ public sealed class HonkMissingDirtyAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -163,6 +166,25 @@ public sealed class HonkMissingDirtyAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
+    }
+
+    [Test]
+    public async Task WriteWithoutDirty_InUpstreamFile_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Fork.Stubs;
+
+            public sealed class MySys : EntitySystem
+            {
+                public void Poke(EntityUid uid, NetComp comp)
+                {
+                    comp.Value = 5;
+                }
+            }
+            """;
+
+        await Verify(code, UpstreamPath);
     }
 }

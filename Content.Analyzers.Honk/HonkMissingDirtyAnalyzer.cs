@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -13,7 +14,8 @@ namespace Content.Analyzers.Honk;
 /// <c>DirtyField</c>, <c>DirtyFields</c>, <c>DirtyEntity</c>) is the single
 /// most common desync source in content code. The server mutates state,
 /// the client never receives a delta, and the bug only surfaces under
-/// real latency.
+/// real latency. Scoped to fork files (path contains <c>/RussStation/</c>
+/// or ends in <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HonkMissingDirtyAnalyzer : DiagnosticAnalyzer
@@ -41,6 +43,9 @@ public sealed class HonkMissingDirtyAnalyzer : DiagnosticAnalyzer
     {
         var assignment = (AssignmentExpressionSyntax)context.Node;
 
+        if (!IsForkFile(assignment.SyntaxTree.FilePath))
+            return;
+
         if (assignment.Left is not MemberAccessExpressionSyntax memberAccess)
             return;
 
@@ -66,6 +71,15 @@ public sealed class HonkMissingDirtyAnalyzer : DiagnosticAnalyzer
         var fieldName = fieldSymbol.Name;
         var componentName = containingComponent.Name;
         context.ReportDiagnostic(Diagnostic.Create(Descriptor, assignment.GetLocation(), fieldName, componentName));
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+
+        return path!.Replace('\\', '/').Contains("/RussStation/")
+            || path.EndsWith(".Honk.cs", StringComparison.Ordinal);
     }
 
     private static bool HasNetworkedComponentAttribute(INamedTypeSymbol type)
