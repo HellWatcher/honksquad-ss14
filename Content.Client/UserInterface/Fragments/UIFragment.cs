@@ -18,6 +18,7 @@ public abstract partial class UIFragment
 {
     public abstract Control GetUIFragmentRoot();
 
+    //HONK START - document idempotency requirement learned from PDA fragment regressions
     /// <summary>
     /// Called when the cartridge UI is activated. May be called multiple times for the
     /// same program (e.g. PdaUpdateState inherits CartridgeLoaderUiState, so any PDA
@@ -26,6 +27,7 @@ public abstract partial class UIFragment
     /// Creating a new control here without re-attaching it to the UI tree causes the
     /// displayed fragment and the updated fragment to diverge silently.
     /// </summary>
+    //HONK END
     public abstract void Setup(BoundUserInterface userInterface, EntityUid? fragmentOwner);
 
     public abstract void UpdateState(BoundUserInterfaceState state);
