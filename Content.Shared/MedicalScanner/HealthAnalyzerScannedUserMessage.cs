@@ -1,4 +1,6 @@
-using Content.Shared.RussStation.Wounds; //HONK
+//HONK START - WoundDisplayInfo for wound list payload
+using Content.Shared.RussStation.Wounds;
+//HONK END
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.MedicalScanner;
@@ -29,11 +31,15 @@ public struct HealthAnalyzerUiState
     public bool? ScanMode;
     public bool? Bleeding;
     public bool? Unrevivable;
-    public List<WoundDisplayInfo>? Wounds; //HONK
+    //HONK START - wound list payload
+    public List<WoundDisplayInfo>? Wounds;
+    //HONK END
 
     public HealthAnalyzerUiState() {}
 
-    public HealthAnalyzerUiState(NetEntity? targetEntity, float temperature, float bloodLevel, bool? scanMode, bool? bleeding, bool? unrevivable, List<WoundDisplayInfo>? wounds = null) //HONK
+    //HONK START - wounds parameter for ctor
+    public HealthAnalyzerUiState(NetEntity? targetEntity, float temperature, float bloodLevel, bool? scanMode, bool? bleeding, bool? unrevivable, List<WoundDisplayInfo>? wounds = null)
+    //HONK END
     {
         TargetEntity = targetEntity;
         Temperature = temperature;
@@ -41,6 +47,8 @@ public struct HealthAnalyzerUiState
         ScanMode = scanMode;
         Bleeding = bleeding;
         Unrevivable = unrevivable;
-        Wounds = wounds; //HONK
+        //HONK START - assign wounds
+        Wounds = wounds;
+        //HONK END
     }
 }
