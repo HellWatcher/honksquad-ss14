@@ -20,6 +20,9 @@
     <ProjectReference Include="..\Content.Server.Database\Content.Server.Database.csproj" />
     <ProjectReference Include="..\Content.Shared.Database\Content.Shared.Database.csproj" />
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />
+    <!-- HONK START - fork-owned Roslyn analyzer -->
+    <ProjectReference Include="..\Content.Analyzers.Honk\Content.Analyzers.Honk.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="All" />
+    <!-- HONK END -->
   </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
 

@@ -23,6 +23,10 @@
     <File Path="Directory.Packages.props" />
     <File Path="README.md" />
   </Folder>
+  <!-- HONK START - fork-owned Roslyn analyzer -->
+  <Project Path="Content.Analyzers.Honk/Content.Analyzers.Honk.csproj" />
+  <Project Path="Content.Analyzers.Honk.Tests/Content.Analyzers.Honk.Tests.csproj" />
+  <!-- HONK END -->
   <Project Path="Content.Benchmarks/Content.Benchmarks.csproj" />
   <Project Path="Content.Client/Content.Client.csproj" />
   <Project Path="Content.IntegrationTests/Content.IntegrationTests.csproj" />
