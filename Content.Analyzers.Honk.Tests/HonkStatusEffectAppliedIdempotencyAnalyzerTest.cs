@@ -38,11 +38,14 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, params DiagnosticResult[] expected)
+    private const string ForkPath = "Content.Shared/RussStation/ForkSystem.cs";
+    private const string UpstreamPath = "Content.Shared/Upstream/Sys.cs";
+
+    private static Task Verify(string code, string filePath, params DiagnosticResult[] expected)
     {
         var test = new VerifyCS
         {
-            TestState = { Sources = { Stubs, code } },
+            TestState = { Sources = { Stubs, (filePath, code) } },
         };
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
@@ -75,7 +78,7 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -101,9 +104,9 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0013", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 10, 69, 10, 78)
+                .WithSpan(ForkPath, 10, 69, 10, 78)
                 .WithArguments("OnApplied"));
     }
 
@@ -125,9 +128,9 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0013", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 10, 69, 10, 102)
+                .WithSpan(ForkPath, 10, 69, 10, 102)
                 .WithArguments("<lambda>"));
     }
 
@@ -154,7 +157,7 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -184,6 +187,32 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
+    }
+
+    [Test]
+    public async Task HandlerWithoutGuard_InUpstreamFile_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Content.Shared.StatusEffectNew;
+
+            public sealed class FooComponent : Component { }
+
+            public sealed class FooSystem : EntitySystem
+            {
+                public void Init()
+                {
+                    SubscribeLocalEvent<FooComponent, StatusEffectAppliedEvent>(OnApplied);
+                }
+
+                private void OnApplied(Microsoft.CodeAnalysis.Testing.EntityUid uid, FooComponent comp, StatusEffectAppliedEvent ev)
+                {
+                    var x = 1;
+                }
+            }
+            """;
+
+        await Verify(code, UpstreamPath);
     }
 }

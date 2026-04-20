@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -13,6 +14,8 @@ namespace Content.Analyzers.Honk;
 /// <c>StatusEffectComponent.Applied</c> field is intentionally not networked,
 /// so client state replay re-raises the event every tick; a non-idempotent
 /// handler will run repeatedly instead of once per real application.
+/// Scoped to fork files (path contains <c>/RussStation/</c> or ends in
+/// <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HonkStatusEffectAppliedIdempotencyAnalyzer : DiagnosticAnalyzer
@@ -39,6 +42,9 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzer : DiagnosticAnaly
     private static void Analyze(SyntaxNodeAnalysisContext context)
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
+
+        if (!IsForkFile(invocation.SyntaxTree.FilePath))
+            return;
 
         if (!TryGetSubscribeLocalEventName(invocation, out var nameSyntax))
             return;
@@ -84,6 +90,15 @@ public sealed class HonkStatusEffectAppliedIdempotencyAnalyzer : DiagnosticAnaly
             return;
 
         context.ReportDiagnostic(Diagnostic.Create(Descriptor, handlerExpression.GetLocation(), handlerName));
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+
+        return path!.Replace('\\', '/').Contains("/RussStation/")
+            || path.EndsWith(".Honk.cs", StringComparison.Ordinal);
     }
 
     private static bool TryGetSubscribeLocalEventName(InvocationExpressionSyntax invocation, out GenericNameSyntax? name)
