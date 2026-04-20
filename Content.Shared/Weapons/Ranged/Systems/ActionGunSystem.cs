@@ -38,3 +38,4 @@ public sealed class ActionGunSystem : EntitySystem
             _gun.AttemptShoot(ent, (ent.Comp.Gun.Value, gun), args.Target);
     }
 }
+
