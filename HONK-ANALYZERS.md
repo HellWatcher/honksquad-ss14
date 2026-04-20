@@ -6,7 +6,9 @@ policy. Rules run on every `dotnet build` via the
 
 ## Rules
 
-Populated as rules land.
+| ID       | Severity | Summary                                                                |
+| -------- | -------- | ---------------------------------------------------------------------- |
+| HONK0001 | Error    | `[Access(..., Other = ReadWrite)]` forbidden inside a `// HONK` block. |
 
 ## Suppressing a rule
 

@@ -8,9 +8,7 @@ namespace Content.Shared.Body;
 /// </summary>
 /// <seealso cref="BodySystem" />
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-// HONK START - surgery system writes organ state
-[Access(typeof(BodySystem), Other = AccessPermissions.ReadWrite)]
-// HONK END
+[Access(typeof(BodySystem))]
 public sealed partial class OrganComponent : Component
 {
     /// <summary>
