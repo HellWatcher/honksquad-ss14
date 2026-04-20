@@ -17,7 +17,9 @@ using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
-using Robust.Client.Player; //HONK
+//HONK START - IPlayerManager for local-player filtering
+using Robust.Client.Player;
+//HONK END
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 namespace Content.Client.HealthAnalyzer.UI;
@@ -29,7 +31,9 @@ namespace Content.Client.HealthAnalyzer.UI;
 public sealed partial class HealthAnalyzerControl : BoxContainer
 {
     private readonly IEntityManager _entityManager;
-    private readonly IPlayerManager _player; //HONK
+    //HONK START - local player handle for filtering
+    private readonly IPlayerManager _player;
+    //HONK END
     private readonly SpriteSystem _spriteSystem;
     private readonly IPrototypeManager _prototypes;
     private readonly IResourceCache _cache;
@@ -41,7 +45,9 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
 
         var dependencies = IoCManager.Instance!;
         _entityManager = dependencies.Resolve<IEntityManager>();
-        _player = dependencies.Resolve<IPlayerManager>(); //HONK
+        //HONK START - resolve local player handle
+        _player = dependencies.Resolve<IPlayerManager>();
+        //HONK END
         _spriteSystem = _entityManager.System<SpriteSystem>();
         _prototypes = dependencies.Resolve<IPrototypeManager>();
         _cache = dependencies.Resolve<IResourceCache>();
