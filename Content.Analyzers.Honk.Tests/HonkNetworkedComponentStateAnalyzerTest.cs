@@ -38,9 +38,12 @@ public sealed class HonkNetworkedComponentStateAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, params DiagnosticResult[] expected)
+    private const string ForkPath = "Content.Shared/RussStation/ForkComp.cs";
+    private const string UpstreamPath = "Content.Shared/Upstream/UpstreamComp.cs";
+
+    private static Task Verify(string code, string filePath, params DiagnosticResult[] expected)
     {
-        var test = new VerifyCS { TestState = { Sources = { Stubs, code } } };
+        var test = new VerifyCS { TestState = { Sources = { Stubs, (filePath, code) } } };
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
     }
@@ -61,9 +64,9 @@ public sealed class HonkNetworkedComponentStateAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0012", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 6, 29, 6, 34)
+                .WithSpan(ForkPath, 6, 29, 6, 34)
                 .WithArguments("Leaky"));
     }
 
@@ -83,7 +86,7 @@ public sealed class HonkNetworkedComponentStateAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -105,7 +108,7 @@ public sealed class HonkNetworkedComponentStateAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -122,7 +125,7 @@ public sealed class HonkNetworkedComponentStateAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -136,6 +139,25 @@ public sealed class HonkNetworkedComponentStateAnalyzerTest
             public sealed partial class Flag : Component { }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
+    }
+
+    [Test]
+    public async Task NetworkedWithDataFieldButNoState_InUpstreamFile_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Robust.Shared.GameStates;
+            using Robust.Shared.Serialization.Manager.Attributes;
+
+            [NetworkedComponent]
+            public sealed partial class UpstreamLeaky : Component
+            {
+                [DataField]
+                public int Value;
+            }
+            """;
+
+        await Verify(code, UpstreamPath);
     }
 }

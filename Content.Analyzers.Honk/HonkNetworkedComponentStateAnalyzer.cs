@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,7 +12,8 @@ namespace Content.Analyzers.Honk;
 /// <c>[DataField]</c> members but has no <c>[AutoGenerateComponentState]</c>
 /// attribute and no manual <c>GetComponentState</c> / <c>HandleComponentState</c>
 /// override silently fails to replicate its fields. The mutation reaches
-/// only the server.
+/// only the server. Scoped to fork files (path contains <c>/RussStation/</c>
+/// or ends in <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HonkNetworkedComponentStateAnalyzer : DiagnosticAnalyzer
@@ -38,6 +40,10 @@ public sealed class HonkNetworkedComponentStateAnalyzer : DiagnosticAnalyzer
     private static void Analyze(SyntaxNodeAnalysisContext context)
     {
         var cls = (ClassDeclarationSyntax)context.Node;
+
+        if (!IsForkFile(cls.SyntaxTree.FilePath))
+            return;
+
         if (context.SemanticModel.GetDeclaredSymbol(cls, context.CancellationToken) is not INamedTypeSymbol symbol)
             return;
 
@@ -54,6 +60,15 @@ public sealed class HonkNetworkedComponentStateAnalyzer : DiagnosticAnalyzer
             return;
 
         context.ReportDiagnostic(Diagnostic.Create(Descriptor, cls.Identifier.GetLocation(), symbol.Name));
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+
+        return path!.Replace('\\', '/').Contains("/RussStation/")
+            || path.EndsWith(".Honk.cs", StringComparison.Ordinal);
     }
 
     private static bool HasAttribute(ISymbol symbol, string name)
