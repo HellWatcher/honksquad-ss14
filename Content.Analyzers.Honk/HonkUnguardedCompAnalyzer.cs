@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -13,6 +14,8 @@ namespace Content.Analyzers.Honk;
 /// handler with no preceding <c>HasComp&lt;T&gt;</c> / <c>TryComp&lt;T&gt;</c>
 /// guard in the same method body. <c>Comp&lt;T&gt;</c> throws on miss;
 /// server-side that kills the handler for the rest of the tick.
+/// Scoped to fork files (path contains <c>/RussStation/</c> or ends in
+/// <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HonkUnguardedCompAnalyzer : DiagnosticAnalyzer
@@ -40,6 +43,9 @@ public sealed class HonkUnguardedCompAnalyzer : DiagnosticAnalyzer
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
 
+        if (!IsForkFile(invocation.SyntaxTree.FilePath))
+            return;
+
         var invokedName = GetGenericName(invocation);
         if (invokedName is null || invokedName.Identifier.ValueText != "Comp")
             return;
@@ -64,6 +70,15 @@ public sealed class HonkUnguardedCompAnalyzer : DiagnosticAnalyzer
             return;
 
         context.ReportDiagnostic(Diagnostic.Create(Descriptor, invocation.GetLocation(), typeArgText, uidText));
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+
+        return path!.Replace('\\', '/').Contains("/RussStation/")
+            || path.EndsWith(".Honk.cs", StringComparison.Ordinal);
     }
 
     private static GenericNameSyntax? GetGenericName(InvocationExpressionSyntax invocation)

@@ -38,9 +38,12 @@ public sealed class HonkUnguardedCompAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, params DiagnosticResult[] expected)
+    private const string ForkPath = "Content.Shared/RussStation/ForkSystem.cs";
+    private const string UpstreamPath = "Content.Shared/Upstream/Sys.cs";
+
+    private static Task Verify(string code, string filePath, params DiagnosticResult[] expected)
     {
-        var test = new VerifyCS { TestState = { Sources = { Stubs, code } } };
+        var test = new VerifyCS { TestState = { Sources = { Stubs, (filePath, code) } } };
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
     }
@@ -61,9 +64,9 @@ public sealed class HonkUnguardedCompAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0011", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 8, 17, 8, 46)
+                .WithSpan(ForkPath, 8, 17, 8, 46)
                 .WithArguments("TargetComp", "args.Target"));
     }
 
@@ -85,7 +88,7 @@ public sealed class HonkUnguardedCompAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -107,7 +110,7 @@ public sealed class HonkUnguardedCompAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -127,7 +130,7 @@ public sealed class HonkUnguardedCompAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -148,9 +151,9 @@ public sealed class HonkUnguardedCompAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0011", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 10, 17, 10, 46)
+                .WithSpan(ForkPath, 10, 17, 10, 46)
                 .WithArguments("TargetComp", "args.Target"));
     }
 
@@ -171,6 +174,25 @@ public sealed class HonkUnguardedCompAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
+    }
+
+    [Test]
+    public async Task UnguardedCompInUpstreamFile_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Fork.Stubs;
+
+            public sealed class UpstreamSys : EntitySystem
+            {
+                public void OnIt(SomeEvent args)
+                {
+                    var c = Comp<TargetComp>(args.Target);
+                }
+            }
+            """;
+
+        await Verify(code, UpstreamPath);
     }
 }
