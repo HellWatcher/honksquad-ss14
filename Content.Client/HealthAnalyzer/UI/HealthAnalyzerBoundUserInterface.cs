@@ -19,6 +19,10 @@ namespace Content.Client.HealthAnalyzer.UI
             base.Open();
 
             _window = this.CreateWindow<HealthAnalyzerWindow>();
+            // HONK START - upstream sets _window.Title here; the fork's HandheldHealthAnalyzer proto
+            // wires to HealthAnalyzerTabbedBoundUserInterface, which titles its own window. This
+            // class is kept lean for upstream parity but never opens at runtime.
+            // HONK END
         }
 
         protected override void ReceiveMessage(BoundUserInterfaceMessage message)
