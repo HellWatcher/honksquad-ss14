@@ -269,8 +269,8 @@ public sealed partial class HealthAnalyzerSystem : EntitySystem
             bloodAmount,
             null,
             bleeding,
+            //HONK START - add trailing comma + wounds arg
             unrevivable,
-            //HONK START
             wounds
             //HONK END
         );

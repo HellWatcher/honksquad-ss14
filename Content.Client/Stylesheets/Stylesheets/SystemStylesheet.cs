@@ -30,7 +30,9 @@ public partial class SystemStylesheet : CommonStylesheet
     // for some GOD FORSAKEN REASON if I use a collection expression here it throws a sandbox error
     // Thanks ReSharper, this was very fun to find in the ~40 files I last committed
     // ReSharper disable once UseCollectionExpression
+    //HONK START - non-readonly so ForkFontCustomization.Apply can reassign
     private List<(string?, int)> _commonFontSizes = new()
+    //HONK END
     {
         (null, PrimaryFontSize),
         (StyleClass.FontSmall, PrimaryFontSize - FontSizeStep),
@@ -53,7 +55,9 @@ public partial class SystemStylesheet : CommonStylesheet
             // Set up our core rules.
             [
                 // Declare the default font.
+                //HONK START - use customSize so user-selected font size applies
                 Element().Prop(Label.StylePropertyFont, BaseFont.GetFont(customSize)),
+                //HONK END
             ],
             // Finally, load all the other sheetlets.
             GetAllSheetletRules<PalettedStylesheet, CommonSheetletAttribute>(man),

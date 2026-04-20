@@ -233,7 +233,9 @@ public sealed partial class ClimbSystem : VirtualController
             climbDelay *= freerunning.ClimbDelayMultiplier;
         //HONK END
 
+        //HONK START - use Freerunning-adjusted climbDelay
         var args = new DoAfterArgs(EntityManager, user, climbDelay, new ClimbDoAfterEvent(),
+        //HONK END
             entityToMove,
             target: climbable,
             used: entityToMove)

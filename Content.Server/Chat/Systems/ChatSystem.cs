@@ -672,7 +672,9 @@ public sealed partial class ChatSystem : SharedChatSystem
         RaiseLocalEvent(source, ref voiceRangeEv);
         //HONK END
 
+        //HONK START - use voiceRangeEv.Range (was VoiceRange)
         foreach (var (session, data) in GetRecipients(source, voiceRangeEv.Range))
+        //HONK END
         {
             var entRange = MessageRangeCheck(session, data, range);
             if (entRange == MessageRangeCheckResult.Disallowed)

@@ -374,8 +374,8 @@ namespace Content.Shared.Atmos
         WaterVapor = 5,
         Ammonia = 6,
         NitrousOxide = 7,
+        // HONK START - Fork gases (trailing comma added for fork-appended entries)
         Frezon = 8,
-        // HONK START - Fork gases
         Hydrogen = 9,
         Helium = 10,
         BZ = 11,

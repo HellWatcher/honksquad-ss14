@@ -18,7 +18,9 @@ namespace Content.Client.UserInterface.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class SimpleRadialMenu : RadialMenu
 {
+    //HONK START - shared button size constant for pixel-aware icon fit
     private const float ButtonSize = 64f;
+    //HONK END
 
     private EntityUid? _attachMenuToEntity;
 
@@ -129,7 +131,9 @@ public sealed partial class SimpleRadialMenu : RadialMenu
         var button = settings.UseSectors
             ? ConvertToButtonWithSector(model, settings)
             : new RadialMenuButton();
+        //HONK START - use shared ButtonSize constant
         button.SetSize = new Vector2(ButtonSize, ButtonSize);
+        //HONK END
         button.ToolTip = model.ToolTip;
         var imageControl = model.IconSpecifier switch
         {

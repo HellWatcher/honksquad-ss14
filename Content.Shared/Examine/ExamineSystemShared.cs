@@ -156,9 +156,13 @@ namespace Content.Shared.Examine
                     return CritExamineRange;
 
                 if (TryComp<BlurryVisionComponent>(examiner, out var blurry))
+                    //HONK START - use event-modified range
                     return Math.Clamp(range - blurry.Magnitude * ExamineBlurrinessMult, 2, range);
+                    //HONK END
             }
+            //HONK START - use event-modified range
             return range;
+            //HONK END
         }
 
         /// <summary>

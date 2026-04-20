@@ -31,7 +31,9 @@ public partial class NanotrasenStylesheet : CommonStylesheet
 
     // why? see InterfaceStylesheet.cs
     // ReSharper disable once UseCollectionExpression
+    //HONK START - non-readonly so ForkFontCustomization.Apply can reassign
     private List<(string?, int)> _commonFontSizes = new()
+    //HONK END
     {
         (null, PrimaryFontSize),
         (StyleClass.FontSmall, PrimaryFontSize - FontSizeStep),
@@ -54,7 +56,9 @@ public partial class NanotrasenStylesheet : CommonStylesheet
             // Set up our core rules.
             [
                 // Declare the default font.
+                //HONK START - use customSize so user-selected font size applies
                 Element().Prop(Label.StylePropertyFont, BaseFont.GetFont(customSize)),
+                //HONK END
                 // Branding.
                 Element<TextureRect>()
                     .Class("NTLogoDark")
