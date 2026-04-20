@@ -6,10 +6,11 @@ policy. Rules run on every `dotnet build` via the
 
 ## Rules
 
-| ID       | Severity | Summary                                                                |
-| -------- | -------- | ---------------------------------------------------------------------- |
-| HONK0001 | Error    | `[Access(..., Other = ReadWrite)]` forbidden inside a `// HONK` block. |
-| HONK0004 | Error    | Unmatched `// HONK START` / `// HONK END` markers in one file.         |
+| ID       | Severity | Summary                                                                          |
+| -------- | -------- | -------------------------------------------------------------------------------- |
+| HONK0001 | Error    | `[Access(..., Other = ReadWrite)]` forbidden inside a `// HONK` block.           |
+| HONK0004 | Error    | Unmatched `// HONK START` / `// HONK END` markers in one file.                   |
+| HONK0005 | Error    | `[Access(typeof(ForkSystem))]` on an upstream file must sit inside a HONK block. |
 
 ## Suppressing a rule
 
