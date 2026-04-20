@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -12,6 +13,8 @@ namespace Content.Analyzers.Honk;
 /// <c>Initialize</c> or an <c>InitializeXxx</c> partial helper invoked by
 /// it. Subscribing later registers handlers after earlier events have
 /// already fired, and the failure mode is invisible at runtime.
+/// Scoped to fork files (path contains <c>/RussStation/</c> or ends in
+/// <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HonkSubscribeOutsideInitializeAnalyzer : DiagnosticAnalyzer
@@ -38,6 +41,9 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzer : DiagnosticAnalyzer
     private static void Analyze(SyntaxNodeAnalysisContext context)
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
+
+        if (!IsForkFile(invocation.SyntaxTree.FilePath))
+            return;
 
         var name = GetInvokedName(invocation);
         if (name is not ("SubscribeLocalEvent" or "SubscribeNetworkEvent" or "SubscribeAllEvent"))
@@ -84,6 +90,15 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzer : DiagnosticAnalyzer
             MemberAccessExpressionSyntax m => m.Name.Identifier.ValueText,
             _ => null,
         };
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+
+        return path!.Replace('\\', '/').Contains("/RussStation/")
+            || path.EndsWith(".Honk.cs", StringComparison.Ordinal);
     }
 
     private static bool IsEntitySystemMember(INamedTypeSymbol? type)

@@ -39,11 +39,14 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, params DiagnosticResult[] expected)
+    private const string ForkPath = "Content.Shared/RussStation/SomeForkSystem.cs";
+    private const string UpstreamPath = "Content.Shared/Upstream/SomeSystem.cs";
+
+    private static Task Verify(string code, string filePath, params DiagnosticResult[] expected)
     {
         var test = new VerifyCS
         {
-            TestState = { Sources = { Stubs, code } },
+            TestState = { Sources = { Stubs, (filePath, code) } },
         };
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
@@ -67,7 +70,7 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -93,9 +96,9 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0009", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 13, 9, 13, 62)
+                .WithSpan(ForkPath, 13, 9, 13, 62)
                 .WithArguments("SubscribeLocalEvent"));
     }
 
@@ -124,7 +127,7 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -144,9 +147,9 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0009", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 7, 9, 7, 49)
+                .WithSpan(ForkPath, 7, 9, 7, 49)
                 .WithArguments("SubscribeNetworkEvent"));
     }
 
@@ -168,7 +171,7 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -190,9 +193,29 @@ public sealed class HonkSubscribeOutsideInitializeAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0009", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 9, 9, 9, 62)
+                .WithSpan(ForkPath, 9, 9, 9, 62)
                 .WithArguments("SubscribeLocalEvent"));
+    }
+
+    [Test]
+    public async Task SubscribeInUpstreamFile_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+
+            public sealed class UpstreamSystem : EntitySystem
+            {
+                public override void Update(float frameTime)
+                {
+                    SubscribeLocalEvent<SomeComponent, SomeEvent>(OnSome);
+                }
+
+                private void OnSome(System.Guid uid, SomeComponent comp, SomeEvent args) { }
+            }
+            """;
+
+        await Verify(code, UpstreamPath);
     }
 }
