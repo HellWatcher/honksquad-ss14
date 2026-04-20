@@ -462,13 +462,13 @@ namespace Content.Shared.Preferences
             foreach (var trait in list)
             {
                 // If trait not found or another category don't count its points.
-                if (!protoManager.TryIndex<TraitPrototype>(trait, out var otherProto2) ||
-                    otherProto2.Category != traitCategory)
+                if (!protoManager.TryIndex<TraitPrototype>(trait, out var otherProto) ||
+                    otherProto.Category != traitCategory)
                 {
                     continue;
                 }
 
-                count += otherProto2.Cost;
+                count += otherProto.Cost;
             }
 
             if (count > traitCategory.MaxTraitPoints && traitProto.Cost != 0)
@@ -722,7 +722,9 @@ namespace Content.Shared.Preferences
                 // Always valid.
                 if (traitProto.Category == null)
                 {
-                    globalCount = newGlobal; // HONK - Track global spending
+                    // HONK START - Track global spending
+                    globalCount = newGlobal;
+                    // HONK END
                     result.Add(trait);
                     continue;
                 }
@@ -739,7 +741,9 @@ namespace Content.Shared.Preferences
                     continue;
 
                 groups[category.ID] = existing;
-                globalCount = newGlobal; // HONK - Track global spending
+                // HONK START - Track global spending
+                globalCount = newGlobal;
+                // HONK END
                 result.Add(trait);
             }
 
