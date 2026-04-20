@@ -91,11 +91,14 @@ namespace Content.Client.VendingMachines.UI
         /// Populates the list of available items on the vending machine interface
         /// and sets icons based on their prototypes
         /// </summary>
-        //HONK - Added prices parameter
+        //HONK START - Added prices parameter
         public void Populate(List<VendingMachineInventoryEntry> inventory, bool enabled, Dictionary<string, int>? prices = null)
+        //HONK END
         {
             _enabled = enabled;
-            _prices = prices; //HONK
+            //HONK START - track prices for display
+            _prices = prices;
+            //HONK END
             _listItems.Clear();
             _amounts.Clear();
 
@@ -165,11 +168,14 @@ namespace Content.Client.VendingMachines.UI
         /// <summary>
         /// Updates text entries for vending data in place without modifying the list controls.
         /// </summary>
-        //HONK - Added prices parameter
+        //HONK START - Added prices parameter
         public void UpdateAmounts(List<VendingMachineInventoryEntry> cachedInventory, bool enabled, Dictionary<string, int>? prices = null)
+        //HONK END
         {
             _enabled = enabled;
-            _prices = prices; //HONK
+            //HONK START - track prices for display
+            _prices = prices;
+            //HONK END
 
             foreach (var proto in _dummies.Keys)
             {
