@@ -722,7 +722,9 @@ namespace Content.Shared.Preferences
                 // Always valid.
                 if (traitProto.Category == null)
                 {
-                    globalCount = newGlobal; // HONK - Track global spending
+                    //HONK START - Track global spending
+                    globalCount = newGlobal;
+                    //HONK END
                     result.Add(trait);
                     continue;
                 }
@@ -739,7 +741,9 @@ namespace Content.Shared.Preferences
                     continue;
 
                 groups[category.ID] = existing;
-                globalCount = newGlobal; // HONK - Track global spending
+                //HONK START - Track global spending
+                globalCount = newGlobal;
+                //HONK END
                 result.Add(trait);
             }
 
