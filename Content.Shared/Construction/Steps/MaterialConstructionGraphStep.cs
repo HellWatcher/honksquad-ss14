@@ -45,7 +45,9 @@ namespace Content.Shared.Construction.Steps
             return new ConstructionGuideEntry()
             {
                 Localization = "construction-presenter-material-step",
+                //HONK START - locale double-lookup fix: presenter already localizes, don't pre-resolve
                 Arguments = new (string, object)[]{("amount", Amount), ("material", material.Name)},
+                //HONK END
                 Icon = material.Icon,
             };
         }
