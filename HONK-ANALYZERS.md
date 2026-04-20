@@ -9,6 +9,7 @@ policy. Rules run on every `dotnet build` via the
 | ID       | Severity | Summary                                                                |
 | -------- | -------- | ---------------------------------------------------------------------- |
 | HONK0001 | Error    | `[Access(..., Other = ReadWrite)]` forbidden inside a `// HONK` block. |
+| HONK0004 | Error    | Unmatched `// HONK START` / `// HONK END` markers in one file.         |
 
 ## Suppressing a rule
 
