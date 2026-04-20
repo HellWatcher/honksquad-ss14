@@ -14,7 +14,9 @@ public struct BeforeThrowEvent
     }
 
     public EntityUid ItemUid { get; set; }
-    public Vector2 Direction { get; set; } // HONK - mutable for Weak Arm quirk
+    //HONK START - mutable for Weak Arm quirk
+    public Vector2 Direction { get; set; }
+    //HONK END
     public float ThrowSpeed { get; set;}
     public EntityUid PlayerUid { get; }
 
