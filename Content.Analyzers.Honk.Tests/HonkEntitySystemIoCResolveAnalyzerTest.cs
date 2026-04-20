@@ -36,13 +36,20 @@ public sealed class HonkEntitySystemIoCResolveAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, params DiagnosticResult[] expected)
+    private const string ForkPath = "Content.Shared/RussStation/SomeForkSystem.cs";
+    private const string UpstreamPath = "Content.Shared/Upstream/SomeSystem.cs";
+
+    private static Task Verify(string code, string filePath, params DiagnosticResult[] expected)
     {
         var test = new VerifyCS
         {
             TestState =
             {
-                Sources = { Stubs, code },
+                Sources =
+                {
+                    Stubs,
+                    (filePath, code),
+                },
             },
         };
         test.ExpectedDiagnostics.AddRange(expected);
@@ -66,9 +73,9 @@ public sealed class HonkEntitySystemIoCResolveAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0007", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 9, 22, 9, 55)
+                .WithSpan(ForkPath, 9, 22, 9, 55)
                 .WithArguments("MySystem"));
     }
 
@@ -89,9 +96,9 @@ public sealed class HonkEntitySystemIoCResolveAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0007", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 9, 22, 9, 64)
+                .WithSpan(ForkPath, 9, 22, 9, 64)
                 .WithArguments("MySystem"));
     }
 
@@ -111,7 +118,7 @@ public sealed class HonkEntitySystemIoCResolveAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -132,7 +139,7 @@ public sealed class HonkEntitySystemIoCResolveAnalyzerTest
             }
             """;
 
-        await Verify(code);
+        await Verify(code, ForkPath);
     }
 
     [Test]
@@ -154,9 +161,53 @@ public sealed class HonkEntitySystemIoCResolveAnalyzerTest
             }
             """;
 
-        await Verify(code,
+        await Verify(code, ForkPath,
             new DiagnosticResult("HONK0007", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 11, 22, 11, 55)
+                .WithSpan(ForkPath, 11, 22, 11, 55)
                 .WithArguments("FooSystem"));
+    }
+
+    [Test]
+    public async Task Resolve_InUpstreamFile_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Robust.Shared.IoC;
+            using Robust.Shared.Timing;
+
+            public sealed class UpstreamSystem : EntitySystem
+            {
+                public void Foo()
+                {
+                    var timing = IoCManager.Resolve<IGameTiming>();
+                }
+            }
+            """;
+
+        await Verify(code, UpstreamPath);
+    }
+
+    [Test]
+    public async Task Resolve_InHonkPartial_Reports()
+    {
+        const string honkPath = "Content.Shared/Upstream/SomeSystem.Honk.cs";
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Robust.Shared.IoC;
+            using Robust.Shared.Timing;
+
+            public sealed class HonkPartialSystem : EntitySystem
+            {
+                public void Foo()
+                {
+                    var timing = IoCManager.Resolve<IGameTiming>();
+                }
+            }
+            """;
+
+        await Verify(code, honkPath,
+            new DiagnosticResult("HONK0007", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
+                .WithSpan(honkPath, 9, 22, 9, 55)
+                .WithArguments("HonkPartialSystem"));
     }
 }

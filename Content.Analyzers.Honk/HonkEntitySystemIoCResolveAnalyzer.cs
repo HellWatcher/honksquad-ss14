@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -12,6 +13,8 @@ namespace Content.Analyzers.Honk;
 /// constructed by the engine with DI available via <c>[Dependency]</c>
 /// field injection. Reaching into the IoC container defeats lifetime
 /// tracking and test substitution, and hides the system's dependency list.
+/// Scoped to fork files (path contains <c>/RussStation/</c> or ends in
+/// <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HonkEntitySystemIoCResolveAnalyzer : DiagnosticAnalyzer
@@ -38,6 +41,9 @@ public sealed class HonkEntitySystemIoCResolveAnalyzer : DiagnosticAnalyzer
     private static void Analyze(SyntaxNodeAnalysisContext context)
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
+
+        if (!IsForkFile(invocation.SyntaxTree.FilePath))
+            return;
 
         if (!IsIoCResolveCall(invocation))
             return;
@@ -77,6 +83,15 @@ public sealed class HonkEntitySystemIoCResolveAnalyzer : DiagnosticAnalyzer
                 || ma.Name.Identifier.ValueText == "IoCManager",
             _ => false,
         };
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+
+        return path!.Replace('\\', '/').Contains("/RussStation/")
+            || path.EndsWith(".Honk.cs", StringComparison.Ordinal);
     }
 
     private static bool InheritsEntitySystem(INamedTypeSymbol type)
