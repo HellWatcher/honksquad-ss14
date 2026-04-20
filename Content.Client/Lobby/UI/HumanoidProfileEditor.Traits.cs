@@ -4,7 +4,9 @@ using Content.Client.Stylesheets;
 using Content.Shared.CCVar;
 using Content.Shared.Traits;
 using Robust.Client.UserInterface.Controls;
-using Robust.Shared.Prototypes; //HONK
+//HONK START - ProtoId lookups for category cap display
+using Robust.Shared.Prototypes;
+//HONK END
 using Robust.Shared.Utility;
 
 namespace Content.Client.Lobby.UI;
@@ -200,7 +202,9 @@ public sealed partial class HumanoidProfileEditor
             {
                 category = _prototypeManager.Index<TraitCategoryPrototype>(categoryId);
                 // Label
-                column.AddChild(new Label // HONK - Changed from TraitsList to column
+                //HONK START - add to column instead of TraitsList
+                column.AddChild(new Label
+                //HONK END
                 {
                     Text = Loc.GetString(category.Name),
                     Margin = new Thickness(0, 0, 0, 0),
@@ -252,8 +256,9 @@ public sealed partial class HumanoidProfileEditor
 
             // HONK END
 
-            // HONK - 2-column grid for trait selectors within each category
+            //HONK START - 2-column grid for trait selectors within each category
             var traitGrid = new GridContainer
+            //HONK END
             {
                 Columns = 2,
                 HorizontalExpand = true,
@@ -280,7 +285,9 @@ public sealed partial class HumanoidProfileEditor
 
             column.AddChild(traitGrid);
 
-            columnsContainer.AddChild(column); // HONK - Add to columns
+            //HONK START - append category column to columns container
+            columnsContainer.AddChild(column);
+            //HONK END
         }
     }
 }
