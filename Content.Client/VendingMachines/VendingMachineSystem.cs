@@ -1,5 +1,7 @@
 using System.Linq;
-using Content.Shared.RussStation.Economy.Components; //HONK
+// HONK START
+using Content.Shared.RussStation.Economy.Components;
+// HONK END
 using Content.Shared.VendingMachines;
 using Robust.Client.Animations;
 using Robust.Client.GameObjects;

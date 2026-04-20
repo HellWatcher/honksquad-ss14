@@ -1,6 +1,8 @@
 using Content.Client.UserInterface.Controls;
 using Content.Client.VendingMachines.UI;
-using Content.Shared.RussStation.Economy.Components; //HONK
+// HONK START
+using Content.Shared.RussStation.Economy.Components;
+// HONK END
 using Content.Shared.VendingMachines;
 using Robust.Client.UserInterface;
 using Robust.Shared.Input;
