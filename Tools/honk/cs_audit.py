@@ -25,6 +25,7 @@ from common import (
     DRIFT_CATEGORIES,
     HONK_START,
     balanced_honk,
+    drift_lines,
     git_show,
     inline_honk_lines,
     is_fork_owned,
@@ -32,7 +33,6 @@ from common import (
     pr_new_inline,
     sh,
     strip_honk_blocks,
-    whitespace_normalize,
 )
 
 DEFAULT_FORK_REF = "origin/release"
@@ -112,10 +112,8 @@ def classify(path: str, fork_ref: str, upstream_ref: str) -> Result:
     has_honk = bool(HONK_START.search(release))
 
     stripped_release = strip_honk_blocks(release)
-    norm_stripped = whitespace_normalize(stripped_release)
-    norm_upstream = whitespace_normalize(upstream)
 
-    if norm_stripped == norm_upstream:
+    if not drift_lines(stripped_release, upstream):
         if has_honk:
             return Result(path, "HONK-ONLY")
         return Result(path, "REFORMAT-ONLY")

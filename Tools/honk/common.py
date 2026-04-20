@@ -25,7 +25,7 @@ FORK_OWNED = re.compile(
 
 HONK_START = re.compile(r"HONK\s*START", re.IGNORECASE)
 HONK_END = re.compile(r"HONK\s*END", re.IGNORECASE)
-HONK_LINE = re.compile(r"//\s*HONK\b|#\s*HONK\b", re.IGNORECASE)
+HONK_LINE = re.compile(r"//\s*HONK\b|#\s*HONK\b")
 
 DRIFT_CATEGORIES = ("REFORMAT-ONLY", "MIXED", "CONTENT-NO-HONK")
 
