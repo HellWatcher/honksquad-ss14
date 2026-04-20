@@ -102,6 +102,17 @@ fi
 
 # --- Unit Tests ---
 if [ "$SKIP_TESTS" = false ]; then
+    echo "--- Content.Analyzers.Honk.Tests ---"
+    step_start
+    if dotnet test --no-build --configuration DebugOpt Content.Analyzers.Honk.Tests/Content.Analyzers.Honk.Tests.csproj -- NUnit.ConsoleOut=0 2>&1 | tee /dev/stderr | grep -q "Passed!"; then
+        step_end "Analyzer Tests"
+        pass "Content.Analyzers.Honk.Tests" "${STEP_TIMES["Analyzer Tests"]}"
+    else
+        step_end "Analyzer Tests"
+        fail "Content.Analyzers.Honk.Tests" "${STEP_TIMES["Analyzer Tests"]}"
+    fi
+    echo ""
+
     echo "--- Content.Tests ---"
     step_start
     if dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 2>&1 | tee /dev/stderr | grep -q "Passed!"; then
@@ -125,6 +136,7 @@ if [ "$SKIP_TESTS" = false ]; then
     fi
     echo ""
 else
+    skip "Content.Analyzers.Honk.Tests"
     skip "Content.Tests"
     skip "Content.IntegrationTests"
     echo ""
@@ -161,7 +173,7 @@ echo ""
 # Print timing breakdown
 if [ ${#STEP_TIMES[@]} -gt 0 ]; then
     echo "  Timing:"
-    for step in "CRLF Check" "Build" "Unit Tests" "Integration Tests" "YAML Linter"; do
+    for step in "CRLF Check" "Build" "Analyzer Tests" "Unit Tests" "Integration Tests" "YAML Linter"; do
         if [ -n "${STEP_TIMES[$step]+x}" ]; then
             printf "    %-25s %4ss\n" "$step" "${STEP_TIMES[$step]}"
         fi
