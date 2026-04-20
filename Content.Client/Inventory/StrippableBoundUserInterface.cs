@@ -81,7 +81,9 @@ namespace Content.Client.Inventory
 
             _strippingMenu = this.CreateWindowCenteredLeft<StrippingMenu>();
             _strippingMenu.OnDirty += UpdateMenu;
+            //HONK START - identity-aware title: show owner's identity from the viewer's perspective
             _strippingMenu.Title = Loc.GetString("strippable-bound-user-interface-stripping-menu-title", ("ownerName", Identity.Name(Owner, EntMan, _player.LocalEntity)));
+            //HONK END
         }
 
         protected override void Dispose(bool disposing)
