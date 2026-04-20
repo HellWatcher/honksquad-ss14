@@ -30,25 +30,25 @@ public sealed class HonkTestPrototypeRefStyleAnalyzerTest
         }
         """;
 
-    private static Task Verify(string code, string assemblyName, params DiagnosticResult[] expected)
+    private static Task Verify(string path, string code, string assemblyName, params DiagnosticResult[] expected)
     {
         var test = new VerifyCS
         {
-            TestState = { Sources = { Stubs, code } },
+            TestState =
+            {
+                Sources = { Stubs, (path, code) },
+            },
         };
-        test.TestState.AdditionalReferences.Clear();
         test.SolutionTransforms.Add((solution, projectId) =>
-        {
-            var project = solution.GetProject(projectId)!;
-            return solution.WithProjectAssemblyName(projectId, assemblyName);
-        });
+            solution.WithProjectAssemblyName(projectId, assemblyName));
         test.ExpectedDiagnostics.AddRange(expected);
         return test.RunAsync();
     }
 
     [Test]
-    public async Task TestProtoId_FieldWithTestPrototypeId_Reports()
+    public async Task TestProtoId_InForkFile_Reports()
     {
+        const string path = "/0/RussStation/FooTest.cs";
         const string code = """
             using Robust.Shared.Prototypes;
             using Robust.UnitTesting;
@@ -64,15 +64,38 @@ public sealed class HonkTestPrototypeRefStyleAnalyzerTest
             }
             """;
 
-        await Verify(code, "Content.IntegrationTests",
+        await Verify(path, code, "Content.IntegrationTests",
             new DiagnosticResult("HONK0014", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 11, 42, 11, 54)
+                .WithSpan(path, 11, 42, 11, 54)
                 .WithArguments("MyTagDummy"));
+    }
+
+    [Test]
+    public async Task TestProtoId_InUpstreamFile_DoesNotReport()
+    {
+        const string path = "/0/Test1.cs";
+        const string code = """
+            using Robust.Shared.Prototypes;
+            using Robust.UnitTesting;
+
+            public sealed class Foo
+            {
+                private const string MyTag = "MyTagDummy";
+
+                [TestPrototypes]
+                private const string Prototypes = "- type: Tag\n  id: {MyTag}";
+
+                public ProtoId<TagPrototype> MyRef = "MyTagDummy";
+            }
+            """;
+
+        await Verify(path, code, "Content.IntegrationTests");
     }
 
     [Test]
     public async Task TestProtoId_ConstString_DoesNotReport()
     {
+        const string path = "/0/RussStation/FooTest.cs";
         const string code = """
             using Robust.UnitTesting;
 
@@ -85,12 +108,13 @@ public sealed class HonkTestPrototypeRefStyleAnalyzerTest
             }
             """;
 
-        await Verify(code, "Content.IntegrationTests");
+        await Verify(path, code, "Content.IntegrationTests");
     }
 
     [Test]
     public async Task ProductionAssembly_DoesNotReport()
     {
+        const string path = "/0/RussStation/FooTest.cs";
         const string code = """
             using Robust.Shared.Prototypes;
             using Robust.UnitTesting;
@@ -106,12 +130,13 @@ public sealed class HonkTestPrototypeRefStyleAnalyzerTest
             }
             """;
 
-        await Verify(code, "Content.Shared");
+        await Verify(path, code, "Content.Shared");
     }
 
     [Test]
-    public async Task UnrelatedProtoId_InTestAssembly_DoesNotReport()
+    public async Task UnrelatedProtoId_InForkTest_DoesNotReport()
     {
+        const string path = "/0/RussStation/FooTest.cs";
         const string code = """
             using Robust.Shared.Prototypes;
             using Robust.UnitTesting;
@@ -127,12 +152,13 @@ public sealed class HonkTestPrototypeRefStyleAnalyzerTest
             }
             """;
 
-        await Verify(code, "Content.IntegrationTests");
+        await Verify(path, code, "Content.IntegrationTests");
     }
 
     [Test]
-    public async Task LiteralIdInYaml_ProtoIdMatch_Reports()
+    public async Task LiteralIdInYaml_ForkProtoIdMatch_Reports()
     {
+        const string path = "/0/RussStation/FooTest.cs";
         const string code = """
             using Robust.Shared.Prototypes;
             using Robust.UnitTesting;
@@ -146,9 +172,9 @@ public sealed class HonkTestPrototypeRefStyleAnalyzerTest
             }
             """;
 
-        await Verify(code, "Content.IntegrationTests",
+        await Verify(path, code, "Content.IntegrationTests",
             new DiagnosticResult("HONK0014", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
-                .WithSpan("/0/Test1.cs", 9, 42, 9, 55)
+                .WithSpan(path, 9, 42, 9, 55)
                 .WithArguments("DirectDummy"));
     }
 }

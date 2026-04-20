@@ -149,9 +149,20 @@ public sealed class HonkTestPrototypeRefStyleAnalyzer : DiagnosticAnalyzer
 
         foreach (var (value, location) in state.ProtoIdLiterals)
         {
-            if (testIds.Contains(value))
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, location, value));
+            if (!testIds.Contains(value))
+                continue;
+            if (!IsForkFile(location.SourceTree?.FilePath))
+                continue;
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, location, value));
         }
+    }
+
+    private static bool IsForkFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+        var norm = path!.Replace('\\', '/');
+        return norm.Contains("/RussStation/") || norm.EndsWith(".Honk.cs", System.StringComparison.Ordinal);
     }
 
     private static bool IsConstString(FieldDeclarationSyntax field)
