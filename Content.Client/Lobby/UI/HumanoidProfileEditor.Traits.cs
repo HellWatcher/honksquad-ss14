@@ -67,7 +67,7 @@ public sealed partial class HumanoidProfileEditor
             }
         }
 
-        //HONK START - Build conflict map: blocked trait → list of blocking trait names
+        // Build conflict map: blocked trait → list of blocking trait names
         var selectedTraits = Profile?.TraitPreferences ?? new HashSet<ProtoId<TraitPrototype>>();
 
         // Map each excluded tag back to the selected trait(s) that exclude it
@@ -153,7 +153,6 @@ public sealed partial class HumanoidProfileEditor
                 }
             }
         }
-        //HONK END
 
         var globalAvailable = globalMax - globalSpent;
 
