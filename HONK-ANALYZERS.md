@@ -12,6 +12,7 @@ policy. Rules run on every `dotnet build` via the
 | HONK0004 | Error    | Unmatched `// HONK START` / `// HONK END` markers in one file.                   |
 | HONK0005 | Error    | `[Access(typeof(ForkSystem))]` on an upstream file must sit inside a HONK block. |
 | HONK0002 | Warning  | `*.Honk.cs` partial exposes more than three public setters / `Set*` methods.     |
+| HONK0008 | Warning  | Concrete `Component` subclass missing `[RegisterComponent]`.                     |
 
 ## Suppressing a rule
 
