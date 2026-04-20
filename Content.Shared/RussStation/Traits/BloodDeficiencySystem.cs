@@ -39,7 +39,9 @@ public sealed class BloodDeficiencySystem : EntitySystem
         if (!TryComp<BloodstreamComponent>(uid, out var bloodstream))
             return;
 
+#pragma warning disable HONK0003 // BloodstreamComponent grants this system as an [Access] friend (HONK-marked on the upstream file); write is sanctioned fork drift.
         bloodstream.BloodRefreshAmount = -component.BloodLossPerTick;
+#pragma warning restore HONK0003
 
         if (!_net.IsServer)
             return;
