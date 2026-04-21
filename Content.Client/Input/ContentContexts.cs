@@ -1,4 +1,7 @@
 using Content.Shared.Input;
+//HONK START - verb bindings (#579)
+using Content.Shared.RussStation.Input;
+//HONK END
 using Robust.Shared.Input;
 
 namespace Content.Client.Input
@@ -99,6 +102,13 @@ namespace Content.Client.Input
             {
                 common.AddFunction(boundKey);
             }
+
+            //HONK START - verb bindings (#579)
+            foreach (var slot in HonkVerbBindKeyFunctions.All)
+            {
+                common.AddFunction(slot);
+            }
+            //HONK END
 
             var aghost = contexts.New("aghost", "common");
             aghost.AddFunction(EngineKeyFunctions.MoveUp);
