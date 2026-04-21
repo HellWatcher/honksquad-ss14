@@ -110,4 +110,10 @@ public sealed partial class SurgeryProcedurePrototype : IPrototype
     /// </summary>
     [DataField]
     public SurgeryDifficulty Difficulty = SurgeryDifficulty.Standard;
+
+    /// <summary>
+    /// Top-level category the procedure is grouped under in the selection radial menu.
+    /// </summary>
+    [DataField]
+    public SurgeryCategory Category = SurgeryCategory.WoundRepair;
 }

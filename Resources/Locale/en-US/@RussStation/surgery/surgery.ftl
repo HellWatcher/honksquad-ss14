@@ -71,3 +71,10 @@ surgery-procedure-tend-wounds-burn = Tend Wounds (Burn)
 surgery-procedure-organ-manipulation = Organ Manipulation
 surgery-procedure-wound-repair-fracture = Set Fractures
 surgery-procedure-wound-repair-burn = Treat Burns
+
+## Procedure Categories
+surgery-category-wound-repair = Wound Repair
+surgery-category-tend-wounds = Tend Wounds
+surgery-category-organ-manipulation = Organ Manipulation
+surgery-category-implants = Implants
+surgery-category-advanced = Advanced

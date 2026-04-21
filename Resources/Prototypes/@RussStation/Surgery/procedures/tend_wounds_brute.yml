@@ -5,6 +5,7 @@
   icon:
     sprite: "@RussStation/Interface/Alerts/wounds.rsi"
     state: brute_icon
+  category: TendWounds
   difficulty: Minor
   steps:
     - quality: Slicing

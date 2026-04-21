@@ -5,6 +5,7 @@
   icon:
     sprite: "@RussStation/Interface/Alerts/wounds.rsi"
     state: burn_icon
+  category: WoundRepair
   difficulty: Minor
   steps:
     - quality: Cauterizing

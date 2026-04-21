@@ -5,6 +5,7 @@
   icon:
     sprite: "@RussStation/Interface/Surgery/procedures.rsi"
     state: organmanipulation_icon
+  category: OrganManipulation
   difficulty: Major
   steps:
     - quality: Slicing
