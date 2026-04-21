@@ -1,0 +1,14 @@
+- type: surgeryProcedure
+  id: WoundRepairBurn
+  name: surgery-procedure-wound-repair-burn
+  description: Cauterize and dress burn wounds to clear burn damage.
+  icon:
+    sprite: "@RussStation/Interface/Alerts/wounds.rsi"
+    state: burn_icon
+  difficulty: Minor
+  steps:
+    - quality: Cauterizing
+      duration: 6
+      popup: surgery-step-treat-burn-wounds
+      effect: !type:ClearWoundCategoryEffect
+        category: Burn

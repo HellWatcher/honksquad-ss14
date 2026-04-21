@@ -18,6 +18,8 @@ surgery-step-cauterize = {CAPITALIZE(THE($user))} cauterizes the wound on {THE($
 surgery-step-treat-brute = {CAPITALIZE(THE($user))} repairs physical damage on {THE($target)}.
 surgery-step-treat-burn = {CAPITALIZE(THE($user))} treats burn damage on {THE($target)}.
 surgery-step-remove-organ = {CAPITALIZE(THE($user))} carefully extracts an organ from {THE($target)}.
+surgery-step-set-bones = {CAPITALIZE(THE($user))} sets {POSS-ADJ($target)} broken bones.
+surgery-step-treat-burn-wounds = {CAPITALIZE(THE($user))} dresses and cauterizes {POSS-ADJ($target)} burns.
 
 ## Alerts
 alerts-surgery-draped-name = Surgical Drapes
@@ -67,3 +69,5 @@ tool-quality-draping-tool-name = Drape
 surgery-procedure-tend-wounds-brute = Tend Wounds (Brute)
 surgery-procedure-tend-wounds-burn = Tend Wounds (Burn)
 surgery-procedure-organ-manipulation = Organ Manipulation
+surgery-procedure-wound-repair-fracture = Set Fractures
+surgery-procedure-wound-repair-burn = Treat Burns

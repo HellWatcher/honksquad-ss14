@@ -1,0 +1,14 @@
+- type: surgeryProcedure
+  id: WoundRepairFracture
+  name: surgery-procedure-wound-repair-fracture
+  description: Manually set broken bones to clear fractures.
+  icon:
+    sprite: "@RussStation/Interface/Alerts/wounds.rsi"
+    state: brute_icon
+  difficulty: Minor
+  steps:
+    - quality: BoneSetting
+      duration: 6
+      popup: surgery-step-set-bones
+      effect: !type:ClearWoundCategoryEffect
+        category: Fracture

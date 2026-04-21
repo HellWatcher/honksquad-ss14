@@ -105,6 +105,10 @@ public sealed partial class SurgerySystem
                 OpenOrganRemovalMenu(surgeon, patient);
                 break;
 
+            case ClearWoundCategoryEffect clear:
+                _wounds.ClearWoundsByCategory(patient, clear.Category);
+                break;
+
             default:
                 Log.Warning($"Unhandled surgery effect type: {effect.GetType().Name} on {ToPrettyString(patient)}");
                 break;

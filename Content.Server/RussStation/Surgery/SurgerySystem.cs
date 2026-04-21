@@ -7,6 +7,7 @@ using Content.Shared.Popups;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Systems;
+using Content.Shared.RussStation.Wounds.Systems;
 using Content.Shared.Standing;
 using Content.Shared.Tag;
 using Content.Shared.Tools;
@@ -34,6 +35,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     [Dependency] private readonly TagSystem _tags = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
+    [Dependency] private readonly SharedWoundSystem _wounds = default!;
 
     [Dependency] private readonly EntityQuery<SurgeryDrapedComponent> _drapedQuery = default!;
     [Dependency] private readonly EntityQuery<ActiveSurgeryComponent> _activeSurgeryQuery = default!;
