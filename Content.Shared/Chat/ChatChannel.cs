@@ -85,6 +85,13 @@ namespace Content.Shared.Chat
         /// </summary>
         Unspecified = 1 << 14,
 
+        // HONK START - dedicated channel for mirrored popups (issue #578). Synthesized client-side, never received from the server.
+        /// <summary>
+        ///     Mirrored popups shown in the chat tab so players can scroll back.
+        /// </summary>
+        Popup = 1 << 15,
+        // HONK END
+
         /// <summary>
         ///     Channels considered to be IC.
         /// </summary>

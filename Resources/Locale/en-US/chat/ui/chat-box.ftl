@@ -31,6 +31,7 @@ hud-chatbox-channel-Server = Server
 hud-chatbox-channel-Visual = Actions
 hud-chatbox-channel-Damage = Damage
 hud-chatbox-channel-Unspecified = Unspecified
+hud-chatbox-channel-Popup = Popup
 
 hud-chatbox-highlights = Highlights:
 hud-chatbox-highlights-button = Submit

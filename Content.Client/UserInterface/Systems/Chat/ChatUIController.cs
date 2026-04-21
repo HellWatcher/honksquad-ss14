@@ -535,6 +535,10 @@ public sealed partial class ChatUIController : UIController
         // can always hear server (nobody can actually send server messages).
         FilterableChannels |= ChatChannel.Server;
 
+        // HONK START - popup mirror is always filterable (issue #578)
+        FilterableChannels |= ChatChannel.Popup;
+        // HONK END
+
         if (_state.CurrentState is GameplayStateBase)
         {
             // can always hear local / radio / emote / notifications when in the game
