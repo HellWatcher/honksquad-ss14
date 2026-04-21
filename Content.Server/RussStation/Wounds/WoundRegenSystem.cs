@@ -19,7 +19,6 @@ public sealed class WoundRegenSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly SharedWoundSystem _wounds = default!;
 
     private TimeSpan _nextTick;
 
