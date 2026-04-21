@@ -84,9 +84,9 @@ public sealed class MessengerServerSystem : EntitySystem
 
     private string GenerateAddress(string prefix)
     {
-        for (var i = 0; i < 100; i++)
+        for (var i = 0; i < MessengerConstants.MaxAddressGenerationAttempts; i++)
         {
-            var addr = $"{prefix}{_random.Next(0x10000):X4}";
+            var addr = $"{prefix}{_random.Next(MessengerConstants.CrewAddressHexRange):X4}";
             if (_usedAddresses.Add(addr))
                 return addr;
         }
@@ -136,7 +136,7 @@ public sealed class MessengerServerSystem : EntitySystem
         conversation.Add(new StoredMessage(senderCart, senderName, text, _timing.CurTime));
 
         if (conversation.Count > MaxMessagesPerConversation)
-            conversation.RemoveAt(0);
+            conversation.RemoveAt(MessengerConstants.OldestMessageIndex);
 
         return true;
     }
@@ -165,7 +165,7 @@ public sealed class MessengerServerSystem : EntitySystem
         if (!_messages.TryGetValue(key, out var conversation) || conversation.Count == 0)
             return false;
 
-        var lastSeen = _lastSeen.GetValueOrDefault((viewerCart, otherCart), 0);
+        var lastSeen = _lastSeen.GetValueOrDefault((viewerCart, otherCart), MessengerConstants.NeverSeenMessageCount);
         return conversation.Count > lastSeen;
     }
 

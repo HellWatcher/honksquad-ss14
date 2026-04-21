@@ -6,19 +6,20 @@ namespace Content.Client.RussStation.Economy;
 /// </summary>
 public static class EconomyConstants
 {
-    /// <summary>
-    /// Top padding above the mute-toggle row in the balance cartridge UI.
-    /// </summary>
+    public const int MuteRowLeftMargin = 0;
+
     public const int MuteRowTopMargin = 8;
 
-    /// <summary>
-    /// Top padding above the transaction-list header label.
-    /// </summary>
+    public const int MuteRowRightMargin = 0;
+
+    public const int MuteRowBottomMargin = 0;
+
+    public const int TxHeaderLeftMargin = 0;
+
     public const int TxHeaderTopMargin = 12;
 
-    /// <summary>
-    /// Bottom padding below the transaction-list header label.
-    /// </summary>
+    public const int TxHeaderRightMargin = 0;
+
     public const int TxHeaderBottomMargin = 4;
 
     /// <summary>
@@ -26,12 +27,6 @@ public static class EconomyConstants
     /// transaction row so amounts line up cleanly.
     /// </summary>
     public const int TxAmountColumnMinWidth = 60;
-
-    /// <summary>
-    /// Virtual-pixel padding applied to the horizontal sides (and unused vertical
-    /// sides) of balance cartridge margins that should have no inset.
-    /// </summary>
-    public const int NoMargin = 0;
 
     /// <summary>
     /// Index of the primary content <c>BoxContainer</c> inside the balance

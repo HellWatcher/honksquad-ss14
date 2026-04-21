@@ -60,7 +60,7 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
             Texture = _spriteSystem.Frame0(new SpriteSpecifier.EntityPrototype(seed.PacketPrototype)),
             Stretch = TextureRect.StretchMode.KeepAspectCentered,
             SetSize = new System.Numerics.Vector2(BotanyClientConstants.SeedIconSize, BotanyClientConstants.SeedIconSize),
-            Margin = new Thickness(BotanyClientConstants.SeedRowFlushMargin, BotanyClientConstants.SeedRowFlushMargin, BotanyClientConstants.SeedIconRightMargin, BotanyClientConstants.SeedRowFlushMargin),
+            Margin = new Thickness(BotanyClientConstants.SeedIconLeftMargin, BotanyClientConstants.SeedIconTopMargin, BotanyClientConstants.SeedIconRightMargin, BotanyClientConstants.SeedIconBottomMargin),
             VerticalAlignment = VAlignment.Center,
         };
         row.AddChild(icon);
@@ -70,7 +70,7 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
             Text = $"{seed.Count}x {seed.DisplayName}",
             HorizontalExpand = true,
             ClipText = true,
-            Margin = new Thickness(BotanyClientConstants.SeedRowFlushMargin, BotanyClientConstants.SeedRowFlushMargin, BotanyClientConstants.SeedNameRightMargin, BotanyClientConstants.SeedRowFlushMargin),
+            Margin = new Thickness(BotanyClientConstants.SeedNameLeftMargin, BotanyClientConstants.SeedNameTopMargin, BotanyClientConstants.SeedNameRightMargin, BotanyClientConstants.SeedNameBottomMargin),
         });
 
         row.AddChild(StatLabel(seed.Potency.ToString("0"), BotanyClientConstants.SeedStatLabelMinWidth));

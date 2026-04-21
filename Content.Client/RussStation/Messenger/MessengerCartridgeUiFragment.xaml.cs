@@ -29,7 +29,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         RobustXamlLoader.Load(this);
         Orientation = LayoutOrientation.Vertical;
 
-        var content = (BoxContainer) GetChild(1);
+        var content = (BoxContainer) GetChild(MessengerConstants.RootContentChildIndex);
 
         // Contact list view.
         _contactList = new BoxContainer
@@ -60,7 +60,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
             Text = Loc.GetString("messenger-back"),
             StyleClasses = { "OpenBoth" },
             HorizontalAlignment = HAlignment.Left,
-            Margin = new Thickness(0, 0, 0, 4),
+            Margin = new Thickness(MessengerConstants.BackButtonLeftMargin, MessengerConstants.BackButtonTopMargin, MessengerConstants.BackButtonRightMargin, MessengerConstants.BackButtonBottomMargin),
         };
         _backButton.OnPressed += _ => OnBackPressed?.Invoke();
 
@@ -81,7 +81,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
             HorizontalExpand = true,
-            Margin = new Thickness(0, 4, 0, 0),
+            Margin = new Thickness(MessengerConstants.InputRowLeftMargin, MessengerConstants.InputRowTopMargin, MessengerConstants.InputRowRightMargin, MessengerConstants.InputRowBottomMargin),
         };
 
         _messageInput = new LineEdit
@@ -95,7 +95,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         {
             Text = Loc.GetString("messenger-send"),
             StyleClasses = { "OpenBoth" },
-            Margin = new Thickness(4, 0, 0, 0),
+            Margin = new Thickness(MessengerConstants.SendButtonLeftMargin, MessengerConstants.SendButtonTopMargin, MessengerConstants.SendButtonRightMargin, MessengerConstants.SendButtonBottomMargin),
         };
         _sendButton.OnPressed += _ => SendCurrentMessage();
 
@@ -112,7 +112,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
             Text = Loc.GetString("messenger-mute"),
             StyleClasses = { "OpenBoth" },
             HorizontalAlignment = HAlignment.Center,
-            Margin = new Thickness(0, 4, 0, 4),
+            Margin = new Thickness(MessengerConstants.MuteButtonLeftMargin, MessengerConstants.MuteButtonTopMargin, MessengerConstants.MuteButtonRightMargin, MessengerConstants.MuteButtonBottomMargin),
         };
         _muteButton.OnPressed += _ => OnMuteToggled?.Invoke();
 
@@ -120,7 +120,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         {
             StyleClasses = { "LabelSubText" },
             HorizontalAlignment = HAlignment.Right,
-            Margin = new Thickness(0, 2, 4, 0),
+            Margin = new Thickness(MessengerConstants.AddressLabelLeftMargin, MessengerConstants.AddressLabelTopMargin, MessengerConstants.AddressLabelRightMargin, MessengerConstants.AddressLabelBottomMargin),
         };
 
         var body = new BoxContainer
@@ -195,7 +195,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
             {
                 StyleClasses = { "OpenBoth" },
                 HorizontalExpand = true,
-                Margin = new Thickness(0, 1, 0, 1),
+                Margin = new Thickness(MessengerConstants.ContactRowLeftMargin, MessengerConstants.ContactRowTopMargin, MessengerConstants.ContactRowRightMargin, MessengerConstants.ContactRowBottomMargin),
             };
 
             var rowContent = new BoxContainer
@@ -214,7 +214,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
             {
                 Text = contact.JobTitle,
                 StyleClasses = { "LabelSubText" },
-                Margin = new Thickness(8, 0, 0, 0),
+                Margin = new Thickness(MessengerConstants.JobLabelLeftMargin, MessengerConstants.JobLabelTopMargin, MessengerConstants.JobLabelRightMargin, MessengerConstants.JobLabelBottomMargin),
             };
 
             rowContent.AddChild(nameLabel);
@@ -226,7 +226,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
                 {
                     Text = "*",
                     StyleClasses = { "LabelKeyValueStatValue" },
-                    Margin = new Thickness(4, 0, 0, 0),
+                    Margin = new Thickness(MessengerConstants.UnreadDotLeftMargin, MessengerConstants.UnreadDotTopMargin, MessengerConstants.UnreadDotRightMargin, MessengerConstants.UnreadDotBottomMargin),
                 };
                 rowContent.AddChild(unreadDot);
             }
@@ -285,7 +285,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
             {
                 Orientation = LayoutOrientation.Vertical,
                 HorizontalExpand = true,
-                Margin = new Thickness(0, 2, 0, 2),
+                Margin = new Thickness(MessengerConstants.MessageRowLeftMargin, MessengerConstants.MessageRowTopMargin, MessengerConstants.MessageRowRightMargin, MessengerConstants.MessageRowBottomMargin),
             };
 
             var senderLabel = new Label

@@ -70,7 +70,7 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
                 box.AddChild(new Label
                 {
                     Text = Loc.GetString("health-analyzer-reagent-group-empty"),
-                    Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentRowIndent, MedicalScannerConstants.ReagentRowOtherSidesPadding, MedicalScannerConstants.ReagentRowOtherSidesPadding, MedicalScannerConstants.ReagentRowOtherSidesPadding),
+                    Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentRowLeftIndent, MedicalScannerConstants.ReagentRowTopPadding, MedicalScannerConstants.ReagentRowRightPadding, MedicalScannerConstants.ReagentRowBottomPadding),
                 });
             }
             else
@@ -80,7 +80,7 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
                     var line = new BoxContainer
                     {
                         Orientation = LayoutOrientation.Horizontal,
-                        Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentRowIndent, MedicalScannerConstants.ReagentRowOtherSidesPadding, MedicalScannerConstants.ReagentRowOtherSidesPadding, MedicalScannerConstants.ReagentRowOtherSidesPadding),
+                        Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentRowLeftIndent, MedicalScannerConstants.ReagentRowTopPadding, MedicalScannerConstants.ReagentRowRightPadding, MedicalScannerConstants.ReagentRowBottomPadding),
                         HorizontalExpand = true,
                     };
 
@@ -118,7 +118,7 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
                         Text = Loc.GetString(locKey,
                             ("name", TitleCase(reagent.ReagentName)),
                             ("quantity", FormatAmount(reagent.Quantity))),
-                        Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentLabelSpacing, MedicalScannerConstants.ReagentRowOtherSidesPadding, MedicalScannerConstants.ReagentRowOtherSidesPadding, MedicalScannerConstants.ReagentRowOtherSidesPadding),
+                        Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentLabelLeftSpacing, MedicalScannerConstants.ReagentLabelTopPadding, MedicalScannerConstants.ReagentLabelRightPadding, MedicalScannerConstants.ReagentLabelBottomPadding),
                         FontColorOverride = color,
                     });
 
