@@ -3,9 +3,9 @@ using Robust.Shared.GameStates;
 
 namespace Content.Shared.RussStation.Traits;
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class NegotiatorComponent : Component
 {
-    [DataField]
+    [DataField, AutoNetworkedField]
     public float WageMultiplier = 1.5f;
 }

@@ -6,9 +6,9 @@ namespace Content.Shared.RussStation.Traits;
 /// Scales the distance and speed of thrown items by a multiplier so
 /// the character literally can't throw as far or as hard.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class WeakArmComponent : Component
 {
-    [DataField]
+    [DataField, AutoNetworkedField]
     public float ThrowMultiplier = 0.5f;
 }

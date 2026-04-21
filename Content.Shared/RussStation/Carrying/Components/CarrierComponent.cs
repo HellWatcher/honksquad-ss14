@@ -11,19 +11,19 @@ namespace Content.Shared.RussStation.Carrying.Components;
 /// The active relationship lives on <see cref="ActiveCarrierComponent"/>;
 /// this component is config-only.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 [Access(typeof(SharedCarryingSystem))]
 public sealed partial class CarrierComponent : Component
 {
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public float WalkSpeedModifier = 0.75f;
 
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public float SprintSpeedModifier = 0.6f;
 
     /// <summary>
     /// Y offset for the carried entity visual. Overridable per prototype for different species heights.
     /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public float CarryOffset = 0.2f;
 }

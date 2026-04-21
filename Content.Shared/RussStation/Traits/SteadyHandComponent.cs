@@ -3,9 +3,9 @@ using Robust.Shared.GameStates;
 
 namespace Content.Shared.RussStation.Traits;
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class SteadyHandComponent : Component
 {
-    [DataField]
+    [DataField, AutoNetworkedField]
     public float SpreadMultiplier = 0.5f;
 }

@@ -8,24 +8,24 @@ namespace Content.Shared.RussStation.MedicalScanner;
 /// Sits alongside the upstream <c>HealthAnalyzerComponent</c>; our system subscribes its events
 /// off this component to avoid colliding with upstream's (component, event) subscription slot.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentPause]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
 public sealed partial class HealthAnalyzerReagentScannerComponent : Component
 {
     /// <summary>
     /// Entity currently being ticked for reagent updates. Pinned after a successful scan;
     /// cleared on drop, toggle-off, deletion, or mode-wide stop.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public EntityUid? ReagentScanTarget;
 
-    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField]
     [AutoPausedField]
     public TimeSpan NextReagentUpdate = TimeSpan.Zero;
 
-    [DataField]
+    [DataField, AutoNetworkedField]
     public TimeSpan ReagentUpdateInterval = TimeSpan.FromSeconds(1);
 
-    [DataField]
+    [DataField, AutoNetworkedField]
     public float? MaxReagentScanRange = 2.5f;
 
     /// <summary>
