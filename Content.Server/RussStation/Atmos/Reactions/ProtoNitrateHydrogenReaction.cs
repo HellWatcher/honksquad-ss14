@@ -14,7 +14,7 @@ public sealed partial class ProtoNitrateHydrogenReaction : IGasReactionEffect
         var hydrogen = mixture.GetMoles(Gas.Hydrogen);
         var protoNitrate = mixture.GetMoles(Gas.ProtoNitrate);
 
-        var producedAmount = Math.Min(RussAtmospherics.ProtoNitrateHydrogenConversionMaxRate,
+        var producedAmount = Math.Min(AtmosConstants.ProtoNitrateHydrogenConversionMaxRate,
             Math.Min(hydrogen, protoNitrate));
 
         if (producedAmount <= 0 || hydrogen - producedAmount < 0)
@@ -23,10 +23,10 @@ public sealed partial class ProtoNitrateHydrogenReaction : IGasReactionEffect
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
         mixture.AdjustMoles(Gas.Hydrogen, -producedAmount);
-        mixture.AdjustMoles(Gas.ProtoNitrate, producedAmount * RussAtmospherics.ProtoNitrateHydrogenConversionProducedPerUnit);
+        mixture.AdjustMoles(Gas.ProtoNitrate, producedAmount * AtmosConstants.ProtoNitrateHydrogenConversionProducedPerUnit);
 
         ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
-            -(producedAmount * RussAtmospherics.ProtoNitrateHydrogenConversionEnergy), heatScale, mixture.Temperature);
+            -(producedAmount * AtmosConstants.ProtoNitrateHydrogenConversionEnergy), heatScale, mixture.Temperature);
 
         return ReactionResult.Reacting;
     }

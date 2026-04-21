@@ -19,7 +19,7 @@ public sealed partial class NitriumDecompositionReaction : IGasReactionEffect
         var nitrium = mixture.GetMoles(Gas.Nitrium);
 
         var heatEfficiency = Math.Min(
-            temperature / RussAtmospherics.NitriumDecompositionTempDivisor,
+            temperature / AtmosConstants.NitriumDecompositionTempDivisor,
             nitrium);
 
         if (heatEfficiency <= 0 || nitrium - heatEfficiency < 0)
@@ -32,7 +32,7 @@ public sealed partial class NitriumDecompositionReaction : IGasReactionEffect
         mixture.AdjustMoles(Gas.Nitrogen, heatEfficiency);
 
         ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
-            heatEfficiency * RussAtmospherics.NitriumDecompositionEnergy, heatScale, temperature);
+            heatEfficiency * AtmosConstants.NitriumDecompositionEnergy, heatScale, temperature);
 
         return ReactionResult.Reacting;
     }

@@ -19,22 +19,22 @@ public sealed partial class HealiumFormationReaction : IGasReactionEffect
         var frezon = mixture.GetMoles(Gas.Frezon);
         var bz = mixture.GetMoles(Gas.BZ);
 
-        var heatEfficiency = Math.Min(temperature * RussAtmospherics.HealiumHeatEfficiencyScale,
-            Math.Min(frezon / RussAtmospherics.HealiumFrezonConsumedPerUnit, bz / RussAtmospherics.HealiumBZConsumedPerUnit));
+        var heatEfficiency = Math.Min(temperature * AtmosConstants.HealiumHeatEfficiencyScale,
+            Math.Min(frezon / AtmosConstants.HealiumFrezonConsumedPerUnit, bz / AtmosConstants.HealiumBZConsumedPerUnit));
 
         if (heatEfficiency <= 0
-            || frezon - heatEfficiency * RussAtmospherics.HealiumFrezonConsumedPerUnit < 0
-            || bz - heatEfficiency * RussAtmospherics.HealiumBZConsumedPerUnit < 0)
+            || frezon - heatEfficiency * AtmosConstants.HealiumFrezonConsumedPerUnit < 0
+            || bz - heatEfficiency * AtmosConstants.HealiumBZConsumedPerUnit < 0)
             return ReactionResult.NoReaction;
 
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
-        mixture.AdjustMoles(Gas.Frezon, -heatEfficiency * RussAtmospherics.HealiumFrezonConsumedPerUnit);
-        mixture.AdjustMoles(Gas.BZ, -heatEfficiency * RussAtmospherics.HealiumBZConsumedPerUnit);
-        mixture.AdjustMoles(Gas.Healium, heatEfficiency * RussAtmospherics.HealiumProducedPerUnit);
+        mixture.AdjustMoles(Gas.Frezon, -heatEfficiency * AtmosConstants.HealiumFrezonConsumedPerUnit);
+        mixture.AdjustMoles(Gas.BZ, -heatEfficiency * AtmosConstants.HealiumBZConsumedPerUnit);
+        mixture.AdjustMoles(Gas.Healium, heatEfficiency * AtmosConstants.HealiumProducedPerUnit);
 
         ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
-            heatEfficiency * RussAtmospherics.HealiumFormationEnergy, heatScale);
+            heatEfficiency * AtmosConstants.HealiumFormationEnergy, heatScale);
 
         return ReactionResult.Reacting;
     }

@@ -25,19 +25,19 @@ public sealed partial class HydrogenFireReaction : IGasReactionEffect
 
         // burned = min(h2 / BURN_RATE_DELTA, o2 / (BURN_RATE_DELTA * OXYGEN_FULLBURN), h2, o2 * 2)
         var burned = Math.Min(
-            initialH2 / RussAtmospherics.HydrogenBurnRateDelta,
-            initialO2 / (RussAtmospherics.HydrogenBurnRateDelta * RussAtmospherics.HydrogenOxygenFullburn));
+            initialH2 / AtmosConstants.HydrogenBurnRateDelta,
+            initialO2 / (AtmosConstants.HydrogenBurnRateDelta * AtmosConstants.HydrogenOxygenFullburn));
         burned = Math.Min(burned, initialH2);
-        burned = Math.Min(burned, initialO2 * RussAtmospherics.HydrogenFireOxygenBurnMultiplier);
+        burned = Math.Min(burned, initialO2 * AtmosConstants.HydrogenFireOxygenBurnMultiplier);
 
         if (burned <= 0)
             return ReactionResult.NoReaction;
 
         mixture.AdjustMoles(Gas.Hydrogen, -burned);
-        mixture.AdjustMoles(Gas.Oxygen, -burned * RussAtmospherics.HydrogenFireOxygenConsumedPerUnit);
+        mixture.AdjustMoles(Gas.Oxygen, -burned * AtmosConstants.HydrogenFireOxygenConsumedPerUnit);
         mixture.AdjustMoles(Gas.WaterVapor, burned);
 
-        energyReleased += burned * RussAtmospherics.HydrogenFireEnergyReleased;
+        energyReleased += burned * AtmosConstants.HydrogenFireEnergyReleased;
         mixture.ReactionResults[(byte)GasReaction.Fire] += burned;
 
         if (energyReleased > 0)

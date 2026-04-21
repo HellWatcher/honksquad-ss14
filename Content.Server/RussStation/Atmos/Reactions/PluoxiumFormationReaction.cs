@@ -20,9 +20,9 @@ public sealed partial class PluoxiumFormationReaction : IGasReactionEffect
         var tritium = mixture.GetMoles(Gas.Tritium);
 
         // Rate limited by all three reactants and max rate
-        var produced = Math.Min(co2, o2 / RussAtmospherics.PluoxiumOxygenConsumedPerUnit);
-        produced = Math.Min(produced, tritium / RussAtmospherics.PluoxiumTritiumConsumedPerUnit);
-        produced = Math.Min(produced, RussAtmospherics.PluoxiumFormationMaxRate);
+        var produced = Math.Min(co2, o2 / AtmosConstants.PluoxiumOxygenConsumedPerUnit);
+        produced = Math.Min(produced, tritium / AtmosConstants.PluoxiumTritiumConsumedPerUnit);
+        produced = Math.Min(produced, AtmosConstants.PluoxiumFormationMaxRate);
 
         if (produced <= 0)
             return ReactionResult.NoReaction;
@@ -30,13 +30,13 @@ public sealed partial class PluoxiumFormationReaction : IGasReactionEffect
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
         mixture.AdjustMoles(Gas.CarbonDioxide, -produced);
-        mixture.AdjustMoles(Gas.Oxygen, -produced * RussAtmospherics.PluoxiumOxygenConsumedPerUnit);
-        mixture.AdjustMoles(Gas.Tritium, -produced * RussAtmospherics.PluoxiumTritiumConsumedPerUnit);
+        mixture.AdjustMoles(Gas.Oxygen, -produced * AtmosConstants.PluoxiumOxygenConsumedPerUnit);
+        mixture.AdjustMoles(Gas.Tritium, -produced * AtmosConstants.PluoxiumTritiumConsumedPerUnit);
         mixture.AdjustMoles(Gas.Pluoxium, produced);
-        mixture.AdjustMoles(Gas.Hydrogen, produced * RussAtmospherics.PluoxiumTritiumConsumedPerUnit);
+        mixture.AdjustMoles(Gas.Hydrogen, produced * AtmosConstants.PluoxiumTritiumConsumedPerUnit);
 
         ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
-            produced * RussAtmospherics.PluoxiumFormationEnergy, heatScale);
+            produced * AtmosConstants.PluoxiumFormationEnergy, heatScale);
 
         return ReactionResult.Reacting;
     }

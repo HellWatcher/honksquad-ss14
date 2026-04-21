@@ -5,7 +5,7 @@ namespace Content.Server.RussStation.Atmos;
 /// <summary>
 ///     Fork-specific atmospheric constants for gas reactions.
 /// </summary>
-public static class RussAtmospherics
+public static class AtmosConstants
 {
     public const float HydrogenBurnRateDelta = 2f;
     public const float HydrogenOxygenFullburn = 10f;

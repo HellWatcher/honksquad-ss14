@@ -22,17 +22,17 @@ public sealed partial class BZFormationReaction : IGasReactionEffect
             return ReactionResult.NoReaction;
 
         // If plasma:N2O ratio > 3:1, N2O decomposes into N2+O2 instead
-        if (plasma / n2o > RussAtmospherics.BZFormationPlasmaN2ORatioThreshold)
+        if (plasma / n2o > AtmosConstants.BZFormationPlasmaN2ORatioThreshold)
         {
             mixture.AdjustMoles(Gas.NitrousOxide, -n2o);
-            mixture.AdjustMoles(Gas.Nitrogen, n2o * RussAtmospherics.BZFormationN2ODecomposeNitrogenRatio);
-            mixture.AdjustMoles(Gas.Oxygen, n2o * RussAtmospherics.BZFormationN2ODecomposeOxygenRatio);
+            mixture.AdjustMoles(Gas.Nitrogen, n2o * AtmosConstants.BZFormationN2ODecomposeNitrogenRatio);
+            mixture.AdjustMoles(Gas.Oxygen, n2o * AtmosConstants.BZFormationN2ODecomposeOxygenRatio);
             return ReactionResult.Reacting;
         }
 
-        var ratio = Math.Min(n2o / plasma, RussAtmospherics.BZFormationReactantRatioCap);
-        var produced = Math.Min(n2o * RussAtmospherics.BZFormationRate * ratio,
-            plasma * RussAtmospherics.BZFormationRate * ratio);
+        var ratio = Math.Min(n2o / plasma, AtmosConstants.BZFormationReactantRatioCap);
+        var produced = Math.Min(n2o * AtmosConstants.BZFormationRate * ratio,
+            plasma * AtmosConstants.BZFormationRate * ratio);
 
         if (produced <= 0)
             return ReactionResult.NoReaction;
@@ -44,7 +44,7 @@ public sealed partial class BZFormationReaction : IGasReactionEffect
         mixture.AdjustMoles(Gas.BZ, produced);
 
         ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
-            produced * RussAtmospherics.BZFormationEnergyReleased, heatScale);
+            produced * AtmosConstants.BZFormationEnergyReleased, heatScale);
 
         return ReactionResult.Reacting;
     }

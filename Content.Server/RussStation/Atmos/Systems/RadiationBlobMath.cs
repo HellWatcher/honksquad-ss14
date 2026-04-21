@@ -56,11 +56,11 @@ public static class RadiationBlobMath
         }
 
         var radius = Math.Max(
-            maxX - minX + RussAtmospherics.RadiationBlobInclusiveExtentAdjust,
-            maxY - minY + RussAtmospherics.RadiationBlobInclusiveExtentAdjust)
-            / RussAtmospherics.RadiationBlobRadiusDivisor;
+            maxX - minX + AtmosConstants.RadiationBlobInclusiveExtentAdjust,
+            maxY - minY + AtmosConstants.RadiationBlobInclusiveExtentAdjust)
+            / AtmosConstants.RadiationBlobRadiusDivisor;
         var slope = radius > MinRadiusForSlope && minRads > 0f
-            ? (maxRads / minRads - RussAtmospherics.RadiationBlobFlatGradientBaseline) / radius
+            ? (maxRads / minRads - AtmosConstants.RadiationBlobFlatGradientBaseline) / radius
             : DefaultSlope;
 
         return (maxRads, slope);
