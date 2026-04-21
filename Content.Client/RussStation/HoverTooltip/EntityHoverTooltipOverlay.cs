@@ -31,12 +31,12 @@ public sealed class EntityHoverTooltipOverlay : Overlay
 
         if (_fontManager != null)
         {
-            _font = _fontManager.GetCurrentFont(12);
-            _fontManager.FontsChanged += () => _font = _fontManager.GetCurrentFont(12);
+            _font = _fontManager.GetCurrentFont(HoverTooltipConstants.TooltipFontSize);
+            _fontManager.FontsChanged += () => _font = _fontManager.GetCurrentFont(HoverTooltipConstants.TooltipFontSize);
         }
         else
         {
-            _font = resourceCache.GetFont("/Fonts/NotoSans/NotoSans-Regular.ttf", 12);
+            _font = resourceCache.GetFont("/Fonts/NotoSans/NotoSans-Regular.ttf", HoverTooltipConstants.TooltipFontSize);
         }
         // HONK END
     }

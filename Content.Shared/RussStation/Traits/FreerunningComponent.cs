@@ -9,5 +9,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class FreerunningComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float ClimbDelayMultiplier = 0.5f;
+    public float ClimbDelayMultiplier = TraitsConstants.Freerunning.ClimbDelayMultiplier;
 }

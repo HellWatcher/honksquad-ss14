@@ -28,8 +28,8 @@ public sealed class VegetarianSystem : EntitySystem
         if (!_tag.HasTag(args.Food, MeatTag))
             return;
 
-        var coords = _transform.GetMoverCoordinates(uid).Offset(new Vector2(0, 0.25f));
+        var coords = _transform.GetMoverCoordinates(uid).Offset(new Vector2(0, TraitsConstants.Vegetarian.PopupYOffset));
         _popup.PopupPredictedCoordinates(Loc.GetString("trait-vegetarian-nausea"), coords, uid, PopupType.MediumCaution);
-        _vomit.Vomit(uid, -20f, -20f);
+        _vomit.Vomit(uid, TraitsConstants.Vegetarian.VomitThirstAmount, TraitsConstants.Vegetarian.VomitHungerAmount);
     }
 }

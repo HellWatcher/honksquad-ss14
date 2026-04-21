@@ -194,7 +194,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
         string number;
         do
         {
-            number = _random.Next(0x10000000, int.MaxValue).ToString("X8");
+            number = _random.Next(EconomyConstants.AccountNumberMinValue, int.MaxValue).ToString(EconomyConstants.AccountNumberHexFormat);
         }
         while (_accountIndex.ContainsKey(number));
 

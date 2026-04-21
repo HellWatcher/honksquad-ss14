@@ -13,5 +13,5 @@ public sealed partial class PoorAimComponent : Component
     /// Higher = worse accuracy. Default 2.0 means twice the normal spread.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float SpreadMultiplier = 2.0f;
+    public float SpreadMultiplier = TraitsConstants.PoorAim.SpreadMultiplier;
 }

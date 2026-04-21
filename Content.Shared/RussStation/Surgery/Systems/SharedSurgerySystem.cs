@@ -17,13 +17,13 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     /// </summary>
     private static readonly Dictionary<string, float> DefaultStepDurations = new()
     {
-        { "Slicing", 2.0f },
-        { "Retracting", 1.5f },
-        { "Clamping", 2.0f },
-        { "Sawing", 3.0f },
-        { "Drilling", 2.0f },
-        { "BoneSetting", 3.0f },
-        { "Cauterizing", 2.0f },
+        { "Slicing", SurgeryConstants.DefaultSlicingDuration },
+        { "Retracting", SurgeryConstants.DefaultRetractingDuration },
+        { "Clamping", SurgeryConstants.DefaultClampingDuration },
+        { "Sawing", SurgeryConstants.DefaultSawingDuration },
+        { "Drilling", SurgeryConstants.DefaultDrillingDuration },
+        { "BoneSetting", SurgeryConstants.DefaultBoneSettingDuration },
+        { "Cauterizing", SurgeryConstants.DefaultCauterizingDuration },
     };
 
     private const float FallbackStepDuration = 2.0f;
@@ -106,10 +106,10 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     public float GetSurfaceSpeedModifier(EntityUid patient)
     {
         if (!TryComp<BuckleComponent>(patient, out var buckle) || buckle.BuckledTo is not { } strap)
-            return 2f;
+            return SurgeryConstants.NoSurgerySurfacePenalty;
 
         if (!TryComp<SurgerySurfaceComponent>(strap, out var surface))
-            return 2f;
+            return SurgeryConstants.NoSurgerySurfacePenalty;
 
         return surface.SpeedModifier;
     }
@@ -133,11 +133,11 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     {
         return difficulty switch
         {
-            SurgeryDifficulty.Minor => 0.8f,
-            SurgeryDifficulty.Standard => 1.0f,
-            SurgeryDifficulty.Major => 1.3f,
-            SurgeryDifficulty.Critical => 1.5f,
-            _ => 1.0f,
+            SurgeryDifficulty.Minor => SurgeryConstants.DifficultyMinorModifier,
+            SurgeryDifficulty.Standard => SurgeryConstants.DifficultyStandardModifier,
+            SurgeryDifficulty.Major => SurgeryConstants.DifficultyMajorModifier,
+            SurgeryDifficulty.Critical => SurgeryConstants.DifficultyCriticalModifier,
+            _ => SurgeryConstants.DifficultyStandardModifier,
         };
     }
 

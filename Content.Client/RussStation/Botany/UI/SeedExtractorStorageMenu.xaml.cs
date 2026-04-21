@@ -52,15 +52,15 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
             HorizontalExpand = true,
-            Margin = new Thickness(4, 2),
+            Margin = new Thickness(BotanyClientConstants.SeedRowMarginH, BotanyClientConstants.SeedRowMarginV),
         };
 
         var icon = new TextureRect
         {
             Texture = _spriteSystem.Frame0(new SpriteSpecifier.EntityPrototype(seed.PacketPrototype)),
             Stretch = TextureRect.StretchMode.KeepAspectCentered,
-            SetSize = new System.Numerics.Vector2(24, 24),
-            Margin = new Thickness(0, 0, 4, 0),
+            SetSize = new System.Numerics.Vector2(BotanyClientConstants.SeedIconSize, BotanyClientConstants.SeedIconSize),
+            Margin = new Thickness(0, 0, BotanyClientConstants.SeedIconRightMargin, 0),
             VerticalAlignment = VAlignment.Center,
         };
         row.AddChild(icon);
@@ -70,20 +70,20 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
             Text = $"{seed.Count}x {seed.DisplayName}",
             HorizontalExpand = true,
             ClipText = true,
-            Margin = new Thickness(0, 0, 16, 0),
+            Margin = new Thickness(0, 0, BotanyClientConstants.SeedNameRightMargin, 0),
         });
 
-        row.AddChild(StatLabel(seed.Potency.ToString("0"), 50));
-        row.AddChild(StatLabel(seed.Yield.ToString("0"), 50));
-        row.AddChild(StatLabel(seed.Maturation.ToString("0"), 50));
-        row.AddChild(StatLabel(seed.Production.ToString("0"), 50));
-        row.AddChild(StatLabel(seed.Lifespan.ToString("0"), 50));
-        row.AddChild(StatLabel(seed.Endurance.ToString("0"), 50));
+        row.AddChild(StatLabel(seed.Potency.ToString("0"), BotanyClientConstants.SeedStatLabelMinWidth));
+        row.AddChild(StatLabel(seed.Yield.ToString("0"), BotanyClientConstants.SeedStatLabelMinWidth));
+        row.AddChild(StatLabel(seed.Maturation.ToString("0"), BotanyClientConstants.SeedStatLabelMinWidth));
+        row.AddChild(StatLabel(seed.Production.ToString("0"), BotanyClientConstants.SeedStatLabelMinWidth));
+        row.AddChild(StatLabel(seed.Lifespan.ToString("0"), BotanyClientConstants.SeedStatLabelMinWidth));
+        row.AddChild(StatLabel(seed.Endurance.ToString("0"), BotanyClientConstants.SeedStatLabelMinWidth));
 
         var takeButton = new Button
         {
             Text = Loc.GetString("seed-extractor-menu-take"),
-            MinWidth = 65,
+            MinWidth = BotanyClientConstants.SeedTakeButtonMinWidth,
         };
         takeButton.OnPressed += _ => OnTakePressed?.Invoke(seed.GroupKey);
         row.AddChild(takeButton);

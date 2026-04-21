@@ -53,7 +53,7 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
             var box = new BoxContainer
             {
                 Orientation = LayoutOrientation.Vertical,
-                SeparationOverride = 2,
+                SeparationOverride = MedicalScannerConstants.GroupSeparation,
             };
 
             box.AddChild(new Label
@@ -70,7 +70,7 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
                 box.AddChild(new Label
                 {
                     Text = Loc.GetString("health-analyzer-reagent-group-empty"),
-                    Margin = new Robust.Shared.Maths.Thickness(8, 0, 0, 0),
+                    Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentRowIndent, 0, 0, 0),
                 });
             }
             else
@@ -80,14 +80,14 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
                     var line = new BoxContainer
                     {
                         Orientation = LayoutOrientation.Horizontal,
-                        Margin = new Robust.Shared.Maths.Thickness(8, 0, 0, 0),
+                        Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentRowIndent, 0, 0, 0),
                         HorizontalExpand = true,
                     };
 
                     line.AddChild(new PanelContainer
                     {
-                        MinSize = new System.Numerics.Vector2(10, 10),
-                        SetSize = new System.Numerics.Vector2(10, 10),
+                        MinSize = new System.Numerics.Vector2(MedicalScannerConstants.ReagentColorSwatchSize, MedicalScannerConstants.ReagentColorSwatchSize),
+                        SetSize = new System.Numerics.Vector2(MedicalScannerConstants.ReagentColorSwatchSize, MedicalScannerConstants.ReagentColorSwatchSize),
                         VerticalAlignment = Control.VAlignment.Center,
                         PanelOverride = new StyleBoxFlat
                         {
@@ -118,7 +118,7 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
                         Text = Loc.GetString(locKey,
                             ("name", TitleCase(reagent.ReagentName)),
                             ("quantity", FormatAmount(reagent.Quantity))),
-                        Margin = new Robust.Shared.Maths.Thickness(6, 0, 0, 0),
+                        Margin = new Robust.Shared.Maths.Thickness(MedicalScannerConstants.ReagentLabelSpacing, 0, 0, 0),
                         FontColorOverride = color,
                     });
 

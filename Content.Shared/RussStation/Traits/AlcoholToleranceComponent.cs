@@ -9,5 +9,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class AlcoholToleranceComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float BoozeStrengthMultiplier = 0.5f;
+    public float BoozeStrengthMultiplier = TraitsConstants.AlcoholTolerance.BoozeStrengthMultiplier;
 }

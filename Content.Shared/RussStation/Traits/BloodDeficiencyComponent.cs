@@ -17,6 +17,6 @@ public sealed partial class BloodDeficiencyComponent : Component
     /// and ~75 minutes to fully drain.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public FixedPoint2 BloodLossPerTick = 0.2f;
+    public FixedPoint2 BloodLossPerTick = TraitsConstants.BloodDeficiency.BloodLossPerTick;
 
 }

@@ -69,11 +69,11 @@ public sealed partial class SurgerySystem
     {
         // Cautery burn damage
         var damage = new DamageSpecifier();
-        damage.DamageDict.Add("Heat", FixedPoint2.New(2));
+        damage.DamageDict.Add("Heat", FixedPoint2.New(SurgeryConstants.CauteryBurnDamage));
         _damageable.TryChangeDamage(patient, damage);
 
         // Stop all bleeding
-        _bloodstream.TryModifyBleedAmount((patient, null), -100f);
+        _bloodstream.TryModifyBleedAmount((patient, null), SurgeryConstants.CauteryBleedClearAmount);
 
         if (surgeon != null)
             _popup.PopupEntity(Loc.GetString("surgery-step-cauterize", ("user", surgeon.Value), ("target", patient)), patient);

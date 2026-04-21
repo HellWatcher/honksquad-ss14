@@ -1,0 +1,24 @@
+namespace Content.Shared.RussStation.Wounds;
+
+public static class WoundsConstants
+{
+    public const float MovementSlowMultiplier = 0.7f;
+
+    public const float FractureDropChance = 0.5f;
+
+    public const int MovementSlowTier = 2;
+
+    public const int FractureDropTier = 3;
+
+    public const int MaxWoundTier = 3;
+
+    public const int MaxStackedWoundsPerType = 3;
+
+    public const float DefaultBleedTier1Threshold = 1f;
+
+    public const float DefaultBleedTier2Threshold = 3f;
+
+    public const float DefaultBleedTier3Threshold = 6f;
+
+    public const float DefaultThresholdMultiplier = 1f;
+}

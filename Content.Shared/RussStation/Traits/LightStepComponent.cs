@@ -9,5 +9,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class LightStepComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float VolumeModifier = -10f;
+    public float VolumeModifier = TraitsConstants.LightStep.VolumeModifier;
 }

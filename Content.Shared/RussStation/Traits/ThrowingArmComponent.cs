@@ -10,5 +10,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class ThrowingArmComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float ThrowMultiplier = 1.5f;
+    public float ThrowMultiplier = TraitsConstants.ThrowingArm.ThrowMultiplier;
 }

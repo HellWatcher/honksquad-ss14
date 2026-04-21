@@ -22,5 +22,5 @@ public sealed partial class SurgeryDrapedComponent : Component
     /// 1.0 for surgical drapes (standard), 1.5 for bedsheets (improvised penalty).
     /// </summary>
     [AutoNetworkedField, DataField]
-    public float DrapeSpeedModifier = 1.5f;
+    public float DrapeSpeedModifier = SurgeryConstants.DefaultDrapeSpeedModifier;
 }

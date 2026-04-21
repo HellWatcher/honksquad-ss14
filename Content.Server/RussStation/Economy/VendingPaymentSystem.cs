@@ -7,6 +7,7 @@ using Content.Shared.Research.Prototypes;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Content.Shared.Stacks;
+using SharedEconomyConstants = Content.Shared.RussStation.Economy.EconomyConstants;
 using Content.Shared.VendingMachines;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
@@ -123,7 +124,7 @@ public sealed class VendingPaymentSystem : EntitySystem
 
         // Fall back to global CVar if no items had a price.
         if (vendorMin == int.MaxValue)
-            vendorMin = RoundUpTo5(_vendMinPrice);
+            vendorMin = RoundUpToStep(_vendMinPrice);
 
         // Pass 3: apply vendor minimum and round.
         foreach (var itemId in prices.Prices.Keys)
@@ -238,25 +239,25 @@ public sealed class VendingPaymentSystem : EntitySystem
         if (_recipeMaterialCosts.TryGetValue(itemId, out var materialCost))
         {
             var materialPrice = materialCost * _vendMaterialMarkup;
-            return RoundUpTo5((int) Math.Ceiling(materialPrice));
+            return RoundUpToStep((int) Math.Ceiling(materialPrice));
         }
 
         // Fallback: cargo estimated value.
         if (_proto.TryIndex<EntityPrototype>(itemId, out var proto))
         {
             var cargoPrice = _pricing.GetEstimatedPrice(proto) * _vendCargoMarkup;
-            return RoundUpTo5((int) Math.Ceiling(cargoPrice));
+            return RoundUpToStep((int) Math.Ceiling(cargoPrice));
         }
 
         return 0;
     }
 
-    private static int RoundUpTo5(int value)
+    private static int RoundUpToStep(int value)
     {
         if (value <= 0)
             return 0;
 
-        var remainder = value % 5;
-        return remainder == 0 ? value : value + (5 - remainder);
+        var remainder = value % SharedEconomyConstants.VendingPriceRoundingStep;
+        return remainder == 0 ? value : value + (SharedEconomyConstants.VendingPriceRoundingStep - remainder);
     }
 }

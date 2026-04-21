@@ -91,7 +91,7 @@ public sealed class ItemSlotEjectMenuSystem : EntitySystem
             Text = Loc.GetString("item-slot-eject-menu-verb"),
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/eject.svg.192dpi.png")),
             Act = () => _ui.TryToggleUi(uid, ItemSlotEjectMenuUiKey.Key, user),
-            Priority = 100
+            Priority = ItemSlotsConstants.EjectVerbPriority
         });
     }
 

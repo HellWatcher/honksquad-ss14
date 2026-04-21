@@ -12,5 +12,5 @@ public sealed partial class ToughComponent : Component
     /// Multiplier applied to wound thresholds. Higher = wounds trigger less easily.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float ThresholdMultiplier = 1.25f;
+    public float ThresholdMultiplier = TraitsConstants.Tough.ThresholdMultiplier;
 }

@@ -308,7 +308,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
     private void StartCauteryClose(EntityUid surgeon, EntityUid patient, EntityUid tool)
     {
-        var duration = TimeSpan.FromSeconds(2f
+        var duration = TimeSpan.FromSeconds(SurgeryConstants.CauteryCloseBaseDurationSeconds
             * GetSurfaceSpeedModifier(patient)
             * GetDrapeSpeedModifier(patient)
             * GetToolTierModifier(tool));
@@ -416,14 +416,14 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     public float GetToolTierModifier(EntityUid tool)
     {
         if (_tags.HasTag(tool, TierExperimentalTag))
-            return 0.7f;
+            return SurgeryConstants.ToolTierExperimentalModifier;
 
         if (_tags.HasTag(tool, TierAdvancedTag))
-            return 0.8f;
+            return SurgeryConstants.ToolTierAdvancedModifier;
 
         if (_tags.HasTag(tool, TierStandardTag))
-            return 1.0f;
+            return SurgeryConstants.ToolTierStandardModifier;
 
-        return 1.5f; // no tier tag = improvised
+        return SurgeryConstants.ToolTierImprovisedModifier; // no tier tag = improvised
     }
 }

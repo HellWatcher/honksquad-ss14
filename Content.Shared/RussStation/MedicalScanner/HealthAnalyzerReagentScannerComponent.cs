@@ -23,10 +23,10 @@ public sealed partial class HealthAnalyzerReagentScannerComponent : Component
     public TimeSpan NextReagentUpdate = TimeSpan.Zero;
 
     [DataField, AutoNetworkedField]
-    public TimeSpan ReagentUpdateInterval = TimeSpan.FromSeconds(1);
+    public TimeSpan ReagentUpdateInterval = MedicalScannerConstants.DefaultReagentUpdateInterval;
 
     [DataField, AutoNetworkedField]
-    public float? MaxReagentScanRange = 2.5f;
+    public float? MaxReagentScanRange = MedicalScannerConstants.DefaultMaxReagentScanRange;
 
     /// <summary>
     /// Edge flag mirroring upstream's <c>IsAnalyzerActive</c>. Only true while we are

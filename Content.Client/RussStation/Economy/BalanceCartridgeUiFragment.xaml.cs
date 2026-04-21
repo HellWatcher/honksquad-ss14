@@ -31,7 +31,7 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
             HorizontalAlignment = HAlignment.Center,
-            Margin = new Thickness(0, 8, 0, 0),
+            Margin = new Thickness(0, EconomyConstants.MuteRowTopMargin, 0, 0),
         };
         muteRow.AddChild(_muteButton);
 
@@ -40,7 +40,7 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
             Text = Loc.GetString("balance-cartridge-tx-header"),
             StyleClasses = { "LabelHeading" },
             HorizontalAlignment = HAlignment.Center,
-            Margin = new Thickness(0, 12, 0, 4),
+            Margin = new Thickness(0, EconomyConstants.TxHeaderTopMargin, 0, EconomyConstants.TxHeaderBottomMargin),
         };
 
         _transactionList = new BoxContainer
@@ -113,7 +113,7 @@ public sealed partial class BalanceCartridgeUiFragment : BoxContainer
             {
                 Text = $"{sign}{tx.Amount}",
                 StyleClasses = { tx.Amount >= 0 ? "LabelKeyValueStatValue" : "LabelSubText" },
-                MinWidth = 60,
+                MinWidth = EconomyConstants.TxAmountColumnMinWidth,
             });
             row.AddChild(new Label
             {

@@ -20,7 +20,7 @@ public sealed partial class ProtoNitrateBZReaction : IGasReactionEffect
         var protoNitrate = mixture.GetMoles(Gas.ProtoNitrate);
 
         var consumedAmount = Math.Min(
-            temperature / 2240f * bz * protoNitrate / (bz + protoNitrate),
+            temperature / RussAtmospherics.ProtoNitrateBZTempDivisor * bz * protoNitrate / (bz + protoNitrate),
             Math.Min(bz, protoNitrate));
 
         if (consumedAmount <= 0 || bz - consumedAmount < 0)
@@ -29,9 +29,9 @@ public sealed partial class ProtoNitrateBZReaction : IGasReactionEffect
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
         mixture.AdjustMoles(Gas.BZ, -consumedAmount);
-        mixture.AdjustMoles(Gas.Nitrogen, consumedAmount * 0.4f);
-        mixture.AdjustMoles(Gas.Helium, consumedAmount * 1.6f);
-        mixture.AdjustMoles(Gas.Plasma, consumedAmount * 0.8f);
+        mixture.AdjustMoles(Gas.Nitrogen, consumedAmount * RussAtmospherics.ProtoNitrateBZNitrogenProducedPerUnit);
+        mixture.AdjustMoles(Gas.Helium, consumedAmount * RussAtmospherics.ProtoNitrateBZHeliumProducedPerUnit);
+        mixture.AdjustMoles(Gas.Plasma, consumedAmount * RussAtmospherics.ProtoNitrateBZPlasmaProducedPerUnit);
 
         ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
             consumedAmount * RussAtmospherics.ProtoNitrateBZDecompositionEnergy, heatScale);

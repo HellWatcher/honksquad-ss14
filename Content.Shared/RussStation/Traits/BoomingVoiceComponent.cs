@@ -9,5 +9,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class BoomingVoiceComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float RangeMultiplier = 1.5f;
+    public float RangeMultiplier = TraitsConstants.BoomingVoice.RangeMultiplier;
 }

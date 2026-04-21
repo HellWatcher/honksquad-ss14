@@ -10,5 +10,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class WeakArmComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float ThrowMultiplier = 0.5f;
+    public float ThrowMultiplier = TraitsConstants.WeakArm.ThrowMultiplier;
 }

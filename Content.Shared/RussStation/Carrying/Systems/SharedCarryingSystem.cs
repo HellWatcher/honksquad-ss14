@@ -199,7 +199,7 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
         var freeHands = _hands.CountFreeHands(carrier);
         var pullingTarget = TryComp<PullerComponent>(carrier, out var pullerCheck) && pullerCheck.Pulling == target;
         var effectiveFreeHands = freeHands + (pullingTarget ? 1 : 0);
-        if (effectiveFreeHands < 2)
+        if (effectiveFreeHands < CarryingConstants.RequiredFreeHands)
             return false;
 
         return true;
@@ -207,7 +207,7 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
 
     private void StartCarryDoAfter(EntityUid carrier, EntityUid target, CarrierComponent component)
     {
-        var doAfterArgs = new DoAfterArgs(EntityManager, carrier, TimeSpan.FromSeconds(3), new CarryDoAfterEvent(), carrier, target: target)
+        var doAfterArgs = new DoAfterArgs(EntityManager, carrier, CarryingConstants.CarryDoAfterDuration, new CarryDoAfterEvent(), carrier, target: target)
         {
             BreakOnMove = true,
             BreakOnDamage = true,

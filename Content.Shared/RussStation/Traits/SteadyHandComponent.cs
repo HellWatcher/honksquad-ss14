@@ -7,5 +7,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class SteadyHandComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float SpreadMultiplier = 0.5f;
+    public float SpreadMultiplier = TraitsConstants.SteadyHand.SpreadMultiplier;
 }

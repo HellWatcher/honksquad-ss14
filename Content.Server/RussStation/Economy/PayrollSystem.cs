@@ -7,6 +7,7 @@ using Content.Shared.Roles.Jobs;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
 using Robust.Shared.Audio;
+using SharedEconomyConstants = Content.Shared.RussStation.Economy.EconomyConstants;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
@@ -81,7 +82,7 @@ public sealed class PayrollSystem : EntitySystem
     private void OnBalanceStartup(EntityUid uid, PlayerBalanceComponent comp, ComponentStartup args)
     {
         // First paycheck after one full interval, staggered +/- 60s so not everyone pays at once.
-        var offset = _payrollInterval + _random.NextFloat(-60f, 60f);
+        var offset = _payrollInterval + _random.NextFloat(-SharedEconomyConstants.PayrollJitterSeconds, SharedEconomyConstants.PayrollJitterSeconds);
         comp.NextPayroll = _timing.CurTime + TimeSpan.FromSeconds(offset);
     }
 
@@ -121,7 +122,7 @@ public sealed class PayrollSystem : EntitySystem
     }
 
     private static readonly SoundSpecifier PaycheckSound =
-        new SoundPathSpecifier("/Audio/Machines/twobeep.ogg", AudioParams.Default.WithVolume(-6f));
+        new SoundPathSpecifier("/Audio/Machines/twobeep.ogg", AudioParams.Default.WithVolume(EconomyConstants.PaycheckChimeVolume));
 
     private void PlayPdaChime(EntityUid mob)
     {

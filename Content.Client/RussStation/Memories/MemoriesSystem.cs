@@ -30,7 +30,7 @@ public sealed class MemoriesSystem : EntitySystem
 
         var box = new BoxContainer
         {
-            Margin = new Thickness(5),
+            Margin = new Thickness(MemoriesConstants.PanelMargin),
             Orientation = BoxContainer.LayoutOrientation.Vertical
         };
 

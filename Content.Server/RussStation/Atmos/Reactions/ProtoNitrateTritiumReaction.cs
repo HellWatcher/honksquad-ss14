@@ -22,17 +22,19 @@ public sealed partial class ProtoNitrateTritiumReaction : IGasReactionEffect
 
         // Rate scales with temperature and reactant ratio, capped by available moles.
         var producedAmount = Math.Min(
-            temperature / 34f * (tritium * protoNitrate) / (tritium + 10f * protoNitrate),
-            Math.Min(tritium, protoNitrate / 0.01f));
+            temperature / RussAtmospherics.ProtoNitrateTritiumTempDivisor
+                * (tritium * protoNitrate)
+                / (tritium + RussAtmospherics.ProtoNitrateTritiumProtoNitrateRatioWeight * protoNitrate),
+            Math.Min(tritium, protoNitrate / RussAtmospherics.ProtoNitrateTritiumProtoNitrateConsumedPerUnit));
 
         if (producedAmount <= 0
             || tritium - producedAmount < 0
-            || protoNitrate - producedAmount * 0.01f < 0)
+            || protoNitrate - producedAmount * RussAtmospherics.ProtoNitrateTritiumProtoNitrateConsumedPerUnit < 0)
             return ReactionResult.NoReaction;
 
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
-        mixture.AdjustMoles(Gas.ProtoNitrate, -producedAmount * 0.01f);
+        mixture.AdjustMoles(Gas.ProtoNitrate, -producedAmount * RussAtmospherics.ProtoNitrateTritiumProtoNitrateConsumedPerUnit);
         mixture.AdjustMoles(Gas.Tritium, -producedAmount);
         mixture.AdjustMoles(Gas.Hydrogen, producedAmount);
 

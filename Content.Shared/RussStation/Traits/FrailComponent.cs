@@ -12,5 +12,5 @@ public sealed partial class FrailComponent : Component
     /// Multiplier applied to wound thresholds. Lower = wounds trigger more easily.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float ThresholdMultiplier = 0.8f;
+    public float ThresholdMultiplier = TraitsConstants.Frail.ThresholdMultiplier;
 }

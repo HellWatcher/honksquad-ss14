@@ -16,14 +16,14 @@ namespace Content.Shared.RussStation.Carrying.Components;
 public sealed partial class CarrierComponent : Component
 {
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float WalkSpeedModifier = 0.75f;
+    public float WalkSpeedModifier = CarryingConstants.DefaultWalkSpeedModifier;
 
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float SprintSpeedModifier = 0.6f;
+    public float SprintSpeedModifier = CarryingConstants.DefaultSprintSpeedModifier;
 
     /// <summary>
     /// Y offset for the carried entity visual. Overridable per prototype for different species heights.
     /// </summary>
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float CarryOffset = 0.2f;
+    public float CarryOffset = CarryingConstants.DefaultCarryOffset;
 }

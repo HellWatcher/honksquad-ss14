@@ -67,7 +67,7 @@ public sealed class SkittishSystem : EntitySystem
         // Block the internal-movement handler from immediately re-opening the storage due to the
         // lingering movement input that triggered this collision.
 #pragma warning disable HONK0003 // EntityStorageComponent field guards re-entry on skittish collision; reviewed drift, upstream has no equivalent helper.
-        storageComp.NextInternalOpenAttempt = _timing.CurTime + TimeSpan.FromSeconds(1.0);
+        storageComp.NextInternalOpenAttempt = _timing.CurTime + TimeSpan.FromSeconds(TraitsConstants.Skittish.InternalOpenCooldownSeconds);
 #pragma warning restore HONK0003
         Dirty(other, storageComp);
 

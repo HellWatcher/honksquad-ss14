@@ -9,8 +9,8 @@ namespace Content.Shared.RussStation.Surgery.Components;
 public sealed partial class SurgicalTrayComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float FoldedFriction = 0.8f;
+    public float FoldedFriction = SurgeryConstants.DefaultTrayFoldedFriction;
 
     [DataField, AutoNetworkedField]
-    public float UnfoldedFriction = 0.4f;
+    public float UnfoldedFriction = SurgeryConstants.DefaultTrayUnfoldedFriction;
 }

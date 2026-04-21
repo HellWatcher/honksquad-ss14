@@ -112,7 +112,7 @@ public sealed class SelfAwareSystem : EntitySystem
             var bloodPercent = _bloodstream.GetBloodLevel((uid, bloodstream));
             msg.PushNewline();
             msg.AddMarkupOrThrow(Loc.GetString("self-aware-blood-level",
-                ("percent", (bloodPercent * 100f).ToString("0"))));
+                ("percent", (bloodPercent * TraitsConstants.SelfAware.BloodPercentMultiplier).ToString("0"))));
         }
 
         var anyDamage = false;

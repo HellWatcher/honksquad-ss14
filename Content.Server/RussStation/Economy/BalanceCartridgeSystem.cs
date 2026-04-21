@@ -5,6 +5,7 @@ using Content.Shared.PDA;
 using Robust.Shared.Containers;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
+using SharedEconomyConstants = Content.Shared.RussStation.Economy.EconomyConstants;
 
 namespace Content.Server.RussStation.Economy;
 
@@ -82,8 +83,8 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         var comp = CompOrNull<PlayerBalanceComponent>(holder);
         var balance = comp?.Balance ?? 0;
         var accountNumber = comp?.AccountNumber ?? string.Empty;
-        var suffix = accountNumber.Length >= 4
-            ? accountNumber[^4..]
+        var suffix = accountNumber.Length >= SharedEconomyConstants.AccountSuffixLength
+            ? accountNumber[^SharedEconomyConstants.AccountSuffixLength..]
             : accountNumber;
         var muted = comp?.PaycheckMuted ?? false;
         var transactions = comp?.Transactions ?? new List<TransactionRecord>();

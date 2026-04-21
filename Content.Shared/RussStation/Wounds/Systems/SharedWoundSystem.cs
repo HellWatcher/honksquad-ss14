@@ -130,7 +130,7 @@ public abstract class SharedWoundSystem : EntitySystem
                 return true;
             }
 
-            if (wound.Tier < 3)
+            if (wound.Tier < WoundsConstants.MaxWoundTier)
                 return false; // Existing wound is same or higher tier, no action
 
             // At tier 3, fall through to stack a new wound
@@ -138,7 +138,7 @@ public abstract class SharedWoundSystem : EntitySystem
         }
 
         // Cap stacking at 3 wounds per type
-        if (existingCount >= 3)
+        if (existingCount >= WoundsConstants.MaxStackedWoundsPerType)
             return false;
 
         // Create new wound entry

@@ -14,5 +14,5 @@ public sealed partial class GlassJawComponent : Component
     /// Lower = knocked down by less stamina damage. Default 0.7 means 70% of normal threshold.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float CritThresholdModifier = 0.7f;
+    public float CritThresholdModifier = TraitsConstants.GlassJaw.CritThresholdModifier;
 }

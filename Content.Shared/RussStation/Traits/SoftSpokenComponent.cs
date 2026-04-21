@@ -13,5 +13,5 @@ public sealed partial class SoftSpokenComponent : Component
     /// Multiplier applied to voice range. 0.5 = half normal range.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float RangeMultiplier = 0.5f;
+    public float RangeMultiplier = TraitsConstants.SoftSpoken.RangeMultiplier;
 }

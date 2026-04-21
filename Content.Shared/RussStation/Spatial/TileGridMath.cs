@@ -35,8 +35,8 @@ public static class TileGridMath
         var cy = 0f;
         for (var i = 0; i < tiles.Length; i++)
         {
-            cx += (tiles[i].X + 0.5f) * weights[i];
-            cy += (tiles[i].Y + 0.5f) * weights[i];
+            cx += (tiles[i].X + SpatialConstants.TileCenterOffset) * weights[i];
+            cy += (tiles[i].Y + SpatialConstants.TileCenterOffset) * weights[i];
         }
         return (cx / totalWeight, cy / totalWeight);
     }

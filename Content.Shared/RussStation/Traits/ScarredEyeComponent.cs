@@ -6,5 +6,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class ScarredEyeComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public int Blindness = 2;
+    public int Blindness = TraitsConstants.ScarredEye.Blindness;
 }

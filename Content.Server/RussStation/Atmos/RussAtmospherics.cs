@@ -51,4 +51,42 @@ public static class RussAtmospherics
     public const float ProtoNitrateBZDecompositionMinTemp = 260f;
     public const float ProtoNitrateBZDecompositionMaxTemp = 280f;
     public const float ProtoNitrateBZDecompositionEnergy = 60000f;
+
+    public const float BZFormationPlasmaN2ORatioThreshold = 3f;
+    public const float BZFormationN2ODecomposeNitrogenRatio = 0.5f;
+    public const float BZFormationN2ODecomposeOxygenRatio = 0.5f;
+    public const float BZFormationEnergyReleased = 80000f;
+
+    public const float HalonFireMinTempScale = 10f;
+    public const float HalonOxygenAbsorptionEnergy = 2500f;
+
+    public const float HealiumHeatEfficiencyScale = 0.3f;
+    public const float HealiumFrezonConsumedPerUnit = 2.75f;
+    public const float HealiumBZConsumedPerUnit = 0.25f;
+    public const float HealiumProducedPerUnit = 3f;
+
+    public const float HydrogenFireOxygenBurnMultiplier = 2f;
+    public const float HydrogenFireOxygenConsumedPerUnit = 0.5f;
+
+    public const float NitriumFormationBZConsumedPerUnit = 0.05f;
+
+    public const float PluoxiumOxygenConsumedPerUnit = 0.5f;
+    public const float PluoxiumTritiumConsumedPerUnit = 0.01f;
+    public const float PluoxiumFormationEnergy = 250f;
+
+    public const float ProtoNitrateBZTempDivisor = 2240f;
+    public const float ProtoNitrateBZNitrogenProducedPerUnit = 0.4f;
+    public const float ProtoNitrateBZHeliumProducedPerUnit = 1.6f;
+    public const float ProtoNitrateBZPlasmaProducedPerUnit = 0.8f;
+
+    public const float ProtoNitrateFormationHeatEfficiencyScale = 0.005f;
+    public const float ProtoNitrateFormationPluoxiumConsumedPerUnit = 0.2f;
+    public const float ProtoNitrateFormationHydrogenConsumedPerUnit = 2f;
+    public const float ProtoNitrateFormationProducedPerUnit = 2.2f;
+
+    public const float ProtoNitrateHydrogenConversionProducedPerUnit = 0.5f;
+
+    public const float ProtoNitrateTritiumTempDivisor = 34f;
+    public const float ProtoNitrateTritiumProtoNitrateRatioWeight = 10f;
+    public const float ProtoNitrateTritiumProtoNitrateConsumedPerUnit = 0.01f;
 }

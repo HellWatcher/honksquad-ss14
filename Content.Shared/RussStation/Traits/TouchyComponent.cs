@@ -13,5 +13,5 @@ public sealed partial class TouchyComponent : Component
     /// The examine range when this component is active. Default 1.5 tiles (roughly touch distance).
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float ExamineRange = 1.5f;
+    public float ExamineRange = TraitsConstants.Touchy.ExamineRange;
 }

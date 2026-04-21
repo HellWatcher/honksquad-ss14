@@ -23,7 +23,7 @@ public sealed partial class ProtoNitrateHydrogenReaction : IGasReactionEffect
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
         mixture.AdjustMoles(Gas.Hydrogen, -producedAmount);
-        mixture.AdjustMoles(Gas.ProtoNitrate, producedAmount * 0.5f);
+        mixture.AdjustMoles(Gas.ProtoNitrate, producedAmount * RussAtmospherics.ProtoNitrateHydrogenConversionProducedPerUnit);
 
         ReactionHelper.AdjustEnergy(mixture, atmosphereSystem, oldHeatCapacity,
             -(producedAmount * RussAtmospherics.ProtoNitrateHydrogenConversionEnergy), heatScale, mixture.Temperature);

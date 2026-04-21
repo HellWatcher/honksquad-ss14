@@ -7,5 +7,5 @@ namespace Content.Shared.RussStation.Traits;
 public sealed partial class NegotiatorComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public float WageMultiplier = 1.5f;
+    public float WageMultiplier = TraitsConstants.Negotiator.WageMultiplier;
 }
