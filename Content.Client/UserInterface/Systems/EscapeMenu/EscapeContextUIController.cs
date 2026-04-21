@@ -34,14 +34,14 @@ public sealed class EscapeContextUIController : UIController
         if (_closeRecentWindowUIController.HasClosableWindow())
         {
             _closeRecentWindowUIController.CloseMostRecentWindow();
-            return;
         }
-
-        // HONK START - honksquad #513: cancel active DoAfters before opening the escape menu
-        if (_entityManager.System<DoAfterCancelRequestSystem>().TryRequestCancel())
-            return;
-        // HONK END
-
-        _escapeUIController.ToggleWindow();
+        else
+        {
+            // HONK START - honksquad #513: cancel active DoAfters before opening the escape menu
+            if (_entityManager.System<DoAfterCancelRequestSystem>().TryRequestCancel())
+                return;
+            // HONK END
+            _escapeUIController.ToggleWindow();
+        }
     }
 }
