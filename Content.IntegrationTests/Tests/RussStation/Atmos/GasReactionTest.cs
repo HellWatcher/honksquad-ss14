@@ -282,7 +282,7 @@ public sealed class GasReactionTest : GameTest
         {
             // NitriumFormationTempDivisor = FireMin*8 = 2985.2
             // heatEff = min(6000/2985.2≈2.0098, min(5, min(5, 1/0.05=20))) = 2.0098
-            var expected = 6000f / RussAtmospherics.NitriumFormationTempDivisor;
+            var expected = 6000f / AtmosConstants.NitriumFormationTempDivisor;
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.EqualTo(ReactionResult.Reacting));
@@ -323,7 +323,7 @@ public sealed class GasReactionTest : GameTest
         (result, mix, _) =>
         {
             // heatEff = min(300/2985.2≈0.1005, 10) = 0.1005
-            var expected = 300f / RussAtmospherics.NitriumDecompositionTempDivisor;
+            var expected = 300f / AtmosConstants.NitriumDecompositionTempDivisor;
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.EqualTo(ReactionResult.Reacting));
