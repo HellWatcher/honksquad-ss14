@@ -449,6 +449,7 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
                 {
                     _transform.PlaceNextTo((uid, targetXform), (carrier, Transform(carrier)));
                     targetXform.ActivelyLerping = false;
+                    Dirty(uid, targetXform);
                 }
             }
 
