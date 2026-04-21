@@ -24,6 +24,13 @@
             <BoxContainer Access="Internal" Name="ReturnContainer" Orientation="Horizontal" HorizontalAlignment="Right" Visible="False">
                 <Button Name="HomeButton" Text="{Loc 'ui-rules-button-home'}" Margin="0 0 10 0"/>
             </BoxContainer>
+            <!-- HONK START - popout button, issue #580 -->
+            <BoxContainer Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 2 10 2">
+                <Button Name="PopoutButton" Access="Public"
+                        Text="{Loc 'honk-guidebook-popout-button'}"
+                        ToolTip="{Loc 'honk-guidebook-popout-button-tooltip'}" />
+            </BoxContainer>
+            <!-- HONK END -->
             <ScrollContainer Name="Scroll" HScrollEnabled="False" HorizontalExpand="True" VerticalExpand="True">
                 <Control>
                     <BoxContainer Orientation="Vertical" Name="EntryContainer" Margin="5 5 5 5" Visible="False">
