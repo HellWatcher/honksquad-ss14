@@ -233,7 +233,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
         var active = EnsureComp<ActiveSurgeryComponent>(target.Value);
         active.ProcedureId = ev.ProcedureId;
-        active.CurrentStep = 0;
+        active.CurrentStep = SurgeryConstants.InitialProcedureStepIndex;
         active.Surgeon = surgeon;
         Dirty(target.Value, active);
 

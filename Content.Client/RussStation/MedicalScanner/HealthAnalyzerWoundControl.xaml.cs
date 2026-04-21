@@ -59,7 +59,7 @@ public sealed partial class HealthAnalyzerWoundControl : BoxContainer
             WoundList.AddChild(new RichTextLabel
             {
                 Text = Loc.GetString(wound.LocKey),
-                Margin = new Thickness(0, MedicalScannerConstants.WoundRowVerticalMargin),
+                Margin = new Thickness(MedicalScannerConstants.WoundRowHorizontalMargin, MedicalScannerConstants.WoundRowVerticalMargin),
                 MaxWidth = MedicalScannerConstants.WoundLabelMaxWidth,
                 Modulate = color,
             });

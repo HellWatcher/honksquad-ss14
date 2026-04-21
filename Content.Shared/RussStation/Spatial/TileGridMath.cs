@@ -106,10 +106,10 @@ public static class TileGridMath
             if (pos.Y > maxY) maxY = pos.Y;
         }
 
-        var width = maxX - minX + 1;
-        var height = maxY - minY + 1;
+        var width = maxX - minX + SpatialConstants.InclusiveExtentAdjust;
+        var height = maxY - minY + SpatialConstants.InclusiveExtentAdjust;
         var longer = Math.Max(width, height);
-        var shorter = Math.Max(1, Math.Min(width, height));
+        var shorter = Math.Max(SpatialConstants.MinAspectDivisorFloor, Math.Min(width, height));
 
         if (tiles.Count <= minSplitSize || (float) longer / shorter <= aspectThreshold)
         {
@@ -122,7 +122,7 @@ public static class TileGridMath
 
         if (width >= height)
         {
-            var midX = minX + width / 2;
+            var midX = minX + width / SpatialConstants.SubdivisionHalfDivisor;
             foreach (var entry in tiles)
             {
                 if (tileSelector(entry).X <= midX)
@@ -133,7 +133,7 @@ public static class TileGridMath
         }
         else
         {
-            var midY = minY + height / 2;
+            var midY = minY + height / SpatialConstants.SubdivisionHalfDivisor;
             foreach (var entry in tiles)
             {
                 if (tileSelector(entry).Y <= midY)

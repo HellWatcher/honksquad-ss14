@@ -1,3 +1,4 @@
+using Content.Server.RussStation.Atmos;
 using Content.Shared.RussStation.Spatial;
 using Robust.Shared.Maths;
 
@@ -54,9 +55,12 @@ public static class RadiationBlobMath
             if (tile.Y > maxY) maxY = tile.Y;
         }
 
-        var radius = Math.Max(maxX - minX + 1, maxY - minY + 1) / 2f;
+        var radius = Math.Max(
+            maxX - minX + RussAtmospherics.RadiationBlobInclusiveExtentAdjust,
+            maxY - minY + RussAtmospherics.RadiationBlobInclusiveExtentAdjust)
+            / RussAtmospherics.RadiationBlobRadiusDivisor;
         var slope = radius > MinRadiusForSlope && minRads > 0f
-            ? (maxRads / minRads - 1f) / radius
+            ? (maxRads / minRads - RussAtmospherics.RadiationBlobFlatGradientBaseline) / radius
             : DefaultSlope;
 
         return (maxRads, slope);

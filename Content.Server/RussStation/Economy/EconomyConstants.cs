@@ -23,4 +23,12 @@ public static class EconomyConstants
     /// Format specifier for generated account numbers (8-digit uppercase hex).
     /// </summary>
     public const string AccountNumberHexFormat = "X8";
+
+    /// <summary>
+    /// Default starting balance for manually-created bank accounts (as opposed
+    /// to spawn-time accounts which use the <c>DefaultStartingBalance</c> CVar).
+    /// Creating a new account forfeits any previous account's funds, so the
+    /// new account starts empty as an intentional penalty.
+    /// </summary>
+    public const int NewAccountStartingBalance = 0;
 }

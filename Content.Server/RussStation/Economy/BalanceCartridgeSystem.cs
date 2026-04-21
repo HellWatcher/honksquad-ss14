@@ -74,7 +74,7 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         // Require an ID card to be inserted to show wallet data.
         if (!TryComp<PdaComponent>(loaderUid, out var pda) || pda.ContainedId == null)
         {
-            var empty = new BalanceCartridgeUiState(0, string.Empty, false, new List<TransactionRecord>(), false);
+            var empty = new BalanceCartridgeUiState(SharedEconomyConstants.EmptyStateBalance, string.Empty, false, new List<TransactionRecord>(), false);
             _cartridgeLoader?.UpdateCartridgeUiState(loaderUid, empty);
             return;
         }

@@ -261,8 +261,8 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
         for (var i = 0; i < organs.Count; i++)
         {
             var (uid, comp) = organs[i];
-            var label = organs.Count > 1
-                ? Loc.GetString(indexedKey, ("index", i + 1))
+            var label = organs.Count > MedicalScannerConstants.MultiOrganLabelThreshold
+                ? Loc.GetString(indexedKey, ("index", i + MedicalScannerConstants.OrganIndexLabelOffset))
                 : Loc.GetString(singleKey);
             if (resolve(uid, comp) is { } sol)
                 AddSolutionFromSolution(groups, sol, label);
@@ -390,9 +390,11 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
                 return EffectClass.Neutral;
 
             case MovementSpeedModifier msm:
-                if (msm.WalkSpeedModifier < 1f || msm.SprintSpeedModifier < 1f)
+                if (msm.WalkSpeedModifier < MedicalScannerConstants.NeutralMovementSpeedModifier
+                    || msm.SprintSpeedModifier < MedicalScannerConstants.NeutralMovementSpeedModifier)
                     return EffectClass.Harmful;
-                if (msm.WalkSpeedModifier > 1f || msm.SprintSpeedModifier > 1f)
+                if (msm.WalkSpeedModifier > MedicalScannerConstants.NeutralMovementSpeedModifier
+                    || msm.SprintSpeedModifier > MedicalScannerConstants.NeutralMovementSpeedModifier)
                     return EffectClass.Beneficial;
                 return EffectClass.Neutral;
 

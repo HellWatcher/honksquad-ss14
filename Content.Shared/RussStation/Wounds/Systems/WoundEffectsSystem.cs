@@ -115,12 +115,12 @@ public sealed class WoundEffectsSystem : EntitySystem
         var burnTier = _wounds.GetWorstTier(comp, WoundCategory.Burn);
 
         if (fractureTier > 0)
-            _alerts.ShowAlert(uid, comp.FractureAlert, (short) (fractureTier - 1));
+            _alerts.ShowAlert(uid, comp.FractureAlert, (short) (fractureTier - WoundsConstants.AlertSeverityTierOffset));
         else
             _alerts.ClearAlert(uid, comp.FractureAlert);
 
         if (burnTier > 0)
-            _alerts.ShowAlert(uid, comp.BurnAlert, (short) (burnTier - 1));
+            _alerts.ShowAlert(uid, comp.BurnAlert, (short) (burnTier - WoundsConstants.AlertSeverityTierOffset));
         else
             _alerts.ClearAlert(uid, comp.BurnAlert);
     }

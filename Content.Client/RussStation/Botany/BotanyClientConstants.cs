@@ -15,4 +15,10 @@ public static class BotanyClientConstants
     public const float SeedStatLabelMinWidth = 50f;
 
     public const float SeedTakeButtonMinWidth = 65f;
+
+    /// <summary>
+    /// Right-only margin pattern used on the seed icon and the seed name
+    /// labels. Top/left/bottom sit flush against the neighbouring control.
+    /// </summary>
+    public const int SeedRowFlushMargin = 0;
 }

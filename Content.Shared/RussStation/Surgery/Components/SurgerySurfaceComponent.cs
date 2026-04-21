@@ -12,5 +12,5 @@ public sealed partial class SurgerySurfaceComponent : Component
     /// Multiplier applied to surgery step durations. Below 1.0 speeds things up, above 1.0 slows them down.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float SpeedModifier = 1f;
+    public float SpeedModifier = SurgeryConstants.DefaultSurgerySurfaceSpeedModifier;
 }

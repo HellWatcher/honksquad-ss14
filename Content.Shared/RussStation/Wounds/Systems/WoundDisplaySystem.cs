@@ -51,7 +51,7 @@ public sealed class WoundDisplaySystem : EntitySystem
         for (var i = 0; i < woundComp.BleedTierThresholds.Length; i++)
         {
             if (bleed >= woundComp.BleedTierThresholds[i])
-                tier = i + 1;
+                tier = i + WoundsConstants.TierIndexToTierOffset;
         }
         return tier;
     }

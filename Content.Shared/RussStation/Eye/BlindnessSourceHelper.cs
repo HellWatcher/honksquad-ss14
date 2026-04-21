@@ -21,8 +21,8 @@ public static class BlindnessSourceHelper
         if (!entMan.TryGetComponent<BlindableComponent>(uid, out var blindable))
             return;
 
-        if (blindable.MinDamage != 0)
-            blinding.SetMinDamage((uid, blindable), 0);
+        if (blindable.MinDamage != EyeConstants.ClearedMinDamage)
+            blinding.SetMinDamage((uid, blindable), EyeConstants.ClearedMinDamage);
 
         blinding.AdjustEyeDamage((uid, blindable), -blindable.EyeDamage);
     }

@@ -94,6 +94,7 @@ public static class TraitsConstants
 
     public static class Vegetarian
     {
+        public const float PopupXOffset = 0f;
         public const float PopupYOffset = 0.25f;
         public const float VomitThirstAmount = -20f;
         public const float VomitHungerAmount = -20f;

@@ -25,7 +25,7 @@ public sealed partial class WoundTypePrototype : IPrototype
     /// Damage spike thresholds for tier 1, 2, and 3.
     /// </summary>
     [DataField(required: true)]
-    public float[] Thresholds = new float[3];
+    public float[] Thresholds = new float[WoundsConstants.MaxWoundTier];
 
     /// <summary>
     /// Display names per tier (1-indexed).

@@ -198,7 +198,7 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
         // so count it as available.
         var freeHands = _hands.CountFreeHands(carrier);
         var pullingTarget = TryComp<PullerComponent>(carrier, out var pullerCheck) && pullerCheck.Pulling == target;
-        var effectiveFreeHands = freeHands + (pullingTarget ? 1 : 0);
+        var effectiveFreeHands = freeHands + (pullingTarget ? CarryingConstants.PullingFreesHands : 0);
         if (effectiveFreeHands < CarryingConstants.RequiredFreeHands)
             return false;
 

@@ -16,6 +16,7 @@ public static class RussAtmospherics
 
     public const float BZFormationMaxTemp = Atmospherics.T0C + 40f;
     public const float BZFormationRate = 0.4f;
+    public const float BZFormationReactantRatioCap = 1f;
 
     public const float PluoxiumFormationMinTemp = 50f;
     public const float PluoxiumFormationMaxTemp = 273f;
@@ -89,4 +90,10 @@ public static class RussAtmospherics
     public const float ProtoNitrateTritiumTempDivisor = 34f;
     public const float ProtoNitrateTritiumProtoNitrateRatioWeight = 10f;
     public const float ProtoNitrateTritiumProtoNitrateConsumedPerUnit = 0.01f;
+
+    // Radiation blob gradient math: bisect blob extent into a radius (half-width)
+    // and subtract the flat-gradient baseline so slope==0 when min==max rads.
+    public const float RadiationBlobInclusiveExtentAdjust = 1f;
+    public const float RadiationBlobRadiusDivisor = 2f;
+    public const float RadiationBlobFlatGradientBaseline = 1f;
 }

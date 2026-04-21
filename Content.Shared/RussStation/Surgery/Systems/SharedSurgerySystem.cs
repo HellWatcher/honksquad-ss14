@@ -121,7 +121,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     public float GetDrapeSpeedModifier(EntityUid patient)
     {
         if (!TryComp<SurgeryDrapedComponent>(patient, out var draped))
-            return 1f;
+            return SurgeryConstants.NoDrapeSpeedModifier;
 
         return draped.DrapeSpeedModifier;
     }

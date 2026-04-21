@@ -108,7 +108,7 @@ public abstract class SharedWoundSystem : EntitySystem
         for (var i = 0; i < proto.Thresholds.Length; i++)
         {
             if (amount >= proto.Thresholds[i])
-                tier = i + 1;
+                tier = i + WoundsConstants.TierIndexToTierOffset;
         }
         return tier;
     }

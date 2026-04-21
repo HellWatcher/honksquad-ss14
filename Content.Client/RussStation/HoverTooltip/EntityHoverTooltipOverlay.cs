@@ -52,12 +52,12 @@ public sealed class EntityHoverTooltipOverlay : Overlay
         handle.SetTransform(Matrix3x2.Identity);
 
         var pos = ScreenPosition + CursorOffset;
-        var dimensions = handle.GetDimensions(_font, TooltipText!, 1f);
+        var dimensions = handle.GetDimensions(_font, TooltipText!, HoverTooltipConstants.TooltipTextScale);
 
         var bgPos = pos - new Vector2(Padding, Padding);
         var bgSize = dimensions + new Vector2(Padding * 2, Padding * 2);
         handle.DrawRect(UIBox2.FromDimensions(bgPos, bgSize), BackgroundColor);
 
-        handle.DrawString(_font, pos, TooltipText!, 1f, Color.White);
+        handle.DrawString(_font, pos, TooltipText!, HoverTooltipConstants.TooltipTextScale, Color.White);
     }
 }

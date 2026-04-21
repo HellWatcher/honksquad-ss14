@@ -1,4 +1,5 @@
 using System.Numerics;
+using Content.Shared.RussStation.Carrying;
 using Content.Shared.RussStation.Carrying.Components;
 using Content.Shared.RussStation.Carrying.Systems;
 using Robust.Client.GameObjects;
@@ -33,7 +34,7 @@ internal sealed class CarryingSystem : SharedCarryingSystem
             // Local coordinates rotate with the parent, so counter-rotate the offset
             // to keep the carried entity visually above the carrier in screen space.
             var carrierXform = Transform(carrier);
-            var worldOffset = new Vector2(0, carrierComp.CarryOffset);
+            var worldOffset = new Vector2(CarryingConstants.CarryOffsetX, carrierComp.CarryOffset);
             var localOffset = (-carrierXform.LocalRotation).RotateVec(worldOffset);
 
             _xform.SetLocalPosition(uid, localOffset, xform);

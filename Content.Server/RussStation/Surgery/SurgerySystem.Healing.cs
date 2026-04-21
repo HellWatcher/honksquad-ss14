@@ -124,7 +124,6 @@ public sealed partial class SurgerySystem
 
         var hasHealingStep = false;
         var currentDamage = _damageable.GetPositiveDamage((patient, damageable));
-        const float epsilon = 0.01f;
 
         foreach (var step in proto.Steps)
         {
@@ -135,7 +134,7 @@ public sealed partial class SurgerySystem
 
             foreach (var type in step.Healing.DamageDict.Keys)
             {
-                if (currentDamage.DamageDict.TryGetValue(type, out var amount) && amount > FixedPoint2.New(epsilon))
+                if (currentDamage.DamageDict.TryGetValue(type, out var amount) && amount > FixedPoint2.New(SurgeryConstants.HealingDamageEpsilon))
                     return true;
             }
         }

@@ -23,4 +23,17 @@ public static class EconomyConstants
     /// Vending prices are rounded up to the nearest multiple of this value.
     /// </summary>
     public const int VendingPriceRoundingStep = 5;
+
+    /// <summary>
+    /// Balance value reported in the cartridge UI state when the PDA has no
+    /// inserted ID card (wallet data is hidden in this case).
+    /// </summary>
+    public const int EmptyStateBalance = 0;
+
+    /// <summary>
+    /// Index of the oldest transaction in a player's transaction log. Used when
+    /// trimming the log back to <c>PlayerBalanceComponent.MaxTransactions</c>
+    /// entries after a new one is appended (FIFO: drop oldest, keep newest).
+    /// </summary>
+    public const int OldestTransactionIndex = 0;
 }

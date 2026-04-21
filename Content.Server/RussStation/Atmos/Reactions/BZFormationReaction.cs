@@ -30,7 +30,7 @@ public sealed partial class BZFormationReaction : IGasReactionEffect
             return ReactionResult.Reacting;
         }
 
-        var ratio = Math.Min(n2o / plasma, 1f);
+        var ratio = Math.Min(n2o / plasma, RussAtmospherics.BZFormationReactantRatioCap);
         var produced = Math.Min(n2o * RussAtmospherics.BZFormationRate * ratio,
             plasma * RussAtmospherics.BZFormationRate * ratio);
 

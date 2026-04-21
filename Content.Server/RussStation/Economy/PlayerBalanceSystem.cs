@@ -3,6 +3,7 @@ using Content.Shared.Access.Systems;
 using Content.Shared.GameTicking;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
+using SharedEconomyConstants = Content.Shared.RussStation.Economy.EconomyConstants;
 using Robust.Shared.Configuration;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
@@ -150,7 +151,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
         comp.Transactions.Add(new TransactionRecord(amount, description, _timing.CurTime));
 
         if (comp.Transactions.Count > PlayerBalanceComponent.MaxTransactions)
-            comp.Transactions.RemoveAt(0);
+            comp.Transactions.RemoveAt(SharedEconomyConstants.OldestTransactionIndex);
     }
 
     /// <summary>
@@ -169,7 +170,7 @@ public sealed class PlayerBalanceSystem : EntitySystem
     /// Intentionally resets balance to startingBalance (default 0) -- creating a new account
     /// means the old one and its funds are gone. This is the intended penalty for account replacement.
     /// </summary>
-    public string CreateAccount(EntityUid uid, int startingBalance = 0)
+    public string CreateAccount(EntityUid uid, int startingBalance = EconomyConstants.NewAccountStartingBalance)
     {
         var comp = EnsureComp<PlayerBalanceComponent>(uid);
 

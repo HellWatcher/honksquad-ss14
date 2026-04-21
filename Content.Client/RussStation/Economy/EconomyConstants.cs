@@ -26,4 +26,17 @@ public static class EconomyConstants
     /// transaction row so amounts line up cleanly.
     /// </summary>
     public const int TxAmountColumnMinWidth = 60;
+
+    /// <summary>
+    /// Virtual-pixel padding applied to the horizontal sides (and unused vertical
+    /// sides) of balance cartridge margins that should have no inset.
+    /// </summary>
+    public const int NoMargin = 0;
+
+    /// <summary>
+    /// Index of the primary content <c>BoxContainer</c> inside the balance
+    /// cartridge fragment root. The first child (index 0) is the background
+    /// <c>PanelContainer</c>; the second (index 1) holds the cartridge UI.
+    /// </summary>
+    public const int RootContentChildIndex = 1;
 }
