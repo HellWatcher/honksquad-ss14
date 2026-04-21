@@ -372,6 +372,14 @@ public sealed partial class ChatUIController : UIController
 
     private void FocusChat()
     {
+        // HONK START — issue #577, route to floating input when enabled
+        if (_config.GetCVar(CCVars.FloatingChatInput))
+        {
+            UIManager.GetUIController<Content.Client.RussStation.Chat.FloatingChatInputController>().Show();
+            return;
+        }
+        // HONK END
+
         foreach (var chat in _chats)
         {
             if (!chat.Main)
