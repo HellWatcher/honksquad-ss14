@@ -7,7 +7,9 @@ namespace Content.Shared.Popups
     /// <summary>
     ///     System for displaying small text popups on users' screens.
     /// </summary>
-    public abstract class SharedPopupSystem : EntitySystem
+    //HONK START - partial to allow SharedPopupSystem.Honk.cs to add categorized overloads without touching this file further
+    public abstract partial class SharedPopupSystem : EntitySystem
+    //HONK END
     {
         /// <summary>
         ///     Shows a popup at the local users' cursor. Does nothing on the server.
