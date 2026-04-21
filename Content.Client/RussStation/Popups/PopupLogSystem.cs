@@ -1,10 +1,12 @@
 using Content.Client.UserInterface.Systems.Chat;
 using Content.Shared.Chat;
 using Content.Shared.Examine;
+using Content.Shared.GameTicking;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Popups;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
+using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
 namespace Content.Client.RussStation.Popups;
@@ -23,6 +25,13 @@ public sealed class PopupLogSystem : EntitySystem
     [Dependency] private readonly IUserInterfaceManager _ui = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
     [Dependency] private readonly ExamineSystemShared _examine = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
+
+    // Window during which an identical popup (by message text) is treated as a duplicate
+    // and suppressed from the chat mirror. The floating display keeps its own upstream coalescing independently.
+    private static readonly TimeSpan CoalesceWindow = TimeSpan.FromSeconds(2);
+
+    private readonly Dictionary<string, TimeSpan> _recentMirror = new();
 
     private ChatUIController? _chat;
     private ChatUIController Chat => _chat ??= _ui.GetUIController<ChatUIController>();
@@ -34,6 +43,12 @@ public sealed class PopupLogSystem : EntitySystem
         // PopupMessage / PopupCursorInternal (HONK blocks), so network-sent popups, client-predicted
         // popups, and fork categorized calls all land here exactly once.
         SubscribeLocalEvent<CategorizedPopupRaisedEvent>(OnCategorizedPopup);
+        SubscribeNetworkEvent<RoundRestartCleanupEvent>(OnRoundRestart);
+    }
+
+    private void OnRoundRestart(RoundRestartCleanupEvent ev)
+    {
+        _recentMirror.Clear();
     }
 
     private void OnCategorizedPopup(CategorizedPopupRaisedEvent ev)
@@ -60,6 +75,12 @@ public sealed class PopupLogSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(message))
             return;
 
+        var now = _timing.RealTime;
+        if (_recentMirror.TryGetValue(message, out var lastSeen) && now - lastSeen < CoalesceWindow)
+            return;
+        _recentMirror[message] = now;
+        PruneStaleCoalesceEntries(now);
+
         var escaped = FormattedMessage.EscapeText(message);
         var wrapped = category is { } cat
             ? $"[color=#9999aa]\\[{cat}\\][/color] {escaped}"
@@ -73,5 +94,20 @@ public sealed class PopupLogSystem : EntitySystem
             senderKey: null);
 
         Chat.ProcessChatMessage(mirror, speechBubble: false);
+    }
+
+    private void PruneStaleCoalesceEntries(TimeSpan now)
+    {
+        if (_recentMirror.Count < 32)
+            return;
+
+        var stale = new List<string>();
+        foreach (var (key, seenAt) in _recentMirror)
+        {
+            if (now - seenAt >= CoalesceWindow)
+                stale.Add(key);
+        }
+        foreach (var key in stale)
+            _recentMirror.Remove(key);
     }
 }
