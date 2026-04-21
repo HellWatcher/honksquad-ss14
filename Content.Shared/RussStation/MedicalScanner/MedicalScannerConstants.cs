@@ -16,7 +16,9 @@ public static class MedicalScannerConstants
 
     public const int ReagentRowBottomPadding = 0;
 
-    public const int ReagentColorSwatchSize = 10;
+    public const int ReagentColorSwatchWidth = 10;
+
+    public const int ReagentColorSwatchHeight = 10;
 
     public const int ReagentLabelLeftSpacing = 6;
 

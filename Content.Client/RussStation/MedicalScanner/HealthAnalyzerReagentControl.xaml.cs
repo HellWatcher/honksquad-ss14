@@ -86,8 +86,8 @@ public sealed partial class HealthAnalyzerReagentControl : BoxContainer
 
                     line.AddChild(new PanelContainer
                     {
-                        MinSize = new System.Numerics.Vector2(MedicalScannerConstants.ReagentColorSwatchSize, MedicalScannerConstants.ReagentColorSwatchSize),
-                        SetSize = new System.Numerics.Vector2(MedicalScannerConstants.ReagentColorSwatchSize, MedicalScannerConstants.ReagentColorSwatchSize),
+                        MinSize = new System.Numerics.Vector2(MedicalScannerConstants.ReagentColorSwatchWidth, MedicalScannerConstants.ReagentColorSwatchHeight),
+                        SetSize = new System.Numerics.Vector2(MedicalScannerConstants.ReagentColorSwatchWidth, MedicalScannerConstants.ReagentColorSwatchHeight),
                         VerticalAlignment = Control.VAlignment.Center,
                         PanelOverride = new StyleBoxFlat
                         {

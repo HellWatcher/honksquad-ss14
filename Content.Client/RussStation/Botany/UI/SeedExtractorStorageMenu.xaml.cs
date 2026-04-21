@@ -59,7 +59,7 @@ public sealed partial class SeedExtractorStorageMenu : FancyWindow
         {
             Texture = _spriteSystem.Frame0(new SpriteSpecifier.EntityPrototype(seed.PacketPrototype)),
             Stretch = TextureRect.StretchMode.KeepAspectCentered,
-            SetSize = new System.Numerics.Vector2(BotanyClientConstants.SeedIconSize, BotanyClientConstants.SeedIconSize),
+            SetSize = new System.Numerics.Vector2(BotanyClientConstants.SeedIconWidth, BotanyClientConstants.SeedIconHeight),
             Margin = new Thickness(BotanyClientConstants.SeedIconLeftMargin, BotanyClientConstants.SeedIconTopMargin, BotanyClientConstants.SeedIconRightMargin, BotanyClientConstants.SeedIconBottomMargin),
             VerticalAlignment = VAlignment.Center,
         };

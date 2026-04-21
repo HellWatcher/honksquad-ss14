@@ -6,7 +6,9 @@ public static class BotanyClientConstants
 
     public const int SeedRowMarginV = 2;
 
-    public const int SeedIconSize = 24;
+    public const int SeedIconWidth = 24;
+
+    public const int SeedIconHeight = 24;
 
     public const int SeedIconLeftMargin = 0;
 
