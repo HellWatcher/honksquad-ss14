@@ -31,6 +31,13 @@
                 <CheckBox Name="OpaqueStorageWindowCheckBox" Text="{Loc 'ui-options-opaque-storage-window'}" />
                 <CheckBox Name="StaticStorageUI" Text="{Loc 'ui-options-static-storage-ui'}" />
                 <!-- <CheckBox Name="ToggleWalk" Text="{Loc 'ui-options-hotkey-toggle-walk'}" /> -->
+                <!-- HONK START - Action bar customization -->
+                <Label Text="{Loc 'ui-options-action-bar-header'}"
+                       StyleClasses="LabelKeyText"/>
+                <ui:OptionSlider Name="ActionBarRowsSlider" Title="{Loc 'ui-options-action-bar-rows'}" />
+                <ui:OptionSlider Name="ActionBarSlotSpacingSlider" Title="{Loc 'ui-options-action-bar-slot-spacing'}" />
+                <CheckBox Name="ActionBarShowKeybindLabel" Text="{Loc 'ui-options-action-bar-show-keybind-label'}" />
+                <!-- HONK END -->
             </BoxContainer>
         </ScrollContainer>
         <ui:OptionsTabControlRow Name="Control" Access="Public" />
