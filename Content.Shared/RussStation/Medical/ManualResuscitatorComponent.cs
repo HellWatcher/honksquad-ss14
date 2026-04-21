@@ -27,7 +27,7 @@ public sealed partial class ManualResuscitatorComponent : Component
     /// How long one squeeze cycle takes.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public TimeSpan DoAfterDuration = TimeSpan.FromSeconds(3);
+    public TimeSpan DoAfterDuration = MedicalConstants.ResuscitatorDoAfterDuration;
 
     /// <summary>
     /// The resuscitator stops repeating once the target's Asphyxiation damage is
@@ -35,7 +35,7 @@ public sealed partial class ManualResuscitatorComponent : Component
     /// fully-healed patients whose damage hovers at a trivial amount.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public FixedPoint2 StopThreshold = 10;
+    public FixedPoint2 StopThreshold = MedicalConstants.ResuscitatorStopThreshold;
 
     /// <summary>
     /// If true, the resuscitator only engages on critical-state patients. Dead
