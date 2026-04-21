@@ -81,6 +81,22 @@ public sealed partial class AccessibilityTab : Control
 
         Control.AddOptionCheckBox(CCVars.AccessibilityClientCensorNudity, CensorNudityCheckBox);
 
+        // HONK START - popup mirror routing (issue #578)
+        var popupMirrorOptions = new[]
+        {
+            new OptionDropDownCVar<int>.ValueOption(0, Loc.GetString("ui-options-popup-mirror-disabled")),
+            new OptionDropDownCVar<int>.ValueOption(1, Loc.GetString("ui-options-popup-mirror-popup-tab")),
+            new OptionDropDownCVar<int>.ValueOption(2, Loc.GetString("ui-options-popup-mirror-main-chat")),
+        };
+        Control.AddOptionDropDown(CCVars.PopupMirrorDefault, PopupMirrorDefaultDropDown, popupMirrorOptions);
+        Control.AddOptionDropDown(CCVars.PopupMirrorFlavor, PopupMirrorFlavorDropDown, popupMirrorOptions);
+        Control.AddOptionDropDown(CCVars.PopupMirrorCombat, PopupMirrorCombatDropDown, popupMirrorOptions);
+        Control.AddOptionDropDown(CCVars.PopupMirrorMedical, PopupMirrorMedicalDropDown, popupMirrorOptions);
+        Control.AddOptionDropDown(CCVars.PopupMirrorEnvironmental, PopupMirrorEnvironmentalDropDown, popupMirrorOptions);
+        Control.AddOptionDropDown(CCVars.PopupMirrorInteraction, PopupMirrorInteractionDropDown, popupMirrorOptions);
+        Control.AddOptionDropDown(CCVars.PopupMirrorSystem, PopupMirrorSystemDropDown, popupMirrorOptions);
+        // HONK END
+
         Control.Initialize();
     }
 

@@ -387,6 +387,19 @@ ui-options-rescan-fonts = Rescan Fonts
 
 ui-options-censor-nudity = Censor character nudity
 
+## Popup Mirror (issue #578)
+ui-options-header-popup-mirror = Popup Mirror
+ui-options-popup-mirror-default = Uncategorized popups
+ui-options-popup-mirror-flavor = Flavor popups
+ui-options-popup-mirror-combat = Combat popups
+ui-options-popup-mirror-medical = Medical popups
+ui-options-popup-mirror-environmental = Environmental popups
+ui-options-popup-mirror-interaction = Interaction popups
+ui-options-popup-mirror-system = System popups
+ui-options-popup-mirror-disabled = Float only
+ui-options-popup-mirror-popup-tab = Float + Popup tab
+ui-options-popup-mirror-main-chat = Float + Main chat
+
 ## Admin menu
 
 ui-options-admin-player-panel = Admin Menu Players List

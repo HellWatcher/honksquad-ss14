@@ -36,6 +36,17 @@
                     <Button Name="RescanFontsButton" Text="{Loc 'ui-options-rescan-fonts'}" />
                 </BoxContainer>
                 <!-- HONK END -->
+                <!-- HONK START - popup mirror routing (issue #578) -->
+                <Label Text="{Loc 'ui-options-header-popup-mirror'}"
+                       StyleClasses="LabelKeyText"/>
+                <ui:OptionDropDown Name="PopupMirrorDefaultDropDown" Title="{Loc 'ui-options-popup-mirror-default'}" />
+                <ui:OptionDropDown Name="PopupMirrorFlavorDropDown" Title="{Loc 'ui-options-popup-mirror-flavor'}" />
+                <ui:OptionDropDown Name="PopupMirrorCombatDropDown" Title="{Loc 'ui-options-popup-mirror-combat'}" />
+                <ui:OptionDropDown Name="PopupMirrorMedicalDropDown" Title="{Loc 'ui-options-popup-mirror-medical'}" />
+                <ui:OptionDropDown Name="PopupMirrorEnvironmentalDropDown" Title="{Loc 'ui-options-popup-mirror-environmental'}" />
+                <ui:OptionDropDown Name="PopupMirrorInteractionDropDown" Title="{Loc 'ui-options-popup-mirror-interaction'}" />
+                <ui:OptionDropDown Name="PopupMirrorSystemDropDown" Title="{Loc 'ui-options-popup-mirror-system'}" />
+                <!-- HONK END -->
                 <Label Text="{Loc 'ui-options-accessability-header-content'}"
                        StyleClasses="LabelKeyText"/>
                 <CheckBox Name="CensorNudityCheckBox" Text="{Loc 'ui-options-censor-nudity'}" />

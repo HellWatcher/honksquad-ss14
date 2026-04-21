@@ -1,17 +1,20 @@
 using Content.Client.UserInterface.Systems.Chat;
+using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.Examine;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Popups;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
+using Robust.Shared.Configuration;
 using Robust.Shared.Utility;
 
 namespace Content.Client.RussStation.Popups;
 
 /// <summary>
-/// Mirrors every popup the local client sees into a dedicated chat channel so players can scroll back
-/// through text that otherwise disappears with the floating display.
+/// Mirrors every popup the local client sees into a chat channel so players can scroll back through
+/// text that otherwise vanishes with the floating display. Destination is governed by the
+/// <c>honk.popup.mirror.*</c> CVars, per-category or fallback.
 /// </summary>
 /// <remarks>
 /// Popups for entities the local player can't examine (out of range, occluded, wrong map) are dropped
@@ -21,6 +24,7 @@ namespace Content.Client.RussStation.Popups;
 public sealed class PopupLogSystem : EntitySystem
 {
     [Dependency] private readonly IUserInterfaceManager _ui = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
     [Dependency] private readonly ExamineSystemShared _examine = default!;
 
@@ -60,18 +64,39 @@ public sealed class PopupLogSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(message))
             return;
 
+        var route = ResolveRoute(category);
+        if (route == PopupMirrorRoute.Disabled)
+            return;
+
+        var channel = route == PopupMirrorRoute.MainChat ? ChatChannel.Local : ChatChannel.Popup;
         var escaped = FormattedMessage.EscapeText(message);
         var wrapped = category is { } cat
             ? $"[color=#9999aa]\\[{cat}\\][/color] {escaped}"
             : escaped;
 
-        var mirror = new ChatMessage(
-            ChatChannel.Popup,
-            message,
-            wrapped,
-            source,
-            senderKey: null);
-
+        var mirror = new ChatMessage(channel, message, wrapped, source, senderKey: null);
         Chat.ProcessChatMessage(mirror, speechBubble: false);
+    }
+
+    private PopupMirrorRoute ResolveRoute(PopupCategory? category)
+    {
+        var cvar = category switch
+        {
+            PopupCategory.Flavor => CCVars.PopupMirrorFlavor,
+            PopupCategory.Combat => CCVars.PopupMirrorCombat,
+            PopupCategory.Medical => CCVars.PopupMirrorMedical,
+            PopupCategory.Environmental => CCVars.PopupMirrorEnvironmental,
+            PopupCategory.Interaction => CCVars.PopupMirrorInteraction,
+            PopupCategory.System => CCVars.PopupMirrorSystem,
+            _ => CCVars.PopupMirrorDefault,
+        };
+
+        var raw = _cfg.GetCVar(cvar);
+        return raw switch
+        {
+            (int) PopupMirrorRoute.PopupTab => PopupMirrorRoute.PopupTab,
+            (int) PopupMirrorRoute.MainChat => PopupMirrorRoute.MainChat,
+            _ => PopupMirrorRoute.Disabled,
+        };
     }
 }
