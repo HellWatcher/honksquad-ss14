@@ -103,6 +103,7 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
             }
 
             scanner.IsReagentScanActive = true;
+            Dirty(uid, scanner);
             PushReagentState(uid, target, active: true);
         }
     }
@@ -137,6 +138,7 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
         ent.Comp.ReagentScanTarget = target;
         ent.Comp.NextReagentUpdate = _timing.CurTime + ent.Comp.ReagentUpdateInterval;
         ent.Comp.IsReagentScanActive = true;
+        Dirty(ent);
         PushReagentState(ent.Owner, target, active: true, preferredTab: HealthAnalyzerTab.Health);
     }
 
@@ -168,6 +170,7 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
             return;
 
         ent.Comp.IsReagentScanActive = false;
+        Dirty(ent);
         PushReagentState(ent.Owner, target, active: false);
     }
 
@@ -175,6 +178,7 @@ public sealed class HealthAnalyzerReagentSystem : EntitySystem
     {
         ent.Comp.ReagentScanTarget = null;
         ent.Comp.IsReagentScanActive = false;
+        Dirty(ent);
     }
 
     private void OnDropped(Entity<HealthAnalyzerReagentScannerComponent> ent, ref DroppedEvent args)

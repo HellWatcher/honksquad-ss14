@@ -28,6 +28,7 @@ public sealed class MessengerCartridgeSystem : EntitySystem
     private void OnActivated(EntityUid uid, MessengerCartridgeComponent component, CartridgeActivatedEvent args)
     {
         component.ActiveConversation = null;
+        Dirty(uid, component);
         UpdateUiState(uid, args.Loader, component);
     }
 
