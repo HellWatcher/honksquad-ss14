@@ -16,6 +16,11 @@
   It's also a [bold]hotbar[/bold] — perform those actions by pressing their corresponding [color=yellow][bold]number keys[/bold][/color] on your keyboard.
   Rearrange them by [bold]dragging[/bold] one icon over another, or remove icons temporarily by dragging them away.
 
+  <!-- HONK START - Action bar customization (#584) -->
+  You can customize the action bar in [bold]Settings → Misc → Action Bar[/bold] (rows, slots per row, slot spacing, keybind labels, empty slot visibility) and in [bold]Settings → Accessibility[/bold] (button background opacity).
+  The actions window header also has [bold]Lock[/bold] (freezes the bar against right-click clear and drag rearrange, click-to-fire still works) and [bold]Auto-add[/bold] (when off, server-granted actions stay in the menu instead of jumping onto the bar).
+  <!-- HONK END -->
+
   ### Status bar
   Below the chat window on the right, there's the [bold]status bar[/bold] showing your character's statuses.
   As with the action bar, hover over those icons to see what they mean.
@@ -138,6 +143,14 @@
   Don't worry about having to memorize them — they're usually intuitive and consistent across entity categories, and you'll find that most entities only use one or two interactions.
 
   [bold]Items stored in containers are still interactable.[/bold]
+
+  <!-- HONK START - Escape cancels DoAfters (#571) -->
+  ## Cancelling progress bars
+  Press [color=yellow][bold][keybind="EscapeContext"][/bold][/color] to [color=cyan]cancel[/color] any active progress-bar action you started (eating, drinking, channeled actions, etc.).
+  This works as long as no menu or text field is in the way (Escape still closes open windows and opens the game menu in the usual order).
+
+  Forced actions you didn't start (being grabbed, stripped, or operated on) aren't cancellable this way.
+  <!-- HONK END -->
 
   ## Context menus
   Click [color=yellow][bold][keybind="UIRightClick"/][/bold][/color] on any interactive entity to open the [color=cyan]context menu[/color], which shows you additional interaction you can currently perform.

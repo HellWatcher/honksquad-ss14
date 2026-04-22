@@ -76,6 +76,14 @@ Treats burn damage (heat, shock, cold, caustic).
 - [color=#a4885c]Hemostat[/color] - treat burns (repeats automatically until healed)
 - [color=#a4885c]Cautery[/color] - close incision
 
+### Wound Repair (Fracture)
+Clears fractures, the lasting bone wounds applied by heavy blunt damage.
+- [color=#a4885c]Bonesetter[/color] - set the bone
+
+### Wound Repair (Burn)
+Clears burn wounds, the lasting tissue wounds left by severe heat or shock damage (separate from the raw burn damage on the health bar).
+- [color=#a4885c]Cautery[/color] - cauterize the wound
+
 ### Organ Manipulation
 Open the body cavity to remove or insert organs.
 - [color=#a4885c]Scalpel[/color] - make incision
@@ -84,6 +92,9 @@ Open the body cavity to remove or insert organs.
 - [color=#a4885c]Bone saw[/color] - saw through bone
 - [color=#a4885c]Hemostat[/color] - select organ to remove (opens organ picker), or use an organ in your hand on the patient to insert it
 - [color=#a4885c]Cautery[/color] - close incision
+
+## Natural Healing
+Untreated wounds slowly heal on their own over a few minutes. A tier-3 wound drops to tier-2 after about 2 minutes, all the way cleared in roughly 10 minutes total. Surgery is still the fast path. Dead bodies don't regenerate.
 
 ## Cancelling Surgery
 The patient can click the [color=#a4885c]drape alert[/color] on their HUD to remove the drape and cancel the procedure at any time.
