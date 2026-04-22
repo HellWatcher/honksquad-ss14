@@ -18,21 +18,13 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
 
     private bool _isPopulating;
 
-    private StationRecordFilterType _currentFilterType;
-
     public GeneralStationRecordConsoleWindow()
     {
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
 
-        _currentFilterType = StationRecordFilterType.Name;
-
         SearchBar.SetPlaceholder(Loc.GetString("general-station-record-for-filter-line-placeholder"));
-        foreach (var item in Enum.GetValues<StationRecordFilterType>())
-        {
-            SearchBar.AddTypeOption((int)item, GetTypeFilterLocals(item));
-        }
-        SearchBar.SelectTypeId((int)_currentFilterType);
+        SearchBar.PopulateTypes<StationRecordFilterType>(GetTypeFilterLocals, StationRecordFilterType.Name);
 
         RecordListing.OnItemSelected += args =>
         {
@@ -48,29 +40,13 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
                 OnKeySelected?.Invoke(null);
         };
 
-        SearchBar.OnFilterChanged += args =>
-        {
-            _currentFilterType = (StationRecordFilterType)args.TypeId;
-            FilterListingOfRecords(args.Text);
-        };
+        SearchBar.OnFilterChanged += args => FilterListingOfRecords(args.Text);
     }
 
     public void UpdateState(GeneralStationRecordConsoleState state)
     {
         if (state.Filter != null)
-        {
-            if (state.Filter.Type != _currentFilterType)
-            {
-                _currentFilterType = state.Filter.Type;
-            }
-
-            if (state.Filter.Value != SearchBar.Text)
-            {
-                SearchBar.Text = state.Filter.Value;
-            }
-        }
-
-        SearchBar.SelectTypeId((int)_currentFilterType);
+            SearchBar.ApplyFilterState((int)state.Filter.Type, state.Filter.Value);
 
         if (state.RecordListing == null)
         {
@@ -134,7 +110,7 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
     {
         if (!_isPopulating)
         {
-            OnFiltersChanged?.Invoke(_currentFilterType, text);
+            OnFiltersChanged?.Invoke((StationRecordFilterType)SearchBar.SelectedTypeId, text);
         }
     }
 

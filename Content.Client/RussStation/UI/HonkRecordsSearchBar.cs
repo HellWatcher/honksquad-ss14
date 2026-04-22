@@ -75,6 +75,33 @@ public sealed class HonkRecordsSearchBar : BoxContainer
 
     public void SetPlaceholder(string placeholder) => SearchBox.PlaceHolder = placeholder;
 
+    /// <summary>
+    ///     Populate the type dropdown from an enum and pick an initial value.
+    ///     Collapses the Enum.GetValues + AddItem + SelectTypeId boilerplate
+    ///     that every records console would otherwise repeat.
+    /// </summary>
+    public void PopulateTypes<TEnum>(Func<TEnum, string> labelFor, TEnum initial)
+        where TEnum : struct, Enum
+    {
+        foreach (var value in Enum.GetValues<TEnum>())
+        {
+            AddTypeOption(Convert.ToInt32(value), labelFor(value));
+        }
+        SelectTypeId(Convert.ToInt32(initial));
+    }
+
+    /// <summary>
+    ///     Mirror an incoming filter state (type + text) into the bar without
+    ///     re-raising OnFilterChanged. Safe to call from UpdateState; the Text
+    ///     setter already guards against clobbering active typing.
+    /// </summary>
+    public void ApplyFilterState(int typeId, string value)
+    {
+        SelectTypeId(typeId);
+        if (value != Text)
+            Text = value;
+    }
+
     private void Raise() => OnFilterChanged?.Invoke(new HonkRecordsFilterChangedArgs(TypeOption.SelectedId, SearchBox.Text));
 }
 

@@ -51,8 +51,6 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
 
     private DialogWindow? _reasonDialog;
 
-    private StationRecordFilterType _currentFilterType;
-
     private SecurityStatus _currentCrewListFilter;
 
     public CriminalRecordsConsoleWindow(EntityUid console, uint maxLength, IPlayerManager playerManager, IPrototypeManager prototypeManager, IRobustRandom robustRandom, AccessReaderSystem accessReader)
@@ -68,18 +66,13 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
         _spriteSystem = _entManager.System<SpriteSystem>();
 
         _maxLength = maxLength;
-        _currentFilterType = StationRecordFilterType.Name;
 
         _currentCrewListFilter = SecurityStatus.None;
 
         OpenCentered();
 
         SearchBar.SetPlaceholder(Loc.GetString("criminal-records-filter-placeholder"));
-        foreach (var item in Enum.GetValues<StationRecordFilterType>())
-        {
-            SearchBar.AddTypeOption((int)item, GetTypeFilterLocals(item));
-        }
-        SearchBar.SelectTypeId((int)_currentFilterType);
+        SearchBar.PopulateTypes<StationRecordFilterType>(GetTypeFilterLocals, StationRecordFilterType.Name);
 
         foreach (var status in Enum.GetValues<SecurityStatus>())
         {
@@ -121,11 +114,7 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
             }
         };
 
-        SearchBar.OnFilterChanged += args =>
-        {
-            _currentFilterType = (StationRecordFilterType)args.TypeId;
-            FilterListingOfRecords(args.Text);
-        };
+        SearchBar.OnFilterChanged += args => FilterListingOfRecords(args.Text);
 
         StatusOptionButton.OnItemSelected += args =>
         {
@@ -147,17 +136,7 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
     public void UpdateState(CriminalRecordsConsoleState state)
     {
         if (state.Filter != null)
-        {
-            if (state.Filter.Type != _currentFilterType)
-            {
-                _currentFilterType = state.Filter.Type;
-            }
-
-            if (state.Filter.Value != SearchBar.Text)
-            {
-                SearchBar.Text = state.Filter.Value;
-            }
-        }
+            SearchBar.ApplyFilterState((int)state.Filter.Type, state.Filter.Value);
 
         if (state.FilterStatus != _currentCrewListFilter)
         {
@@ -165,7 +144,6 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
         }
 
         _selectedKey = state.SelectedKey;
-        SearchBar.SelectTypeId((int)_currentFilterType);
         CrewListFilter.SelectId((int)_currentCrewListFilter);
         NoRecords.Visible = state.RecordListing == null || state.RecordListing.Count == 0;
         PopulateRecordListing(state.RecordListing);
@@ -263,7 +241,7 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
 
     private void FilterListingOfRecords(string text = "")
     {
-        OnFiltersChanged?.Invoke(_currentFilterType, text);
+        OnFiltersChanged?.Invoke((StationRecordFilterType)SearchBar.SelectedTypeId, text);
     }
 
     private void SetStatus(SecurityStatus status)
