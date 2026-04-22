@@ -20,7 +20,9 @@ public sealed partial class ChannelFilterPopup : Popup
         ChatChannel.Emotes,
         ChatChannel.Radio,
         ChatChannel.Notifications,
-        ChatChannel.Popup, // HONK - popup mirror (issue #578)
+        //HONK START - popup mirror (issue #578)
+        ChatChannel.Popup,
+        //HONK END
         ChatChannel.LOOC,
         ChatChannel.OOC,
         ChatChannel.Dead,
