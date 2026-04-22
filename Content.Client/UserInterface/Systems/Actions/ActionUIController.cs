@@ -638,8 +638,9 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
     private bool OnMenuBeginDrag()
     {
-        //HONK - pad empty drop targets into the bar for the duration of the drag
+        //HONK START - pad empty drop targets into the bar for the duration of the drag
         UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkSetDragActive(true);
+        //HONK END
         // TODO ACTIONS
         // The dragging icon shuld be based on the entity's icon style. I.e. if the action has a large icon texture,
         // and a small item/provider sprite, then the dragged icon should be the big texture, not the provider.
@@ -673,8 +674,9 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
     private void OnMenuEndDrag()
     {
-        //HONK - trim the drag-only empty slots back out now that the drop is resolved
+        //HONK START - trim the drag-only empty slots back out now that the drop is resolved
         UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkSetDragActive(false);
+        //HONK END
         _dragShadow.Texture = null;
         _dragShadow.Visible = false;
     }
@@ -720,15 +722,17 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
         RegisterActionContainer(ActionsBar.ActionsContainer);
 
-        //HONK - apply fork layout (rows, slots-per-row, spacing, empty preview, min-slot padding)
+        //HONK START - apply fork layout (rows, slots-per-row, spacing, empty preview, min-slot padding)
         // once the container exists and before LinkAllActions populates it; a second call after
         // linking re-asserts the layout in case upstream rebuilds the grid during linking.
         UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkOnContainerReady();
+        //HONK END
 
         _actionsSystem?.LinkAllActions();
 
-        //HONK - re-apply after the initial action link rebuilds the container children
+        //HONK START - re-apply after the initial action link rebuilds the container children
         UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkOnContainerReady();
+        //HONK END
     }
 
     public void RegisterActionContainer(ActionButtonContainer container)

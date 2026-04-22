@@ -406,12 +406,14 @@ public sealed class ActionButton : Control, IEntityControl
             ? new Color(255, 255, 255, honkEmptyAlphaByte)
             : new Color(255, 255, 255, honkAlphaByte);
         //HONK END
+        //HONK START - draw the slot background texture so the empty preview has something to show
         if (Action != null ||
             _controller.IsDragging && GetPositionInParent() == Parent?.ChildCount - 1
-            || honkShowEmpty) //HONK - draw the slot background texture so the empty preview has something to show
+            || honkShowEmpty)
         {
             Button.Texture = _buttonBackgroundTexture;
         }
+        //HONK END
         else
         {
             Button.Texture = null;
