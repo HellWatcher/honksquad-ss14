@@ -157,6 +157,10 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         window.AutoAddButton.Pressed = AutoAddActions;
         window.LockButton.OnToggled += a => _cfg.SetCVar(CCVars.HonkActionBarLock, a.Pressed);
         window.AutoAddButton.OnToggled += a => _cfg.SetCVar(CCVars.HonkActionBarAutoAddActions, a.Pressed);
+
+        var slotHotkeys = UIManager.GetUIController<SlotHotkeyController>();
+        window.AssignHotkeyButton.Pressed = slotHotkeys.AssignMode;
+        window.AssignHotkeyButton.OnToggled += a => slotHotkeys.SetAssignMode(a.Pressed);
     }
 
     // Called from the upstream ActionUIController (HONK) once the action bar widget

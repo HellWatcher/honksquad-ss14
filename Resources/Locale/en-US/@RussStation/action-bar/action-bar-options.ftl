@@ -7,3 +7,4 @@ ui-options-action-bar-show-empty-slots = Show empty slots (faint)
 ui-options-action-bar-button-background-alpha = Action bar button background alpha
 ui-actionmenu-lock-button = Lock bar
 ui-actionmenu-auto-add-button = Auto-add new actions
+honk-ui-actionmenu-assign-hotkey-button = Assign hotkeys

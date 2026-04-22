@@ -20,6 +20,7 @@
         <BoxContainer Orientation="Horizontal" SeparationOverride="8">
             <CheckBox Name="LockButton" Access="Public" Text="{Loc ui-actionmenu-lock-button}"/>
             <CheckBox Name="AutoAddButton" Access="Public" Text="{Loc ui-actionmenu-auto-add-button}"/>
+            <CheckBox Name="AssignHotkeyButton" Access="Public" Text="{Loc honk-ui-actionmenu-assign-hotkey-button}"/>
         </BoxContainer>
         <BoxContainer Name="FilterContainer" Access="Public" Orientation="Vertical"/>
         <!-- HONK END -->

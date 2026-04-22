@@ -63,11 +63,17 @@ public class ActionButtonContainer : GridContainer
         {
             var button = new ActionButton(_entity);
 
-            if (!keys.TryGetValue(index, out var boundKey))
-                return button;
-
-            //HONK START - KeyBind setter now resolves the short label and autofits it; no extra work here
-            button.KeyBind = boundKey;
+            //HONK START - per-slot hotkey lookup via SlotHotkeyController: user
+            // overrides and slots past the default hotbar range land on the right
+            // label. Falls back to the upstream fixed-index key when the UI
+            // subsystem isn't wired yet (tests, early init).
+            var resolved = UserInterfaceManager
+                .GetUIController<Content.Client.RussStation.ActionBar.SlotHotkeyController>()
+                .GetHotkeyForSlot(index);
+            if (resolved is { } slotKey)
+                button.KeyBind = slotKey;
+            else if (keys.TryGetValue(index, out var boundKey))
+                button.KeyBind = boundKey;
             //HONK END
 
             return button;

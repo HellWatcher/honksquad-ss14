@@ -322,8 +322,12 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
     }
 
     //HONK START - public entry so the fork controller can force a hotbar rebuild when empty-slot /
-    // slots-per-row / rows CVars change and the padding needs to grow or shrink.
+    // slots-per-row / rows CVars change and the padding needs to grow or shrink; and a slot-trigger
+    // entry point so SlotHotkeyController can dispatch after resolving a key→slot mapping that
+    // differs from the upstream fixed index.
     public void HonkRefreshHotbar() => OnActionsUpdated();
+
+    public void HonkTriggerSlot(int slot) => TriggerAction(slot);
     //HONK END
 
     private void ActionButtonPressed(ButtonEventArgs args)
@@ -606,6 +610,20 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
     private void HandleActionPressed(GUIBoundKeyEventArgs args, ActionButton button)
     {
         args.Handle();
+
+        //HONK START - assign-hotkey mode: left-click arms the clicked slot so the
+        // next hotbar keypress becomes that slot's hotkey. Short-circuit the drag
+        // and trigger paths entirely while assign mode is on.
+        var slotHotkeys = UIManager.GetUIController<Content.Client.RussStation.ActionBar.SlotHotkeyController>();
+        if (slotHotkeys.AssignMode
+            && _container != null
+            && _container.TryGetButtonIndex(button, out var armSlot))
+        {
+            slotHotkeys.ArmSlot(armSlot);
+            return;
+        }
+        //HONK END
+
         if (button.Action != null)
         {
             //HONK START - lock blocks drag-rearrange on the bar; clicking an action to fire it still works
