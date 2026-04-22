@@ -81,7 +81,22 @@ public sealed class FloatingChatInputControl : Control
         InputBox.Input.OnTextChanged += OnInputTextChanged;
         InputBox.ChannelSelector.OnChannelSelect += OnChannelSelectorChanged;
 
+        // Pick up the accessibility text-opacity knob too so the typed text
+        // fades in sync with in-world bubble text.
+        ApplyTextOpacity(_config.GetCVar(CCVars.SpeechBubbleTextOpacity));
+
         _config.OnValueChanged(CCVars.SpeechBubbleBackgroundOpacity, OnBackgroundOpacityChanged);
+        _config.OnValueChanged(CCVars.SpeechBubbleTextOpacity, OnTextOpacityChanged);
+    }
+
+    private void ApplyTextOpacity(float alpha)
+    {
+        InputBox.Input.ModulateSelfOverride = Color.White.WithAlpha(Math.Clamp(alpha, 0f, 1f));
+    }
+
+    private void OnTextOpacityChanged(float newAlpha)
+    {
+        ApplyTextOpacity(newAlpha);
     }
 
     private static Color BuildBackgroundColor(float alpha)
@@ -101,7 +116,10 @@ public sealed class FloatingChatInputControl : Control
     {
         base.Dispose(disposing);
         if (disposing)
+        {
             _config.UnsubValueChanged(CCVars.SpeechBubbleBackgroundOpacity, OnBackgroundOpacityChanged);
+            _config.UnsubValueChanged(CCVars.SpeechBubbleTextOpacity, OnTextOpacityChanged);
+        }
     }
 
     private void OnChannelSelectorChanged(ChatSelectChannel channel)
