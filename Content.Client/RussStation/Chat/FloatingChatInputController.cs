@@ -60,8 +60,16 @@ public sealed class FloatingChatInputController : UIController
         root.AddChild(_active);
         _active.Attach(entity);
 
-        if (channel.HasValue)
-            _active.InputBox.ChannelSelector.Select(channel.Value);
+        var selected = channel ?? ChatSelectChannel.Local;
+        _active.InputBox.ChannelSelector.Select(selected);
+        // Select() is a no-op when the target channel already matches the
+        // freshly-constructed default, so the label can be blank. Force a
+        // repaint of the button text regardless.
+        _active.InputBox.ChannelSelector.UpdateChannelSelectButton(selected, null);
+
+        // Make the widget a modal so Escape (CloseModals) and clicks outside
+        // dismiss it without needing the LineEdit to hold keyboard focus.
+        UIManager.PushModal(_active);
 
         _active.FocusInput();
     }
@@ -97,10 +105,15 @@ public sealed class FloatingChatInputController : UIController
         if (_active == null)
             return;
 
-        _active.OnSubmit -= HandleSubmit;
-        _active.OnCancel -= HandleCancel;
-        _active.InputBox.Input.ReleaseKeyboardFocus();
-        _active.Orphan();
+        var widget = _active;
         _active = null;
+
+        // Detach first so the ModalRemoved callback the engine fires while
+        // tearing down has no subscribers left to re-enter Close(). Orphan
+        // pops the widget off the modal stack for us.
+        widget.OnSubmit -= HandleSubmit;
+        widget.OnCancel -= HandleCancel;
+        widget.InputBox.Input.ReleaseKeyboardFocus();
+        widget.Orphan();
     }
 }

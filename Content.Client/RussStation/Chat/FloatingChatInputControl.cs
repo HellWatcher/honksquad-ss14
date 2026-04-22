@@ -53,7 +53,17 @@ public sealed class FloatingChatInputControl : Control
 
         InputBox.Input.OnTextEntered += OnTextEntered;
         InputBox.Input.OnKeyBindDown += OnInputKeyBindDown;
-        InputBox.Input.OnFocusExit += _ => OnCancel?.Invoke();
+    }
+
+    /// <summary>
+    /// Engine invokes this when the widget is popped from the modal stack
+    /// (Escape via CloseModals, or a click outside the widget). Route that
+    /// back to the controller so it can tear down exactly once.
+    /// </summary>
+    protected override void ModalRemoved()
+    {
+        base.ModalRemoved();
+        OnCancel?.Invoke();
     }
 
     public void Attach(EntityUid entity)
