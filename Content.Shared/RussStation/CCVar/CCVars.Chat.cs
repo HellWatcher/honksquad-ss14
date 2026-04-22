@@ -34,12 +34,4 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<string> FloatingChatInputLastRadioChannel =
         CVarDef.Create("honk.chat.floating_input_last_radio_channel", string.Empty, CVar.CLIENTONLY | CVar.ARCHIVE);
-
-    /// <summary>
-    /// Alpha of the floating chat input's background panel, 0..1. Higher values
-    /// make typed text more legible over busy scenes; lower values let the game
-    /// world show through.
-    /// </summary>
-    public static readonly CVarDef<float> FloatingChatInputBackgroundOpacity =
-        CVarDef.Create("honk.chat.floating_input_background_opacity", 0.96f, CVar.CLIENTONLY | CVar.ARCHIVE);
 }

@@ -62,9 +62,10 @@ public sealed class FloatingChatInputControl : Control
 
         // Thicker background than the anchored chat panel — the floating
         // widget overlaps the game world, so a more opaque fill keeps typed
-        // text legible against busy scenes. Alpha is user-tunable via the
-        // accessibility option below.
-        _backgroundStyle = new StyleBoxFlat(BuildBackgroundColor(_config.GetCVar(CCVars.FloatingChatInputBackgroundOpacity)));
+        // text legible. Share the accessibility "Speech bubble background
+        // opacity" option rather than adding a duplicate slider; in-world
+        // text surfaces belong to the same knob.
+        _backgroundStyle = new StyleBoxFlat(BuildBackgroundColor(_config.GetCVar(CCVars.SpeechBubbleBackgroundOpacity)));
 
         InputBox = new ChatInputBox
         {
@@ -80,7 +81,7 @@ public sealed class FloatingChatInputControl : Control
         InputBox.Input.OnTextChanged += OnInputTextChanged;
         InputBox.ChannelSelector.OnChannelSelect += OnChannelSelectorChanged;
 
-        _config.OnValueChanged(CCVars.FloatingChatInputBackgroundOpacity, OnBackgroundOpacityChanged);
+        _config.OnValueChanged(CCVars.SpeechBubbleBackgroundOpacity, OnBackgroundOpacityChanged);
     }
 
     private static Color BuildBackgroundColor(float alpha)
@@ -100,7 +101,7 @@ public sealed class FloatingChatInputControl : Control
     {
         base.Dispose(disposing);
         if (disposing)
-            _config.UnsubValueChanged(CCVars.FloatingChatInputBackgroundOpacity, OnBackgroundOpacityChanged);
+            _config.UnsubValueChanged(CCVars.SpeechBubbleBackgroundOpacity, OnBackgroundOpacityChanged);
     }
 
     private void OnChannelSelectorChanged(ChatSelectChannel channel)

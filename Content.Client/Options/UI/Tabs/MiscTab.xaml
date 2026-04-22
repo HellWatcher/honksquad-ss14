@@ -21,7 +21,6 @@
                 <!-- HONK START - issue #577 floating chat input -->
                 <CheckBox Name="FloatingChatInputCheckBox" Text="{Loc 'ui-options-floating-chat-input'}" />
                 <CheckBox Name="FloatingChatInputRememberChannelCheckBox" Text="{Loc 'ui-options-floating-chat-input-remember-channel'}" Margin="20 0 0 0" />
-                <ui:OptionSlider Name="FloatingChatInputBackgroundOpacitySlider" Title="{Loc 'ui-options-floating-chat-input-background-opacity'}" Margin="20 0 0 0" />
                 <!-- HONK END -->
                 <Label Text="{Loc 'ui-options-general-cursor'}"
                        StyleClasses="LabelKeyText"/>

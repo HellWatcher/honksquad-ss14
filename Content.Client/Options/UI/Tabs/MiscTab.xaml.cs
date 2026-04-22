@@ -54,7 +54,6 @@ public sealed partial class MiscTab : Control
         //HONK START - issue #577
         Control.AddOptionCheckBox(CCVars.FloatingChatInput, FloatingChatInputCheckBox);
         Control.AddOptionCheckBox(CCVars.FloatingChatInputRememberChannel, FloatingChatInputRememberChannelCheckBox);
-        Control.AddOptionPercentSlider(CCVars.FloatingChatInputBackgroundOpacity, FloatingChatInputBackgroundOpacitySlider);
         //HONK END
         Control.AddOptionCheckBox(CCVars.StaticStorageUI, StaticStorageUI);
 
