@@ -2,6 +2,7 @@
 // Positioning mirrors Content.Client/Chat/UI/SpeechBubble.cs. See issue #577.
 
 using System.Numerics;
+using Content.Client.UserInterface.Systems.Chat;
 using Content.Client.UserInterface.Systems.Chat.Controls;
 using Content.Shared.Chat;
 using Content.Shared.Input;
@@ -10,6 +11,7 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Input;
+using Robust.Shared.Maths;
 using Robust.Shared.Timing;
 using static Robust.Client.UserInterface.Controls.LineEdit;
 
@@ -24,6 +26,7 @@ public sealed class FloatingChatInputControl : Control
 {
     [Dependency] private readonly IEntityManager _entManager = default!;
     [Dependency] private readonly IEyeManager _eyeManager = default!;
+    [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
 
     private readonly SharedTransformSystem _transform;
 
@@ -53,6 +56,48 @@ public sealed class FloatingChatInputControl : Control
 
         InputBox.Input.OnTextEntered += OnTextEntered;
         InputBox.Input.OnKeyBindDown += OnInputKeyBindDown;
+        InputBox.Input.OnTextChanged += OnInputTextChanged;
+        InputBox.ChannelSelector.OnChannelSelect += _ => RefreshChannelLabel();
+    }
+
+    private void OnInputTextChanged(LineEditEventArgs args)
+    {
+        RefreshChannelLabel();
+    }
+
+    /// <summary>
+    /// Mirrors <see cref="ChatUIController.UpdateSelectedChannel"/>. The button
+    /// text is only refreshed here; <see cref="ChannelSelectorButton.Select"/>
+    /// short-circuits on same-channel and neither it nor the dropdown's
+    /// OnChannelSelect handler repaints the label.
+    /// </summary>
+    private void RefreshChannelLabel()
+    {
+        var chatUi = _uiManager.GetUIController<ChatUIController>();
+        var (prefixChannel, _, radioChannel) = chatUi.SplitInputContents(InputBox.Input.Text.ToLower());
+
+        if (prefixChannel == ChatSelectChannel.None)
+            InputBox.ChannelSelector.UpdateChannelSelectButton(InputBox.ChannelSelector.SelectedChannel, null);
+        else
+            InputBox.ChannelSelector.UpdateChannelSelectButton(prefixChannel, radioChannel);
+    }
+
+    private void CycleChannel(bool forward)
+    {
+        var chatUi = _uiManager.GetUIController<ChatUIController>();
+        var order = ChannelSelectorPopup.ChannelSelectorOrder;
+        var idx = Array.IndexOf(order, InputBox.ChannelSelector.SelectedChannel);
+        do
+        {
+            idx += forward ? 1 : -1;
+            idx = MathHelper.Mod(idx, order.Length);
+        } while ((chatUi.SelectableChannels & order[idx]) == 0);
+
+        var target = chatUi.MapLocalIfGhost(order[idx]);
+        if ((chatUi.SelectableChannels & target) == 0)
+            return;
+
+        InputBox.ChannelSelector.Select(target);
     }
 
     /// <summary>
@@ -92,6 +137,20 @@ public sealed class FloatingChatInputControl : Control
         {
             args.Handle();
             OnCancel?.Invoke();
+            return;
+        }
+
+        if (args.Function == ContentKeyFunctions.CycleChatChannelForward)
+        {
+            CycleChannel(true);
+            args.Handle();
+            return;
+        }
+
+        if (args.Function == ContentKeyFunctions.CycleChatChannelBackward)
+        {
+            CycleChannel(false);
+            args.Handle();
         }
     }
 
