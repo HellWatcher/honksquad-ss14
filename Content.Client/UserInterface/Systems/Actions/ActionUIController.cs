@@ -265,11 +265,10 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actions.Contains(action))
             return;
 
-        //HONK START - fork auto-add toggle + provider-slot memory. Auto-add off skips ALL new
-        // actions including ones that previously lived on the bar; when on, prefer the remembered
-        // slot for hand/pocket swaps so the layout doesn't reshuffle every toggle.
-        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
-            return;
+        //HONK START - fork auto-add toggle + provider-slot memory. Hand/pocket swaps of an item that
+        // already had a slot always restore to that slot regardless of auto-add (the player accepted
+        // the action onto the bar previously, so a move shouldn't silently drop it). Truly new
+        // providers fall through to the auto-add check.
         if (action.Comp.Container is {} provider
             && _honkLastSlotByProvider.TryGetValue(provider, out var lastSlot)
             && lastSlot >= 0
@@ -279,6 +278,8 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             _actions[lastSlot] = action;
             return;
         }
+        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
+            return;
         //HONK END
 
         _actions.Add(action);
