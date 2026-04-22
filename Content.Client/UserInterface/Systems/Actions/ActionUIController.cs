@@ -572,6 +572,13 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
     {
         if (args.Function == EngineKeyFunctions.UIRightClick)
         {
+            //HONK START - locked bars swallow right-click clear so a mis-click can't wipe a slot
+            if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.LockActions)
+            {
+                args.Handle();
+                return;
+            }
+            //HONK END
             SetAction(button, null);
             args.Handle();
             return;
@@ -588,6 +595,10 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         args.Handle();
         if (button.Action != null)
         {
+            //HONK START - lock blocks drag-rearrange on the bar; clicking an action to fire it still works
+            if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.LockActions)
+                return;
+            //HONK END
             _menuDragHelper.MouseDown(button);
             return;
         }
