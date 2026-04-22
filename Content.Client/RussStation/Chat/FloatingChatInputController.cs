@@ -24,6 +24,19 @@ public sealed class FloatingChatInputController : UIController
 
     public bool IsActive => _active != null;
 
+    public override void Initialize()
+    {
+        _player.LocalPlayerAttached += OnLocalPlayerAttached;
+    }
+
+    private void OnLocalPlayerAttached(EntityUid newEntity)
+    {
+        // Keep the widget following whatever entity the session controls now
+        // (death -> ghost, admin respawn, etc.). Without this, the anchor stays
+        // pinned to the prior entity and the new body can't open a fresh box.
+        _active?.Attach(newEntity);
+    }
+
     public void Show(ChatSelectChannel? channel = null)
     {
         if (_active != null)

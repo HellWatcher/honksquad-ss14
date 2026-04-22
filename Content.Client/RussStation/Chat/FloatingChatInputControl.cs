@@ -47,10 +47,13 @@ public sealed class FloatingChatInputControl : Control
         {
             MinWidth = 320,
         };
+        // Channel filter button is noise for an ephemeral floating input.
+        InputBox.FilterButton.Visible = false;
         AddChild(InputBox);
 
         InputBox.Input.OnTextEntered += OnTextEntered;
         InputBox.Input.OnKeyBindDown += OnInputKeyBindDown;
+        InputBox.Input.OnFocusExit += _ => OnCancel?.Invoke();
     }
 
     public void Attach(EntityUid entity)
