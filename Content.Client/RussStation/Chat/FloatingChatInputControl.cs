@@ -6,6 +6,7 @@ using Content.Client.UserInterface.Systems.Chat;
 using Content.Client.UserInterface.Systems.Chat.Controls;
 using Content.Shared.Chat;
 using Content.Shared.Input;
+using Content.Shared.Radio;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
@@ -41,6 +42,18 @@ public sealed class FloatingChatInputControl : Control
     public event Action<string, ChatSelectChannel>? OnSubmit;
     public event Action? OnCancel;
 
+    private RadioChannelPrototype? _pendingRadioChannel;
+    private bool _suppressPendingClear;
+
+    /// <summary>
+    /// Specific radio channel to route to when the widget submits on
+    /// <see cref="ChatSelectChannel.Radio"/> without a typed prefix.
+    /// Cleared automatically when the user picks a channel via dropdown
+    /// or cycle hotkey; use <see cref="RestoreChannel"/> to seed it at
+    /// open time.
+    /// </summary>
+    public RadioChannelPrototype? PendingRadioChannel => _pendingRadioChannel;
+
     public FloatingChatInputControl()
     {
         IoCManager.InjectDependencies(this);
@@ -57,7 +70,38 @@ public sealed class FloatingChatInputControl : Control
         InputBox.Input.OnTextEntered += OnTextEntered;
         InputBox.Input.OnKeyBindDown += OnInputKeyBindDown;
         InputBox.Input.OnTextChanged += OnInputTextChanged;
-        InputBox.ChannelSelector.OnChannelSelect += _ => RefreshChannelLabel();
+        InputBox.ChannelSelector.OnChannelSelect += OnChannelSelectorChanged;
+    }
+
+    private void OnChannelSelectorChanged(ChatSelectChannel channel)
+    {
+        // User interaction (dropdown or cycle) overrides any restored radio
+        // target. Programmatic restore via RestoreChannel suppresses this.
+        if (!_suppressPendingClear)
+            _pendingRadioChannel = null;
+
+        RefreshChannelLabel();
+    }
+
+    /// <summary>
+    /// Open-time channel seed. Selects the channel and, when it is Radio,
+    /// stores the pending radio prototype so both the button label and
+    /// submit routing address it.
+    /// </summary>
+    public void RestoreChannel(ChatSelectChannel channel, RadioChannelPrototype? pendingRadio)
+    {
+        _suppressPendingClear = true;
+        try
+        {
+            InputBox.ChannelSelector.Select(channel);
+        }
+        finally
+        {
+            _suppressPendingClear = false;
+        }
+
+        _pendingRadioChannel = channel == ChatSelectChannel.Radio ? pendingRadio : null;
+        RefreshChannelLabel();
     }
 
     private void OnInputTextChanged(LineEditEventArgs args)
@@ -76,10 +120,15 @@ public sealed class FloatingChatInputControl : Control
         var chatUi = _uiManager.GetUIController<ChatUIController>();
         var (prefixChannel, _, radioChannel) = chatUi.SplitInputContents(InputBox.Input.Text.ToLower());
 
-        if (prefixChannel == ChatSelectChannel.None)
-            InputBox.ChannelSelector.UpdateChannelSelectButton(InputBox.ChannelSelector.SelectedChannel, null);
-        else
+        if (prefixChannel != ChatSelectChannel.None)
+        {
             InputBox.ChannelSelector.UpdateChannelSelectButton(prefixChannel, radioChannel);
+            return;
+        }
+
+        var selected = InputBox.ChannelSelector.SelectedChannel;
+        var radio = selected == ChatSelectChannel.Radio ? _pendingRadioChannel : null;
+        InputBox.ChannelSelector.UpdateChannelSelectButton(selected, radio);
     }
 
     private void CycleChannel(bool forward)

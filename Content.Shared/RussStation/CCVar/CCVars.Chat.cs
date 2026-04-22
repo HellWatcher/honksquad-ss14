@@ -26,4 +26,12 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<int> FloatingChatInputLastChannel =
         CVarDef.Create("honk.chat.floating_input_last_channel", 0, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// Persists the last <c>RadioChannelPrototype</c> ID used on the Radio channel when
+    /// <see cref="FloatingChatInputRememberChannel"/> is on. Empty means "default/common"
+    /// (or the prototype is missing and the widget falls back to common).
+    /// </summary>
+    public static readonly CVarDef<string> FloatingChatInputLastRadioChannel =
+        CVarDef.Create("honk.chat.floating_input_last_radio_channel", string.Empty, CVar.CLIENTONLY | CVar.ARCHIVE);
 }
