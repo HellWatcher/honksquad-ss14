@@ -265,7 +265,11 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actions.Contains(action))
             return;
 
-        //HONK START - restore to the previously-held slot if this provider's action was here before
+        //HONK START - fork auto-add toggle + provider-slot memory. Auto-add off skips ALL new
+        // actions including ones that previously lived on the bar; when on, prefer the remembered
+        // slot for hand/pocket swaps so the layout doesn't reshuffle every toggle.
+        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
+            return;
         if (action.Comp.Container is {} provider
             && _honkLastSlotByProvider.TryGetValue(provider, out var lastSlot)
             && lastSlot >= 0
@@ -275,11 +279,6 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             _actions[lastSlot] = action;
             return;
         }
-        //HONK END
-
-        //HONK START - fork auto-add toggle lets players curate layouts without new actions butting in
-        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
-            return;
         //HONK END
 
         _actions.Add(action);
@@ -830,6 +829,12 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
     {
         if (_actionsSystem == null)
             return;
+
+        //HONK START - auto-add off: don't clobber the curated layout when the player's ActionsComponent
+        // re-links (respawn, body swap). New actions still land in the actions menu; bar stays as-is.
+        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
+            return;
+        //HONK END
 
         var actions = _actionsSystem.GetClientActions().Where(action => action.Comp.AutoPopulate).ToList();
         actions.Sort(ActionComparer);
