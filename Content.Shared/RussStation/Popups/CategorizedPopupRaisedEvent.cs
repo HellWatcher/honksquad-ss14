@@ -12,7 +12,12 @@ namespace Content.Shared.RussStation.Popups;
 public sealed class CategorizedPopupRaisedEvent : EntityEventArgs
 {
     public string? Message { get; }
-    public PopupCategory Category { get; }
+
+    /// <summary>
+    /// Null for non-categorized calls (most upstream popup paths). Set only when a fork caller
+    /// used one of the <see cref="PopupCategory"/>-carrying overloads on SharedPopupSystem.
+    /// </summary>
+    public PopupCategory? Category { get; }
     public Content.Shared.Popups.PopupType Type { get; }
 
     /// <summary>
@@ -21,7 +26,7 @@ public sealed class CategorizedPopupRaisedEvent : EntityEventArgs
     /// </summary>
     public EntityUid? Source { get; }
 
-    public CategorizedPopupRaisedEvent(string? message, PopupCategory category, Content.Shared.Popups.PopupType type, EntityUid? source)
+    public CategorizedPopupRaisedEvent(string? message, PopupCategory? category, Content.Shared.Popups.PopupType type, EntityUid? source)
     {
         Message = message;
         Category = category;

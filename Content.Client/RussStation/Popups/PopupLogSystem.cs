@@ -27,25 +27,10 @@ public sealed class PopupLogSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeNetworkEvent<PopupCursorEvent>(OnPopupCursor);
-        SubscribeNetworkEvent<PopupCoordinatesEvent>(OnPopupCoordinates);
-        SubscribeNetworkEvent<PopupEntityEvent>(OnPopupEntity);
+        // Single source: the client-side PopupSystem raises a CategorizedPopupRaisedEvent from
+        // PopupMessage / PopupCursorInternal (HONK blocks), so network-sent popups, client-predicted
+        // popups, and fork categorized calls all land here exactly once.
         SubscribeLocalEvent<CategorizedPopupRaisedEvent>(OnCategorizedPopup);
-    }
-
-    private void OnPopupCursor(PopupCursorEvent ev)
-    {
-        LogMirroredPopup(ev.Message, NetEntity.Invalid, null);
-    }
-
-    private void OnPopupCoordinates(PopupCoordinatesEvent ev)
-    {
-        LogMirroredPopup(ev.Message, NetEntity.Invalid, null);
-    }
-
-    private void OnPopupEntity(PopupEntityEvent ev)
-    {
-        LogMirroredPopup(ev.Message, ev.Uid, null);
     }
 
     private void OnCategorizedPopup(CategorizedPopupRaisedEvent ev)

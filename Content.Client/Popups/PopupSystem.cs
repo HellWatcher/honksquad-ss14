@@ -89,6 +89,10 @@ namespace Content.Client.Popups
                     _replayRecording.RecordClientMessage(new PopupCoordinatesEvent(message, type, GetNetCoordinates(coordinates)));
             }
 
+            //HONK START - every displayed world popup goes through here; mirror into the popup chat log
+            RaiseLocalEvent(new Content.Shared.RussStation.Popups.CategorizedPopupRaisedEvent(message, null, type, entity));
+            //HONK END
+
             var popupData = new WorldPopupData(message, type, coordinates, entity);
             if (_aliveWorldLabels.TryGetValue(popupData, out var existingLabel))
             {
@@ -136,6 +140,10 @@ namespace Content.Client.Popups
 
             if (recordReplay && _replayRecording.IsRecording)
                 _replayRecording.RecordClientMessage(new PopupCursorEvent(message, type));
+
+            //HONK START - every displayed cursor popup goes through here; mirror into the popup chat log
+            RaiseLocalEvent(new Content.Shared.RussStation.Popups.CategorizedPopupRaisedEvent(message, null, type, null));
+            //HONK END
 
             var popupData = new CursorPopupData(message, type);
             if (_aliveCursorLabels.TryGetValue(popupData, out var existingLabel))
