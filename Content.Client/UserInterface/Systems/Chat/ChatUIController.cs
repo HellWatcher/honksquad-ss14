@@ -859,20 +859,12 @@ public sealed partial class ChatUIController : UIController
             }
         }
 
-        //HONK START - HideChat emotes (gasp, sleeping snores, etc.) produce a floating speech bubble
-        // but never enter chat history, so the popup log is the only place they can be scrolled back.
-        // Route them through the same CategorizedPopupRaisedEvent pipeline so the examine visibility
-        // filter and self-bypass in PopupLogSystem apply.
+        //HONK START - let HideChat emotes (gasp, snore, etc.) land in the Emotes filter alongside
+        // typed emotes. Upstream set HideChat=true on these so they wouldn't enter chat history, but
+        // the chat log is the only scrollback path for transient visuals. Other HideChat channels
+        // (range-faded Local/Whisper, etc.) stay suppressed.
         if (msg.HideChat && msg.Channel == ChatChannel.Emotes)
-        {
-            var source = _ent.GetEntity(msg.SenderEntity);
-            _ent.EventBus.RaiseEvent(EventSource.Local,
-                new Content.Shared.RussStation.Popups.CategorizedPopupRaisedEvent(
-                    msg.Message,
-                    null,
-                    Content.Shared.Popups.PopupType.Small,
-                    source == default ? null : source));
-        }
+            msg.HideChat = false;
         //HONK END
 
         // Log all incoming chat to repopulate when filter is un-toggled
