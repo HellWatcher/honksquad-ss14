@@ -77,11 +77,11 @@ Treats burn damage (heat, shock, cold, caustic).
 - [color=#a4885c]Cautery[/color] - close incision
 
 ### Wound Repair (Fracture)
-Clears fractures, the lasting bone wounds applied by heavy blunt damage.
+Clears fractures left by heavy blunt damage.
 - [color=#a4885c]Bonesetter[/color] - set the bone
 
 ### Wound Repair (Burn)
-Clears burn wounds, the lasting tissue wounds left by severe heat or shock damage (separate from the raw burn damage on the health bar).
+Clears burn wounds left by severe heat or shock damage. Burn wounds are separate from the raw burn damage on the health bar.
 - [color=#a4885c]Cautery[/color] - cauterize the wound
 
 ### Organ Manipulation
