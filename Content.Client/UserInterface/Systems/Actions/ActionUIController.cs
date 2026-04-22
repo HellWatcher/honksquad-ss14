@@ -823,9 +823,10 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         _container?.ClearActionData();
         QueueWindowUpdate();
         StopTargeting();
-        //HONK - reset the first-link flag so next connection gets the default bar populated even if
-        // auto-add is off; within a connection the guard preserves the curated layout on respawn.
+        //HONK START - reset the first-link flag so next connection gets the default bar populated
+        // even if auto-add is off; within a connection the guard preserves the curated layout on respawn.
         _honkLoadedDefaultsThisConnection = false;
+        //HONK END
     }
 
     //HONK START - track whether defaults have been populated this connection so auto-add off still
