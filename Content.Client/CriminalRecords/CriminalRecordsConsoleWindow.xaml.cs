@@ -71,10 +71,12 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
 
         OpenCentered();
 
+        //HONK START - swap OptionButton + LineEdit row for shared live-filter widget
         SearchBar.SetPlaceholder(Loc.GetString("criminal-records-filter-placeholder"));
         SearchBar.PopulateTypes(
             Enum.GetValues<StationRecordFilterType>().Select(t => ((int)t, GetTypeFilterLocals(t))),
             (int)StationRecordFilterType.Name);
+        //HONK END
 
         foreach (var status in Enum.GetValues<SecurityStatus>())
         {
@@ -116,7 +118,9 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
             }
         };
 
+        //HONK START - single subscription covers both type and text changes
         SearchBar.OnFilterChanged += args => FilterListingOfRecords(args.Text);
+        //HONK END
 
         StatusOptionButton.OnItemSelected += args =>
         {
@@ -137,8 +141,10 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
 
     public void UpdateState(CriminalRecordsConsoleState state)
     {
+        //HONK START - shared search bar mirrors filter state
         if (state.Filter != null)
             SearchBar.ApplyFilterState((int)state.Filter.Type, state.Filter.Value);
+        //HONK END
 
         if (state.FilterStatus != _currentCrewListFilter)
         {
@@ -243,7 +249,9 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
 
     private void FilterListingOfRecords(string text = "")
     {
+        //HONK START - SearchBar.SelectedTypeId replaces upstream _currentFilterType field
         OnFiltersChanged?.Invoke((StationRecordFilterType)SearchBar.SelectedTypeId, text);
+        //HONK END
     }
 
     private void SetStatus(SecurityStatus status)

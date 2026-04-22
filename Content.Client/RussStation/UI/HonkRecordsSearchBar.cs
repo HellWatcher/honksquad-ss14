@@ -18,6 +18,12 @@ namespace Content.Client.RussStation.UI;
 /// </remarks>
 public sealed class HonkRecordsSearchBar : BoxContainer
 {
+    // Type dropdown sits on the left of the row with a small gap between it
+    // and the search box on the right; no margin on the other three edges.
+    private const int TypeOptionMinWidthPx = 200;
+    private const int TypeOptionRightMarginPx = 10;
+    private const int NoMarginPx = 0;
+
     public OptionButton TypeOption { get; }
     public LineEdit SearchBox { get; }
 
@@ -45,8 +51,8 @@ public sealed class HonkRecordsSearchBar : BoxContainer
 
         TypeOption = new OptionButton
         {
-            MinWidth = 200,
-            Margin = new Thickness(0, 0, 10, 0),
+            MinWidth = TypeOptionMinWidthPx,
+            Margin = new Thickness(NoMarginPx, NoMarginPx, TypeOptionRightMarginPx, NoMarginPx),
         };
         SearchBox = new LineEdit
         {
