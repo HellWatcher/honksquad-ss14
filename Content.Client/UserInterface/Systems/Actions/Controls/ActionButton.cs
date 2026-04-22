@@ -393,8 +393,9 @@ public sealed class ActionButton : Control, IEntityControl
     {
         _controller ??= UserInterfaceManager.GetUIController<ActionUIController>();
         //HONK START - fork empty-slot preview toggle + accessibility button-background alpha.
-        // Also reveal empty slots at full alpha during drag so drop targets are visible
-        // even when the user has the persistent empty-slot toggle off.
+        // Empty slots reveal at full alpha during drag so drop targets are visible even
+        // when the user has the persistent empty-slot toggle off, and the slot background
+        // texture draws in that case so the preview has something to render.
         var honkShowEmpty = Action == null
             && (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.ShowEmptySlots
                 || _controller.IsDragging);
@@ -405,8 +406,6 @@ public sealed class ActionButton : Control, IEntityControl
         Button.Modulate = honkShowEmpty && !_controller.IsDragging
             ? new Color(255, 255, 255, honkEmptyAlphaByte)
             : new Color(255, 255, 255, honkAlphaByte);
-        //HONK END
-        //HONK START - draw the slot background texture so the empty preview has something to show
         if (Action != null ||
             _controller.IsDragging && GetPositionInParent() == Parent?.ChildCount - 1
             || honkShowEmpty)
