@@ -37,7 +37,6 @@
                 <ui:OptionSlider Name="ActionBarRowsSlider" Title="{Loc 'ui-options-action-bar-rows'}" />
                 <ui:OptionSlider Name="ActionBarSlotsPerRowSlider" Title="{Loc 'ui-options-action-bar-slots-per-row'}" />
                 <ui:OptionSlider Name="ActionBarSlotSpacingSlider" Title="{Loc 'ui-options-action-bar-slot-spacing'}" />
-                <ui:OptionSlider Name="ActionBarButtonBackgroundAlphaSlider" Title="{Loc 'ui-options-action-bar-button-background-alpha'}" />
                 <CheckBox Name="ActionBarShowKeybindLabel" Text="{Loc 'ui-options-action-bar-show-keybind-label'}" />
                 <CheckBox Name="ActionBarShowEmptySlots" Text="{Loc 'ui-options-action-bar-show-empty-slots'}" />
                 <!-- HONK END -->

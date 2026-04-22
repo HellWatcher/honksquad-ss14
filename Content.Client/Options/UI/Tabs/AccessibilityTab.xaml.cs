@@ -28,6 +28,15 @@ public sealed partial class AccessibilityTab : Control
         Control.AddOptionPercentSlider(CCVars.SpeechBubbleTextOpacity, SpeechBubbleTextOpacitySlider);
         Control.AddOptionPercentSlider(CCVars.SpeechBubbleSpeakerOpacity, SpeechBubbleSpeakerOpacitySlider);
         Control.AddOptionPercentSlider(CCVars.SpeechBubbleBackgroundOpacity, SpeechBubbleBackgroundOpacitySlider);
+        //HONK START - action bar button background opacity sits with the other UI opacity sliders
+        Control.AddOption(new OptionSliderFloatCVar(
+            Control,
+            IoCManager.Resolve<IConfigurationManager>(),
+            CCVars.HonkActionBarButtonBackgroundAlpha,
+            ActionBarButtonBackgroundAlphaSlider,
+            0f, 1f, 1f,
+            (_, value) => $"{(int)(value * 100)}%"));
+        //HONK END
         Control.AddOptionCheckBox(CCVars.ChatAutoFillHighlights, AutoFillHighlightsCheckBox);
         Control.AddOptionColorSlider(CCVars.ChatHighlightsColor, HighlightsColorSlider);
 
