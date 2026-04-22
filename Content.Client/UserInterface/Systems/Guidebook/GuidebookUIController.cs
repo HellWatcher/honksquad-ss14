@@ -4,7 +4,9 @@ using Content.Client.Guidebook;
 using Content.Client.Guidebook.Controls;
 using Content.Client.Lobby;
 using Content.Client.Players.PlayTimeTracking;
-using Content.Client.RussStation.Guidebook; // HONK - popout window
+//HONK START - popout window
+using Content.Client.RussStation.Guidebook;
+//HONK END
 using Content.Client.UserInterface.Controls;
 using Content.Shared.CCVar;
 using Content.Shared.Guidebook;
