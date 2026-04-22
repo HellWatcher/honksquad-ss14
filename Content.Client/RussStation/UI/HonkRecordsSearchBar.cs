@@ -76,18 +76,18 @@ public sealed class HonkRecordsSearchBar : BoxContainer
     public void SetPlaceholder(string placeholder) => SearchBox.PlaceHolder = placeholder;
 
     /// <summary>
-    ///     Populate the type dropdown from an enum and pick an initial value.
-    ///     Collapses the Enum.GetValues + AddItem + SelectTypeId boilerplate
-    ///     that every records console would otherwise repeat.
+    ///     Populate the type dropdown from a prebuilt option list and pick the
+    ///     initial selection. Generic enum version is avoided on purpose --
+    ///     boxed enums can't be unboxed straight to int, and the sandbox bans
+    ///     Convert.ToInt32(object), so callers do the cast themselves.
     /// </summary>
-    public void PopulateTypes<TEnum>(Func<TEnum, string> labelFor, TEnum initial)
-        where TEnum : struct, Enum
+    public void PopulateTypes(IEnumerable<(int Id, string Label)> options, int initial)
     {
-        foreach (var value in Enum.GetValues<TEnum>())
+        foreach (var (id, label) in options)
         {
-            AddTypeOption((int)(object)value, labelFor(value));
+            AddTypeOption(id, label);
         }
-        SelectTypeId((int)(object)initial);
+        SelectTypeId(initial);
     }
 
     /// <summary>

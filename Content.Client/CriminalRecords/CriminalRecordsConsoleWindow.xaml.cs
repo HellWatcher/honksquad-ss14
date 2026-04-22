@@ -72,7 +72,9 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
         OpenCentered();
 
         SearchBar.SetPlaceholder(Loc.GetString("criminal-records-filter-placeholder"));
-        SearchBar.PopulateTypes<StationRecordFilterType>(GetTypeFilterLocals, StationRecordFilterType.Name);
+        SearchBar.PopulateTypes(
+            Enum.GetValues<StationRecordFilterType>().Select(t => ((int)t, GetTypeFilterLocals(t))),
+            (int)StationRecordFilterType.Name);
 
         foreach (var status in Enum.GetValues<SecurityStatus>())
         {
