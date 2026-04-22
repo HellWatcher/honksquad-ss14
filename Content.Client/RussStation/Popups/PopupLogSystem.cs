@@ -40,9 +40,12 @@ public sealed class PopupLogSystem : EntitySystem
     {
         // Filter out popups the player shouldn't be able to perceive. Server PVS may ship popups
         // for entities outside the player's line of sight (proximity filters, broad broadcast);
-        // gate those behind the same visibility rule the examine system uses.
+        // gate those behind the same visibility rule the examine system uses. Self-sourced popups
+        // (combat mode, spit, ActionGun text) and popups that don't carry an entity source always
+        // log since those are directly addressed to the local player.
         if (ev.Source is { } sourceUid
             && _player.LocalEntity is { } examiner
+            && sourceUid != examiner
             && !_examine.CanExamine(examiner, sourceUid))
         {
             return;
