@@ -711,7 +711,10 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
         _window.OnOpen += OnWindowOpened;
         _window.OnClose += OnWindowClosed;
-        //HONK - ClearButton removed; right-click the search box to clear it
+        //HONK START - ClearButton removed (right-click the search box instead); wire fork
+        // lock + auto-add checkboxes on the actions window.
+        UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkBindWindow(_window);
+        //HONK END
         _window.SearchBar.OnTextChanged += OnSearchChanged;
         _window.FilterButton.OnItemSelected += OnFilterSelected;
 

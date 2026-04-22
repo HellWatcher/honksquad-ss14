@@ -2,6 +2,7 @@ using Content.Client.Gameplay;
 using Content.Client.UserInterface.Systems.Actions;
 using Content.Client.UserInterface.Systems.Actions.Controls;
 using Content.Client.UserInterface.Systems.Actions.Widgets;
+using Content.Client.UserInterface.Systems.Actions.Windows;
 using Content.Shared.CCVar;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Shared.Configuration;
@@ -146,6 +147,16 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         UIManager.GetUIController<ActionUIController>().HonkRefreshHotbar();
         // Padding may have added buttons; labels must be re-applied to the new ones.
         ApplyLabels();
+    }
+
+    // Wires the lock + auto-add toggle checkboxes on the actions window, called from
+    // the upstream LoadGui (HONK) each time the window is (re)created.
+    public void HonkBindWindow(ActionsWindow window)
+    {
+        window.LockButton.Pressed = LockActions;
+        window.AutoAddButton.Pressed = AutoAddActions;
+        window.LockButton.OnToggled += a => _cfg.SetCVar(CCVars.HonkActionBarLock, a.Pressed);
+        window.AutoAddButton.OnToggled += a => _cfg.SetCVar(CCVars.HonkActionBarAutoAddActions, a.Pressed);
     }
 
     // Called from the upstream ActionUIController (HONK) once the action bar widget

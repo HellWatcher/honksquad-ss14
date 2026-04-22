@@ -14,9 +14,15 @@
             <LineEdit Name="SearchBar" Access="Public" StyleClasses="actionSearchBox" HorizontalExpand="True"
                       PlaceHolder="{Loc ui-actionmenu-search-bar-placeholder-text}"/>
         </BoxContainer>
-        <!-- HONK - ClearButton removed; right-click the search box to clear it -->
-        <!-- HONK - FilterContainer hosts the inline HonkFilterPanel body when expanded -->
+        <!-- HONK START - ClearButton removed (right-click the search box), plus fork toggles
+             for bar lock and auto-add-new-actions, and FilterContainer hosts the inline
+             HonkFilterPanel body when expanded -->
+        <BoxContainer Orientation="Horizontal" SeparationOverride="8">
+            <CheckBox Name="LockButton" Access="Public" Text="{Loc ui-actionmenu-lock-button}"/>
+            <CheckBox Name="AutoAddButton" Access="Public" Text="{Loc ui-actionmenu-auto-add-button}"/>
+        </BoxContainer>
         <BoxContainer Name="FilterContainer" Access="Public" Orientation="Vertical"/>
+        <!-- HONK END -->
         <Label Name="FilterLabel" Access="Public"/>
         <ScrollContainer VerticalExpand="True" HorizontalExpand="True">
             <GridContainer Name="ResultsGrid" Access="Public" MaxGridWidth="300"/>
