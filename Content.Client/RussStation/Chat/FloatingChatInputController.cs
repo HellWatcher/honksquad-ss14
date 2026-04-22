@@ -90,17 +90,11 @@ public sealed class FloatingChatInputController : UIController
 
     private ChatSelectChannel ResolveDefaultChannel()
     {
-        if (!_config.GetCVar(CCVars.FloatingChatInputRememberChannel))
-            return ChatSelectChannel.Local;
-
-        var stored = (ChatSelectChannel) _config.GetCVar(CCVars.FloatingChatInputLastChannel);
         var chatUi = UIManager.GetUIController<ChatUIController>();
-        // Only restore if the channel is currently selectable (e.g. Dead is
-        // gone once the player is alive again). Fall back to Local otherwise.
-        if (stored != ChatSelectChannel.None && (chatUi.SelectableChannels & stored) != 0)
-            return stored;
-
-        return ChatSelectChannel.Local;
+        return FloatingChatInputRouting.ResolveDefaultChannel(
+            _config.GetCVar(CCVars.FloatingChatInputRememberChannel),
+            _config.GetCVar(CCVars.FloatingChatInputLastChannel),
+            chatUi.SelectableChannels);
     }
 
     private void HandleSubmit(string text, ChatSelectChannel channel)
@@ -127,10 +121,7 @@ public sealed class FloatingChatInputController : UIController
             // No typed prefix — route via the restored pending radio channel if
             // we still have one, otherwise fall back to common radio.
             effectiveRadio = widgetPendingRadio;
-            var keycode = effectiveRadio?.KeyCode ?? '\0';
-            text = keycode != '\0'
-                ? $"{SharedChatSystem.RadioChannelPrefix}{keycode} {text}"
-                : $"{SharedChatSystem.RadioCommonPrefix}{text}";
+            text = FloatingChatInputRouting.BuildRadioPrefixedText(text, effectiveRadio?.KeyCode);
         }
 
         if (_config.GetCVar(CCVars.FloatingChatInputRememberChannel))

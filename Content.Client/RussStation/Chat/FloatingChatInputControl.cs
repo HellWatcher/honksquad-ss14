@@ -167,17 +167,26 @@ public sealed class FloatingChatInputControl : Control
     private void RefreshChannelLabel()
     {
         var chatUi = _uiManager.GetUIController<ChatUIController>();
-        var (prefixChannel, _, radioChannel) = chatUi.SplitInputContents(InputBox.Input.Text.ToLower());
-
-        if (prefixChannel != ChatSelectChannel.None)
-        {
-            InputBox.ChannelSelector.UpdateChannelSelectButton(prefixChannel, radioChannel);
-            return;
-        }
-
+        var (prefixChannel, _, prefixRadio) = chatUi.SplitInputContents(InputBox.Input.Text.ToLower());
         var selected = InputBox.ChannelSelector.SelectedChannel;
-        var radio = selected == ChatSelectChannel.Radio ? _pendingRadioChannel : null;
-        InputBox.ChannelSelector.UpdateChannelSelectButton(selected, radio);
+
+        var source = FloatingChatInputRouting.ResolveLabelSource(
+            selected,
+            _pendingRadioChannel != null,
+            prefixChannel);
+
+        switch (source)
+        {
+            case FloatingChatInputRouting.LabelSource.Prefix:
+                InputBox.ChannelSelector.UpdateChannelSelectButton(prefixChannel, prefixRadio);
+                break;
+            case FloatingChatInputRouting.LabelSource.PendingRadio:
+                InputBox.ChannelSelector.UpdateChannelSelectButton(ChatSelectChannel.Radio, _pendingRadioChannel);
+                break;
+            default:
+                InputBox.ChannelSelector.UpdateChannelSelectButton(selected, null);
+                break;
+        }
     }
 
     private void CycleChannel(bool forward)
