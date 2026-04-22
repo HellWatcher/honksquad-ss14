@@ -78,11 +78,11 @@ Treats burn damage (heat, shock, cold, caustic).
 
 ### Wound Repair (Fracture)
 Clears fractures left by heavy blunt damage.
-- [color=#a4885c]Bonesetter[/color] - set the bone
+- [color=#a4885c]Bonesetter[/color] - set broken bones
 
 ### Wound Repair (Burn)
 Clears burn wounds left by severe heat or shock damage.
-- [color=#a4885c]Cautery[/color] - cauterize the wound
+- [color=#a4885c]Cautery[/color] - dress and cauterize burns
 
 ### Organ Manipulation
 Open the body cavity to remove or insert organs.
