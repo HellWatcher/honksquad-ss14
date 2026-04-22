@@ -823,17 +823,27 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         _container?.ClearActionData();
         QueueWindowUpdate();
         StopTargeting();
+        //HONK - reset the first-link flag so next connection gets the default bar populated even if
+        // auto-add is off; within a connection the guard preserves the curated layout on respawn.
+        _honkLoadedDefaultsThisConnection = false;
     }
+
+    //HONK START - track whether defaults have been populated this connection so auto-add off still
+    // gets a sensible initial bar on first server link. Reset on unlink-all-actions (disconnect).
+    private bool _honkLoadedDefaultsThisConnection;
+    //HONK END
 
     private void LoadDefaultActions()
     {
         if (_actionsSystem == null)
             return;
 
-        //HONK START - auto-add off: don't clobber the curated layout when the player's ActionsComponent
-        // re-links (respawn, body swap). New actions still land in the actions menu; bar stays as-is.
-        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
+        //HONK START - auto-add off skips the respawn / body-swap repopulate so a curated bar survives,
+        // but first link per connection always loads defaults so a new connect isn't a blank bar.
+        if (_honkLoadedDefaultsThisConnection
+            && !Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
             return;
+        _honkLoadedDefaultsThisConnection = true;
         //HONK END
 
         var actions = _actionsSystem.GetClientActions().Where(action => action.Comp.AutoPopulate).ToList();
