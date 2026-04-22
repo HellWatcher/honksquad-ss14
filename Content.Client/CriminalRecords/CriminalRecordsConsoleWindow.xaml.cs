@@ -74,10 +74,12 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
 
         OpenCentered();
 
+        SearchBar.SetPlaceholder(Loc.GetString("criminal-records-filter-placeholder"));
         foreach (var item in Enum.GetValues<StationRecordFilterType>())
         {
-            FilterType.AddItem(GetTypeFilterLocals(item), (int)item);
+            SearchBar.AddTypeOption((int)item, GetTypeFilterLocals(item));
         }
+        SearchBar.SelectTypeId((int)_currentFilterType);
 
         foreach (var status in Enum.GetValues<SecurityStatus>())
         {
@@ -105,17 +107,6 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
             OnKeySelected?.Invoke(null);
         };
 
-        FilterType.OnItemSelected += eventArgs =>
-        {
-            var type = (StationRecordFilterType)eventArgs.Id;
-
-            if (_currentFilterType != type)
-            {
-                _currentFilterType = type;
-                FilterListingOfRecords(FilterText.Text);
-            }
-        };
-
         //Select Status to filter crew
         CrewListFilter.OnItemSelected += eventArgs =>
         {
@@ -130,8 +121,9 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
             }
         };
 
-        FilterText.OnTextEntered += args =>
+        SearchBar.OnFilterChanged += args =>
         {
+            _currentFilterType = (StationRecordFilterType)args.TypeId;
             FilterListingOfRecords(args.Text);
         };
 
@@ -161,9 +153,9 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
                 _currentFilterType = state.Filter.Type;
             }
 
-            if (state.Filter.Value != FilterText.Text)
+            if (state.Filter.Value != SearchBar.Text)
             {
-                FilterText.Text = state.Filter.Value;
+                SearchBar.Text = state.Filter.Value;
             }
         }
 
@@ -173,7 +165,7 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
         }
 
         _selectedKey = state.SelectedKey;
-        FilterType.SelectId((int)_currentFilterType);
+        SearchBar.SelectTypeId((int)_currentFilterType);
         CrewListFilter.SelectId((int)_currentCrewListFilter);
         NoRecords.Visible = state.RecordListing == null || state.RecordListing.Count == 0;
         PopulateRecordListing(state.RecordListing);

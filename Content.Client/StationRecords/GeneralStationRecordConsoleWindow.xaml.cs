@@ -27,10 +27,12 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
 
         _currentFilterType = StationRecordFilterType.Name;
 
+        SearchBar.SetPlaceholder(Loc.GetString("general-station-record-for-filter-line-placeholder"));
         foreach (var item in Enum.GetValues<StationRecordFilterType>())
         {
-            StationRecordsFilterType.AddItem(GetTypeFilterLocals(item), (int)item);
+            SearchBar.AddTypeOption((int)item, GetTypeFilterLocals(item));
         }
+        SearchBar.SelectTypeId((int)_currentFilterType);
 
         RecordListing.OnItemSelected += args =>
         {
@@ -46,31 +48,10 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
                 OnKeySelected?.Invoke(null);
         };
 
-        StationRecordsFilterType.OnItemSelected += eventArgs =>
+        SearchBar.OnFilterChanged += args =>
         {
-            var type = (StationRecordFilterType)eventArgs.Id;
-
-            if (_currentFilterType != type)
-            {
-                _currentFilterType = type;
-                FilterListingOfRecords();
-            }
-        };
-
-        StationRecordsFiltersValue.OnTextEntered += args =>
-        {
+            _currentFilterType = (StationRecordFilterType)args.TypeId;
             FilterListingOfRecords(args.Text);
-        };
-
-        StationRecordsFilters.OnPressed += _ =>
-        {
-            FilterListingOfRecords(StationRecordsFiltersValue.Text);
-        };
-
-        StationRecordsFiltersReset.OnPressed += _ =>
-        {
-            StationRecordsFiltersValue.Text = "";
-            FilterListingOfRecords();
         };
     }
 
@@ -83,13 +64,13 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
                 _currentFilterType = state.Filter.Type;
             }
 
-            if (state.Filter.Value != StationRecordsFiltersValue.Text)
+            if (state.Filter.Value != SearchBar.Text)
             {
-                StationRecordsFiltersValue.Text = state.Filter.Value;
+                SearchBar.Text = state.Filter.Value;
             }
         }
 
-        StationRecordsFilterType.SelectId((int)_currentFilterType);
+        SearchBar.SelectTypeId((int)_currentFilterType);
 
         if (state.RecordListing == null)
         {

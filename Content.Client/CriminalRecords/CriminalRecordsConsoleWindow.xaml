@@ -1,5 +1,6 @@
 <controls:FancyWindow xmlns="https://spacestation14.io"
                       xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                      xmlns:russ="clr-namespace:Content.Client.RussStation.UI"
                       Title="{Loc 'criminal-records-console-window-title'}"
                       MinSize="695 440">
     <BoxContainer Orientation="Vertical">
@@ -8,18 +9,8 @@
                       VerticalExpand="True"
                       HorizontalExpand="True"
                       Margin="8">
-            <!-- Record search bar -->
-            <BoxContainer Margin="5 5 5 10"
-                          HorizontalExpand="true"
-                          VerticalAlignment="Center">
-                <OptionButton Name="FilterType"
-                              MinWidth="250"
-                              Margin="0 0 10 0" />
-                <!-- Populated in constructor -->
-                <LineEdit Name="FilterText"
-                          PlaceHolder="{Loc 'criminal-records-filter-placeholder'}"
-                          HorizontalExpand="True" />
-            </BoxContainer>
+            <!-- HONK - shared search bar across records consoles; live-filters on keystroke, right-click clears -->
+            <russ:HonkRecordsSearchBar Name="SearchBar" Access="Public" Margin="5 5 5 10"/>
             <BoxContainer Orientation="Horizontal"
                           VerticalExpand="True">
                 <!-- Record listing -->
