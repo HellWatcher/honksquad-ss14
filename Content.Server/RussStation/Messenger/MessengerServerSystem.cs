@@ -3,6 +3,7 @@ using Content.Shared.CartridgeLoader;
 using Content.Shared.GameTicking;
 using Content.Shared.PDA;
 using Content.Shared.RussStation.Messenger;
+using Content.Shared.StationRecords;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
@@ -203,19 +204,17 @@ public sealed class MessengerServerSystem : EntitySystem
             if (!TryComp<PdaComponent>(loaderUid, out var pda))
                 continue;
 
-            var isAntag = IsAntagAddress(cartComp.Address);
-            var hasId = pda.ContainedId != null;
+            // Station crew = not an antag, holds an ID, ID is registered in station records.
+            // Anyone else (antag, no ID, CentComm/ERT) only shows up when there's already a
+            // conversation, and is always read-only.
+            var isCrew = !IsAntagAddress(cartComp.Address)
+                         && pda.ContainedId is { } id
+                         && IsStationCrewId(id);
 
-            // Antag cartridges: only show if there's a conversation.
-            if (isAntag && !HasConversation(myCart, cartUid))
+            if (!isCrew && !HasConversation(myCart, cartUid))
                 continue;
 
-            // No ID: only show if there's an existing conversation.
-            if (!hasId && !HasConversation(myCart, cartUid))
-                continue;
-
-            var readOnly = isAntag || !hasId;
-            var contact = BuildContact(myCart, cartUid, pda, readOnly);
+            var contact = BuildContact(myCart, cartUid, pda, readOnly: !isCrew);
             contacts.Add(contact);
         }
 
@@ -267,21 +266,29 @@ public sealed class MessengerServerSystem : EntitySystem
     }
 
     /// <summary>
-    /// Check if a target cartridge is read-only (antag or no ID).
+    /// Check if a target cartridge is read-only. A cartridge is writable only when it belongs
+    /// to station crew: not an antag address, has an ID inserted, and that ID is on the station
+    /// records roster (so CentComm and ERT IDs are excluded).
     /// </summary>
-    public bool IsContactReadOnly(EntityUid targetCart)
+    public bool IsContactReadOnly(EntityUid targetCart) => !IsStationCrewCartridge(targetCart);
+
+    private bool IsStationCrewCartridge(EntityUid cartUid)
     {
-        if (!TryComp<MessengerCartridgeComponent>(targetCart, out var comp))
-            return true;
+        return TryComp<MessengerCartridgeComponent>(cartUid, out var comp)
+               && !IsAntagAddress(comp.Address)
+               && TryComp<PdaComponent>(Transform(cartUid).ParentUid, out var pda)
+               && pda.ContainedId is { } id
+               && IsStationCrewId(id);
+    }
 
-        if (IsAntagAddress(comp.Address))
-            return true;
-
-        var loaderUid = Transform(targetCart).ParentUid;
-        if (!TryComp<PdaComponent>(loaderUid, out var pda) || pda.ContainedId == null)
-            return true;
-
-        return false;
+    /// <summary>
+    /// True if the ID card was issued through station records (i.e. the holder is on the station crew roster).
+    /// CentComm/ERT IDs spawn directly from prototypes and lack a station record key.
+    /// </summary>
+    private bool IsStationCrewId(EntityUid idCard)
+    {
+        return TryComp<StationRecordKeyStorageComponent>(idCard, out var keyStorage)
+               && keyStorage.Key != null;
     }
 
     /// <summary>
