@@ -5,9 +5,8 @@
         <BoxContainer Orientation="Horizontal">
             <Button Name="CollapseAllButton" Access="Public" Text="-" SetSize="48 48"
                     StyleClasses="ButtonSquare" ToolTip="Collapse All" TooltipDelay="0" />
+            <!-- HONK - ClearSearchButton removed; right-click the search box to clear it -->
             <LineEdit Name="SearchBar" SetHeight="48" HorizontalExpand="True" Access="Public" />
-            <Button Name="ClearSearchButton" Access="Public" Text="X" SetSize="48 48"
-                    StyleClasses="ButtonSquare" />
         </BoxContainer>
         <ScrollContainer Name="ScrollContainer" Access="Public" VerticalExpand="True"
                          ReserveScrollbarSpace="True">

@@ -485,16 +485,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         _menuDragHelper.EndDrag();
     }
 
-    private void OnClearPressed(ButtonEventArgs args)
-    {
-        if (_window == null)
-            return;
-
-        _window.SearchBar.Clear();
-        _window.FilterButton.DeselectAll();
-        UpdateFilterLabel();
-        QueueWindowUpdate();
-    }
+    //HONK - OnClearPressed removed; right-click the search box clears search text via the global handler
 
     private void OnSearchChanged(LineEditEventArgs args)
     {
@@ -648,7 +639,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         {
             _window.OnOpen -= OnWindowOpened;
             _window.OnClose -= OnWindowClosed;
-            _window.ClearButton.OnPressed -= OnClearPressed;
+            //HONK - ClearButton removed; right-click the search box to clear it
             _window.SearchBar.OnTextChanged -= OnSearchChanged;
             _window.FilterButton.OnItemSelected -= OnFilterSelected;
 
@@ -665,7 +656,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
         _window.OnOpen += OnWindowOpened;
         _window.OnClose += OnWindowClosed;
-        _window.ClearButton.OnPressed += OnClearPressed;
+        //HONK - ClearButton removed; right-click the search box to clear it
         _window.SearchBar.OnTextChanged += OnSearchChanged;
         _window.FilterButton.OnItemSelected += OnFilterSelected;
 
