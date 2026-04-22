@@ -14,11 +14,4 @@ internal static class FloatingChatInputConstants
     public const byte BackgroundRed = 30;
     public const byte BackgroundGreen = 30;
     public const byte BackgroundBlue = 34;
-
-    /// <summary>
-    /// Background alpha for the input panel. The anchored HUD chat sits at
-    /// ~221/255; the floating widget overlaps the world, so we push closer
-    /// to opaque to keep typed text legible.
-    /// </summary>
-    public const byte BackgroundAlpha = 245;
 }

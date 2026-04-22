@@ -4,6 +4,7 @@
 using System.Numerics;
 using Content.Client.UserInterface.Systems.Chat;
 using Content.Client.UserInterface.Systems.Chat.Controls;
+using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.Input;
 using Content.Shared.Radio;
@@ -11,6 +12,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.Configuration;
 using Robust.Shared.Input;
 using Robust.Shared.Maths;
 using Robust.Shared.Timing;
@@ -28,8 +30,10 @@ public sealed class FloatingChatInputControl : Control
     [Dependency] private readonly IEntityManager _entManager = default!;
     [Dependency] private readonly IEyeManager _eyeManager = default!;
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
+    [Dependency] private readonly IConfigurationManager _config = default!;
 
     private readonly SharedTransformSystem _transform;
+    private readonly StyleBoxFlat _backgroundStyle;
 
     public readonly ChatInputBox InputBox;
 
@@ -56,17 +60,16 @@ public sealed class FloatingChatInputControl : Control
         IoCManager.InjectDependencies(this);
         _transform = _entManager.System<SharedTransformSystem>();
 
+        // Thicker background than the anchored chat panel — the floating
+        // widget overlaps the game world, so a more opaque fill keeps typed
+        // text legible against busy scenes. Alpha is user-tunable via the
+        // accessibility option below.
+        _backgroundStyle = new StyleBoxFlat(BuildBackgroundColor(_config.GetCVar(CCVars.FloatingChatInputBackgroundOpacity)));
+
         InputBox = new ChatInputBox
         {
             MinWidth = FloatingChatInputConstants.InputMinWidth,
-            // Thicker background than the anchored chat panel — the floating
-            // widget overlaps the game world, so a near-opaque fill keeps
-            // typed text legible against busy scenes.
-            PanelOverride = new StyleBoxFlat(new Color(
-                FloatingChatInputConstants.BackgroundRed,
-                FloatingChatInputConstants.BackgroundGreen,
-                FloatingChatInputConstants.BackgroundBlue,
-                FloatingChatInputConstants.BackgroundAlpha)),
+            PanelOverride = _backgroundStyle,
         };
         // Channel filter button is noise for an ephemeral floating input.
         InputBox.FilterButton.Visible = false;
@@ -76,6 +79,28 @@ public sealed class FloatingChatInputControl : Control
         InputBox.Input.OnKeyBindDown += OnInputKeyBindDown;
         InputBox.Input.OnTextChanged += OnInputTextChanged;
         InputBox.ChannelSelector.OnChannelSelect += OnChannelSelectorChanged;
+
+        _config.OnValueChanged(CCVars.FloatingChatInputBackgroundOpacity, OnBackgroundOpacityChanged);
+    }
+
+    private static Color BuildBackgroundColor(float alpha)
+    {
+        return new Color(
+            FloatingChatInputConstants.BackgroundRed,
+            FloatingChatInputConstants.BackgroundGreen,
+            FloatingChatInputConstants.BackgroundBlue).WithAlpha(Math.Clamp(alpha, 0f, 1f));
+    }
+
+    private void OnBackgroundOpacityChanged(float newAlpha)
+    {
+        _backgroundStyle.BackgroundColor = BuildBackgroundColor(newAlpha);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        if (disposing)
+            _config.UnsubValueChanged(CCVars.FloatingChatInputBackgroundOpacity, OnBackgroundOpacityChanged);
     }
 
     private void OnChannelSelectorChanged(ChatSelectChannel channel)
