@@ -32,7 +32,8 @@ using static Content.Client.UserInterface.Systems.Actions.Windows.ActionsWindow;
 using static Robust.Client.UserInterface.Control;
 using static Robust.Client.UserInterface.Controls.BaseButton;
 using static Robust.Client.UserInterface.Controls.LineEdit;
-using static Robust.Client.UserInterface.Controls.MultiselectOptionButton<
+//HONK - filter control replaced with the inline HonkFilterPanel; nested event args come from there
+using static Content.Client.RussStation.UI.HonkFilterPanel<
     Content.Client.UserInterface.Systems.Actions.Windows.ActionsWindow.Filters>;
 using static Robust.Client.UserInterface.Controls.TextureRect;
 using static Robust.Shared.Input.Binding.PointerInputCmdHandler;
