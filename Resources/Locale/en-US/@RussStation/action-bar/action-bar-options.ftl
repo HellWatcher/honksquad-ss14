@@ -1,4 +1,9 @@
 ui-options-action-bar-header = Action Bar
 ui-options-action-bar-rows = Rows
+ui-options-action-bar-slots-per-row = Slots per row
 ui-options-action-bar-slot-spacing = Slot spacing
 ui-options-action-bar-show-keybind-label = Show keybind label
+ui-options-action-bar-show-empty-slots = Show empty slots (faint)
+ui-options-action-bar-button-background-alpha = Action bar button background alpha
+ui-actionmenu-lock-button = Lock bar
+ui-actionmenu-auto-add-button = Auto-add new actions

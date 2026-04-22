@@ -26,10 +26,21 @@ public class ActionButtonContainer : GridContainer
         get => (ActionButton) GetChild(index);
     }
 
+    //HONK START - fork empty-slot preview: pad up to this many slots with nulls so the grid renders
+    // the layout visibly even when the player hasn't filled every slot yet.
+    public int HonkMinSlotCount { get; set; }
+    //HONK END
+
     public void SetActionData(ActionsSystem system, params EntityUid?[] actionTypes)
     {
         var uniqueCount = Math.Min(system.GetClientActions().Count(), actionTypes.Length + 1);
         var keys = ContentKeyFunctions.GetHotbarBoundKeys();
+        //HONK START - honour the caller's sparse layout (drag-to-slot places actions at specific indices)
+        // and pad empties up to the fork-requested minimum, capped at bound hotbar key count.
+        uniqueCount = Math.Max(uniqueCount, actionTypes.Length);
+        if (HonkMinSlotCount > 0)
+            uniqueCount = Math.Max(uniqueCount, Math.Min(HonkMinSlotCount, keys.Length));
+        //HONK END
 
         for (var i = 0; i < uniqueCount; i++)
         {

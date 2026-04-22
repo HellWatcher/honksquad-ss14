@@ -63,9 +63,16 @@ public sealed partial class MiscTab : Control
             Control, cfg, CCVars.HonkActionBarRows, ActionBarRowsSlider, 1, 4,
             (_, value) => value.ToString()));
         Control.AddOption(new OptionSliderIntCVar(
+            Control, cfg, CCVars.HonkActionBarSlotsPerRow, ActionBarSlotsPerRowSlider, 1, 10,
+            (_, value) => value.ToString()));
+        Control.AddOption(new OptionSliderIntCVar(
             Control, cfg, CCVars.HonkActionBarSlotSpacing, ActionBarSlotSpacingSlider, 0, 16,
             (_, value) => $"{value}px"));
+        Control.AddOption(new OptionSliderFloatCVar(
+            Control, cfg, CCVars.HonkActionBarButtonBackgroundAlpha, ActionBarButtonBackgroundAlphaSlider, 0f, 1f, 1f,
+            (_, value) => $"{(int)(value * 100)}%"));
         Control.AddOptionCheckBox(CCVars.HonkActionBarShowKeybindLabel, ActionBarShowKeybindLabel);
+        Control.AddOptionCheckBox(CCVars.HonkActionBarShowEmptySlots, ActionBarShowEmptySlots);
         //HONK END
 
         Control.Initialize();

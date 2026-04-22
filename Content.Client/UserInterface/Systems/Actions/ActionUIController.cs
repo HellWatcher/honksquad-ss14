@@ -247,6 +247,11 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             _actionsSystem?.TriggerAction(action);
     }
 
+    //HONK START - remember which slot an action from a given provider item last occupied, so
+    // hand<->pocket moves (which revoke + regrant the action) don't shuffle the bar layout.
+    private readonly Dictionary<EntityUid, int> _honkLastSlotByProvider = new();
+    //HONK END
+
     private void OnActionAdded(EntityUid actionId)
     {
         if (_actionsSystem?.GetAction(actionId) is not {} action)
@@ -260,6 +265,23 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actions.Contains(action))
             return;
 
+        //HONK START - restore to the previously-held slot if this provider's action was here before
+        if (action.Comp.Container is {} provider
+            && _honkLastSlotByProvider.TryGetValue(provider, out var lastSlot)
+            && lastSlot >= 0
+            && lastSlot < _actions.Count
+            && _actions[lastSlot] == null)
+        {
+            _actions[lastSlot] = action;
+            return;
+        }
+        //HONK END
+
+        //HONK START - fork auto-add toggle lets players curate layouts without new actions butting in
+        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
+            return;
+        //HONK END
+
         _actions.Add(action);
     }
 
@@ -271,7 +293,18 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (actionId == SelectingTargetFor)
             StopTargeting();
 
-        _actions.RemoveAll(x => x == actionId);
+        //HONK START - null the slot in place + record provider->slot so re-granted actions return home
+        for (var i = 0; i < _actions.Count; i++)
+        {
+            if (_actions[i] != actionId)
+                continue;
+            if (_actionsSystem?.GetAction(actionId) is {} action && action.Comp.Container is {} provider)
+                _honkLastSlotByProvider[provider] = i;
+            _actions[i] = null;
+        }
+        while (_actions.Count > 0 && _actions[^1] == null)
+            _actions.RemoveAt(_actions.Count - 1);
+        //HONK END
     }
 
     private void OnActionsUpdated()
@@ -281,6 +314,11 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actionsSystem != null)
             _container?.SetActionData(_actionsSystem, _actions.ToArray());
     }
+
+    //HONK START - public entry so the fork controller can force a hotbar rebuild when empty-slot /
+    // slots-per-row / rows CVars change and the padding needs to grow or shrink.
+    public void HonkRefreshHotbar() => OnActionsUpdated();
+    //HONK END
 
     private void ActionButtonPressed(ButtonEventArgs args)
     {
@@ -439,14 +477,24 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             button.ClearData();
             if (_container?.TryGetButtonIndex(button, out position) ?? false)
             {
-                if (_actions.Count > position && position >= 0)
-                    _actions.RemoveAt(position);
+                //HONK START - keep _actions sparse so a cleared middle slot doesn't shift later actions left
+                if (position >= 0 && position < _actions.Count)
+                {
+                    _actions[position] = null;
+                    while (_actions.Count > 0 && _actions[^1] == null)
+                        _actions.RemoveAt(_actions.Count - 1);
+                }
+                //HONK END
             }
         }
         else if (button.TryReplaceWith(actionId.Value, _actionsSystem) &&
             _container != null &&
             _container.TryGetButtonIndex(button, out position))
         {
+            //HONK START - pad with nulls so an action dropped on slot N lands at slot N, not at Count
+            while (_actions.Count < position)
+                _actions.Add(null);
+            //HONK END
             if (position >= _actions.Count)
             {
                 _actions.Add(actionId);
@@ -590,6 +638,8 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
     private bool OnMenuBeginDrag()
     {
+        //HONK - pad empty drop targets into the bar for the duration of the drag
+        UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkSetDragActive(true);
         // TODO ACTIONS
         // The dragging icon shuld be based on the entity's icon style. I.e. if the action has a large icon texture,
         // and a small item/provider sprite, then the dragged icon should be the big texture, not the provider.
@@ -623,6 +673,8 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
     private void OnMenuEndDrag()
     {
+        //HONK - trim the drag-only empty slots back out now that the drop is resolved
+        UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkSetDragActive(false);
         _dragShadow.Texture = null;
         _dragShadow.Visible = false;
     }
@@ -668,7 +720,15 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
         RegisterActionContainer(ActionsBar.ActionsContainer);
 
+        //HONK - apply fork layout (rows, slots-per-row, spacing, empty preview, min-slot padding)
+        // once the container exists and before LinkAllActions populates it; a second call after
+        // linking re-asserts the layout in case upstream rebuilds the grid during linking.
+        UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkOnContainerReady();
+
         _actionsSystem?.LinkAllActions();
+
+        //HONK - re-apply after the initial action link rebuilds the container children
+        UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>().HonkOnContainerReady();
     }
 
     public void RegisterActionContainer(ActionButtonContainer container)
