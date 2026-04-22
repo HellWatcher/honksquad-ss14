@@ -2,7 +2,6 @@ using System.Numerics;
 using Content.Client.Actions;
 using Content.Client.Actions.UI;
 using Content.Client.Cooldown;
-using Content.Client.Stylesheets;
 using Content.Shared.Actions.Components;
 using Content.Shared.Charges.Systems;
 using Content.Shared.Examine;
@@ -11,6 +10,12 @@ using Robust.Client.Graphics;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
+//HONK START - fork autofit helpers + input events + CVar subscriptions for label refresh
+using Content.Client.RussStation.UI;
+using Content.Shared.CCVar;
+using Robust.Client.Input;
+using Robust.Shared.Configuration;
+//HONK END
 using Robust.Shared.Input;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
@@ -37,12 +42,58 @@ public sealed class ActionButton : Control, IEntityControl
         set
         {
             _keybind = value;
-            if (_keybind != null)
-            {
-                Label.Text = BoundKeyHelper.ShortKeyName(_keybind.Value);
-            }
+            //HONK START - fork autofit + short-form label with modifier support
+            HonkRefreshKeybindLabel();
+            //HONK END
         }
     }
+
+    //HONK START - autofit + live re-fit when the user rebinds the hotbar key.
+    // Corner tag on a 64px tile was small by design; at the game's default UI font (12pt)
+    // it reads at ~10pt so the icon isn't crowded. The fitter scales this up when the
+    // user picks a larger UI font.
+    // Budget derives from the button's actual size. Width is capped so long combos can't
+    // spill into the next slot; the height cap is the full tile so the font is free to
+    // scale with UIFontSize without being clamped by a tight corner allowance.
+    private const float HonkKeyLabelFallbackWidthPx = 50f;
+    private const float HonkKeyLabelFallbackHeightPx = 64f;
+    // Label sits top-left with a 5px left margin; leave a few more px gutter before the next slot.
+    private const float HonkKeyLabelWidthGutterPx = 4f;
+    private const int HonkKeyLabelBaseSize = 10;
+
+    protected override void Resized()
+    {
+        base.Resized();
+        HonkRefreshKeybindLabel();
+    }
+
+    private void HonkRefreshKeybindLabel()
+    {
+        if (_keybind == null)
+            return;
+        // Short form for unmodified keys (Del, Spc, etc.), short form + modifier prefix
+        // for bound combos (Shift+Del, Ctrl+1). Autofit shrinks whatever we produce.
+        var keyString = HonkKeyLabel.For(_keybind.Value);
+        Label.Text = keyString;
+
+        var widthBudget = Size.X > 0f
+            ? Size.X - Label.Margin.Left - HonkKeyLabelWidthGutterPx
+            : HonkKeyLabelFallbackWidthPx;
+        var heightBudget = Size.Y > 0f ? Size.Y : HonkKeyLabelFallbackHeightPx;
+
+        HonkLabelFitter.Fit(
+            Label,
+            keyString,
+            widthBudget,
+            baseSizeAtGameDefault: HonkKeyLabelBaseSize,
+            targetHeightPx: heightBudget);
+    }
+
+    private void HonkOnKeyBindingChanged(IKeyBinding _) => HonkRefreshKeybindLabel();
+    private void HonkOnInputModeChanged() => HonkRefreshKeybindLabel();
+    private void HonkOnFontSizeChanged(int _) => HonkRefreshKeybindLabel();
+    private void HonkOnFontFamilyChanged(string _) => HonkRefreshKeybindLabel();
+    //HONK END
 
     private BoundKeyFunction? _keybind;
 
@@ -170,6 +221,34 @@ public sealed class ActionButton : Control, IEntityControl
         _buttonBackgroundTexture = Theme.ResolveTexture("SlotBackground");
         Label.FontColorOverride = Theme.ResolveColorOrSpecified("whiteText");
     }
+
+    //HONK START - live-refresh the keybind label on rebind AND when the user's UI font settings change
+    protected override void EnteredTree()
+    {
+        base.EnteredTree();
+        var input = IoCManager.Resolve<IInputManager>();
+        input.OnKeyBindingAdded += HonkOnKeyBindingChanged;
+        input.OnKeyBindingRemoved += HonkOnKeyBindingChanged;
+        input.OnInputModeChanged += HonkOnInputModeChanged;
+        // Subscribe directly to CVars — FontManager.FontsChanged isn't reliable here
+        // because StylesheetManager may not be initialized when early widgets enter the tree.
+        var cfg = IoCManager.Resolve<IConfigurationManager>();
+        cfg.OnValueChanged(CCVars.UIFontSize, HonkOnFontSizeChanged);
+        cfg.OnValueChanged(CCVars.UIFontFamily, HonkOnFontFamilyChanged);
+    }
+
+    protected override void ExitedTree()
+    {
+        base.ExitedTree();
+        var cfg = IoCManager.Resolve<IConfigurationManager>();
+        cfg.UnsubValueChanged(CCVars.UIFontSize, HonkOnFontSizeChanged);
+        cfg.UnsubValueChanged(CCVars.UIFontFamily, HonkOnFontFamilyChanged);
+        var input = IoCManager.Resolve<IInputManager>();
+        input.OnKeyBindingAdded -= HonkOnKeyBindingChanged;
+        input.OnKeyBindingRemoved -= HonkOnKeyBindingChanged;
+        input.OnInputModeChanged -= HonkOnInputModeChanged;
+    }
+    //HONK END
 
     private void OnPressed(GUIBoundKeyEventArgs args)
     {

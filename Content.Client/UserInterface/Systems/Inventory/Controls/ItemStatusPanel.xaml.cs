@@ -8,6 +8,12 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+//HONK START - fork autofit helper, font kind, UIFontSize CVars
+using Content.Client.RussStation.UI;
+using Content.Client.Stylesheets.Fonts;
+using Content.Shared.CCVar;
+using Robust.Shared.Configuration;
+//HONK END
 
 namespace Content.Client.UserInterface.Systems.Inventory.Controls;
 
@@ -26,7 +32,112 @@ public sealed partial class ItemStatusPanel : Control
     {
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
+        //HONK START - intentionally no refit here. Size is 0 before first layout so we'd
+        // pick a bad fallback-based font that then visibly retargets. Wait for Resized.
+        //HONK END
     }
+
+    //HONK START - scale hand-status item-name label with the user's UI font size, fit into
+    // the fixed 60px panel. When there are status widgets above the label (beaker reagents,
+    // gun ammo, etc.) we just give the label half the Contents height instead of trying to
+    // measure the widgets — their sizes populate asynchronously and measuring here
+    // produced flicker or wrong fits. Simple and flicker-free.
+    private const int HonkItemStatusBaseSize = 10;
+    private const float HonkItemStatusFallbackWidthPx = 120f;
+    private const float HonkItemStatusFallbackHeightPx = 40f;
+    private const float HonkItemStatusSafetyPaddingPx = 2f;
+    private const float HonkItemStatusMinHeightBudgetPx = 10f;
+    private const float HonkItemStatusExtraLeftPaddingPx = 4f;
+    private const float HonkItemStatusLabelShareWithStatus = 0.5f;
+
+    // Cache the inputs the last successful fit was made with so we can skip redundant refit
+    // calls every frame (UpdateItemName fires from FrameUpdate). Redoing the fit on every
+    // frame causes visible text flicker as the font bounces between candidate sizes.
+    private string? _honkLastItemText;
+    private string? _honkLastNoItemText;
+    private float _honkLastWidthBudget;
+    private float _honkLastHeightBudget;
+
+    private void HonkRefitLabels()
+    {
+        var widthBudget = Contents.Size.X > 0f
+            ? Contents.Size.X - HonkItemStatusSafetyPaddingPx
+            : HonkItemStatusFallbackWidthPx;
+
+        // Status widgets populate their text asynchronously (e.g. SolutionStatusControl
+        // polls on FrameUpdate), so measuring them during BuildNewEntityStatus returns
+        // stale 0s. Instead: reserve a fixed fraction of the Contents height whenever
+        // any status widget exists. Not perfect but stable and flicker-free.
+        var fullHeight = Contents.Size.Y > 0f
+            ? Contents.Size.Y - HonkItemStatusSafetyPaddingPx
+            : HonkItemStatusFallbackHeightPx;
+        var heightBudget = StatusContents.ChildCount > 0
+            ? fullHeight * HonkItemStatusLabelShareWithStatus
+            : fullHeight;
+        heightBudget = MathF.Max(HonkItemStatusMinHeightBudgetPx, heightBudget);
+
+        // Skip redundant refits — only re-apply FontOverride when an input actually changed.
+        if (ItemNameLabel.Text == _honkLastItemText
+            && NoItemLabel.Text == _honkLastNoItemText
+            && MathF.Abs(widthBudget - _honkLastWidthBudget) < 0.5f
+            && MathF.Abs(heightBudget - _honkLastHeightBudget) < 0.5f)
+            return;
+
+        _honkLastItemText = ItemNameLabel.Text;
+        _honkLastNoItemText = NoItemLabel.Text;
+        _honkLastWidthBudget = widthBudget;
+        _honkLastHeightBudget = heightBudget;
+
+        HonkLabelFitter.FitOrWrap(
+            ItemNameLabel,
+            ItemNameLabel.Text ?? string.Empty,
+            widthBudget,
+            baseSizeAtGameDefault: HonkItemStatusBaseSize,
+            maxWrapLines: 1,
+            targetHeightPx: heightBudget);
+        HonkLabelFitter.FitOrWrap(
+            NoItemLabel,
+            NoItemLabel.Text ?? string.Empty,
+            widthBudget,
+            baseSizeAtGameDefault: HonkItemStatusBaseSize,
+            kind: FontKind.Italic,
+            maxWrapLines: 1,
+            targetHeightPx: heightBudget);
+    }
+
+    // Invalidating via _honkLastItemText=null forces the next HonkRefitLabels call to
+    // re-apply the FontOverride even if text and budgets look unchanged.
+    private void HonkOnFontSizeChanged(int _) => HonkForceRefit();
+    private void HonkOnFontFamilyChanged(string _) => HonkForceRefit();
+
+    private void HonkForceRefit()
+    {
+        _honkLastItemText = null;
+        HonkRefitLabels();
+    }
+
+    protected override void EnteredTree()
+    {
+        base.EnteredTree();
+        var cfg = IoCManager.Resolve<IConfigurationManager>();
+        cfg.OnValueChanged(CCVars.UIFontSize, HonkOnFontSizeChanged);
+        cfg.OnValueChanged(CCVars.UIFontFamily, HonkOnFontFamilyChanged);
+    }
+
+    protected override void ExitedTree()
+    {
+        base.ExitedTree();
+        var cfg = IoCManager.Resolve<IConfigurationManager>();
+        cfg.UnsubValueChanged(CCVars.UIFontSize, HonkOnFontSizeChanged);
+        cfg.UnsubValueChanged(CCVars.UIFontFamily, HonkOnFontFamilyChanged);
+    }
+
+    protected override void Resized()
+    {
+        base.Resized();
+        HonkRefitLabels();
+    }
+    //HONK END
 
     public void SetSide(HandLocation location)
     {
@@ -61,7 +172,13 @@ public sealed partial class ItemStatusPanel : Control
                 throw new ArgumentOutOfRangeException(nameof(location), location, null);
         }
 
-        Contents.Margin = contentMargin;
+        //HONK START - small extra left padding so text isn't flush with the panel's cut-out border
+        Contents.Margin = new Thickness(
+            contentMargin.Left + HonkItemStatusExtraLeftPaddingPx,
+            contentMargin.Top,
+            contentMargin.Right,
+            contentMargin.Bottom);
+        //HONK END
 
         //Important to note for patchMargin!
         //Because of hand ui flipping, left and right instead correspond to outside and inside respectively.
@@ -131,6 +248,9 @@ public sealed partial class ItemStatusPanel : Control
                 ItemNameLabel.Text = "";
             }
 
+            //HONK START - refit after empty-hand text assignment
+            HonkRefitLabels();
+            //HONK END
             return;
         }
 
@@ -169,6 +289,9 @@ public sealed partial class ItemStatusPanel : Control
         {
             ItemNameLabel.Text = Identity.Name(_entity.Value, _entityManager);
         }
+        //HONK START - refit after item name changes
+        HonkRefitLabels();
+        //HONK END
     }
 
     private void ClearOldStatus()
@@ -189,5 +312,9 @@ public sealed partial class ItemStatusPanel : Control
         {
             StatusContents.AddChild(control);
         }
+
+        //HONK START - status widget list changed, force a refit to pick the share-based budget
+        HonkForceRefit();
+        //HONK END
     }
 }

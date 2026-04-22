@@ -1,7 +1,6 @@
 using System.Linq;
 using Content.Client.Actions;
 using Content.Shared.Input;
-using Robust.Client.Input;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Utility;
@@ -12,7 +11,6 @@ namespace Content.Client.UserInterface.Systems.Actions.Controls;
 public class ActionButtonContainer : GridContainer
 {
     [Dependency] private readonly IEntityManager _entity = default!;
-    [Dependency] private readonly IInputManager _input = default!;
 
     public event Action<GUIBoundKeyEventArgs, ActionButton>? ActionPressed;
     public event Action<GUIBoundKeyEventArgs, ActionButton>? ActionUnpressed;
@@ -57,11 +55,9 @@ public class ActionButtonContainer : GridContainer
             if (!keys.TryGetValue(index, out var boundKey))
                 return button;
 
+            //HONK START - KeyBind setter now resolves the short label and autofits it; no extra work here
             button.KeyBind = boundKey;
-            if (_input.TryGetKeyBinding(boundKey, out var binding))
-            {
-                button.Label.Text = binding.GetKeyString();
-            }
+            //HONK END
 
             return button;
         }

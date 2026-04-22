@@ -6,6 +6,12 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Graphics;
 using Robust.Shared.Input;
 using Robust.Shared.Utility;
+//HONK START - fork short-form label helper, autofit helper, font kind, UIFontSize CVars
+using Content.Client.RussStation.UI;
+using Content.Client.Stylesheets.Fonts;
+using Content.Shared.CCVar;
+using Robust.Shared.Configuration;
+//HONK END
 
 namespace Content.Client.UserInterface.Controls;
 
@@ -36,9 +42,40 @@ public sealed class MenuButton : ContainerButton
         set
         {
             _function = value;
-            _buttonLabel!.Text = _function == null ? "" : BoundKeyHelper.ShortKeyName(_function.Value);
+            //HONK START - replaces the inline `_buttonLabel!.Text = ...` with fork short-form + autofit
+            HonkUpdateKeyLabel();
+            //HONK END
         }
     }
+
+    //HONK START - text uses the fork short-form helper (modifier bindings visible) AND
+    // autofits so it tracks the user's UIFontSize accessibility setting. The button itself
+    // is free to grow to fit whatever font size results. At the game's default UI font
+    // (12pt) topButtonLabel renders at 14pt bold; the fitter scales proportionally with
+    // the user's CVar. The width/height budget is intentionally generous — we want the
+    // button to grow, not for the text to shrink.
+    private const int HonkKeyLabelBaseSize = 14;
+    private const float HonkKeyLabelMaxWidthPx = 200f;
+    private const float HonkKeyLabelMaxHeightPx = 100f;
+
+    private void HonkUpdateKeyLabel()
+    {
+        if (_buttonLabel == null)
+            return;
+        var keyString = _function == null ? "" : HonkKeyLabel.For(_function.Value);
+        _buttonLabel.Text = keyString;
+        if (string.IsNullOrEmpty(keyString))
+            return;
+
+        HonkLabelFitter.Fit(
+            _buttonLabel,
+            keyString,
+            HonkKeyLabelMaxWidthPx,
+            baseSizeAtGameDefault: HonkKeyLabelBaseSize,
+            kind: FontKind.Bold,
+            targetHeightPx: HonkKeyLabelMaxHeightPx);
+    }
+    //HONK END
 
     public BoxContainer ButtonRoot => _root;
 
@@ -80,6 +117,11 @@ public sealed class MenuButton : ContainerButton
         _inputManager.OnKeyBindingAdded += OnKeyBindingChanged;
         _inputManager.OnKeyBindingRemoved += OnKeyBindingChanged;
         _inputManager.OnInputModeChanged += OnKeyBindingChanged;
+        //HONK START - refit when the user changes UI font size or family
+        var cfg = IoCManager.Resolve<IConfigurationManager>();
+        cfg.OnValueChanged(CCVars.UIFontSize, HonkOnFontSizeChanged);
+        cfg.OnValueChanged(CCVars.UIFontFamily, HonkOnFontFamilyChanged);
+        //HONK END
     }
 
     protected override void ExitedTree()
@@ -87,17 +129,31 @@ public sealed class MenuButton : ContainerButton
         _inputManager.OnKeyBindingAdded -= OnKeyBindingChanged;
         _inputManager.OnKeyBindingRemoved -= OnKeyBindingChanged;
         _inputManager.OnInputModeChanged -= OnKeyBindingChanged;
+        //HONK START - unsubscribe UI font CVar handlers
+        var cfg = IoCManager.Resolve<IConfigurationManager>();
+        cfg.UnsubValueChanged(CCVars.UIFontSize, HonkOnFontSizeChanged);
+        cfg.UnsubValueChanged(CCVars.UIFontFamily, HonkOnFontFamilyChanged);
+        //HONK END
     }
+
+    //HONK START - CVar change handlers for live UIFontSize / UIFontFamily refit.
+    private void HonkOnFontSizeChanged(int _) => HonkUpdateKeyLabel();
+    private void HonkOnFontFamilyChanged(string _) => HonkUpdateKeyLabel();
+    //HONK END
 
 
     private void OnKeyBindingChanged(IKeyBinding obj)
     {
-        _buttonLabel!.Text = _function == null ? "" : BoundKeyHelper.ShortKeyName(_function.Value);
+        //HONK START - fork short-form label with modifier support + autofit
+        HonkUpdateKeyLabel();
+        //HONK END
     }
 
     private void OnKeyBindingChanged()
     {
-        _buttonLabel!.Text = _function == null ? "" : BoundKeyHelper.ShortKeyName(_function.Value);
+        //HONK START
+        HonkUpdateKeyLabel();
+        //HONK END
     }
 
     protected override void StylePropertiesChanged()
