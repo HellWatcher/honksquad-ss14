@@ -31,9 +31,6 @@ public sealed class FloatingChatInputControl : Control
 
     private readonly SharedTransformSystem _transform;
 
-    /// <summary>World-space vertical offset applied above the entity's origin.</summary>
-    private const float EntityVerticalOffset = 0.6f;
-
     public readonly ChatInputBox InputBox;
 
     private EntityUid _anchorEntity;
@@ -61,7 +58,15 @@ public sealed class FloatingChatInputControl : Control
 
         InputBox = new ChatInputBox
         {
-            MinWidth = 320,
+            MinWidth = FloatingChatInputConstants.InputMinWidth,
+            // Thicker background than the anchored chat panel — the floating
+            // widget overlaps the game world, so a near-opaque fill keeps
+            // typed text legible against busy scenes.
+            PanelOverride = new StyleBoxFlat(new Color(
+                FloatingChatInputConstants.BackgroundRed,
+                FloatingChatInputConstants.BackgroundGreen,
+                FloatingChatInputConstants.BackgroundBlue,
+                FloatingChatInputConstants.BackgroundAlpha)),
         };
         // Channel filter button is noise for an ephemeral floating input.
         InputBox.FilterButton.Visible = false;
@@ -220,7 +225,7 @@ public sealed class FloatingChatInputControl : Control
         Measure(Vector2Helpers.Infinity);
         _contentSize = DesiredSize;
 
-        var offset = (-_eyeManager.CurrentEye.Rotation).ToWorldVec() * -EntityVerticalOffset;
+        var offset = (-_eyeManager.CurrentEye.Rotation).ToWorldVec() * -FloatingChatInputConstants.EntityVerticalOffset;
         var worldPos = _transform.GetWorldPosition(xform) + offset;
 
         var anchor = _eyeManager.WorldToScreen(worldPos) / UIScale;
