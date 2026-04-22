@@ -491,9 +491,16 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             _container != null &&
             _container.TryGetButtonIndex(button, out position))
         {
-            //HONK START - pad with nulls so an action dropped on slot N lands at slot N, not at Count
+            //HONK START - pad with nulls so an action dropped on slot N lands at slot N, not at Count,
+            // and update provider->slot memory so re-acquiring the item later restores to the new slot
+            // rather than the original auto-populated one.
             while (_actions.Count < position)
                 _actions.Add(null);
+            if (_actionsSystem.GetAction(actionId.Value) is {} placedAction
+                && placedAction.Comp.Container is {} placedProvider)
+            {
+                _honkLastSlotByProvider[placedProvider] = position;
+            }
             //HONK END
             if (position >= _actions.Count)
             {
