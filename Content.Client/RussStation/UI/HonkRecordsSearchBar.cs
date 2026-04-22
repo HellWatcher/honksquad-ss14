@@ -85,9 +85,9 @@ public sealed class HonkRecordsSearchBar : BoxContainer
     {
         foreach (var value in Enum.GetValues<TEnum>())
         {
-            AddTypeOption(Convert.ToInt32(value), labelFor(value));
+            AddTypeOption((int)(object)value, labelFor(value));
         }
-        SelectTypeId(Convert.ToInt32(initial));
+        SelectTypeId((int)(object)initial);
     }
 
     /// <summary>
