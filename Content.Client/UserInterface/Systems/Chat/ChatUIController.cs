@@ -861,10 +861,21 @@ public sealed partial class ChatUIController : UIController
 
         //HONK START - let HideChat emotes (gasp, snore, etc.) land in the Emotes filter alongside
         // typed emotes. Upstream set HideChat=true on these so they wouldn't enter chat history, but
-        // the chat log is the only scrollback path for transient visuals. Other HideChat channels
-        // (range-faded Local/Whisper, etc.) stay suppressed.
+        // the chat log is the only scrollback path for transient visuals. The server broadcasts
+        // to everyone in voice range without a line-of-sight check, so gate on whether the local
+        // player can actually examine the source (same rule as the popup log). Self-sourced and
+        // sourceless emotes always pass. Other HideChat channels stay suppressed entirely.
         if (msg.HideChat && msg.Channel == ChatChannel.Emotes)
-            msg.HideChat = false;
+        {
+            var honkSource = _ent.GetEntity(msg.SenderEntity);
+            var honkExaminer = _player.LocalEntity;
+            var honkVisible = honkSource == default
+                || honkExaminer is null
+                || honkSource == honkExaminer.Value
+                || _ent.System<Content.Shared.Examine.ExamineSystemShared>().CanExamine(honkExaminer.Value, honkSource);
+            if (honkVisible)
+                msg.HideChat = false;
+        }
         //HONK END
 
         // Log all incoming chat to repopulate when filter is un-toggled
