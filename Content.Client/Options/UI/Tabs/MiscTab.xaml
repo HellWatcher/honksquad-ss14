@@ -20,6 +20,7 @@
                 <CheckBox Name="FancyNameBackgroundsCheckBox" Text="{Loc 'ui-options-fancy-name-background'}" />
                 <!-- HONK START - issue #577 floating chat input -->
                 <CheckBox Name="FloatingChatInputCheckBox" Text="{Loc 'ui-options-floating-chat-input'}" />
+                <CheckBox Name="FloatingChatInputRememberChannelCheckBox" Text="{Loc 'ui-options-floating-chat-input-remember-channel'}" />
                 <!-- HONK END -->
                 <Label Text="{Loc 'ui-options-general-cursor'}"
                        StyleClasses="LabelKeyText"/>

@@ -2,11 +2,13 @@
 
 using Content.Client.Chat.Managers;
 using Content.Client.UserInterface.Systems.Chat;
+using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.Configuration;
 
 namespace Content.Client.RussStation.Chat;
 
@@ -19,6 +21,7 @@ public sealed class FloatingChatInputController : UIController
 {
     [Dependency] private readonly IChatManager _chatManager = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private readonly IConfigurationManager _config = default!;
 
     private FloatingChatInputControl? _active;
 
@@ -60,7 +63,7 @@ public sealed class FloatingChatInputController : UIController
         root.AddChild(_active);
         _active.Attach(entity);
 
-        var selected = channel ?? ChatSelectChannel.Local;
+        var selected = channel ?? ResolveDefaultChannel();
         _active.InputBox.ChannelSelector.Select(selected);
         // Select() is a no-op when the target channel already matches the
         // freshly-constructed default, so the label can be blank. Force a
@@ -72,6 +75,21 @@ public sealed class FloatingChatInputController : UIController
         UIManager.PushModal(_active);
 
         _active.FocusInput();
+    }
+
+    private ChatSelectChannel ResolveDefaultChannel()
+    {
+        if (!_config.GetCVar(CCVars.FloatingChatInputRememberChannel))
+            return ChatSelectChannel.Local;
+
+        var stored = (ChatSelectChannel) _config.GetCVar(CCVars.FloatingChatInputLastChannel);
+        var chatUi = UIManager.GetUIController<ChatUIController>();
+        // Only restore if the channel is currently selectable (e.g. Dead is
+        // gone once the player is alive again). Fall back to Local otherwise.
+        if (stored != ChatSelectChannel.None && (chatUi.SelectableChannels & stored) != 0)
+            return stored;
+
+        return ChatSelectChannel.Local;
     }
 
     private void HandleSubmit(string text, ChatSelectChannel channel)
@@ -91,6 +109,9 @@ public sealed class FloatingChatInputController : UIController
             // Radio routes through `say` with the common-radio prefix.
             text = $";{text}";
         }
+
+        if (_config.GetCVar(CCVars.FloatingChatInputRememberChannel))
+            _config.SetCVar(CCVars.FloatingChatInputLastChannel, (int) channel);
 
         _chatManager.SendMessage(text, channel);
     }
