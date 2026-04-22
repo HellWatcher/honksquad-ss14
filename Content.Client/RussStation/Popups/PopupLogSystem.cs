@@ -1,7 +1,9 @@
 using Content.Client.UserInterface.Systems.Chat;
 using Content.Shared.Chat;
+using Content.Shared.Examine;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Popups;
+using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Shared.Utility;
 
@@ -12,14 +14,15 @@ namespace Content.Client.RussStation.Popups;
 /// through text that otherwise disappears with the floating display.
 /// </summary>
 /// <remarks>
-/// Subscribes to the three popup network events plus the fork's <see cref="CategorizedPopupRaisedEvent"/>.
-/// Category-tagged mirrors only appear for fork-side categorized calls; server-originated popups arrive
-/// here through the network path and are logged without a category. A future PR will network the category
-/// alongside the popup to close that gap.
+/// Popups for entities the local player can't examine (out of range, occluded, wrong map) are dropped
+/// so the log doesn't leak information the player shouldn't have. Cursor / coordinate-only popups with
+/// no source entity always log since those are typically addressed directly to the local player.
 /// </remarks>
 public sealed class PopupLogSystem : EntitySystem
 {
     [Dependency] private readonly IUserInterfaceManager _ui = default!;
+    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private readonly ExamineSystemShared _examine = default!;
 
     private ChatUIController? _chat;
     private ChatUIController Chat => _chat ??= _ui.GetUIController<ChatUIController>();
@@ -35,6 +38,16 @@ public sealed class PopupLogSystem : EntitySystem
 
     private void OnCategorizedPopup(CategorizedPopupRaisedEvent ev)
     {
+        // Filter out popups the player shouldn't be able to perceive. Server PVS may ship popups
+        // for entities outside the player's line of sight (proximity filters, broad broadcast);
+        // gate those behind the same visibility rule the examine system uses.
+        if (ev.Source is { } sourceUid
+            && _player.LocalEntity is { } examiner
+            && !_examine.CanExamine(examiner, sourceUid))
+        {
+            return;
+        }
+
         var source = ev.Source is { } uid ? GetNetEntity(uid) : NetEntity.Invalid;
         LogMirroredPopup(ev.Message, source, ev.Category);
     }
