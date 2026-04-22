@@ -25,7 +25,15 @@ public sealed class HonkRecordsSearchBar : BoxContainer
     public string Text
     {
         get => SearchBox.Text;
-        set => SearchBox.SetText(value, invokeEvent: false);
+        // Skip the write while the user is typing: stale state echoes from the
+        // server would otherwise clobber keystrokes that landed after the
+        // echoed filter was sent.
+        set
+        {
+            if (SearchBox.HasKeyboardFocus())
+                return;
+            SearchBox.SetText(value, invokeEvent: false);
+        }
     }
 
     public event Action<HonkRecordsFilterChangedArgs>? OnFilterChanged;
