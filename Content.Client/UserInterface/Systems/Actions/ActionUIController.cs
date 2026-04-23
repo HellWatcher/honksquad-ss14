@@ -548,8 +548,13 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             }
             if (EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId.Value, out var placedEmote))
             {
+                Log.Info($"[HONK] emote drop: action={actionId.Value} emote='{placedEmote.Emote}' slot={position}");
                 UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>()
                     .HonkRememberEmoteSlot(placedEmote.Emote, position);
+            }
+            else
+            {
+                Log.Info($"[HONK] emote drop: action={actionId.Value} has no HonkEmoteActionComponent (not an emote, or state not replicated)");
             }
             //HONK END
             if (position >= _actions.Count)
