@@ -14,6 +14,12 @@ public static class SurgeryConstants
 
     public const float DefaultDrapeSpeedModifier = 1.5f;
 
+    /// <summary>
+    /// Overlay entity spawned when a drape item carries no <see cref="Content.Shared.RussStation.Surgery.Components.SurgeryDrapeOverlayComponent"/>.
+    /// Upstream bedsheets fall back to this; fork-side drape items override it on their prototype.
+    /// </summary>
+    public const string DefaultDrapeOverlayPrototype = "SurgeryDrapeOverlayBedsheet";
+
     public const float DefaultTrayFoldedFriction = 0.8f;
     public const float DefaultTrayUnfoldedFriction = 0.4f;
 

@@ -1,0 +1,40 @@
+- type: entity
+  id: SurgeryDrapeOverlayBase
+  abstract: true
+  save: false
+  noSpawn: true
+  components:
+    - type: Transform
+    - type: Sprite
+      sprite: "@RussStation/Mobs/Overlays/surgery_drape.rsi"
+      drawdepth: OverMobs
+      # Keep the sprite upright on screen: the engine still picks an RSI direction based on the
+      # parent mob's world rotation (so the south-only art hides when the mob faces away), but the
+      # sprite image itself doesn't physically rotate with the rapid transform changes.
+      noRot: true
+    - type: SurgeryDrapeOverlayVisibility
+    - type: Tag
+      tags:
+        - HideContextMenu
+
+- type: entity
+  parent: SurgeryDrapeOverlayBase
+  id: SurgeryDrapeOverlaySurgical
+  name: surgical drape overlay
+  description: Visual overlay drawn on top of a patient who has been draped for surgery.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Mobs/Overlays/surgery_drape.rsi"
+      state: surgical
+      drawdepth: OverMobs
+
+- type: entity
+  parent: SurgeryDrapeOverlayBase
+  id: SurgeryDrapeOverlayBedsheet
+  name: bedsheet drape overlay
+  description: Visual overlay drawn on top of a patient who has been covered with a bedsheet for surgery.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Mobs/Overlays/surgery_drape.rsi"
+      state: bedsheet
+      drawdepth: OverMobs

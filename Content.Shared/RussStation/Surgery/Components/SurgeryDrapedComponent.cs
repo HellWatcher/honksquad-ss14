@@ -23,4 +23,12 @@ public sealed partial class SurgeryDrapedComponent : Component
     /// </summary>
     [AutoNetworkedField, DataField]
     public float DrapeSpeedModifier = SurgeryConstants.DefaultDrapeSpeedModifier;
+
+    /// <summary>
+    /// Visual overlay entity spawned above the patient while they're draped. Tracked so it can
+    /// be deleted when the draped component is removed. Not networked; only the server spawns and
+    /// despawns the overlay, clients see it via normal transform replication.
+    /// </summary>
+    [DataField]
+    public EntityUid? OverlayEntity;
 }

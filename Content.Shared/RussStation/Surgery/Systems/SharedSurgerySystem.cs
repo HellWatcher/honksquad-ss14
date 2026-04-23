@@ -61,6 +61,10 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     {
         _alerts.ClearAlert(ent.Owner, "SurgeryDraped");
 
+        // Remove the visible drape overlay (spawned server-side on startup).
+        if (ent.Comp.OverlayEntity is { } overlay && Exists(overlay))
+            QueueDel(overlay);
+
         // Drop bedsheet/drape when draping is removed
         if (ent.Comp.Bedsheet is not { } bedsheet || !Exists(bedsheet))
             return;

@@ -231,6 +231,15 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             return;
         }
 
+        // Spawn the drape overlay above the patient. The drape item can override which overlay is
+        // used; anything without the component (e.g. upstream bedsheets) falls back to the default.
+        var overlayProto = CompOrNull<SurgeryDrapeOverlayComponent>(bedsheet.Value)?.OverlayPrototype
+            ?? SurgeryConstants.DefaultDrapeOverlayPrototype;
+        var overlay = Spawn(overlayProto, Transform(target.Value).Coordinates);
+        _xform.SetParent(overlay, target.Value);
+        _xform.SetLocalPosition(overlay, System.Numerics.Vector2.Zero);
+        draped.OverlayEntity = overlay;
+
         _popup.PopupEntity(Loc.GetString("surgery-drape-patient", ("target", target.Value)), target.Value);
 
         var active = EnsureComp<ActiveSurgeryComponent>(target.Value);
