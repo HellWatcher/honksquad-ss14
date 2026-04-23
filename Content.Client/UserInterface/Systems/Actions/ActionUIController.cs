@@ -281,7 +281,9 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             // drop it there. Go through the controller directly so its Initialize (and CVar
             // parse) is guaranteed to have run before we read the map.
             var custom = UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>();
-            if (custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot)
+            var hasSaved = custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot);
+            Log.Info($"[HONK] emote load: action={actionId} emote='{emoteTag.Emote}' hasSaved={hasSaved} savedSlot={(hasSaved ? savedSlot : -1)} actionsCount={_actions.Count}");
+            if (hasSaved
                 && savedSlot >= 0
                 && savedSlot < ContentKeyFunctions.GetHotbarBoundKeys().Length)
             {
@@ -290,8 +292,10 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 if (_actions[savedSlot] == null)
                 {
                     _actions[savedSlot] = action;
+                    Log.Info($"[HONK] emote load: placed at slot={savedSlot}");
                     return;
                 }
+                Log.Info($"[HONK] emote load: slot {savedSlot} already occupied, staying in menu");
             }
             return;
         }
