@@ -36,6 +36,48 @@ You keep things clean, it's a rough job sometimes, but someone's gotta do it. Th
 <GuideEntityEmbed Entity="FloorDrain"/>
 </Box>
 
+## Your Toolkit
+Your standard kit. Nothing in here is for show, so learn it before you need it.
+
+### Mop
+Every janitor's starter weapon. If there's a puddle on the floor, this is how you deal with it.
+
+- Wet the mop at a [color=#88ccff]bucket[/color]. Sinks and water tanks can top a bucket up, but you can't wet the mop on them directly. A dry mop is useless.
+- Mopping a puddle swaps some of the mop's water into the puddle (turning it into plain water) and pulls the puddle's reagents back into the mop. The water left behind evaporates on its own, and that's the part that slips people, so keep signs up until it dries.
+- Re-wetting the mop at the bucket works the same way in reverse: it dumps whatever the mop picked up into the bucket and pulls clean water out. The bucket slowly gets dirty as you work, so drain it at a [color=#88ccff]floor drain[/color] when it fills. Drains are usually in medical, the kitchen, and your own closet.
+- The [color=#88ccff]advanced mop[/color] (ask R&D) refills its reservoir on its own, saving you the bucket trips.
+
+### Trash bag
+Everything loose and useless ends up in here eventually. Empty it before it bursts.
+
+- Click near loose trash with the bag out to scoop everything in range at once; individual clicks work too.
+- Click the bag on a [color=#88ccff]disposal chute[/color] to empty it in one go.
+
+### Light replacer
+Broken bulbs in, working ones out, all in one motion. Saves you carrying a crate of spares every time engineering misses a fuse.
+
+- Broken bulbs and plain [color=#88ccff]glass shards[/color] recycle into points. Click them onto the replacer.
+- Used on a broken fixture, it consumes the old bulb for a point, then looks for a replacement: an exact-match stored bulb, any stored bulb of the same type, or a fresh one printed from points if storage can't cover it.
+- [color=yellow][bold][keybind="ActivateItemInHand"][/bold][/color] (use in hand) opens a window with Take buttons for stored bulbs and print options for anything else. Storage caps at 12, the same as a full light box.
+
+### Space cleaner
+For the messes a mop can't chew through, and whatever someone scribbled on the wall between shifts.
+
+- Sprayed on a puddle, it converts the whole thing into plain water and deletes the reagents outright. The mop only trades reagents around; space cleaner actually destroys them, which matters when someone's spilled something nasty.
+- Scrubs player-sprayed graffiti off floors and walls. Some station-standard markings placed by mappers are currently immune.
+- Refill at the [color=#88ccff]cleaner dispenser[/color] on the custodial closet wall. Chemistry can brew more if the dispenser runs dry, and a [color=#88ccff]cleaner grenade[/color] wipes a large mess in one toss.
+
+### Wet floor signs and holosign projector
+Your legal defense when someone eats the floor.
+
+- Place them [italic]before[/italic] you mop, not after.
+- The holosign projector is a good backup when you've run out of physical signs.
+
+### Soap
+Small, slippery, useful twice over. Cleans tiles and floors anyone running across them.
+
+- Drop it on the floor and anyone running over it slips. Also actually cleans things.
+
 ## Your Cart
 Your [color=#88ccff]janitorial trolley[/color] is the closest thing to a mobile office you'll ever get. It has dedicated slots for your mop, trash bag, bucket, plunger, light replacer, spray bottle, and up to four wet floor signs, plus enough room in the trash bag for whatever disasters you find on the way. A few tricks the tutorial doesn't mention:
 
@@ -46,20 +88,8 @@ Your [color=#88ccff]janitorial trolley[/color] is the closest thing to a mobile 
 - Dragging a [color=#88ccff]sink[/color] or [color=#88ccff]floor drain[/color] onto the trolley tops up the bucket in place. Beats parking next to the sink every five minutes.
 - And if you really must, [color=yellow][bold][keybind="ActivateItemInWorld"][/bold][/color] lets you [italic]drink[/italic] from the bucket. The chaplain says it builds character.
 
-## Tidying up.
-Now, onto the (figurative) meat and potatoes. We're here to clean, right? Lets keep it simple. The main tools you'll be putting to use are the trusty mop, a trash bag, space cleaner, and one of the three different buckets.
-
-Mopping: Fill your cart up with water, then, find some puddles! Wet your mop, and wipe them up, the resulting water puddle will dry after a short time. Don't forget the wet floor signs!
-- To drain your cart, drag it (with your cursor) onto a floor drain. This will dump all the fluids inside! Floor drains can usually be found somewhere in medical, the kitchen freezer, and of course, the janitor closet.
-
-Trash: Place it in the bag directly, or hold it in your hand. Click -near- trash to scoop -all- nearby junk up, or click on each piece individually. Using the bag on a disposal will empty it.
-- Cargo might want some of your trash, it might be worthwhile to check in from time to time!
-
-Space Cleaner: This miracle spray can do two things, clean graffiti, and in a pinch, clean up puddles!
-- You might be able to get more of this from chemistry.
-
 ## Extra Duties
-A good janitor is always on the lookout for a bit more to do, and there are plenty of tools at your disposal. Keep an eye out for broken lights, help the chef take care of mice in the kitchen, and if you're feeling -really- generous, try to restock the vending machines and emergency closets around the station!
+A good janitor is always on the lookout for a bit more to do. Keep an eye out for broken lights, help the chef take care of mice in the kitchen, and if you're feeling -really- generous, try to restock the vending machines and emergency closets around the station. Cargo will also take scrap off your hands; a full trash bag now and then adds up over a shift.
 
 ##Additional Information:
 <GuideReagentEmbed Reagent="SpaceCleaner"/>
