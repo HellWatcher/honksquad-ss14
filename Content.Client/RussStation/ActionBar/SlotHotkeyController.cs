@@ -1,26 +1,20 @@
 using System.Linq;
-using Content.Client.Gameplay;
-using Content.Client.UserInterface.Systems.Actions;
 using Content.Shared.Input;
-using Content.Shared.RussStation.Input;
 using JetBrains.Annotations;
 using Robust.Client.Input;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Shared.Input;
-using Robust.Shared.Input.Binding;
-using static Robust.Shared.Input.Binding.PointerInputCmdHandler;
 
 namespace Content.Client.RussStation.ActionBar;
 
 // HONK Per-slot hotkey assignment for the fork's resizable action bar (#579).
-// Each slot has a stable BoundKeyFunction: slots 0-9 use upstream's Hotbar0-9,
-// slots 10-19 use the fork's HonkVerbBind0-9. Assign mode rebinds the physical
-// key for that function via IInputManager, so Settings → Controls becomes the
-// single source of truth and the action bar labels refresh when the user
-// changes the binding from either side.
+// Each slot uses the BoundKeyFunction at the same index in ContentKeyFunctions.
+// GetHotbarBoundKeys (Hotbar1-0 for slots 0-9, HotbarShift1-0 for slots 10-19
+// by default). Assign mode rebinds the physical key for that function via
+// IInputManager, so Settings → Controls is the single source of truth and the
+// action bar labels refresh when the user changes the binding from either side.
 [UsedImplicitly]
-public sealed class SlotHotkeyController : UIController,
-    IOnStateEntered<GameplayState>, IOnStateExited<GameplayState>
+public sealed class SlotHotkeyController : UIController
 {
     [Dependency] private readonly IInputManager _input = default!;
 
@@ -54,12 +48,7 @@ public sealed class SlotHotkeyController : UIController,
         if (slot < 0)
             return null;
         var hotbar = ContentKeyFunctions.GetHotbarBoundKeys();
-        if (slot < hotbar.Length)
-            return hotbar[slot];
-        var verbIndex = slot - hotbar.Length;
-        if (verbIndex < HonkVerbBindKeyFunctions.All.Length)
-            return HonkVerbBindKeyFunctions.All[verbIndex];
-        return null;
+        return slot < hotbar.Length ? (BoundKeyFunction?) hotbar[slot] : null;
     }
 
     private void OnBindingChanged(IKeyBinding _) => SlotBindingChanged?.Invoke();
@@ -150,31 +139,4 @@ public sealed class SlotHotkeyController : UIController,
     }
 
     public int? ArmedSlot => _armedSlot;
-
-    public void OnStateEntered(GameplayState state)
-    {
-        // Upstream ActionUIController binds Hotbar0-9 directly. Only the HonkVerbBindN
-        // functions need wiring here so slots 10-19 dispatch into the same TriggerAction path.
-        var builder = CommandBinds.Builder;
-        for (var i = 0; i < HonkVerbBindKeyFunctions.All.Length; i++)
-        {
-            var slot = i + ContentKeyFunctions.GetHotbarBoundKeys().Length;
-            builder = builder.Bind(
-                HonkVerbBindKeyFunctions.All[i],
-                new PointerInputCmdHandler((in PointerInputCmdArgs args) =>
-                {
-                    if (args.State != BoundKeyState.Down)
-                        return false;
-                    UIManager.GetUIController<ActionUIController>().HonkTriggerSlot(slot);
-                    return true;
-                }, false, true));
-        }
-        builder.Register<SlotHotkeyController>();
-    }
-
-    public void OnStateExited(GameplayState state)
-    {
-        CommandBinds.Unregister<SlotHotkeyController>();
-        _armedSlot = null;
-    }
 }
