@@ -1,5 +1,6 @@
 using Content.Server.Chat.Systems;
 using Content.Shared.Actions;
+using Content.Shared.Actions.Components;
 using Content.Shared.Chat.Prototypes;
 using Content.Shared.Ghost;
 using Content.Shared.RussStation.VerbBindings;
@@ -21,6 +22,7 @@ public sealed class HonkEmoteActionSystem : EntitySystem
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly SharedActionsSystem _actions = default!;
+    [Dependency] private readonly ActionContainerSystem _actionContainer = default!;
     [Dependency] private readonly MetaDataSystem _meta = default!;
 
     // Proto id of the allowlist prototype instance shipped by the fork.
@@ -71,9 +73,14 @@ public sealed class HonkEmoteActionSystem : EntitySystem
             if (!_chat.AllowedToUseEmote(performer, emote))
                 continue;
 
-            var actionEntity = _actions.AddAction(performer, EmoteActionProtoId);
-            if (actionEntity is not { } actionUid)
+            // Spawn, configure, then grant. Doing it in that order means the first network
+            // state the client sees for the new action entity already has Emote populated;
+            // otherwise the client's OnActionAdded fires before the delta from Dirty reaches
+            // it and the placement-persistence lookup misses.
+            EntityUid? actionId = null;
+            if (!_actionContainer.EnsureAction(performer, ref actionId, out _, EmoteActionProtoId))
                 continue;
+            var actionUid = actionId.Value;
 
             if (TryComp<HonkEmoteActionComponent>(actionUid, out var tag))
             {
@@ -83,6 +90,8 @@ public sealed class HonkEmoteActionSystem : EntitySystem
 
             _actions.SetIcon(actionUid, emote.Icon);
             _meta.SetEntityName(actionUid, Loc.GetString(emote.Name));
+
+            _actions.AddActionDirect(performer, actionUid);
         }
     }
 
