@@ -6,6 +6,7 @@ using Content.Shared.Ghost;
 using Content.Shared.RussStation.VerbBindings;
 using Content.Shared.Speech;
 using Content.Shared.Speech.Muting;
+using Content.Shared.Whitelist;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 
@@ -27,6 +28,7 @@ public sealed class HonkEmoteActionSystem : EntitySystem
     [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly ActionContainerSystem _actionContainer = default!;
     [Dependency] private readonly MetaDataSystem _meta = default!;
+    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
 
     // Action entity prototype spawned once per allowed emote.
     private const string EmoteActionProtoId = "HonkActionEmote";
@@ -61,13 +63,20 @@ public sealed class HonkEmoteActionSystem : EntitySystem
 
         foreach (var emote in _proto.EnumeratePrototypes<EmotePrototype>())
         {
-            // Invalid-category protos exist as bases; they aren't meant for players.
+            // Mirror the radial emote menu's filter exactly (EmotesUIController.ConvertToButtons):
+            // invalid category, no chat triggers (reflexive / death emotes), whitelist fail,
+            // blacklist match, or Available=false + not in SpeechComponent.AllowedEmotes.
             if (emote.Category == EmoteCategory.Invalid)
                 continue;
-
-            // Same gate ChatSystem uses when a player types the emote command. Species
-            // whitelists, per-emote whitelist / blacklist, and Available=false all apply here.
-            if (!_chat.AllowedToUseEmote(performer, emote))
+            if (emote.ChatTriggers.Count == 0)
+                continue;
+            if (!_whitelist.IsWhitelistPassOrNull(emote.Whitelist, performer))
+                continue;
+            if (_whitelist.IsWhitelistPass(emote.Blacklist, performer))
+                continue;
+            if (!emote.Available
+                && TryComp<SpeechComponent>(performer, out var speech)
+                && !speech.AllowedEmotes.Contains(emote.ID))
                 continue;
 
             // Spawn, configure, then grant. Doing it in that order means the first network
