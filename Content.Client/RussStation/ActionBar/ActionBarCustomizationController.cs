@@ -234,8 +234,10 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
     }
 
     /// <summary>Persist a saved slot for an emote prototype. Pass null to forget the slot.</summary>
-    public void HonkRememberEmoteSlot(string emoteProtoId, int? slot)
+    public void HonkRememberEmoteSlot(string? emoteProtoId, int? slot)
     {
+        if (string.IsNullOrEmpty(emoteProtoId))
+            return;
         var changed = false;
         if (slot is { } index)
         {
