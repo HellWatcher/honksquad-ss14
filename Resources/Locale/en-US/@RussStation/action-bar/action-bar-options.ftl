@@ -8,3 +8,4 @@ ui-options-action-bar-button-background-alpha = Action bar button background alp
 ui-actionmenu-lock-button = Lock bar
 ui-actionmenu-auto-add-button = Auto-add new actions
 honk-ui-actionmenu-assign-hotkey-button = Assign hotkeys
+honk-ui-options-controls-assign-slot-hotkey = Assign action bar slot hotkeys (click a slot, then press a hotbar key)

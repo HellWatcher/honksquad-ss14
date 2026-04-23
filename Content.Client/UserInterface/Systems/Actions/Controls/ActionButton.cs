@@ -398,6 +398,7 @@ public sealed class ActionButton : Control, IEntityControl
         // texture draws in that case so the preview has something to render.
         var honkShowEmpty = Action == null
             && (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.ShowEmptySlots
+                || Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AssignHotkeyMode
                 || _controller.IsDragging);
         var honkAlpha = Content.Client.RussStation.ActionBar.ActionBarCustomizationController.ButtonBackgroundAlpha;
         const float honkEmptyFadeRatio = 0.4f;

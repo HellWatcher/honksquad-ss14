@@ -50,6 +50,10 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
     // container even when the persistent show-empty toggle is off.
     public static bool IsDragActive { get; private set; }
 
+    // Mirrored from SlotHotkeyController so the bar-side code (UpdateBackground, ApplyLabels)
+    // can reveal every slot and its keybind label while the player is assigning hotkeys.
+    public static bool AssignHotkeyMode { get; private set; }
+
     public override void Initialize()
     {
         base.Initialize();
@@ -72,6 +76,20 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         _cfg.OnValueChanged(CCVars.HonkActionBarLock, v => LockActions = v, true);
         _cfg.OnValueChanged(CCVars.HonkActionBarButtonBackgroundAlpha,
             v => ButtonBackgroundAlpha = Math.Clamp(v, 0f, 1f), true);
+
+        // Mirror the assign-hotkey toggle so the bar auto-reveals while the player rebinds slots.
+        var slotHotkeys = UIManager.GetUIController<SlotHotkeyController>();
+        AssignHotkeyMode = slotHotkeys.AssignMode;
+        slotHotkeys.AssignStateChanged += OnAssignStateChanged;
+    }
+
+    private void OnAssignStateChanged()
+    {
+        var slotHotkeys = UIManager.GetUIController<SlotHotkeyController>();
+        AssignHotkeyMode = slotHotkeys.AssignMode;
+        ApplyLayout();
+        ApplyLabels();
+        RefreshHotbar();
     }
 
     private void OnRowsChanged(int value)
@@ -123,7 +141,11 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         container.Columns = _slotsPerRow;
         container.HSeparationOverride = _slotSpacing;
         container.VSeparationOverride = _slotSpacing;
-        container.HonkMinSlotCount = ShowEmptySlots || IsDragActive ? _rows * _slotsPerRow : 0;
+        // Reveal every slot (pad up to rows x slots_per_row) when either the user's persistent
+        // toggle is on, a drag is active, or the player is actively rebinding slot hotkeys.
+        container.HonkMinSlotCount = ShowEmptySlots || IsDragActive || AssignHotkeyMode
+            ? _rows * _slotsPerRow
+            : 0;
     }
 
     private void ApplyLabels()
@@ -131,12 +153,12 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         if (GetContainer() is not { } container)
             return;
 
-        // Only reveal labels on slots that actually hold an action; empty buttons
-        // shouldn't display a keybind that does nothing. Empty slots also show
-        // labels during a drag so the player can see which slot maps to which key.
+        // Normally labels only render on slots with an action and on drag targets. Assign-hotkey
+        // mode forces every slot's label visible so the player can see which key they're rebinding.
         foreach (var button in container.GetButtons())
         {
-            button.Label.Visible = _showKeybindLabel && (button.Action != null || IsDragActive);
+            button.Label.Visible = AssignHotkeyMode
+                || (_showKeybindLabel && (button.Action != null || IsDragActive));
         }
     }
 
@@ -157,10 +179,6 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         window.AutoAddButton.Pressed = AutoAddActions;
         window.LockButton.OnToggled += a => _cfg.SetCVar(CCVars.HonkActionBarLock, a.Pressed);
         window.AutoAddButton.OnToggled += a => _cfg.SetCVar(CCVars.HonkActionBarAutoAddActions, a.Pressed);
-
-        var slotHotkeys = UIManager.GetUIController<SlotHotkeyController>();
-        window.AssignHotkeyButton.Pressed = slotHotkeys.AssignMode;
-        window.AssignHotkeyButton.OnToggled += a => slotHotkeys.SetAssignMode(a.Pressed);
     }
 
     // Called from the upstream ActionUIController (HONK) once the action bar widget

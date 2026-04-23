@@ -111,6 +111,21 @@ namespace Content.Client.Options.UI.Tabs
                 });
             };
 
+            //HONK START - per-slot action-bar hotkey assignment toggle (#579).
+            // Backed by SlotHotkeyController; reflects and drives its AssignMode so
+            // ticking this reveals the action bar slots and lets clicking a slot
+            // arm it for the next hotbar keypress. No window needs to be open.
+            var slotHotkeys = IoCManager.Resolve<Robust.Client.UserInterface.IUserInterfaceManager>()
+                .GetUIController<Content.Client.RussStation.ActionBar.SlotHotkeyController>();
+            AssignActionSlotHotkeyCheckBox.Pressed = slotHotkeys.AssignMode;
+            AssignActionSlotHotkeyCheckBox.OnToggled += args => slotHotkeys.SetAssignMode(args.Pressed);
+            slotHotkeys.AssignStateChanged += () =>
+            {
+                if (AssignActionSlotHotkeyCheckBox.Pressed != slotHotkeys.AssignMode)
+                    AssignActionSlotHotkeyCheckBox.Pressed = slotHotkeys.AssignMode;
+            };
+            //HONK END
+
             var first = true;
 
             void AddHeader(string headerContents)
