@@ -18,8 +18,36 @@ public sealed class ItemSlotEjectMenuSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<ItemSlotEjectMenuComponent, InteractHandEvent>(OnInteractHand);
-        SubscribeLocalEvent<ItemSlotEjectMenuComponent, GetVerbsEvent<AlternativeVerb>>(OnGetAltVerbs);
+        SubscribeLocalEvent<ItemSlotEjectMenuComponent, ActivateInWorldEvent>(OnActivate);
         SubscribeLocalEvent<ItemSlotEjectMenuComponent, ItemSlotEjectMenuEjectMessage>(OnEjectMessage);
+    }
+
+    /// <summary>
+    ///     Activate-in-world (E): open the radial eject menu if any slot is occupied.
+    /// </summary>
+    private void OnActivate(EntityUid uid, ItemSlotEjectMenuComponent comp, ActivateInWorldEvent args)
+    {
+        if (args.Handled || !args.Complex)
+            return;
+
+        if (!TryComp<ItemSlotsComponent>(uid, out var itemSlots))
+            return;
+
+        var hasOccupied = false;
+        foreach (var slot in itemSlots.Slots.Values)
+        {
+            if (slot.Item != null)
+            {
+                hasOccupied = true;
+                break;
+            }
+        }
+
+        if (!hasOccupied)
+            return;
+
+        _ui.TryToggleUi(uid, ItemSlotEjectMenuUiKey.Key, args.User);
+        args.Handled = true;
     }
 
     /// <summary>
@@ -45,54 +73,6 @@ public sealed class ItemSlotEjectMenuSystem : EntitySystem
                 return;
             }
         }
-    }
-
-    /// <summary>
-    ///     Alt-click: add a verb that opens the radial eject menu.
-    /// </summary>
-    private void OnGetAltVerbs(EntityUid uid, ItemSlotEjectMenuComponent comp, GetVerbsEvent<AlternativeVerb> args)
-    {
-        if (args.Hands == null || !args.CanAccess || !args.CanInteract)
-            return;
-
-        if (!TryComp<ItemSlotsComponent>(uid, out var itemSlots))
-            return;
-
-        // If the user is holding an item that fits any slot, let the upstream insert verbs win.
-        if (args.Using != null)
-        {
-            foreach (var slot in itemSlots.Slots.Values)
-            {
-                if (slot.InsertOnInteract)
-                    continue;
-
-                if (_itemSlots.CanInsert(uid, args.Using.Value, args.User, slot))
-                    return;
-            }
-        }
-
-        // Only show the radial menu verb if there's at least one occupied slot to eject.
-        var hasOccupied = false;
-        foreach (var slot in itemSlots.Slots.Values)
-        {
-            if (slot.Item != null)
-            {
-                hasOccupied = true;
-                break;
-            }
-        }
-
-        if (!hasOccupied)
-            return;
-
-        var user = args.User;
-        args.Verbs.Add(new AlternativeVerb
-        {
-            Text = Loc.GetString("item-slot-eject-menu-verb"),
-            Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/eject.svg.192dpi.png")),
-            Act = () => _ui.TryToggleUi(uid, ItemSlotEjectMenuUiKey.Key, user),
-            Priority = ItemSlotsConstants.EjectVerbPriority
-        });
     }
 
     /// <summary>

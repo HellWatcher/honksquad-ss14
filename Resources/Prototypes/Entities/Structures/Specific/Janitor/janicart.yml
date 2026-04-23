@@ -402,6 +402,9 @@
   # HONK START - Left-click inserts into trash bag if item doesn't fit a trolley slot
   - type: JanitorialTrolley
   # HONK END
+  # HONK START - Skip upstream's "slots are full, can't drink" popup on the trolley bucket
+  - type: IgnoreItemSlotsEdibleBlock
+  # HONK END
   - type: GuideHelp
     guides:
     - Janitorial

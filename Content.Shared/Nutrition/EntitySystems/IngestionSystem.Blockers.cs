@@ -111,6 +111,12 @@ public sealed partial class IngestionSystem
         if (!ent.Comp.Slots.Any(slot => slot.Value.HasItem))
             return;
 
+        //HONK START - fork containers (janitorial trolley) opt out of this block via a marker
+        // component so the trolley's bucket drink still works while tools are stowed.
+        if (HasComp<Content.Shared.RussStation.Janitorial.IgnoreItemSlotsEdibleBlockComponent>(ent))
+            return;
+        //HONK END
+
         args.Cancelled = true;
 
         _popup.PopupClient(Loc.GetString("edible-has-used-storage", ("food", ent), ("verb", GetEdibleVerb(ent.Owner))), args.User, args.User);
