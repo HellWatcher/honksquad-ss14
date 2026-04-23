@@ -36,10 +36,13 @@ public class ActionButtonContainer : GridContainer
         var uniqueCount = Math.Min(system.GetClientActions().Count(), actionTypes.Length + 1);
         var keys = ContentKeyFunctions.GetHotbarBoundKeys();
         //HONK START - honour the caller's sparse layout (drag-to-slot places actions at specific indices)
-        // and pad empties up to the fork-requested minimum, capped at bound hotbar key count.
+        // and pad empties up to the fork-requested minimum, capped at all slot-eligible key count.
         uniqueCount = Math.Max(uniqueCount, actionTypes.Length);
         if (HonkMinSlotCount > 0)
-            uniqueCount = Math.Max(uniqueCount, Math.Min(HonkMinSlotCount, keys.Length));
+        {
+            var maxSlots = keys.Length + Content.Shared.RussStation.Input.HonkVerbBindKeyFunctions.SlotCount;
+            uniqueCount = Math.Max(uniqueCount, Math.Min(HonkMinSlotCount, maxSlots));
+        }
         //HONK END
 
         for (var i = 0; i < uniqueCount; i++)

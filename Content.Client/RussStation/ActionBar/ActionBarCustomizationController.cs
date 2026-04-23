@@ -81,6 +81,9 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         var slotHotkeys = UIManager.GetUIController<SlotHotkeyController>();
         AssignHotkeyMode = slotHotkeys.AssignMode;
         slotHotkeys.AssignStateChanged += OnAssignStateChanged;
+        // Rebuild the hotbar when any action-bar slot's binding changes so the labels track
+        // what Settings → Controls currently holds.
+        slotHotkeys.SlotBindingChanged += RefreshHotbar;
     }
 
     private void OnAssignStateChanged()

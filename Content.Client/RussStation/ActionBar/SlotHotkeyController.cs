@@ -1,13 +1,11 @@
 using System.Linq;
-using System.Text;
 using Content.Client.Gameplay;
 using Content.Client.UserInterface.Systems.Actions;
-using Content.Shared.CCVar;
 using Content.Shared.Input;
+using Content.Shared.RussStation.Input;
 using JetBrains.Annotations;
 using Robust.Client.Input;
 using Robust.Client.UserInterface.Controllers;
-using Robust.Shared.Configuration;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
 using static Robust.Shared.Input.Binding.PointerInputCmdHandler;
@@ -15,25 +13,16 @@ using static Robust.Shared.Input.Binding.PointerInputCmdHandler;
 namespace Content.Client.RussStation.ActionBar;
 
 // HONK Per-slot hotkey assignment for the fork's resizable action bar (#579).
-// Upstream fires slot N by pressing Hotbar(N+1), which hardwires the bar to
-// 10 slots and makes additional rows unreachable from the keyboard. This
-// controller stores a slot→key map in a CVar, pre-empts the upstream
-// Hotbar0-9 handlers, and exposes an "assign mode" where left-clicking a
-// slot arms it so the next hotbar keypress becomes that slot's hotkey.
+// Each slot has a stable BoundKeyFunction: slots 0-9 use upstream's Hotbar0-9,
+// slots 10-19 use the fork's HonkVerbBind0-9. Assign mode rebinds the physical
+// key for that function via IInputManager, so Settings → Controls becomes the
+// single source of truth and the action bar labels refresh when the user
+// changes the binding from either side.
 [UsedImplicitly]
 public sealed class SlotHotkeyController : UIController,
     IOnStateEntered<GameplayState>, IOnStateExited<GameplayState>
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IInputManager _input = default!;
-
-    // Explicit slot→key overrides parsed from the CVar. Slots not present
-    // here fall back to the upstream default (hotbarKeys[slot] for slot<10).
-    private readonly Dictionary<int, BoundKeyFunction> _slotToKey = new();
-
-    // Inverse of the fully-resolved slot→key map, used on keypress to find
-    // which slot to trigger. Rebuilt whenever _slotToKey changes.
-    private readonly Dictionary<BoundKeyFunction, int> _keyToSlot = new();
 
     private bool _assignMode;
     private int? _armedSlot;
@@ -44,16 +33,36 @@ public sealed class SlotHotkeyController : UIController,
     /// views can refresh any visual indicator they own.</summary>
     public event Action? AssignStateChanged;
 
+    /// <summary>Raised whenever a keybinding relevant to the action bar changes,
+    /// so the bar can refresh its labels without each button polling.</summary>
+    public event Action? SlotBindingChanged;
+
     public override void Initialize()
     {
         base.Initialize();
-        _cfg.OnValueChanged(CCVars.HonkActionBarSlotHotkeys, OnCVarChanged, true);
-        // FirstChanceOnKeyEvent fires before normal dispatch and can be handled to block
-        // the downstream handlers. This is the same hook the engine's key-rebind menu uses,
-        // which is exactly what we need: capture the raw key while assign mode is armed and
-        // keep gameplay from reacting to it.
+        // FirstChanceOnKeyEvent sees raw key presses before normal dispatch, matching the
+        // engine's key-rebind menu. While a slot is armed we consume the event and use it
+        // to rebind the slot's function directly through IInputManager.
         _input.FirstChanceOnKeyEvent += OnFirstChanceKey;
+        _input.OnKeyBindingAdded += OnBindingChanged;
+        _input.OnKeyBindingRemoved += OnBindingChanged;
     }
+
+    /// <summary>Stable slot → function mapping. Fixed for the lifetime of the bar.</summary>
+    public static BoundKeyFunction? FunctionForSlot(int slot)
+    {
+        if (slot < 0)
+            return null;
+        var hotbar = ContentKeyFunctions.GetHotbarBoundKeys();
+        if (slot < hotbar.Length)
+            return hotbar[slot];
+        var verbIndex = slot - hotbar.Length;
+        if (verbIndex < HonkVerbBindKeyFunctions.All.Length)
+            return HonkVerbBindKeyFunctions.All[verbIndex];
+        return null;
+    }
+
+    private void OnBindingChanged(IKeyBinding _) => SlotBindingChanged?.Invoke();
 
     private void OnFirstChanceKey(KeyEventArgs keyEvent, KeyEventType type)
     {
@@ -61,95 +70,67 @@ public sealed class SlotHotkeyController : UIController,
             return;
 
         // Consume on down so gameplay (firing actions, typing into chat, etc.) never sees it.
-        // Commit the assignment on up so the player's release doesn't immediately trigger the
-        // just-bound function.
+        // Commit on up so release doesn't immediately trigger the just-bound function.
         keyEvent.Handle();
         if (type != KeyEventType.Up)
             return;
 
-        // Skip pure modifier presses; users almost certainly meant the modified key. Also skip
-        // mouse buttons so the arming click isn't captured as the binding.
         var key = keyEvent.Key;
-        if (key == Keyboard.Key.Control || key == Keyboard.Key.Shift || key == Keyboard.Key.Alt
-            || key == Keyboard.Key.LSystem || key == Keyboard.Key.RSystem
-            || key == Keyboard.Key.MouseLeft || key == Keyboard.Key.MouseRight
-            || key == Keyboard.Key.MouseMiddle)
+        if (IsIgnoredKey(key))
             return;
 
-        if (!TryResolveFunction(keyEvent, out var function))
+        if (FunctionForSlot(slot) is not { } function)
             return;
 
-        AssignSlotKey(slot, function);
+        RebindFunction(function, keyEvent);
         _armedSlot = null;
         AssignStateChanged?.Invoke();
     }
 
-    // Given a raw key event with modifiers, find the first BoundKeyFunction whose binding
-    // matches. Players can only assign slots to keys they've already bound in Settings.
-    private bool TryResolveFunction(KeyEventArgs keyEvent, out BoundKeyFunction function)
+    private static bool IsIgnoredKey(Keyboard.Key key)
     {
-        foreach (var binding in _input.AllBindings)
+        return key == Keyboard.Key.Control || key == Keyboard.Key.Shift || key == Keyboard.Key.Alt
+               || key == Keyboard.Key.LSystem || key == Keyboard.Key.RSystem
+               || key == Keyboard.Key.MouseLeft || key == Keyboard.Key.MouseRight
+               || key == Keyboard.Key.MouseMiddle
+               || key == Keyboard.Key.Unknown;
+    }
+
+    // Replace every existing binding for this function with a single new binding at the
+    // captured key+modifiers, matching what the engine's key-rebind menu does. Saving to
+    // user data persists the change so Settings → Controls reflects it immediately.
+    private void RebindFunction(BoundKeyFunction function, KeyEventArgs keyEvent)
+    {
+        foreach (var existing in _input.GetKeyBindings(function).ToArray())
+            _input.RemoveBinding(existing);
+
+        var mods = new Keyboard.Key[3];
+        var i = 0;
+        if (keyEvent.Control && keyEvent.Key != Keyboard.Key.Control)
+            mods[i++] = Keyboard.Key.Control;
+        if (keyEvent.Shift && keyEvent.Key != Keyboard.Key.Shift)
+            mods[i++] = Keyboard.Key.Shift;
+        if (keyEvent.Alt && keyEvent.Key != Keyboard.Key.Alt && i < 3)
+            mods[i++] = Keyboard.Key.Alt;
+
+        _input.RegisterBinding(new KeyBindingRegistration
         {
-            if (binding.BaseKey != keyEvent.Key)
-                continue;
-
-            // Modifier set must match. Missing mods default to Unknown on the binding.
-            var mods = CollectMods(keyEvent);
-            if (!SameMods(binding, mods))
-                continue;
-
-            function = binding.Function;
-            return true;
-        }
-
-        function = default;
-        return false;
+            Function = function,
+            BaseKey = keyEvent.Key,
+            Mod1 = mods[0],
+            Mod2 = mods[1],
+            Mod3 = mods[2],
+            Type = KeyBindingType.State,
+            CanFocus = false,
+            CanRepeat = false,
+            AllowSubCombs = true,
+        });
+        _input.SaveToUserData();
     }
 
-    private static Keyboard.Key[] CollectMods(KeyEventArgs keyEvent)
-    {
-        var mods = new List<Keyboard.Key>(3);
-        if (keyEvent.Control) mods.Add(Keyboard.Key.Control);
-        if (keyEvent.Shift) mods.Add(Keyboard.Key.Shift);
-        if (keyEvent.Alt) mods.Add(Keyboard.Key.Alt);
-        return mods.ToArray();
-    }
-
-    private static bool SameMods(Robust.Client.Input.IKeyBinding binding, Keyboard.Key[] eventMods)
-    {
-        var bindingMods = new List<Keyboard.Key>(3);
-        if (binding.Mod1 != Keyboard.Key.Unknown) bindingMods.Add(binding.Mod1);
-        if (binding.Mod2 != Keyboard.Key.Unknown) bindingMods.Add(binding.Mod2);
-        if (binding.Mod3 != Keyboard.Key.Unknown) bindingMods.Add(binding.Mod3);
-        if (bindingMods.Count != eventMods.Length)
-            return false;
-        foreach (var m in eventMods)
-            if (!bindingMods.Contains(m))
-                return false;
-        return true;
-    }
-
-    /// <summary>Returns the key that fires the given slot, or null if the
-    /// slot has no assigned hotkey (slot past the default hotbar range and
-    /// no explicit entry in the CVar).</summary>
-    public BoundKeyFunction? GetHotkeyForSlot(int slot)
-    {
-        if (_slotToKey.TryGetValue(slot, out var explicitKey))
-            return explicitKey;
-
-        var hotbar = ContentKeyFunctions.GetHotbarBoundKeys();
-        if (slot >= 0 && slot < hotbar.Length)
-        {
-            // Another slot may have explicitly claimed this key. Fall back to
-            // the default only if no explicit claim exists.
-            var defaultKey = hotbar[slot];
-            if (_keyToSlot.TryGetValue(defaultKey, out var owner) && owner != slot)
-                return null;
-            return defaultKey;
-        }
-
-        return null;
-    }
+    /// <summary>Returns the key function that fires the given slot, or null if the
+    /// slot index is outside the supported range.</summary>
+    public BoundKeyFunction? GetHotkeyForSlot(int slot) => FunctionForSlot(slot);
 
     public void SetAssignMode(bool value)
     {
@@ -172,23 +153,21 @@ public sealed class SlotHotkeyController : UIController,
 
     public void OnStateEntered(GameplayState state)
     {
-        var hotbar = ContentKeyFunctions.GetHotbarBoundKeys();
+        // Upstream ActionUIController binds Hotbar0-9 directly. Only the HonkVerbBindN
+        // functions need wiring here so slots 10-19 dispatch into the same TriggerAction path.
         var builder = CommandBinds.Builder;
-        foreach (var key in hotbar)
+        for (var i = 0; i < HonkVerbBindKeyFunctions.All.Length; i++)
         {
-            var captured = key;
-            // BindBefore(ActionUIController) ensures we run ahead of upstream's
-            // fixed-index Hotbar handler; returning true consumes the event so
-            // upstream's version never fires, letting our map fully own dispatch.
-            builder = builder.BindBefore(
-                captured,
+            var slot = i + ContentKeyFunctions.GetHotbarBoundKeys().Length;
+            builder = builder.Bind(
+                HonkVerbBindKeyFunctions.All[i],
                 new PointerInputCmdHandler((in PointerInputCmdArgs args) =>
                 {
                     if (args.State != BoundKeyState.Down)
                         return false;
-                    return HandleKey(captured);
-                }, false, true),
-                typeof(ActionUIController));
+                    UIManager.GetUIController<ActionUIController>().HonkTriggerSlot(slot);
+                    return true;
+                }, false, true));
         }
         builder.Register<SlotHotkeyController>();
     }
@@ -197,105 +176,5 @@ public sealed class SlotHotkeyController : UIController,
     {
         CommandBinds.Unregister<SlotHotkeyController>();
         _armedSlot = null;
-    }
-
-    private bool HandleKey(BoundKeyFunction key)
-    {
-        if (_assignMode && _armedSlot is { } slot)
-        {
-            AssignSlotKey(slot, key);
-            _armedSlot = null;
-            AssignStateChanged?.Invoke();
-            return true;
-        }
-
-        if (_keyToSlot.TryGetValue(key, out var mapped))
-        {
-            UIManager.GetUIController<ActionUIController>().HonkTriggerSlot(mapped);
-            return true;
-        }
-
-        // Key has no owning slot (e.g. user remapped the only slot that claimed
-        // it). Leave the event unhandled so any other listener can still react.
-        return false;
-    }
-
-    private void AssignSlotKey(int slot, BoundKeyFunction key)
-    {
-        // Each key can only fire one slot — strip any previous explicit owner.
-        foreach (var other in _slotToKey
-                     .Where(kv => kv.Key != slot && kv.Value == key)
-                     .Select(kv => kv.Key)
-                     .ToList())
-        {
-            _slotToKey.Remove(other);
-        }
-
-        _slotToKey[slot] = key;
-        WriteCVar();
-        RebuildInverse();
-        UIManager.GetUIController<ActionUIController>().HonkRefreshHotbar();
-    }
-
-    public void ClearSlotKey(int slot)
-    {
-        if (!_slotToKey.Remove(slot))
-            return;
-        WriteCVar();
-        RebuildInverse();
-        UIManager.GetUIController<ActionUIController>().HonkRefreshHotbar();
-    }
-
-    private void WriteCVar()
-    {
-        var sb = new StringBuilder();
-        var first = true;
-        foreach (var (slot, key) in _slotToKey.OrderBy(kv => kv.Key))
-        {
-            if (!first)
-                sb.Append(';');
-            sb.Append(slot).Append('=').Append(key.FunctionName);
-            first = false;
-        }
-        _cfg.SetCVar(CCVars.HonkActionBarSlotHotkeys, sb.ToString());
-    }
-
-    private void OnCVarChanged(string raw)
-    {
-        _slotToKey.Clear();
-
-        if (!string.IsNullOrWhiteSpace(raw))
-        {
-            foreach (var entry in raw.Split(';', StringSplitOptions.RemoveEmptyEntries))
-            {
-                var eq = entry.IndexOf('=');
-                if (eq <= 0 || eq == entry.Length - 1)
-                    continue;
-                if (!int.TryParse(entry.AsSpan(0, eq), out var slot) || slot < 0)
-                    continue;
-                var name = entry[(eq + 1)..];
-                _slotToKey[slot] = new BoundKeyFunction(name);
-            }
-        }
-
-        RebuildInverse();
-        UIManager.GetUIController<ActionUIController>().HonkRefreshHotbar();
-    }
-
-    private void RebuildInverse()
-    {
-        _keyToSlot.Clear();
-        foreach (var (slot, key) in _slotToKey)
-            _keyToSlot[key] = slot;
-
-        var hotbar = ContentKeyFunctions.GetHotbarBoundKeys();
-        for (var slot = 0; slot < hotbar.Length; slot++)
-        {
-            if (_slotToKey.ContainsKey(slot))
-                continue;
-            var defaultKey = hotbar[slot];
-            if (!_keyToSlot.ContainsKey(defaultKey))
-                _keyToSlot[defaultKey] = slot;
-        }
     }
 }
