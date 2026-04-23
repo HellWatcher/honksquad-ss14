@@ -1,0 +1,14 @@
+# HONK Emote-as-action base entity (#579). The server HonkEmoteActionSystem spawns one per
+# allowlisted emote on player-attach, sets the Emote field and the action's icon/name from
+# the matching EmotePrototype, and adds it to the player's ActionsContainer.
+- type: entity
+  abstract: false
+  parent: BaseAction
+  id: HonkActionEmote
+  name: Emote
+  description: Play an emote.
+  components:
+  - type: Action
+  - type: InstantAction
+    event: !type:HonkEmoteActionEvent
+  - type: HonkEmoteAction

@@ -1,0 +1,23 @@
+# HONK Default curated allowlist for emote-as-action (#579). Only emotes in this list get
+# granted as action entities on player-attach; keeps the actions menu from drowning in
+# every EmotePrototype in the game. Admins can ship additional allowlists later if needed.
+- type: honkEmoteActionAllowlist
+  id: HonkDefault
+  emotes:
+  - Scream
+  - Laugh
+  - Sigh
+  - Whistle
+  - Crying
+  - Clap
+  - Snap
+  - Thump
+  - Salute
+  - Yawn
+  - Cough
+  - Sneeze
+  - Shrug
+  - Wave
+  - Point
+  - Nod
+  - Facepalm

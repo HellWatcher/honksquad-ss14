@@ -269,14 +269,6 @@ namespace Content.Client.Options.UI.Tabs
                 AddButton(boundKey);
             }
 
-            //HONK START - verb bind inputs (#579), bound by the player to trigger stored emotes
-            AddHeader("honk-ui-options-header-verb-binds");
-            foreach (var boundKey in Content.Shared.RussStation.Input.HonkVerbBindKeyFunctions.All)
-            {
-                AddButton(boundKey);
-            }
-            //HONK END
-
             AddHeader("ui-options-header-shuttle");
             AddButton(ContentKeyFunctions.ShuttleStrafeUp);
             AddButton(ContentKeyFunctions.ShuttleStrafeRight);
