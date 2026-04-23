@@ -5,6 +5,7 @@ using Content.Client.UserInterface.Systems.Actions;
 using Content.Shared.CCVar;
 using Content.Shared.Input;
 using JetBrains.Annotations;
+using Robust.Client.Input;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Shared.Configuration;
 using Robust.Shared.Input;
@@ -24,6 +25,7 @@ public sealed class SlotHotkeyController : UIController,
     IOnStateEntered<GameplayState>, IOnStateExited<GameplayState>
 {
     [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private readonly IInputManager _input = default!;
 
     // Explicit slot→key overrides parsed from the CVar. Slots not present
     // here fall back to the upstream default (hotbarKeys[slot] for slot<10).
@@ -46,6 +48,31 @@ public sealed class SlotHotkeyController : UIController,
     {
         base.Initialize();
         _cfg.OnValueChanged(CCVars.HonkActionBarSlotHotkeys, OnCVarChanged, true);
+        // Capture key presses ourselves while assign mode is on. Command-bind BindBefore
+        // ordering depends on UIController init order we don't control, so the direct
+        // input-manager hook is more reliable and also captures keys outside Hotbar0-9.
+        _input.UIKeyBindStateChanged += OnUIKeyBind;
+    }
+
+    private bool OnUIKeyBind(BoundKeyEventArgs args)
+    {
+        if (!_assignMode || _armedSlot is not { } slot)
+            return false;
+        if (args.State != BoundKeyState.Down)
+            return false;
+        // Ignore mouse clicks and interaction functions so the click that armed this slot
+        // doesn't also get captured as its keybind.
+        if (args.Function == EngineKeyFunctions.UIClick
+            || args.Function == EngineKeyFunctions.UIRightClick
+            || args.Function == EngineKeyFunctions.Use
+            || args.Function == EngineKeyFunctions.UseSecondary)
+            return false;
+
+        AssignSlotKey(slot, args.Function);
+        _armedSlot = null;
+        AssignStateChanged?.Invoke();
+        args.Handle();
+        return true;
     }
 
     /// <summary>Returns the key that fires the given slot, or null if the
