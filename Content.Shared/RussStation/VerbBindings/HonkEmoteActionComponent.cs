@@ -9,11 +9,11 @@ namespace Content.Shared.RussStation.VerbBindings;
 /// Paired with <see cref="HonkEmoteActionEvent"/> on the action's <c>InstantActionComponent</c>
 /// so the server emote system picks it up and dispatches through <c>ChatSystem.TryEmoteWithChat</c>.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class HonkEmoteActionComponent : Component
 {
     /// <summary>The emote this action plays when fired. Overwritten by the server at spawn
     /// to the allowlisted emote this action was granted for.</summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public ProtoId<EmotePrototype> Emote;
 }

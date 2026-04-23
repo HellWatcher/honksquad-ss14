@@ -76,7 +76,10 @@ public sealed class HonkEmoteActionSystem : EntitySystem
                 continue;
 
             if (TryComp<HonkEmoteActionComponent>(actionUid, out var tag))
+            {
                 tag.Emote = emoteId;
+                Dirty(actionUid, tag);
+            }
 
             _actions.SetIcon(actionUid, emote.Icon);
             _meta.SetEntityName(actionUid, Loc.GetString(emote.Name));
