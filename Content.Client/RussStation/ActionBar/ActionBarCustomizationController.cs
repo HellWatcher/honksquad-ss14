@@ -89,7 +89,25 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         AssignHotkeyMode = slotHotkeys.AssignMode;
         ApplyLayout();
         ApplyLabels();
+        ApplyArmedHighlight();
         RefreshHotbar();
+    }
+
+    // Highlight the currently-armed slot so the player has feedback between clicking a slot
+    // and pressing the hotbar key that will be assigned to it. Clears all highlights when
+    // assign mode is off or no slot is armed.
+    private void ApplyArmedHighlight()
+    {
+        if (GetContainer() is not { } container)
+            return;
+
+        var armed = UIManager.GetUIController<SlotHotkeyController>().ArmedSlot;
+        var i = 0;
+        foreach (var button in container.GetButtons())
+        {
+            button.HighlightRect.Visible = AssignHotkeyMode && armed == i;
+            i++;
+        }
     }
 
     private void OnRowsChanged(int value)

@@ -652,6 +652,12 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
         args.Handle();
 
+        //HONK START - assign-hotkey mode: swallow release so the action doesn't trigger on a
+        // slot the player was arming for rebind. Arming already happened in HandleActionPressed.
+        if (UIManager.GetUIController<Content.Client.RussStation.ActionBar.SlotHotkeyController>().AssignMode)
+            return;
+        //HONK END
+
         if (_menuDragHelper.IsDragging)
         {
             DragAction();
