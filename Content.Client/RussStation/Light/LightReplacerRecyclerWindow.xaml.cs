@@ -13,6 +13,8 @@ namespace Content.Client.RussStation.Light;
 [GenerateTypedNameReferences]
 public sealed partial class LightReplacerRecyclerWindow : DefaultWindow
 {
+    private static readonly Thickness RowIndent = new(16, 0, 0, 0);
+
     [Dependency] private readonly IPrototypeManager _protoManager = default!;
     [Dependency] private readonly IComponentFactory _compFactory = default!;
 
@@ -84,7 +86,7 @@ public sealed partial class LightReplacerRecyclerWindow : DefaultWindow
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
             HorizontalExpand = true,
             SeparationOverride = 6,
-            Margin = new Thickness(16, 0, 0, 0),
+            Margin = RowIndent,
         };
 
         var name = _protoManager.TryIndex<EntityPrototype>(entry.ProtoId, out var proto)
@@ -158,7 +160,7 @@ public sealed partial class LightReplacerRecyclerWindow : DefaultWindow
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
             HorizontalExpand = true,
             SeparationOverride = 6,
-            Margin = new Thickness(16, 0, 0, 0),
+            Margin = RowIndent,
         };
 
         var name = _protoManager.TryIndex<EntityPrototype>(protoId, out var proto)
