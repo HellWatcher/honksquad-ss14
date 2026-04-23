@@ -1,0 +1,6 @@
+# HONK Action bar guidebook entry (#579). Surfaces the customization + rebind + emote-button
+# features so players find them without digging through Settings.
+- type: guideEntry
+  id: ActionBar
+  name: guide-entry-action-bar
+  text: "/ServerInfo/Guidebook/NewPlayer/Controls/ActionBar.xml"

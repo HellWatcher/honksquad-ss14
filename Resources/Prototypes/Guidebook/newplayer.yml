@@ -16,6 +16,9 @@
   text: "/ServerInfo/Guidebook/NewPlayer/Controls/Controls.xml"
   children:
   - Radio
+  # HONK START - action bar customization, rebind, emote buttons (#579)
+  - ActionBar
+  # HONK END
 
 - type: guideEntry
   id: Radio

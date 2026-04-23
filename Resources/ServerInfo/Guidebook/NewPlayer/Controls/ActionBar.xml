@@ -1,0 +1,42 @@
+<Document>
+# Action bar
+
+The row of slots at the top of your screen. Each slot holds one action: something you can click or press a key to do. Abilities from your species, items in your hands, combat mode, emotes, everything goes here.
+
+## Shape and look
+
+[color=yellow]Settings > Misc > Action Bar[/color] is where you shape it:
+
+- [color=#a4885c]Rows[/color] and [color=#a4885c]Slots per row[/color] decide how many buttons you see and how they wrap. Default is one row of ten.
+- [color=#a4885c]Slot spacing[/color] is the gap between buttons.
+- [color=#a4885c]Show keybind label[/color] toggles the little key letter in the corner of each slot.
+- [color=#a4885c]Show empty slots (faint)[/color] draws the outline of unused slots so the layout is always visible.
+
+The background opacity lives over in [color=yellow]Settings > Accessibility[/color] next to the other UI opacity sliders.
+
+## Hotkeys
+
+Default keys are [color=yellow][bold]1-0[/bold][/color] for the first row and [color=yellow][bold]Shift+1-0[/bold][/color] for the second. Any of those can be rebound.
+
+Two ways to rebind:
+
+1. The direct way. [color=yellow]Settings > Controls[/color] has an [color=#a4885c]Assign action bar slot hotkeys[/color] checkbox at the top. Tick it, click any slot on the bar, then press the key you want. Done. The matching [color=#a4885c]Hotbar 1[/color], [color=#a4885c]Hotbar Shift 1[/color], etc. row in the same options panel updates to match.
+2. The traditional way. Scroll down in [color=yellow]Settings > Controls[/color] and click the key field next to [color=#a4885c]Hotbar 1[/color] / [color=#a4885c]Hotbar Shift 1[/color] / etc. and press a key.
+
+Either way writes the same keybind. The slot's label updates immediately.
+
+## Locking and auto-add
+
+The actions window (open with [color=yellow][bold][keybind="OpenActionsMenu"][/bold][/color]) has two checkboxes:
+
+- [color=#a4885c]Lock bar[/color] stops right-click-clear and drag-to-rearrange. Clicking a slot to fire its action still works; the layout just can't be nudged by mis-clicks.
+- [color=#a4885c]Auto-add new actions[/color] controls whether picking up an item or getting a new ability auto-populates onto the bar. Off means the action still appears in the actions menu but stays out of your curated hotbar.
+
+## Emotes
+
+Your emotes (the set you'd see in the radial emote menu) also show up in the actions menu as draggable buttons. The filter dropdown in that window has an [color=#a4885c]Emote[/color] checkbox so you can look at just emotes.
+
+Drag one onto a hotbar slot. It sticks. Rebind the slot's key via either method above. From then on that key plays the emote, same as typing the emote command.
+
+Emote placements are remembered across disconnects and server restarts, so a layout you spent time on isn't wasted when the round ends.
+</Document>
