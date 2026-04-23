@@ -110,13 +110,16 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
             //HONK START - catch emote actions whose OnActionAdded fired before the subscription
             // above (initial ActionsComponent state is applied while we're still in LobbyState).
-            // Run them through the same saved-slot restore that the live path uses so a saved
-            // emote placement from a prior session is honored on first connection too.
             var custom = UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>();
+            var honkTotal = 0;
+            var honkEmoteHit = 0;
             foreach (var existing in _actionsSystem.GetClientActions())
             {
+                honkTotal++;
                 if (!EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(existing.Owner, out var emoteTag))
                     continue;
+                honkEmoteHit++;
+                Log.Info($"[HONK] state-enter scan: emote='{emoteTag.Emote}' action={existing.Owner} inBar={_actions.Contains(existing)}");
                 if (_actions.Contains(existing))
                     continue;
                 if (!custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot))
@@ -126,8 +129,12 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 while (_actions.Count <= savedSlot)
                     _actions.Add(null);
                 if (_actions[savedSlot] == null)
+                {
                     _actions[savedSlot] = existing.Owner;
+                    Log.Info($"[HONK] state-enter placed '{emoteTag.Emote}' at slot={savedSlot}");
+                }
             }
+            Log.Info($"[HONK] state-enter scan done: total={honkTotal} emotes={honkEmoteHit}");
             //HONK END
         }
 
