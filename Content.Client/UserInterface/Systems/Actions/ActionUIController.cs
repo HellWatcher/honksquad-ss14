@@ -135,6 +135,10 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 }
             }
             Log.Info($"[HONK] state-enter scan done: total={honkTotal} emotes={honkEmoteHit}");
+            // Push the updated _actions into the bar; without this the placement is in our
+            // list but never reaches the visible container.
+            if (_container != null)
+                _container.SetActionData(_actionsSystem, _actions.ToArray());
             //HONK END
         }
 
