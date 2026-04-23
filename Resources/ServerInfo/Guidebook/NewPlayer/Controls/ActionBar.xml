@@ -36,5 +36,5 @@ Every emote you'd see in the radial emote menu also appears as a draggable butto
 
 Drag one onto a hotbar slot. Rebind the slot's key if you want. Pressing that key plays the emote, same as typing the command.
 
-Slot placements stick across disconnects and server restarts.
+Emote slot placement is saved.
 </Document>
