@@ -40,7 +40,7 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
     // Read by the gameplay-screen resize handlers (HONK guards) to keep them from
     // calling MaxGridHeight/MaxGridWidth, which would flip the grid into size-limit
     // mode and silently overwrite the user's explicit row count on resize.
-    public const bool OverridesRowLayout = true;
+    public static readonly bool OverridesRowLayout = true;
 
     // Base 0.0-1.0 alpha applied to every action button's slot background. Read each
     // frame by ActionButton.UpdateBackground (HONK block). The empty-slot fade scales
