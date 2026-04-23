@@ -25,6 +25,12 @@ public partial class ChatBox : UIWidget
     private readonly ISawmill _sawmill;
     private readonly ChatUIController _controller;
 
+    // HONK START - tracks which OutputPanel entry index each rendered ChatMessage lives at, so in-place
+    // coalesce updates (see ChatUIController.HonkTryCoalesceChatMessage) can patch that one entry
+    // instead of repopulating the whole box. Cleared whenever Contents is Cleared.
+    private readonly Dictionary<ChatMessage, int> _honkRenderedAt = new();
+    // HONK END
+
     public bool Main { get; set; }
 
     public ChatSelectChannel SelectedChannel => ChatInput.ChannelSelector.SelectedChannel;
@@ -44,6 +50,9 @@ public partial class ChatBox : UIWidget
         ChatInput.FilterButton.Popup.OnNewHighlights += OnNewHighlights;
         _controller = UserInterfaceManager.GetUIController<ChatUIController>();
         _controller.MessageAdded += OnMessageAdded;
+        // HONK START - in-place rerender for coalesced repeats (issue #578)
+        _controller.MessageUpdated += OnMessageUpdated;
+        // HONK END
         _controller.HighlightsUpdated += OnHighlightsUpdated;
         _controller.RegisterChat(this);
     }
@@ -69,7 +78,28 @@ public partial class ChatBox : UIWidget
         var color = msg.MessageColorOverride ?? msg.Channel.TextColor();
 
         AddLine(msg.WrappedMessage, color);
+        // HONK START - remember this message's rendered position so coalesce updates can patch it (issue #578)
+        _honkRenderedAt[msg] = Contents.EntryCount - 1;
+        // HONK END
     }
+
+    // HONK START - issue #578
+    private void OnMessageUpdated(ChatMessage msg)
+    {
+        if (!_honkRenderedAt.TryGetValue(msg, out var index))
+            return;
+
+        if (index < 0 || index >= Contents.EntryCount)
+            return;
+
+        var color = msg.MessageColorOverride ?? msg.Channel.TextColor();
+        var formatted = new FormattedMessage(3);
+        formatted.PushColor(color);
+        formatted.AddMarkupOrThrow(msg.WrappedMessage);
+        formatted.Pop();
+        Contents.SetMessage(index, formatted, tagsAllowed: null);
+    }
+    // HONK END
 
     private void OnHighlightsUpdated(string highlights)
     {
@@ -84,6 +114,9 @@ public partial class ChatBox : UIWidget
     public void Repopulate()
     {
         Contents.Clear();
+        // HONK START - stale contents indices after Clear (issue #578)
+        _honkRenderedAt.Clear();
+        // HONK END
 
         foreach (var message in _controller.History)
         {
@@ -94,6 +127,9 @@ public partial class ChatBox : UIWidget
     private void OnChannelFilter(ChatChannel channel, bool active)
     {
         Contents.Clear();
+        // HONK START - stale contents indices after Clear (issue #578)
+        _honkRenderedAt.Clear();
+        // HONK END
 
         foreach (var message in _controller.History)
         {
@@ -208,6 +244,9 @@ public partial class ChatBox : UIWidget
 
         if (!disposing) return;
         _controller.UnregisterChat(this);
+        // HONK START - unsubscribe from coalesce update event (issue #578)
+        _controller.MessageUpdated -= OnMessageUpdated;
+        // HONK END
         ChatInput.Input.OnTextEntered -= OnTextEntered;
         ChatInput.Input.OnKeyBindDown -= OnInputKeyBindDown;
         ChatInput.Input.OnTextChanged -= OnTextChanged;

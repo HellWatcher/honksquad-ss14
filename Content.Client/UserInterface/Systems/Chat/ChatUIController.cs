@@ -449,11 +449,23 @@ public sealed partial class ChatUIController : UIController
             return;
         }
 
+        // HONK START - coalesce at enqueue time so rapid repeats bump the counter immediately
+        // instead of waiting for the speech-bubble delay queue to dequeue each duplicate. Falls
+        // through to the existing enqueue path when there's no alive match yet. (issue #578)
+        if (HonkTryCoalesceEmoteBubble(ent, msg, speechType))
+            return;
+        // HONK END
+
         EnqueueSpeechBubble(ent, msg, speechType);
     }
 
     private void CreateSpeechBubble(EntityUid entity, SpeechBubbleData speechData)
     {
+        // HONK START - coalesce repeated emote bubbles in place instead of stacking a new bubble (issue #578)
+        if (HonkTryCoalesceEmoteBubble(entity, speechData.Message, speechData.Type))
+            return;
+        // HONK END
+
         var bubble =
             SpeechBubble.CreateSpeechBubble(speechData.Type, speechData.Message, entity);
 
@@ -878,8 +890,17 @@ public sealed partial class ChatUIController : UIController
         }
         //HONK END
 
+        // HONK START - coalesce repeated popup-mirror / emote entries in place (issue #578).
+        // When a match is found, the existing History entry's WrappedMessage is mutated and the
+        // chat boxes re-render that entry via the MessageUpdated event. We still fall through to
+        // the speech-bubble path so emote bubbles can coalesce the same way.
+        var honkCoalesced = !msg.HideChat && HonkTryCoalesceChatMessage(msg);
+        // HONK END
+
         // Log all incoming chat to repopulate when filter is un-toggled
-        if (!msg.HideChat)
+        // HONK START - skip History.Add when the fork coalescer folded this into an existing entry (issue #578)
+        if (!msg.HideChat && !honkCoalesced)
+        // HONK END
         {
             History.Add((_timing.CurTick, msg));
             MessageAdded?.Invoke(msg);

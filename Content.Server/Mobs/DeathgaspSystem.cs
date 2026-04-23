@@ -1,5 +1,8 @@
 ﻿using Content.Server.Chat.Systems;
 using Content.Server.Speech.Muting;
+// HONK START - ChatTransmitRange for deathgasp FOV filter
+using Content.Shared.Chat;
+// HONK END
 using Content.Shared.Mobs;
 using Content.Shared.Speech.Muting;
 using Robust.Shared.Prototypes;
@@ -38,7 +41,10 @@ public sealed class DeathgaspSystem: EntitySystem
         if (HasComp<MutedComponent>(uid))
             return false;
 
-        _chat.TryEmoteWithChat(uid, component.Prototype, ignoreActionBlocker: true);
+        // HONK START - match involuntary gasps: send with HideChat so the client-side FOV filter
+        // re-enables the emote only for observers who can actually see the dying entity.
+        _chat.TryEmoteWithChat(uid, component.Prototype, range: ChatTransmitRange.HideChat, ignoreActionBlocker: true);
+        // HONK END
 
         return true;
     }

@@ -12,7 +12,9 @@ using Robust.Shared.Utility;
 
 namespace Content.Client.Chat.UI
 {
-    public abstract class SpeechBubble : Control
+    // HONK START - partial so the fork can add RepeatWith for emote coalescing (issue #578)
+    public abstract partial class SpeechBubble : Control
+    // HONK END
     {
         [Dependency] private readonly IGameTiming _timing = default!;
         [Dependency] private readonly IEyeManager _eyeManager = default!;
@@ -104,6 +106,9 @@ namespace Content.Client.Chat.UI
             ContentSize = bubble.DesiredSize;
             _verticalOffsetAchieved = -ContentSize.Y;
             _deathTime = _timing.RealTime + TotalTime;
+            // HONK START - stash ctor args for RepeatWith rebuilds (issue #578)
+            HonkStashCtorArgs(message, speechStyleClass, fontColor);
+            // HONK END
         }
 
         protected abstract Control BuildBubble(ChatMessage message, string speechStyleClass, Color? fontColor = null);
