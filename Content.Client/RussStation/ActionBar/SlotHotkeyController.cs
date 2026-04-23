@@ -48,30 +48,84 @@ public sealed class SlotHotkeyController : UIController,
     {
         base.Initialize();
         _cfg.OnValueChanged(CCVars.HonkActionBarSlotHotkeys, OnCVarChanged, true);
-        // Capture key presses ourselves while assign mode is on. Command-bind BindBefore
-        // ordering depends on UIController init order we don't control, so the direct
-        // input-manager hook is more reliable and also captures keys outside Hotbar0-9.
-        _input.UIKeyBindStateChanged += OnUIKeyBind;
+        // FirstChanceOnKeyEvent fires before normal dispatch and can be handled to block
+        // the downstream handlers. This is the same hook the engine's key-rebind menu uses,
+        // which is exactly what we need: capture the raw key while assign mode is armed and
+        // keep gameplay from reacting to it.
+        _input.FirstChanceOnKeyEvent += OnFirstChanceKey;
     }
 
-    private bool OnUIKeyBind(BoundKeyEventArgs args)
+    private void OnFirstChanceKey(KeyEventArgs keyEvent, KeyEventType type)
     {
         if (!_assignMode || _armedSlot is not { } slot)
-            return false;
-        if (args.State != BoundKeyState.Down)
-            return false;
-        // Ignore mouse clicks and interaction functions so the click that armed this slot
-        // doesn't also get captured as its keybind.
-        if (args.Function == EngineKeyFunctions.UIClick
-            || args.Function == EngineKeyFunctions.UIRightClick
-            || args.Function == EngineKeyFunctions.Use
-            || args.Function == EngineKeyFunctions.UseSecondary)
-            return false;
+            return;
 
-        AssignSlotKey(slot, args.Function);
+        // Consume on down so gameplay (firing actions, typing into chat, etc.) never sees it.
+        // Commit the assignment on up so the player's release doesn't immediately trigger the
+        // just-bound function.
+        keyEvent.Handle();
+        if (type != KeyEventType.Up)
+            return;
+
+        // Skip pure modifier presses; users almost certainly meant the modified key. Also skip
+        // mouse buttons so the arming click isn't captured as the binding.
+        var key = keyEvent.Key;
+        if (key == Keyboard.Key.Control || key == Keyboard.Key.Shift || key == Keyboard.Key.Alt
+            || key == Keyboard.Key.LSystem || key == Keyboard.Key.RSystem
+            || key == Keyboard.Key.MouseLeft || key == Keyboard.Key.MouseRight
+            || key == Keyboard.Key.MouseMiddle)
+            return;
+
+        if (!TryResolveFunction(keyEvent, out var function))
+            return;
+
+        AssignSlotKey(slot, function);
         _armedSlot = null;
         AssignStateChanged?.Invoke();
-        args.Handle();
+    }
+
+    // Given a raw key event with modifiers, find the first BoundKeyFunction whose binding
+    // matches. Players can only assign slots to keys they've already bound in Settings.
+    private bool TryResolveFunction(KeyEventArgs keyEvent, out BoundKeyFunction function)
+    {
+        foreach (var binding in _input.AllBindings)
+        {
+            if (binding.BaseKey != keyEvent.Key)
+                continue;
+
+            // Modifier set must match. Missing mods default to Unknown on the binding.
+            var mods = CollectMods(keyEvent);
+            if (!SameMods(binding, mods))
+                continue;
+
+            function = binding.Function;
+            return true;
+        }
+
+        function = default;
+        return false;
+    }
+
+    private static Keyboard.Key[] CollectMods(KeyEventArgs keyEvent)
+    {
+        var mods = new List<Keyboard.Key>(3);
+        if (keyEvent.Control) mods.Add(Keyboard.Key.Control);
+        if (keyEvent.Shift) mods.Add(Keyboard.Key.Shift);
+        if (keyEvent.Alt) mods.Add(Keyboard.Key.Alt);
+        return mods.ToArray();
+    }
+
+    private static bool SameMods(Robust.Client.Input.IKeyBinding binding, Keyboard.Key[] eventMods)
+    {
+        var bindingMods = new List<Keyboard.Key>(3);
+        if (binding.Mod1 != Keyboard.Key.Unknown) bindingMods.Add(binding.Mod1);
+        if (binding.Mod2 != Keyboard.Key.Unknown) bindingMods.Add(binding.Mod2);
+        if (binding.Mod3 != Keyboard.Key.Unknown) bindingMods.Add(binding.Mod3);
+        if (bindingMods.Count != eventMods.Length)
+            return false;
+        foreach (var m in eventMods)
+            if (!bindingMods.Contains(m))
+                return false;
         return true;
     }
 
