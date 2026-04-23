@@ -257,6 +257,9 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actionsSystem?.GetAction(actionId) is not {} action)
             return;
 
+        var hasEmote = EntityManager.HasComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId);
+        Log.Info($"[HONK] OnActionAdded action={actionId} hasEmoteComp={hasEmote}");
+
         // TODO: event
         // if the action is toggled when we add it, start targeting
         if (action.Comp.Toggled && EntityManager.TryGetComponent<TargetActionComponent>(actionId, out var target))
