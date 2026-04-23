@@ -1,7 +1,9 @@
 using Content.Server.Chat.Systems;
 using Content.Shared.Actions;
 using Content.Shared.Chat.Prototypes;
+using Content.Shared.Ghost;
 using Content.Shared.RussStation.VerbBindings;
+using Content.Shared.Speech;
 using Content.Shared.Speech.Muting;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
@@ -37,8 +39,26 @@ public sealed class HonkEmoteActionSystem : EntitySystem
     private void OnPlayerAttached(PlayerAttachedEvent args)
     {
         var performer = args.Entity;
+
+        // Ghosts, lobby observers, and anything else without a SpeechComponent can't emote, so
+        // granting them emote actions just floods the menu. A living mob with speech is the
+        // thing we actually want these buttons on.
+        if (HasComp<GhostComponent>(performer) || !HasComp<SpeechComponent>(performer))
+            return;
+
         if (!_proto.TryIndex<HonkEmoteActionAllowlistPrototype>(AllowlistProtoId, out var allowlist))
             return;
+
+        // Reconnect or re-attach to the same body: skip if this mob already carries any emote
+        // action so we don't duplicate the entire allowlist in its menu every time.
+        if (TryComp<Content.Shared.Actions.Components.ActionsComponent>(performer, out var actions))
+        {
+            foreach (var existing in actions.Actions)
+            {
+                if (HasComp<HonkEmoteActionComponent>(existing))
+                    return;
+            }
+        }
 
         foreach (var emoteId in allowlist.Emotes)
         {
