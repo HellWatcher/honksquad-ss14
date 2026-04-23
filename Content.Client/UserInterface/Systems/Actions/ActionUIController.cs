@@ -107,6 +107,28 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             _actionsSystem.OnActionAdded += OnActionAdded;
             _actionsSystem.OnActionRemoved += OnActionRemoved;
             _actionsSystem.ActionsUpdated += OnActionsUpdated;
+
+            //HONK START - catch emote actions whose OnActionAdded fired before the subscription
+            // above (initial ActionsComponent state is applied while we're still in LobbyState).
+            // Run them through the same saved-slot restore that the live path uses so a saved
+            // emote placement from a prior session is honored on first connection too.
+            var custom = UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>();
+            foreach (var existing in _actionsSystem.GetClientActions())
+            {
+                if (!EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(existing.Owner, out var emoteTag))
+                    continue;
+                if (_actions.Contains(existing))
+                    continue;
+                if (!custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot))
+                    continue;
+                if (savedSlot < 0 || savedSlot >= ContentKeyFunctions.GetHotbarBoundKeys().Length)
+                    continue;
+                while (_actions.Count <= savedSlot)
+                    _actions.Add(null);
+                if (_actions[savedSlot] == null)
+                    _actions[savedSlot] = existing.Owner;
+            }
+            //HONK END
         }
 
         UpdateFilterLabel();
