@@ -278,9 +278,10 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         {
             // Emotes normally stay in the menu, but a player's saved placement from a prior
             // session wins: if the emote's proto id has a remembered slot we're free to fill,
-            // drop it there. Keeps curated emote layouts across disconnects.
-            if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.EmoteSlots
-                    .TryGetValue(emoteTag.Emote, out var savedSlot)
+            // drop it there. Go through the controller directly so its Initialize (and CVar
+            // parse) is guaranteed to have run before we read the map.
+            var custom = UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>();
+            if (custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot)
                 && savedSlot >= 0
                 && savedSlot < ContentKeyFunctions.GetHotbarBoundKeys().Length)
             {

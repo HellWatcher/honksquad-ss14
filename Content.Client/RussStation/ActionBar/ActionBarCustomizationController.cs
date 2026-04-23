@@ -57,16 +57,20 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
 
     // Emote proto id -> slot index, persisted via honk.action_bar.emote_slots so a player's
     // curated emote layout survives disconnects and server restarts. Read by OnActionAdded
-    // to drop freshly-granted emote actions into their saved slot.
+    // through TryGetSavedEmoteSlot so the controller is guaranteed to be instantiated.
     private readonly Dictionary<string, int> _emoteSlots = new();
-    public static IReadOnlyDictionary<string, int> EmoteSlots => Instance?._emoteSlots
-        ?? (IReadOnlyDictionary<string, int>) new Dictionary<string, int>();
-    private static ActionBarCustomizationController? Instance;
+
+    public bool TryGetSavedEmoteSlot(string? emoteProtoId, out int slot)
+    {
+        if (!string.IsNullOrEmpty(emoteProtoId) && _emoteSlots.TryGetValue(emoteProtoId, out slot))
+            return true;
+        slot = default;
+        return false;
+    }
 
     public override void Initialize()
     {
         base.Initialize();
-        Instance = this;
 
         _rows = _cfg.GetCVar(CCVars.HonkActionBarRows);
         _slotsPerRow = _cfg.GetCVar(CCVars.HonkActionBarSlotsPerRow);

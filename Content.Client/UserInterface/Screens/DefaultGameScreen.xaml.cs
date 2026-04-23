@@ -32,6 +32,12 @@ public sealed partial class DefaultGameScreen : InGameScreen
 
     private void ResizeActionContainer()
     {
+        //HONK START - fork action-bar layout controls Columns directly, and setting MaxGridHeight
+        // flips the grid into height-based row mode which silently overwrites the chosen column
+        // count. Skip the resize and let ActionBarCustomizationController own the layout.
+        if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.OverridesRowLayout)
+            return;
+        //HONK END
         float indent = Inventory.Size.Y + TopBar.Size.Y + 40;
         Actions.ActionsContainer.MaxGridHeight = MainViewport.Size.Y - indent;
     }
