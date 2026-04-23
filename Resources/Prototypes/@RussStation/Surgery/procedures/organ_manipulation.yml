@@ -8,26 +8,8 @@
   category: OrganManipulation
   difficulty: Major
   steps:
-    - quality: Slicing
-      popup: surgery-step-incision
-      damage:
-        types:
-          Slash: 5
-      bleedModifier: 3.0
-    - quality: Retracting
-      popup: surgery-step-retract
-      damage:
-        types:
-          Blunt: 2
-    - quality: Clamping
-      popup: surgery-step-clamp
-      bleedModifier: -3.0
-    - quality: Sawing
-      popup: surgery-step-saw
-      damage:
-        types:
-          Slash: 3
-    - quality: Clamping
-      popup: surgery-step-remove-organ
-      repeatable: true
-      effect: !type:RemoveOrganEffect {}
+    - preset: Incision
+    - preset: Retract
+    - preset: Clamp
+    - preset: Saw
+    - preset: RemoveOrgan

@@ -8,8 +8,4 @@
   category: WoundRepair
   difficulty: Minor
   steps:
-    - quality: Cauterizing
-      duration: 6
-      popup: surgery-step-treat-burn-wounds
-      effect: !type:ClearWoundCategoryEffect
-        category: Burn
+    - preset: CauterizeBurnWounds

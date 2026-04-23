@@ -14,10 +14,19 @@ namespace Content.Shared.RussStation.Surgery;
 public sealed partial class SurgeryStep
 {
     /// <summary>
-    /// Tool quality the held tool must have to perform this step.
+    /// Named step template that fills in quality, damage, bleed, healing, duration, popup, effect,
+    /// and the repeatable flag from <see cref="SurgeryConstants"/>. Explicit fields on the step
+    /// still win when set. Use <see cref="SurgeryStepPreset.None"/> when authoring a fully custom
+    /// step that provides every field itself.
     /// </summary>
-    [DataField(required: true)]
-    public ProtoId<ToolQualityPrototype> Quality;
+    [DataField]
+    public SurgeryStepPreset Preset = SurgeryStepPreset.None;
+
+    /// <summary>
+    /// Tool quality the held tool must have to perform this step. Optional when a preset supplies one.
+    /// </summary>
+    [DataField]
+    public ProtoId<ToolQualityPrototype>? Quality;
 
     /// <summary>
     /// How long the DoAfter takes in seconds (before speed modifiers).
@@ -63,9 +72,18 @@ public sealed partial class SurgeryStep
 
     /// <summary>
     /// Modifier to the patient's bleed amount. Positive adds bleeding, negative reduces it.
+    /// Ignored when <see cref="BleedPreset"/> is set to anything other than
+    /// <see cref="SurgeryBleedPreset.Manual"/>.
     /// </summary>
     [DataField]
     public float BleedModifier;
+
+    /// <summary>
+    /// Named bleed delta that overrides <see cref="BleedModifier"/> with a constant from
+    /// <see cref="SurgeryConstants"/> at application time.
+    /// </summary>
+    [DataField]
+    public SurgeryBleedPreset BleedPreset = SurgeryBleedPreset.Manual;
 
     /// <summary>
     /// If true, this step can be repeated multiple times before advancing.

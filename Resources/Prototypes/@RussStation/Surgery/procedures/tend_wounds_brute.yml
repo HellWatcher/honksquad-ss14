@@ -8,26 +8,6 @@
   category: TendWounds
   difficulty: Minor
   steps:
-    - quality: Slicing
-      popup: surgery-step-incision
-      damage:
-        types:
-          Slash: 5
-      bleedModifier: 3.0
-    - quality: Retracting
-      popup: surgery-step-retract
-      damage:
-        types:
-          Blunt: 2
-    - quality: Clamping
-      duration: 2.5
-      popup: surgery-step-treat-brute
-      repeatable: true
-      healingFlat: 5
-      healingMultiplier: 0.07
-      healing:
-        types:
-          Blunt: 1
-          Slash: 1
-          Piercing: 1
-      bleedModifier: -1.0
+    - preset: Incision
+    - preset: Retract
+    - preset: TendBrute

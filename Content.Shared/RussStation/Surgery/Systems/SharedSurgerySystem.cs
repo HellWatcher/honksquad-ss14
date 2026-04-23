@@ -10,23 +10,9 @@ namespace Content.Shared.RussStation.Surgery.Systems;
 
 public abstract partial class SharedSurgerySystem : EntitySystem
 {
+    protected static readonly ProtoId<AlertPrototype> SurgeryDrapedAlert = "SurgeryDraped";
+
     private static readonly ProtoId<ToolQualityPrototype> CauterizingQuality = "Cauterizing";
-
-    /// <summary>
-    /// Default step durations per tool quality, used when a step doesn't specify its own.
-    /// </summary>
-    private static readonly Dictionary<string, float> DefaultStepDurations = new()
-    {
-        { "Slicing", SurgeryConstants.DefaultSlicingDuration },
-        { "Retracting", SurgeryConstants.DefaultRetractingDuration },
-        { "Clamping", SurgeryConstants.DefaultClampingDuration },
-        { "Sawing", SurgeryConstants.DefaultSawingDuration },
-        { "Drilling", SurgeryConstants.DefaultDrillingDuration },
-        { "BoneSetting", SurgeryConstants.DefaultBoneSettingDuration },
-        { "Cauterizing", SurgeryConstants.DefaultCauterizingDuration },
-    };
-
-    private const float FallbackStepDuration = 2.0f;
 
     [Dependency] protected readonly AlertsSystem _alerts = default!;
     [Dependency] protected readonly SharedToolSystem _tool = default!;
@@ -59,7 +45,7 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
     private void OnDrapedShutdown(Entity<SurgeryDrapedComponent> ent, ref ComponentShutdown args)
     {
-        _alerts.ClearAlert(ent.Owner, "SurgeryDraped");
+        _alerts.ClearAlert(ent.Owner, SurgeryDrapedAlert);
 
         // Remove the visible drape overlay (spawned server-side on startup).
         if (ent.Comp.OverlayEntity is { } overlay && Exists(overlay))
@@ -78,30 +64,37 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     /// </summary>
     public bool ToolMatchesStep(EntityUid tool, SurgeryStep step)
     {
-        return _tool.HasQuality(tool, step.Quality);
+        return _tool.HasQuality(tool, step.GetQuality());
     }
 
     /// <summary>
-    /// Gets the base duration for a step: explicit override or centralized default.
+    /// Gets the base duration for a step: explicit override, preset default, or fallback. Every
+    /// in-use preset now carries a duration, so hitting the fallback means a procedure authored
+    /// with <see cref="SurgeryStepPreset.None"/> and no explicit duration.
     /// </summary>
     public static float GetBaseStepDuration(SurgeryStep step)
     {
-        if (step.Duration.HasValue)
-            return step.Duration.Value;
-
-        return DefaultStepDurations.GetValueOrDefault(step.Quality, FallbackStepDuration);
+        return step.GetDuration() ?? SurgeryConstants.FallbackStepDuration;
     }
 
     /// <summary>
-    /// Gets the effective DoAfter duration for a surgery step, incorporating
-    /// surface, drape, and difficulty modifiers (not tool tier, that's server-side).
+    /// Gets the effective DoAfter duration for a surgery step, incorporating surface, drape, and
+    /// difficulty modifiers (not tool tier, that's server-side). Also raises a
+    /// <see cref="SurgeryStepDurationModifierEvent"/> so subscribers can stack their own per-step
+    /// multipliers without touching this system.
     /// </summary>
-    public TimeSpan GetStepDuration(SurgeryStep step, EntityUid patient, SurgeryDifficulty difficulty)
+    public TimeSpan GetStepDuration(SurgeryStep step, EntityUid patient, SurgeryDifficulty difficulty, EntityUid? surgeon = null)
     {
+        var ev = new SurgeryStepDurationModifierEvent(step, patient, surgeon);
+        RaiseLocalEvent(patient, ref ev);
+        if (surgeon is { } surgeonUid)
+            RaiseLocalEvent(surgeonUid, ref ev);
+
         return TimeSpan.FromSeconds(GetBaseStepDuration(step)
             * GetSurfaceSpeedModifier(patient)
             * GetDrapeSpeedModifier(patient)
-            * GetDifficultyModifier(difficulty));
+            * GetDifficultyModifier(difficulty)
+            * ev.Multiplier);
     }
 
     /// <summary>

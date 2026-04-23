@@ -10,16 +10,16 @@ surgery-procedure-started = You begin {$procedure} on {THE($target)}.
 surgery-procedure-complete = The procedure is complete. Cauterize to close the wound.
 
 ## Step Popups
-surgery-step-incision = {CAPITALIZE(THE($user))} makes an incision in {THE($target)}.
-surgery-step-retract = {CAPITALIZE(THE($user))} retracts the incision on {THE($target)}.
-surgery-step-clamp = {CAPITALIZE(THE($user))} clamps the blood vessels on {THE($target)}.
-surgery-step-saw = {CAPITALIZE(THE($user))} saws through tissue on {THE($target)}.
-surgery-step-cauterize = {CAPITALIZE(THE($user))} cauterizes the wound on {THE($target)}.
-surgery-step-treat-brute = {CAPITALIZE(THE($user))} repairs physical damage on {THE($target)}.
-surgery-step-treat-burn = {CAPITALIZE(THE($user))} treats burn damage on {THE($target)}.
-surgery-step-remove-organ = {CAPITALIZE(THE($user))} carefully extracts an organ from {THE($target)}.
-surgery-step-set-bones = {CAPITALIZE(THE($user))} sets {POSS-ADJ($target)} broken bones.
-surgery-step-treat-burn-wounds = {CAPITALIZE(THE($user))} dresses and cauterizes {POSS-ADJ($target)} burns.
+surgery-step-incision = {CAPITALIZE(THE($user))} slices {THE($target)} open. Blood wells up around the cut.
+surgery-step-retract = {CAPITALIZE(THE($user))} pries the incision apart, exposing raw tissue.
+surgery-step-clamp = {CAPITALIZE(THE($user))} clamps the severed vessels shut on {THE($target)}, stemming the bleed.
+surgery-step-saw = {CAPITALIZE(THE($user))} saws through dense tissue on {THE($target)}.
+surgery-step-cauterize = {CAPITALIZE(THE($user))} sears the wound on {THE($target)} shut with a sizzle.
+surgery-step-treat-brute = {CAPITALIZE(THE($user))} stitches torn muscle on {THE($target)} back together.
+surgery-step-treat-burn = {CAPITALIZE(THE($user))} scrapes away charred flesh on {THE($target)} and dresses what's left.
+surgery-step-remove-organ = {CAPITALIZE(THE($user))} plunges a hand into {THE($target)} and pulls out an organ.
+surgery-step-set-bones = {CAPITALIZE(THE($user))} wrenches {POSS-ADJ($target)} shattered bones back into line.
+surgery-step-treat-burn-wounds = {CAPITALIZE(THE($user))} cauterizes and dresses {POSS-ADJ($target)} weeping burns.
 
 ## Alerts
 alerts-surgery-draped-name = Surgical Drapes

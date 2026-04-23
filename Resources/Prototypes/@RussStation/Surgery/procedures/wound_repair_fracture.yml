@@ -8,8 +8,4 @@
   category: WoundRepair
   difficulty: Minor
   steps:
-    - quality: BoneSetting
-      duration: 6
-      popup: surgery-step-set-bones
-      effect: !type:ClearWoundCategoryEffect
-        category: Fracture
+    - preset: SetBones

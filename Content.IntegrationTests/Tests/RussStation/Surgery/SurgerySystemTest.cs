@@ -169,8 +169,8 @@ public sealed class SurgerySystemTest : GameTest
         {
             Assert.That(protoManager.TryIndex<SurgeryProcedurePrototype>(TestProcedureId, out var proto), Is.True);
             Assert.That(proto!.Steps.Count, Is.EqualTo(2));
-            Assert.That(proto.Steps[0].Quality.Id, Is.EqualTo("Slicing"));
-            Assert.That(proto.Steps[1].Quality.Id, Is.EqualTo("Retracting"));
+            Assert.That(proto.Steps[0].GetQuality().Id, Is.EqualTo("Slicing"));
+            Assert.That(proto.Steps[1].GetQuality().Id, Is.EqualTo("Retracting"));
         });
     }
 
@@ -194,8 +194,9 @@ public sealed class SurgerySystemTest : GameTest
                 for (var i = 0; i < proto.Steps.Count; i++)
                 {
                     var step = proto.Steps[i];
-                    Assert.That(protoManager.HasIndex<ToolQualityPrototype>(step.Quality),
-                        $"Procedure '{proto.ID}' step {i} references unknown quality '{step.Quality}'.");
+                    var quality = step.GetQuality();
+                    Assert.That(protoManager.HasIndex<ToolQualityPrototype>(quality),
+                        $"Procedure '{proto.ID}' step {i} references unknown quality '{quality}'.");
 
                     var baseDuration = SharedSurgerySystem.GetBaseStepDuration(step);
                     Assert.That(baseDuration, Is.GreaterThan(0f),
@@ -549,4 +550,50 @@ public sealed class SurgerySystemTest : GameTest
                 Is.EqualTo(1.5f).Within(0.001f));
         });
     }
+
+    /// <summary>
+    /// For every shipped procedure, verifies that each step whose preset is non-None resolves to
+    /// the same tool quality and duration the preset table declares, unless the step explicitly
+    /// overrides them. Guards against a procedure picking a preset and then silently diverging.
+    /// </summary>
+    [Test]
+    public async Task ProcedurePresetsResolveConsistentlyTest()
+    {
+        var server = Server;
+        var protoManager = server.ResolveDependency<IPrototypeManager>();
+
+        await server.WaitAssertion(() =>
+        {
+            foreach (var proto in protoManager.EnumeratePrototypes<SurgeryProcedurePrototype>())
+            {
+                for (var i = 0; i < proto.Steps.Count; i++)
+                {
+                    var step = proto.Steps[i];
+                    if (step.Preset == SurgeryStepPreset.None)
+                        continue;
+
+                    var defaults = SurgeryStepPresets.Resolve(step.Preset);
+
+                    if (step.Quality == null)
+                    {
+                        Assert.That(step.GetQuality(), Is.EqualTo(defaults.Quality),
+                            $"Procedure '{proto.ID}' step {i} ({step.Preset}) inherits the wrong tool quality.");
+                    }
+
+                    if (!step.Duration.HasValue && defaults.Duration.HasValue)
+                    {
+                        Assert.That(step.GetDuration(), Is.EqualTo(defaults.Duration),
+                            $"Procedure '{proto.ID}' step {i} ({step.Preset}) inherits the wrong duration.");
+                    }
+
+                    if (!step.Repeatable && defaults.Repeatable)
+                    {
+                        Assert.That(step.GetRepeatable(), Is.True,
+                            $"Procedure '{proto.ID}' step {i} ({step.Preset}) should be repeatable via preset.");
+                    }
+                }
+            }
+        });
+    }
+
 }
