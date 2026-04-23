@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="20" height="20"
+     viewBox="0 0 5.2916661 5.2916667"
+     version="1.1">
+  <!-- Diagonal fill (bottom-right triangle) sitting inside an unchecked-style border.
+       Marks the category as partially selected. -->
+  <g transform="matrix(0.83333328,0,0,0.83333328,-64.641718,-118.06889)">
+    <polygon points="78.147339,147.45540 83.342793,147.45540 83.342793,142.25995"
+             style="fill:#a88b5e;fill-opacity:1;stroke:none"/>
+    <rect x="78.147339" y="142.25995"
+          width="5.1954546" height="5.1954546"
+          ry="0.5931561"
+          style="fill:none;stroke:#3d4059;stroke-width:1.15454543;stroke-linejoin:round"/>
+  </g>
+</svg>

@@ -36,6 +36,13 @@
       visible: false
       map: ["enum.PortableScrubberVisualLayers.IsDraining"]
   - type: PortableScrubber
+    # HONK START - default filter to dangerous gases only (#281)
+    filterGases:
+    - Plasma
+    - Tritium
+    - Hydrogen
+    - Frezon
+    # HONK END
     gasMixture:
       volume: 1250
   - type: NodeContainer
