@@ -110,16 +110,13 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
             //HONK START - catch emote actions whose OnActionAdded fired before the subscription
             // above (initial ActionsComponent state is applied while we're still in LobbyState).
+            // Non-emote actions come back through LoadDefaultActions on link; emote actions have
+            // autoPopulate: false and would otherwise miss their saved slot restoration.
             var custom = UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>();
-            var honkTotal = 0;
-            var honkEmoteHit = 0;
             foreach (var existing in _actionsSystem.GetClientActions())
             {
-                honkTotal++;
                 if (!EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(existing.Owner, out var emoteTag))
                     continue;
-                honkEmoteHit++;
-                Log.Info($"[HONK] state-enter scan: emote='{emoteTag.Emote}' action={existing.Owner} inBar={_actions.Contains(existing)}");
                 if (_actions.Contains(existing))
                     continue;
                 if (!custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot))
@@ -129,12 +126,8 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 while (_actions.Count <= savedSlot)
                     _actions.Add(null);
                 if (_actions[savedSlot] == null)
-                {
                     _actions[savedSlot] = existing.Owner;
-                    Log.Info($"[HONK] state-enter placed '{emoteTag.Emote}' at slot={savedSlot}");
-                }
             }
-            Log.Info($"[HONK] state-enter scan done: total={honkTotal} emotes={honkEmoteHit}");
             // Push the updated _actions into the bar; without this the placement is in our
             // list but never reaches the visible container.
             if (_container != null)
@@ -290,9 +283,6 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actionsSystem?.GetAction(actionId) is not {} action)
             return;
 
-        var hasEmote = EntityManager.HasComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId);
-        Log.Info($"[HONK] OnActionAdded action={actionId} hasEmoteComp={hasEmote}");
-
         // TODO: event
         // if the action is toggled when we add it, start targeting
         if (action.Comp.Toggled && EntityManager.TryGetComponent<TargetActionComponent>(actionId, out var target))
@@ -317,9 +307,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             // drop it there. Go through the controller directly so its Initialize (and CVar
             // parse) is guaranteed to have run before we read the map.
             var custom = UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>();
-            var hasSaved = custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot);
-            Log.Info($"[HONK] emote load: action={actionId} emote='{emoteTag.Emote}' hasSaved={hasSaved} savedSlot={(hasSaved ? savedSlot : -1)} actionsCount={_actions.Count}");
-            if (hasSaved
+            if (custom.TryGetSavedEmoteSlot(emoteTag.Emote, out var savedSlot)
                 && savedSlot >= 0
                 && savedSlot < ContentKeyFunctions.GetHotbarBoundKeys().Length)
             {
@@ -328,10 +316,8 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 if (_actions[savedSlot] == null)
                 {
                     _actions[savedSlot] = action;
-                    Log.Info($"[HONK] emote load: placed at slot={savedSlot}");
                     return;
                 }
-                Log.Info($"[HONK] emote load: slot {savedSlot} already occupied, staying in menu");
             }
             return;
         }
