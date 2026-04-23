@@ -12,10 +12,13 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.RussStation.VerbBindings;
 
 /// <summary>
-/// HONK Grants one <c>HonkActionEmote</c> action entity per allowlisted emote to every player-controlled
-/// mob when it's attached, and handles the action trigger by firing the emote through
-/// <c>ChatSystem.TryEmoteWithChat</c>. The result is that emotes show up as regular action buttons
-/// in the player's action menu and drag onto hotbar slots like any other action.
+/// HONK Grants one <c>HonkActionEmote</c> action entity per emote the player-controlled mob can
+/// normally perform, and handles the action trigger by firing the emote through
+/// <c>ChatSystem.TryEmoteWithChat</c>. The set comes from every <c>EmotePrototype</c> that passes
+/// <c>SharedChatSystem.AllowedToUseEmote</c> for the performer, so species whitelists,
+/// <c>SpeechComponent.AllowedEmotes</c>, and per-emote whitelist / blacklist all apply exactly as
+/// they do when the player types the emote command. Emotes show up as regular action buttons in
+/// the action menu and drag onto hotbar slots like any other action.
 /// </summary>
 public sealed class HonkEmoteActionSystem : EntitySystem
 {
@@ -24,9 +27,6 @@ public sealed class HonkEmoteActionSystem : EntitySystem
     [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly ActionContainerSystem _actionContainer = default!;
     [Dependency] private readonly MetaDataSystem _meta = default!;
-
-    // Proto id of the allowlist prototype instance shipped by the fork.
-    private const string AllowlistProtoId = "HonkDefault";
 
     // Action entity prototype spawned once per allowed emote.
     private const string EmoteActionProtoId = "HonkActionEmote";
@@ -48,11 +48,8 @@ public sealed class HonkEmoteActionSystem : EntitySystem
         if (HasComp<GhostComponent>(performer) || !HasComp<SpeechComponent>(performer))
             return;
 
-        if (!_proto.TryIndex<HonkEmoteActionAllowlistPrototype>(AllowlistProtoId, out var allowlist))
-            return;
-
         // Reconnect or re-attach to the same body: skip if this mob already carries any emote
-        // action so we don't duplicate the entire allowlist in its menu every time.
+        // action so we don't duplicate the full emote set in its menu every time.
         if (TryComp<Content.Shared.Actions.Components.ActionsComponent>(performer, out var actions))
         {
             foreach (var existing in actions.Actions)
@@ -62,14 +59,14 @@ public sealed class HonkEmoteActionSystem : EntitySystem
             }
         }
 
-        foreach (var emoteId in allowlist.Emotes)
+        foreach (var emote in _proto.EnumeratePrototypes<EmotePrototype>())
         {
-            if (!_proto.TryIndex<EmotePrototype>(emoteId, out var emote))
+            // Invalid-category protos exist as bases; they aren't meant for players.
+            if (emote.Category == EmoteCategory.Invalid)
                 continue;
 
-            // Skip emotes this specific mob can't perform (species whitelist, blacklist,
-            // or Available=false and not in SpeechComponent.AllowedEmotes). Matches the
-            // same gate ChatSystem uses when a player types the emote command.
+            // Same gate ChatSystem uses when a player types the emote command. Species
+            // whitelists, per-emote whitelist / blacklist, and Available=false all apply here.
             if (!_chat.AllowedToUseEmote(performer, emote))
                 continue;
 
@@ -84,7 +81,7 @@ public sealed class HonkEmoteActionSystem : EntitySystem
 
             if (TryComp<HonkEmoteActionComponent>(actionUid, out var tag))
             {
-                tag.Emote = emoteId;
+                tag.Emote = emote.ID;
                 Dirty(actionUid, tag);
             }
 
