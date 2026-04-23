@@ -212,14 +212,34 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         _emoteSlots.Clear();
         if (string.IsNullOrWhiteSpace(raw))
             return;
+        var protoMan = IoCManager.Resolve<Robust.Shared.Prototypes.IPrototypeManager>();
+        var dropped = false;
         foreach (var entry in raw.Split(';', StringSplitOptions.RemoveEmptyEntries))
         {
             var eq = entry.IndexOf('=');
             if (eq <= 0 || eq == entry.Length - 1)
                 continue;
             var id = entry[..eq];
-            if (int.TryParse(entry.AsSpan(eq + 1), out var slot) && slot >= 0)
-                _emoteSlots[id] = slot;
+            if (!int.TryParse(entry.AsSpan(eq + 1), out var slot) || slot < 0)
+                continue;
+
+            // Drop entries whose proto id doesn't match a real EmotePrototype (hand-edited CVar,
+            // stale entry from a removed emote, etc.). The server still gates allowlist + per-mob
+            // AllowedToUseEmote on grant, so an invalid entry here just means dead weight.
+            if (!protoMan.HasIndex<Content.Shared.Chat.Prototypes.EmotePrototype>(id))
+            {
+                dropped = true;
+                continue;
+            }
+
+            _emoteSlots[id] = slot;
+        }
+
+        // Rewrite the CVar if we filtered anything so the pruned list is what lands on disk.
+        if (dropped)
+        {
+            _cfg.SetCVar(CCVars.HonkActionBarEmoteSlots, SerializeEmoteSlots());
+            _cfg.SaveToFile();
         }
     }
 
@@ -242,6 +262,18 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
     {
         if (string.IsNullOrEmpty(emoteProtoId))
             return;
+
+        // Only persist real emote prototypes. Stops a bad caller (or a stale entity with
+        // garbage in the component) from poisoning the saved layout with unknown ids.
+        // The server gates actual dispatch through AllowedToUseEmote, so even if something
+        // slipped through here it wouldn't fire for a disallowed species.
+        if (slot != null
+            && !IoCManager.Resolve<Robust.Shared.Prototypes.IPrototypeManager>()
+                .HasIndex<Content.Shared.Chat.Prototypes.EmotePrototype>(emoteProtoId))
+        {
+            return;
+        }
+
         var changed = false;
         if (slot is { } index)
         {
