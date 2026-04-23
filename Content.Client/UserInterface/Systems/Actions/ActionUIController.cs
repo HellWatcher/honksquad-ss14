@@ -265,18 +265,17 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actions.Contains(action))
             return;
 
-        //HONK START - emote actions never auto-add to the bar regardless of the global toggle.
-        // They're meant to stay in the actions menu until the player drags one onto a slot.
+        //HONK START - fork add-to-bar gating.
+        // * Emote actions never auto-add regardless of the global toggle; they stay in the
+        //   actions menu until the player drags one onto a slot.
+        // * Hand/pocket swaps of an item that already had a slot always restore to that slot
+        //   (player accepted the action onto the bar previously, so a move shouldn't silently
+        //   drop it). The trailing-null trim in OnActionRemoved means the remembered slot can
+        //   be past _actions.Count by the time we re-add, so pad up to it (capped at the bound
+        //   hotbar key count).
+        // * Truly new providers fall through to the auto-add CVar.
         if (EntityManager.HasComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId))
             return;
-        //HONK END
-
-        //HONK START - fork auto-add toggle + provider-slot memory. Hand/pocket swaps of an item that
-        // already had a slot always restore to that slot regardless of auto-add (the player accepted
-        // the action onto the bar previously, so a move shouldn't silently drop it). The trailing-null
-        // trim in OnActionRemoved means the remembered slot can be past _actions.Count by the time
-        // we re-add, so pad up to it (capped at the bound hotbar key count). Truly new providers
-        // fall through to the auto-add check.
         if (action.Comp.Container is {} provider
             && _honkLastSlotByProvider.TryGetValue(provider, out var lastSlot)
             && lastSlot >= 0
