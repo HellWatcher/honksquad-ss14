@@ -522,8 +522,12 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                     if (_actions[position] is { } clearedAction
                         && EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(clearedAction, out var clearedEmote))
                     {
-                        UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>()
-                            .HonkRememberEmoteSlot(clearedEmote.Emote, null);
+                        // Only forget the saved slot if the emote hasn't already been moved to a
+                        // different slot in this same drag (DragAction does place-then-clear, so the
+                        // new slot is already in the map by the time we reach the clear).
+                        var custom = UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>();
+                        if (custom.TryGetSavedEmoteSlot(clearedEmote.Emote, out var savedPos) && savedPos == position)
+                            custom.HonkRememberEmoteSlot(clearedEmote.Emote, null);
                     }
                     _actions[position] = null;
                     while (_actions.Count > 0 && _actions[^1] == null)
@@ -548,13 +552,8 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             }
             if (EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId.Value, out var placedEmote))
             {
-                Log.Info($"[HONK] emote drop: action={actionId.Value} emote='{placedEmote.Emote}' slot={position}");
                 UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>()
                     .HonkRememberEmoteSlot(placedEmote.Emote, position);
-            }
-            else
-            {
-                Log.Info($"[HONK] emote drop: action={actionId.Value} has no HonkEmoteActionComponent (not an emote, or state not replicated)");
             }
             //HONK END
             if (position >= _actions.Count)
