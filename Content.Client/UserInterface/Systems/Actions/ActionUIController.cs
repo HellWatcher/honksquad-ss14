@@ -399,8 +399,9 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             Filters.Innate => comp.Container == null || comp.Container == _playerManager.LocalEntity,
             Filters.Instant => EntityManager.HasComponent<InstantActionComponent>(uid),
             Filters.Targeted => EntityManager.HasComponent<TargetActionComponent>(uid),
-            //HONK - emote-as-action filter (#579)
+            //HONK START - emote-as-action filter (#579)
             Filters.Emote => EntityManager.HasComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(uid),
+            //HONK END
             _ => throw new ArgumentOutOfRangeException(nameof(filter), filter, null)
         };
     }
