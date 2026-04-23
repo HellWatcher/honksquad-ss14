@@ -265,6 +265,12 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (_actions.Contains(action))
             return;
 
+        //HONK START - emote actions never auto-add to the bar regardless of the global toggle.
+        // They're meant to stay in the actions menu until the player drags one onto a slot.
+        if (EntityManager.HasComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId))
+            return;
+        //HONK END
+
         //HONK START - fork auto-add toggle + provider-slot memory. Hand/pocket swaps of an item that
         // already had a slot always restore to that slot regardless of auto-add (the player accepted
         // the action onto the bar previously, so a move shouldn't silently drop it). The trailing-null
@@ -376,6 +382,8 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             Filters.Innate => comp.Container == null || comp.Container == _playerManager.LocalEntity,
             Filters.Instant => EntityManager.HasComponent<InstantActionComponent>(uid),
             Filters.Targeted => EntityManager.HasComponent<TargetActionComponent>(uid),
+            //HONK - emote-as-action filter (#579)
+            Filters.Emote => EntityManager.HasComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(uid),
             _ => throw new ArgumentOutOfRangeException(nameof(filter), filter, null)
         };
     }

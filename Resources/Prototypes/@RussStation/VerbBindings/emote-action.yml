@@ -9,6 +9,9 @@
   description: Play an emote.
   components:
   - type: Action
+    # Fire the HonkEmoteActionEvent on the action entity itself so HonkEmoteActionSystem's
+    # per-component handler can pull the emote id out of HonkEmoteAction and play it.
+    raiseOnAction: true
   - type: InstantAction
     event: !type:HonkEmoteActionEvent
   - type: HonkEmoteAction
