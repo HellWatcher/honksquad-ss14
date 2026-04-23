@@ -274,8 +274,26 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         //   be past _actions.Count by the time we re-add, so pad up to it (capped at the bound
         //   hotbar key count).
         // * Truly new providers fall through to the auto-add CVar.
-        if (EntityManager.HasComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId))
+        if (EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId, out var emoteTag))
+        {
+            // Emotes normally stay in the menu, but a player's saved placement from a prior
+            // session wins: if the emote's proto id has a remembered slot we're free to fill,
+            // drop it there. Keeps curated emote layouts across disconnects.
+            if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.EmoteSlots
+                    .TryGetValue(emoteTag.Emote, out var savedSlot)
+                && savedSlot >= 0
+                && savedSlot < ContentKeyFunctions.GetHotbarBoundKeys().Length)
+            {
+                while (_actions.Count <= savedSlot)
+                    _actions.Add(null);
+                if (_actions[savedSlot] == null)
+                {
+                    _actions[savedSlot] = action;
+                    return;
+                }
+            }
             return;
+        }
         if (action.Comp.Container is {} provider
             && _honkLastSlotByProvider.TryGetValue(provider, out var lastSlot)
             && lastSlot >= 0
@@ -494,9 +512,17 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             button.ClearData();
             if (_container?.TryGetButtonIndex(button, out position) ?? false)
             {
-                //HONK START - keep _actions sparse so a cleared middle slot doesn't shift later actions left
+                //HONK START - keep _actions sparse so a cleared middle slot doesn't shift later actions
+                // left, and forget any emote-slot memory for whatever was in this slot so it doesn't
+                // come back on reconnect.
                 if (position >= 0 && position < _actions.Count)
                 {
+                    if (_actions[position] is { } clearedAction
+                        && EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(clearedAction, out var clearedEmote))
+                    {
+                        UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>()
+                            .HonkRememberEmoteSlot(clearedEmote.Emote, null);
+                    }
                     _actions[position] = null;
                     while (_actions.Count > 0 && _actions[^1] == null)
                         _actions.RemoveAt(_actions.Count - 1);
@@ -509,14 +535,19 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             _container.TryGetButtonIndex(button, out position))
         {
             //HONK START - pad with nulls so an action dropped on slot N lands at slot N, not at Count,
-            // and update provider->slot memory so re-acquiring the item later restores to the new slot
-            // rather than the original auto-populated one.
+            // update provider->slot memory so re-acquiring the item later restores to the new slot,
+            // and persist emote placements so disconnect+reconnect restores the same layout.
             while (_actions.Count < position)
                 _actions.Add(null);
             if (_actionsSystem.GetAction(actionId.Value) is {} placedAction
                 && placedAction.Comp.Container is {} placedProvider)
             {
                 _honkLastSlotByProvider[placedProvider] = position;
+            }
+            if (EntityManager.TryGetComponent<Content.Shared.RussStation.VerbBindings.HonkEmoteActionComponent>(actionId.Value, out var placedEmote))
+            {
+                UIManager.GetUIController<Content.Client.RussStation.ActionBar.ActionBarCustomizationController>()
+                    .HonkRememberEmoteSlot(placedEmote.Emote, position);
             }
             //HONK END
             if (position >= _actions.Count)

@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Client.Gameplay;
 using Content.Client.UserInterface.Systems.Actions;
 using Content.Client.UserInterface.Systems.Actions.Controls;
@@ -54,9 +55,18 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
     // can reveal every slot and its keybind label while the player is assigning hotkeys.
     public static bool AssignHotkeyMode { get; private set; }
 
+    // Emote proto id -> slot index, persisted via honk.action_bar.emote_slots so a player's
+    // curated emote layout survives disconnects and server restarts. Read by OnActionAdded
+    // to drop freshly-granted emote actions into their saved slot.
+    private readonly Dictionary<string, int> _emoteSlots = new();
+    public static IReadOnlyDictionary<string, int> EmoteSlots => Instance?._emoteSlots
+        ?? (IReadOnlyDictionary<string, int>) new Dictionary<string, int>();
+    private static ActionBarCustomizationController? Instance;
+
     public override void Initialize()
     {
         base.Initialize();
+        Instance = this;
 
         _rows = _cfg.GetCVar(CCVars.HonkActionBarRows);
         _slotsPerRow = _cfg.GetCVar(CCVars.HonkActionBarSlotsPerRow);
@@ -76,6 +86,7 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         _cfg.OnValueChanged(CCVars.HonkActionBarLock, v => LockActions = v, true);
         _cfg.OnValueChanged(CCVars.HonkActionBarButtonBackgroundAlpha,
             v => ButtonBackgroundAlpha = Math.Clamp(v, 0f, 1f), true);
+        _cfg.OnValueChanged(CCVars.HonkActionBarEmoteSlots, OnEmoteSlotsChanged, true);
 
         // Mirror the assign-hotkey toggle so the bar auto-reveals while the player rebinds slots.
         var slotHotkeys = UIManager.GetUIController<SlotHotkeyController>();
@@ -190,6 +201,69 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         UIManager.GetUIController<ActionUIController>().HonkRefreshHotbar();
         // Padding may have added buttons; labels must be re-applied to the new ones.
         ApplyLabels();
+    }
+
+    private void OnEmoteSlotsChanged(string raw)
+    {
+        _emoteSlots.Clear();
+        if (string.IsNullOrWhiteSpace(raw))
+            return;
+        foreach (var entry in raw.Split(';', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var eq = entry.IndexOf('=');
+            if (eq <= 0 || eq == entry.Length - 1)
+                continue;
+            var id = entry[..eq];
+            if (int.TryParse(entry.AsSpan(eq + 1), out var slot) && slot >= 0)
+                _emoteSlots[id] = slot;
+        }
+    }
+
+    private string SerializeEmoteSlots()
+    {
+        var sb = new System.Text.StringBuilder();
+        var first = true;
+        foreach (var (id, slot) in _emoteSlots.OrderBy(kv => kv.Value))
+        {
+            if (!first)
+                sb.Append(';');
+            sb.Append(id).Append('=').Append(slot);
+            first = false;
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>Persist a saved slot for an emote prototype. Pass null to forget the slot.</summary>
+    public void HonkRememberEmoteSlot(string emoteProtoId, int? slot)
+    {
+        var changed = false;
+        if (slot is { } index)
+        {
+            // If some other emote used to live in this slot, bump it out so two entries
+            // don't race each other back onto the bar on reconnect.
+            foreach (var existing in _emoteSlots.Where(kv => kv.Value == index && kv.Key != emoteProtoId)
+                         .Select(kv => kv.Key).ToList())
+            {
+                _emoteSlots.Remove(existing);
+                changed = true;
+            }
+
+            if (!_emoteSlots.TryGetValue(emoteProtoId, out var prior) || prior != index)
+            {
+                _emoteSlots[emoteProtoId] = index;
+                changed = true;
+            }
+        }
+        else if (_emoteSlots.Remove(emoteProtoId))
+        {
+            changed = true;
+        }
+
+        if (changed)
+        {
+            _cfg.SetCVar(CCVars.HonkActionBarEmoteSlots, SerializeEmoteSlots());
+            _cfg.SaveToFile();
+        }
     }
 
     // Wires the lock + auto-add toggle checkboxes on the actions window, called from
