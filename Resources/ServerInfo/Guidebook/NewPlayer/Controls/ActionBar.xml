@@ -1,42 +1,40 @@
 <Document>
 # Action bar
 
-The row of slots at the top of your screen. Each slot holds one action: something you can click or press a key to do. Abilities from your species, items in your hands, combat mode, emotes, everything goes here.
+The slot row at the top of the screen. Each slot holds one action: a species ability, an item you're holding, combat mode, an emote, whatever's available. Click a slot or press its key to fire.
 
 ## Shape and look
 
-[color=yellow]Settings > Misc > Action Bar[/color] is where you shape it:
+[color=yellow]Settings > Misc > Action Bar[/color] controls the layout.
 
-- [color=#a4885c]Rows[/color] and [color=#a4885c]Slots per row[/color] decide how many buttons you see and how they wrap. Default is one row of ten.
+- [color=#a4885c]Rows[/color] and [color=#a4885c]Slots per row[/color] decide how many buttons are visible and how they wrap. Default is one row of ten.
 - [color=#a4885c]Slot spacing[/color] is the gap between buttons.
-- [color=#a4885c]Show keybind label[/color] toggles the little key letter in the corner of each slot.
-- [color=#a4885c]Show empty slots (faint)[/color] draws the outline of unused slots so the layout is always visible.
+- [color=#a4885c]Show keybind label[/color] toggles the small key letter in the corner of each slot.
+- [color=#a4885c]Show empty slots (faint)[/color] draws the outline of unused slots so the shape is always visible.
 
-The background opacity lives over in [color=yellow]Settings > Accessibility[/color] next to the other UI opacity sliders.
+Background opacity lives in [color=yellow]Settings > Accessibility[/color] with the other UI opacity sliders.
 
 ## Hotkeys
 
-Default keys are [color=yellow][bold]1-0[/bold][/color] for the first row and [color=yellow][bold]Shift+1-0[/bold][/color] for the second. Any of those can be rebound.
+Defaults are [color=yellow][bold]1-0[/bold][/color] for the first row and [color=yellow][bold]Shift+1-0[/bold][/color] for the second. All 20 can be rebound two ways, and both write the same keybind:
 
-Two ways to rebind:
+1. [color=yellow]Settings > Controls[/color] has an [color=#a4885c]Assign action bar slot hotkeys[/color] checkbox at the top. Tick it, click any slot on the bar, press the key you want. The matching [color=#a4885c]Hotbar 1[/color], [color=#a4885c]Hotbar Shift 1[/color], etc. row updates.
+2. Or scroll down that same options panel and click the key field next to the [color=#a4885c]Hotbar[/color] entry directly.
 
-1. The direct way. [color=yellow]Settings > Controls[/color] has an [color=#a4885c]Assign action bar slot hotkeys[/color] checkbox at the top. Tick it, click any slot on the bar, then press the key you want. Done. The matching [color=#a4885c]Hotbar 1[/color], [color=#a4885c]Hotbar Shift 1[/color], etc. row in the same options panel updates to match.
-2. The traditional way. Scroll down in [color=yellow]Settings > Controls[/color] and click the key field next to [color=#a4885c]Hotbar 1[/color] / [color=#a4885c]Hotbar Shift 1[/color] / etc. and press a key.
-
-Either way writes the same keybind. The slot's label updates immediately.
+The slot's label updates immediately.
 
 ## Locking and auto-add
 
-The actions window (open with [color=yellow][bold][keybind="OpenActionsMenu"][/bold][/color]) has two checkboxes:
+The actions window (open with [color=yellow][bold][keybind="OpenActionsMenu"][/bold][/color]) has two checkboxes worth knowing about.
 
-- [color=#a4885c]Lock bar[/color] stops right-click-clear and drag-to-rearrange. Clicking a slot to fire its action still works; the layout just can't be nudged by mis-clicks.
-- [color=#a4885c]Auto-add new actions[/color] controls whether picking up an item or getting a new ability auto-populates onto the bar. Off means the action still appears in the actions menu but stays out of your curated hotbar.
+- [color=#a4885c]Lock bar[/color] blocks right-click-clear and drag-to-rearrange. Clicking a slot to fire still works; the layout just can't be nudged by a misclick.
+- [color=#a4885c]Auto-add new actions[/color]. When off, picking up an item or getting a new ability leaves the bar alone. The action still appears in the actions menu, it just doesn't push your curated slots around.
 
 ## Emotes
 
-Your emotes (the set you'd see in the radial emote menu) also show up in the actions menu as draggable buttons. The filter dropdown in that window has an [color=#a4885c]Emote[/color] checkbox so you can look at just emotes.
+Every emote you'd see in the radial emote menu also appears as a draggable button in the actions menu. The filter dropdown there has an [color=#a4885c]Emote[/color] checkbox if you want to look at just those.
 
-Drag one onto a hotbar slot. It sticks. Rebind the slot's key via either method above. From then on that key plays the emote, same as typing the emote command.
+Drag one onto a hotbar slot. Rebind the slot's key if you want. Pressing that key plays the emote, same as typing the command.
 
-Emote placements are remembered across disconnects and server restarts, so a layout you spent time on isn't wasted when the round ends.
+Slot placements stick across disconnects and server restarts.
 </Document>
