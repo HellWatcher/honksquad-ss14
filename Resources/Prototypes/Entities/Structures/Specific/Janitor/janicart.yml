@@ -381,17 +381,16 @@
         whitelist:
           tags:
           - PlushieSharkBlue
-        offset: -0.375, -0.03125
+        offset: -0.375, 0
       cart_shark_blue_w:
         whitelist:
           tags:
           - PlushieSharkBlue
-        offset: 0.375, -0.03125
+        offset: 0.375, 0
       cart_shark_blue_ns:
         whitelist:
           tags:
           - PlushieSharkBlue
-        offset: 0, -0.03125
       cart_magicarp_e:
         whitelist:
           tags:
