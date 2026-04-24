@@ -5,7 +5,7 @@
         "y": 32
     },
     "license": "CC-BY-SA-3.0",
-    "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/f8f4aeda930fcd0805ca4cc76d9bc9412a5b3428, cart_goldenplunger modified from cart_plunger by TiniestShark (github) and tweaked by Prole0 (github), cart_garbage_blue modified from cart_garbage by AndrewFenriz (github)",
+    "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/f8f4aeda930fcd0805ca4cc76d9bc9412a5b3428, cart_goldenplunger modified from cart_plunger by TiniestShark (github) and tweaked by Prole0 (github), cart_garbage_blue modified from cart_garbage by AndrewFenriz (github), cart_shark_blue derived by Katyes from mopbucket_shark_blue by Psychpsyo",
     "states": [
         {
             "name": "cart",
@@ -32,6 +32,10 @@
             "directions": 4
         },
         {
+            "name": "cart_shark_blue",
+            "directions": 4
+        },
+        {
             "name": "cart_replacer",
             "directions": 4
         },
@@ -55,7 +59,7 @@
             "name": "cart_spray",
             "directions": 4
         },
-		{
+        {
             "name": "cart_plunger",
             "directions": 4
         },
