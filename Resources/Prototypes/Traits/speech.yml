@@ -91,6 +91,18 @@
   - type: ReplacementAccent
     accent: scottish
 
+# HONK START - Queekish accent trait (Skaven species flavor, also picks for non-Skaven)
+- type: trait
+  id: QueekishAccent
+  name: trait-queekish-name
+  description: trait-queekish-desc
+  category: SpeechTraits
+  cost: 1
+  components:
+  - type: ReplacementAccent
+    accent: queekish
+# HONK END
+
 # 2 Cost
 
 - type: trait

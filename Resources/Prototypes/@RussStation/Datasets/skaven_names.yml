@@ -1,0 +1,14 @@
+# Ported from RussStation SS13 (AGPL-3.0)
+# Source: strings/names/skaven_first.txt (36), skaven_last.txt (40)
+
+- type: localizedDataset
+  id: NamesSkavenFirst
+  values:
+    prefix: names-skaven-first-dataset-
+    count: 36
+
+- type: localizedDataset
+  id: NamesSkavenLast
+  values:
+    prefix: names-skaven-last-dataset-
+    count: 40
