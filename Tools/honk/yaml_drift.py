@@ -39,8 +39,7 @@ from common import (
     pr_new_drift,
     pr_new_inline,
     sh,
-    strip_honk_blocks,
-    whitespace_normalize,
+    unmarked_hunks,
 )
 
 DEFAULT_FORK_REF = "origin/release"
@@ -104,19 +103,16 @@ def classify(path: str, fork_ref: str, upstream_ref: str) -> Result:
         return Result(path, "IDENTICAL")
 
     has_honk = bool(HONK_START.search(release))
+    bad = unmarked_hunks(release, upstream)
 
-    stripped_release = strip_honk_blocks(release)
-    norm_stripped = whitespace_normalize(stripped_release)
-    norm_upstream = whitespace_normalize(upstream)
-
-    if norm_stripped == norm_upstream:
+    if not bad:
         if has_honk:
             return Result(path, "HONK-ONLY")
         return Result(path, "REFORMAT-ONLY")
 
     if has_honk:
-        return Result(path, "MIXED", "drift outside HONK")
-    return Result(path, "CONTENT-NO-HONK", "unmarked content changes")
+        return Result(path, "MIXED", f"{len(bad)} unmarked hunk(s) outside HONK")
+    return Result(path, "CONTENT-NO-HONK", f"{len(bad)} unmarked content change(s)")
 
 
 def print_summary(results: list[Result], *, verbose: bool) -> None:

@@ -129,6 +129,110 @@ def drift_lines(fork_text: str, reference_text: str) -> set[str]:
     return fork_set - reference_set
 
 
+def _fork_line_in_honk(fork_text: str) -> list[bool]:
+    """For each fork line (0-indexed), whether it sits inside a HONK block
+    (including the START/END marker lines themselves, which are treated as
+    part of their own block)."""
+    out: list[bool] = []
+    depth = 0
+    for line in fork_text.splitlines():
+        if HONK_START.search(line):
+            depth += 1
+            out.append(True)
+            continue
+        if HONK_END.search(line):
+            out.append(True)
+            depth -= 1
+            continue
+        out.append(depth > 0)
+    return out
+
+
+def unmarked_hunks(
+    fork_text: str, reference_text: str
+) -> list[tuple[int, int, int, int]]:
+    """Diff-aware drift detection.
+
+    Returns a list of `(fork_start, fork_end, ref_start, ref_end)` hunks
+    (half-open intervals, 0-indexed into the whitespace-normalized line
+    lists) where fork and reference differ AND the difference is not covered
+    by a HONK block on the fork side.
+
+    A hunk is considered "marked" (and therefore OK) when:
+      * It has fork lines AND every fork line in the hunk is inside a HONK
+        block, OR
+      * It has no fork lines (pure upstream removal) AND the fork position
+        is adjacent to a HONK block (i.e. the line before or after the
+        insertion point is a HONK START/END marker or sits inside a block).
+
+    Empty / whitespace-only lines are ignored so indentation-style reflow
+    doesn't register as drift.
+    """
+    import difflib
+
+    fork_lines = fork_text.splitlines()
+    ref_lines = reference_text.splitlines()
+
+    in_honk_raw = _fork_line_in_honk(fork_text)
+
+    # Build whitespace-normalized sequences with index maps back to the raw
+    # line numbers so we can look up HONK membership.
+    def _build(lines: list[str]) -> tuple[list[str], list[int]]:
+        norm_out: list[str] = []
+        idx_out: list[int] = []
+        for i, line in enumerate(lines):
+            collapsed = re.sub(r"\s+", " ", line).strip()
+            if collapsed:
+                norm_out.append(collapsed)
+                idx_out.append(i)
+        return norm_out, idx_out
+
+    fork_norm, fork_idx = _build(fork_lines)
+    ref_norm = _build(ref_lines)[0]
+
+    # Lift HONK membership onto the normalized index space.
+    fork_in_honk = [in_honk_raw[i] for i in fork_idx]
+
+    # Lines that are just punctuation or a single keyword are alignment noise
+    # to SequenceMatcher — it'll pair them asymmetrically between the fork's
+    # and upstream's many `}` / `{` / `;` occurrences. Skip hunks consisting
+    # entirely of such lines on both sides.
+    _NOISE = re.compile(r"^[\s{}();,\[\]]*$")
+
+    def _all_noise(lines: list[str], lo: int, hi: int) -> bool:
+        return all(_NOISE.match(lines[k]) for k in range(lo, hi))
+
+    bad: list[tuple[int, int, int, int]] = []
+    matcher = difflib.SequenceMatcher(a=fork_norm, b=ref_norm, autojunk=False)
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            continue
+
+        if _all_noise(fork_norm, i1, i2) and _all_noise(ref_norm, j1, j2):
+            continue
+
+        fork_span = range(i1, i2)
+        if fork_span:
+            if all(fork_in_honk[i] for i in fork_span):
+                continue
+            bad.append((i1, i2, j1, j2))
+            continue
+
+        # Pure upstream-only hunk (fork removed lines). Accept if an adjacent
+        # fork position sits inside or at the boundary of a HONK block, which
+        # documents that the removal is intentional.
+        adjacent = False
+        for probe in (i1 - 1, i1):
+            if 0 <= probe < len(fork_in_honk) and fork_in_honk[probe]:
+                adjacent = True
+                break
+        if adjacent:
+            continue
+        bad.append((i1, i2, j1, j2))
+
+    return bad
+
+
 def pr_new_inline(path: str, base_ref: str, fork_ref: str) -> set[str]:
     """Inline HONK lines present in fork_ref but not in base_ref.
 
