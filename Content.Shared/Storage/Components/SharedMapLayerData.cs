@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Numerics;
 using Content.Shared.Whitelist;
 using Robust.Shared.Serialization;
 
@@ -33,6 +34,18 @@ namespace Content.Shared.Storage.Components
         /// </summary>
         [DataField]
         public int MaxCount = int.MaxValue;
+
+        // HONK START - let mapper layers carry a world-space offset so individual
+        // sprite layers can sit off-center without repositioning the base sprite.
+        /// <summary>
+        ///     World-space offset for the sprite layer this map layer creates. Lets
+        ///     map layers on the same entity sit at different positions - e.g., a
+        ///     plushie layer that should render past the entity's footprint without
+        ///     clipping inside the RSI frame.
+        /// </summary>
+        [DataField]
+        public Vector2 Offset = Vector2.Zero;
+        // HONK END
     }
 
     [Serializable, NetSerializable]

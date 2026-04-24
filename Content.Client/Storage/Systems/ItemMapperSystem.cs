@@ -52,6 +52,11 @@ public sealed class ItemMapperSystem : SharedItemMapperSystem
             _sprite.LayerMapReserve((owner, spriteComponent), sprite);
             _sprite.LayerSetSprite((owner, spriteComponent), sprite, new SpriteSpecifier.Rsi(component.RSIPath!.Value, sprite));
             _sprite.LayerSetVisible((owner, spriteComponent), sprite, false);
+
+            // HONK START - apply per-map-layer offset so sprites can sit off-center
+            if (component.MapLayers.TryGetValue(sprite, out var mapLayer) && mapLayer.Offset != System.Numerics.Vector2.Zero)
+                _sprite.LayerSetOffset((owner, spriteComponent), sprite, mapLayer.Offset);
+            // HONK END
         }
     }
 
