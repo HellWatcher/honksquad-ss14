@@ -65,6 +65,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
 
         InitializeOrgans();
+        InitializeInterrupt();
         CacheProcedureIds();
     }
 

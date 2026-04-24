@@ -78,3 +78,7 @@ surgery-category-tend-wounds = Tend Wounds
 surgery-category-organ-manipulation = Organ Manipulation
 surgery-category-implants = Implants
 surgery-category-advanced = Advanced
+
+## Interrupt
+surgery-interrupt-patient = Your surgery is cut short as you move!
+surgery-interrupt-surgeon = {CAPITALIZE(THE($target))} moves! The procedure is ruined.
