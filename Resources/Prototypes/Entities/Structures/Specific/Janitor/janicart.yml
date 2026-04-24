@@ -377,31 +377,11 @@
         whitelist:
           tags:
           - Bucket
-      # HONK START - plushie mascot layers; sprite states added alongside in janitorial_cart.rsi
+      # HONK START - plushie mascot layers; add more as sprites land
       cart_shark_blue:
         whitelist:
           tags:
           - PlushieSharkBlue
-      cart_shark_pink:
-        whitelist:
-          tags:
-          - PlushieSharkPink
-      cart_shark_grey:
-        whitelist:
-          tags:
-          - PlushieSharkGrey
-      cart_carpplush:
-        whitelist:
-          tags:
-          - PlushieCarp
-      cart_magicarpplush:
-        whitelist:
-          tags:
-          - PlushieCarpMagi
-      cart_holocarpplush:
-        whitelist:
-          tags:
-          - PlushieCarpHolo
       # HONK END
     sprite: Objects/Specific/Janitorial/janitorial_cart.rsi
   - type: Appearance
