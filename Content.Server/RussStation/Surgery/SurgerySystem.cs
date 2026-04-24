@@ -237,8 +237,6 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         _xform.SetLocalPosition(overlay, System.Numerics.Vector2.Zero);
         draped.OverlayEntity = overlay;
 
-        _popup.PopupEntity(Loc.GetString("surgery-drape-patient", ("target", target.Value)), target.Value);
-
         var active = EnsureComp<ActiveSurgeryComponent>(target.Value);
         active.ProcedureId = ev.ProcedureId;
         active.CurrentStep = SurgeryConstants.InitialProcedureStepIndex;

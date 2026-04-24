@@ -1,7 +1,6 @@
 # Surgery System
 
 ## Draping
-surgery-drape-patient = You drape {THE($target)} for surgery.
 surgery-patient-not-down = The patient must be lying down for surgery.
 
 ## Procedure Selection
