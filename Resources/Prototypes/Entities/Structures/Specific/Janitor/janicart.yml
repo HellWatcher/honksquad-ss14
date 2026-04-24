@@ -376,8 +376,18 @@
         whitelist:
           tags:
           - Bucket
-      # HONK START - plushie mascot layers; add more as sprites land
-      cart_shark_blue:
+      # HONK START - plushie mascot layers; split per-direction so each can carry its own offset
+      cart_shark_blue_e:
+        whitelist:
+          tags:
+          - PlushieSharkBlue
+        offset: 0.375, 0
+      cart_shark_blue_w:
+        whitelist:
+          tags:
+          - PlushieSharkBlue
+        offset: -0.375, 0
+      cart_shark_blue_ns:
         whitelist:
           tags:
           - PlushieSharkBlue

@@ -32,7 +32,15 @@
             "directions": 4
         },
         {
-            "name": "cart_shark_blue",
+            "name": "cart_shark_blue_e",
+            "directions": 4
+        },
+        {
+            "name": "cart_shark_blue_w",
+            "directions": 4
+        },
+        {
+            "name": "cart_shark_blue_ns",
             "directions": 4
         },
         {
