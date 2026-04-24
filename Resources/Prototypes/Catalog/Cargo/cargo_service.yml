@@ -4,8 +4,9 @@
     sprite: Objects/Specific/Janitorial/spray_bottle.rsi
     state: cleaner
   product: CrateServiceJanitorialSupplies
-  # HONK - raised from 560 to clear NoCargoOrderArbitrage (crate sells for ~714)
+  # HONK START - raised from 560 to clear NoCargoOrderArbitrage (crate sells for ~714)
   cost: 750
+  # HONK END
   category: cargoproduct-category-name-service
   group: market
 

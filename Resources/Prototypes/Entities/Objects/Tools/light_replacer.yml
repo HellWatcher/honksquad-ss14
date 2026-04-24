@@ -22,9 +22,11 @@
   - type: ContainerContainer
     containers:
       light_replacer_storage: !type:Container
+  # HONK START - Tag for janitor belt whitelist
   - type: Tag
     tags:
     - LightReplacer
+  # HONK END
   # HONK START - Light replacer recycler
   - type: LightReplacerRecycler
   - type: UserInterface

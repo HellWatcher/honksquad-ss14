@@ -41,9 +41,11 @@
       reagents:
       - ReagentId: SpaceCleaner
         Quantity: 30
+  # HONK START - tag for janitor belt storage whitelist
   - type: Tag
     tags:
     - CleanerGrenade
+  # HONK END
 
 - type: entity
   parent: SmokeGrenade
