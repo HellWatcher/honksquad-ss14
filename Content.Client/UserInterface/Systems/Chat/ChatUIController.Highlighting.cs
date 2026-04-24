@@ -46,6 +46,10 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
 
         _config.OnValueChanged(CCVars.ChatHighlightsColor, (value) => { _highlightsColor = value; }, true);
 
+        //HONK START - preset highlight lists (issue #610)
+        InitializePresetHighlights();
+        //HONK END
+
         // Load highlights if any were saved.
         var highlights = _config.GetCVar(CCVars.ChatHighlights);
 
@@ -53,7 +57,18 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
         {
             UpdateHighlights(highlights, true);
         }
+        //HONK START - still recompile if only presets are active (user highlights empty)
+        else
+        {
+            UpdateHighlights(string.Empty, true);
+        }
+        //HONK END
     }
+
+    //HONK START - declared partial methods for preset highlight lists (issue #610)
+    partial void InitializePresetHighlights();
+    partial void AppendActivePresetHighlights(List<string> highlights);
+    //HONK END
 
     public void OnSystemLoaded(CharacterInfoSystem system)
     {
@@ -89,9 +104,12 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
 
         // We first subdivide the highlights based on newlines to prevent replacing
         // a valid "\n" tag and adding it to the final regex.
-        var splittedHighlights = newHighlights.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        //HONK START - List<T> so preset hook can append (issue #610)
+        var splittedHighlights = newHighlights.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+        AppendActivePresetHighlights(splittedHighlights);
+        //HONK END
 
-        for (var i = 0; i < splittedHighlights.Length; i++)
+        for (var i = 0; i < splittedHighlights.Count; i++)
         {
             // Replace every "\" character with a "\\" to prevent "\n", "\0", etc...
             var keyword = splittedHighlights[i].Replace(@"\", @"\\");

@@ -53,6 +53,21 @@ public sealed partial class ChannelFilterPopup : Popup
         {
             UpdateHighlights(highlights);
         }
+
+        //HONK START - curated highlight preset toggles (issue #610)
+        PresetAntagsCheckBox.Pressed = cfg.GetCVar(CCVars.HonkChatHighlightPresetAntags);
+        PresetDistressCheckBox.Pressed = cfg.GetCVar(CCVars.HonkChatHighlightPresetDistress);
+        PresetAntagsCheckBox.OnToggled += args =>
+        {
+            cfg.SetCVar(CCVars.HonkChatHighlightPresetAntags, args.Pressed);
+            cfg.SaveToFile();
+        };
+        PresetDistressCheckBox.OnToggled += args =>
+        {
+            cfg.SetCVar(CCVars.HonkChatHighlightPresetDistress, args.Pressed);
+            cfg.SaveToFile();
+        };
+        //HONK END
     }
 
     public bool IsActive(ChatChannel channel)

@@ -16,6 +16,14 @@
                     <TextEdit Name="HighlightEdit" MinHeight="150" Margin="5 5"/>
                 </PanelContainer>
                 <Button Name="HighlightButton" Text="{Loc 'hud-chatbox-highlights-button'}" ToolTip="{Loc 'hud-chatbox-highlights-tooltip'}"/>
+                <!-- HONK START - curated highlight preset toggles (issue #610) -->
+                <CheckBox Name="PresetAntagsCheckBox"
+                          Text="{Loc 'hud-chatbox-highlight-preset-antags'}"
+                          ToolTip="{Loc 'hud-chatbox-highlight-preset-antags-tooltip'}"/>
+                <CheckBox Name="PresetDistressCheckBox"
+                          Text="{Loc 'hud-chatbox-highlight-preset-distress'}"
+                          ToolTip="{Loc 'hud-chatbox-highlight-preset-distress-tooltip'}"/>
+                <!-- HONK END -->
             </BoxContainer>
         </BoxContainer>
     </PanelContainer>

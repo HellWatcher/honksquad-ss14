@@ -34,4 +34,18 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<string> FloatingChatInputLastRadioChannel =
         CVarDef.Create("honk.chat.floating_input_last_radio_channel", string.Empty, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// When true, chat highlights include a curated list of antagonist role words
+    /// (e.g. "syndicate", "nukie", "cultist"). Keeps to role words only, never player names.
+    /// </summary>
+    public static readonly CVarDef<bool> HonkChatHighlightPresetAntags =
+        CVarDef.Create("honk.chat.highlight_preset_antags", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// When true, chat highlights include a curated list of distress and alarm phrases
+    /// (e.g. "help", "officer down", "breach").
+    /// </summary>
+    public static readonly CVarDef<bool> HonkChatHighlightPresetDistress =
+        CVarDef.Create("honk.chat.highlight_preset_distress", false, CVar.CLIENTONLY | CVar.ARCHIVE);
 }
