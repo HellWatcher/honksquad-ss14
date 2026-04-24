@@ -241,6 +241,9 @@ public sealed partial class ChatUIController : UIController
         _config.OnValueChanged(CCVars.ChatWindowOpacity, OnChatWindowOpacityChanged);
 
         InitializeHighlights();
+        // HONK START - issue #609 audible radio highlights
+        HonkInitializeHighlightSound();
+        // HONK END
     }
 
     public void OnScreenLoad()
@@ -857,6 +860,10 @@ public sealed partial class ChatUIController : UIController
         {
             msg.WrappedMessage = SharedChatSystem.InjectTagAroundString(msg, highlight, "color", _highlightsColor);
         }
+
+        // HONK START - issue #609 audible radio highlights
+        HonkTryPlayHighlightSound(msg);
+        // HONK END
 
         // Color any codewords for minds that have roles that use them
         if (_player.LocalUser != null && _mindSystem != null && _roleCodewordSystem != null)
