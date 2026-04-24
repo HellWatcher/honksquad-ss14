@@ -263,7 +263,6 @@
           - PlushieSharkBlue
           - PlushieSharkGrey
           - PlushieSharkPink
-        insertOnInteract: false
         priority: 1
       # HONK END
   - type: Fixtures
