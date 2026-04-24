@@ -193,14 +193,19 @@ def unmarked_hunks(
     # Lift HONK membership onto the normalized index space.
     fork_in_honk = [in_honk_raw[i] for i in fork_idx]
 
-    # Lines that are just punctuation or a single keyword are alignment noise
-    # to SequenceMatcher — it'll pair them asymmetrically between the fork's
-    # and upstream's many `}` / `{` / `;` occurrences. Skip hunks consisting
-    # entirely of such lines on both sides.
-    _NOISE = re.compile(r"^[\s{}();,\[\]]*$")
+    # Lines that are just punctuation, HONK markers, or whitespace are
+    # alignment noise to SequenceMatcher — it'll pair repetitive `}`/`{`/`;`
+    # lines asymmetrically across the two inputs and sometimes drag a HONK
+    # marker along for the ride. Skip hunks consisting entirely of such lines.
+    _PUNCT = re.compile(r"^[\s{}();,\[\]]*$")
+
+    def _is_noise(line: str) -> bool:
+        return bool(
+            _PUNCT.match(line) or HONK_START.search(line) or HONK_END.search(line)
+        )
 
     def _all_noise(lines: list[str], lo: int, hi: int) -> bool:
-        return all(_NOISE.match(lines[k]) for k in range(lo, hi))
+        return all(_is_noise(lines[k]) for k in range(lo, hi))
 
     bad: list[tuple[int, int, int, int]] = []
     matcher = difflib.SequenceMatcher(a=fork_norm, b=ref_norm, autojunk=False)
