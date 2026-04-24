@@ -31,6 +31,20 @@ public sealed partial class RampingStationEventSchedulerComponent : Component
     [DataField]
     public float TimeUntilNextEvent;
 
+    //HONK START - expose roller cadence as datafields so presets can tune it without a code patch
+    /// <summary>
+    /// Lower bound (seconds) of the baseline roll interval before chaos scaling.
+    /// </summary>
+    [DataField]
+    public float MinBaselineInterval = 240f;
+
+    /// <summary>
+    /// Upper bound (seconds) of the baseline roll interval before chaos scaling.
+    /// </summary>
+    [DataField]
+    public float MaxBaselineInterval = 720f;
+    //HONK END
+
     /// <summary>
     /// The gamerules that the scheduler can choose from
     /// </summary>
