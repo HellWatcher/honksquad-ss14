@@ -381,30 +381,32 @@
         whitelist:
           tags:
           - PlushieSharkBlue
-        offset: -0.375, 0
+        offset: -0.375, -0.03125
       cart_shark_blue_w:
         whitelist:
           tags:
           - PlushieSharkBlue
-        offset: 0.375, 0
+        offset: 0.375, -0.03125
       cart_shark_blue_ns:
         whitelist:
           tags:
           - PlushieSharkBlue
+        offset: 0, -0.03125
       cart_magicarp_e:
         whitelist:
           tags:
           - PlushieCarpMagi
-        offset: -0.25, 0
+        offset: -0.25, -0.03125
       cart_magicarp_w:
         whitelist:
           tags:
           - PlushieCarpMagi
-        offset: 0.25, 0
+        offset: 0.25, -0.03125
       cart_magicarp_ns:
         whitelist:
           tags:
           - PlushieCarpMagi
+        offset: 0, -0.03125
       # HONK END
     sprite: Objects/Specific/Janitorial/janitorial_cart.rsi
   - type: Appearance
