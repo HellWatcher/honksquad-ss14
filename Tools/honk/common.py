@@ -207,10 +207,45 @@ def unmarked_hunks(
     def _all_noise(lines: list[str], lo: int, hi: int) -> bool:
         return all(_is_noise(lines[k]) for k in range(lo, hi))
 
+    def _trim(
+        lo_fork: int, hi_fork: int, lo_ref: int, hi_ref: int
+    ) -> tuple[int, int, int, int]:
+        # SequenceMatcher will pull noise lines (closing braces, HONK markers)
+        # into the fork-side of an insertion/replacement when identical anchor
+        # lines exist further along on either side. Trim those off each end so
+        # they don't register as "drift outside HONK" just because the match
+        # algorithm picked the wrong anchor.
+        while (
+            hi_fork > lo_fork
+            and hi_ref > lo_ref
+            and _is_noise(fork_norm[hi_fork - 1])
+            and _is_noise(ref_norm[hi_ref - 1])
+        ):
+            hi_fork -= 1
+            hi_ref -= 1
+        while (
+            hi_fork > lo_fork and _is_noise(fork_norm[hi_fork - 1]) and lo_ref == hi_ref
+        ):
+            hi_fork -= 1
+        while (
+            hi_fork > lo_fork
+            and lo_fork < hi_fork
+            and _is_noise(fork_norm[lo_fork])
+            and lo_ref < hi_ref
+            and _is_noise(ref_norm[lo_ref])
+        ):
+            lo_fork += 1
+            lo_ref += 1
+        return lo_fork, hi_fork, lo_ref, hi_ref
+
     bad: list[tuple[int, int, int, int]] = []
     matcher = difflib.SequenceMatcher(a=fork_norm, b=ref_norm, autojunk=False)
     for tag, i1, i2, j1, j2 in matcher.get_opcodes():
         if tag == "equal":
+            continue
+
+        i1, i2, j1, j2 = _trim(i1, i2, j1, j2)
+        if i1 == i2 and j1 == j2:
             continue
 
         if _all_noise(fork_norm, i1, i2) and _all_noise(ref_norm, j1, j2):
