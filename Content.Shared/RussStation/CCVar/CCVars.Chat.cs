@@ -46,13 +46,13 @@ public sealed partial class CCVars
     /// Resource path of the sound played by <see cref="ChatHighlightSoundEnabled"/>.
     /// </summary>
     public static readonly CVarDef<string> ChatHighlightSoundPath =
-        CVarDef.Create("honk.chat.highlight_sound_path", "/Audio/Effects/Cargo/ping.ogg", CVar.CLIENTONLY | CVar.ARCHIVE);
+        CVarDef.Create("honk.chat.highlight_sound_path", "/Audio/Effects/newplayerping.ogg", CVar.CLIENTONLY | CVar.ARCHIVE);
 
     /// <summary>
     /// Extra gain in dB applied on top of the highlight sound clip.
     /// </summary>
     public static readonly CVarDef<float> ChatHighlightSoundVolume =
-        CVarDef.Create("honk.chat.highlight_sound_volume", 0f, CVar.CLIENTONLY | CVar.ARCHIVE);
+        CVarDef.Create("honk.chat.highlight_sound_volume", -10f, CVar.CLIENTONLY | CVar.ARCHIVE);
 
     /// <summary>
     /// Minimum seconds between highlight pings, regardless of how many radio messages match.

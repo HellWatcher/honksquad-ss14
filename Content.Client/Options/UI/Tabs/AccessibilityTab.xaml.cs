@@ -28,7 +28,7 @@ public sealed partial class AccessibilityTab : Control
         Control.AddOptionPercentSlider(CCVars.SpeechBubbleTextOpacity, SpeechBubbleTextOpacitySlider);
         Control.AddOptionPercentSlider(CCVars.SpeechBubbleSpeakerOpacity, SpeechBubbleSpeakerOpacitySlider);
         Control.AddOptionPercentSlider(CCVars.SpeechBubbleBackgroundOpacity, SpeechBubbleBackgroundOpacitySlider);
-        //HONK START - action bar button background opacity sits with the other UI opacity sliders
+        //HONK START - action bar opacity, highlight section (issue #609), hover tooltip, font customization
         Control.AddOption(new OptionSliderFloatCVar(
             Control,
             IoCManager.Resolve<IConfigurationManager>(),
@@ -36,11 +36,25 @@ public sealed partial class AccessibilityTab : Control
             ActionBarButtonBackgroundAlphaSlider,
             0f, 1f, 1f,
             (_, value) => $"{(int)(value * 100)}%"));
-        //HONK END
+
         Control.AddOptionCheckBox(CCVars.ChatAutoFillHighlights, AutoFillHighlightsCheckBox);
         Control.AddOptionColorSlider(CCVars.ChatHighlightsColor, HighlightsColorSlider);
+        Control.AddOptionCheckBox(CCVars.ChatHighlightSoundEnabled, HonkHighlightSoundCheckBox);
+        Control.AddOption(new OptionSliderFloatCVar(
+            Control,
+            IoCManager.Resolve<IConfigurationManager>(),
+            CCVars.ChatHighlightSoundCooldown,
+            HonkHighlightSoundCooldownSlider,
+            0f, 10f, 0.5f,
+            (_, value) => $"{value:F1}s"));
+        Control.AddOption(new OptionSliderFloatCVar(
+            Control,
+            IoCManager.Resolve<IConfigurationManager>(),
+            CCVars.ChatHighlightSoundVolume,
+            HonkHighlightSoundVolumeSlider,
+            -20f, 0f, 1f,
+            (_, value) => $"{value:F0} dB"));
 
-        //HONK START
         Control.AddOptionCheckBox(CCVars.HoverTooltipEnabled, HoverTooltipEnabledCheckBox);
         Control.AddOption(new OptionSliderFloatCVar(
             Control,

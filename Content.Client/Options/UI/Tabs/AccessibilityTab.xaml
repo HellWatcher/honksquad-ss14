@@ -14,19 +14,24 @@
                 <ui:OptionSlider Name="SpeechBubbleTextOpacitySlider" Title="{Loc 'ui-options-speech-bubble-text-opacity'}" />
                 <ui:OptionSlider Name="SpeechBubbleSpeakerOpacitySlider" Title="{Loc 'ui-options-speech-bubble-speaker-opacity'}" />
                 <ui:OptionSlider Name="SpeechBubbleBackgroundOpacitySlider" Title="{Loc 'ui-options-speech-bubble-background-opacity'}" />
-                <!-- HONK - action bar button background opacity lives here next to the other UI opacity sliders -->
+                <!-- HONK START - action bar opacity, highlight section (issue #609), hover tooltip, font customization -->
                 <ui:OptionSlider Name="ActionBarButtonBackgroundAlphaSlider" Title="{Loc 'ui-options-action-bar-button-background-alpha'}" />
+                <Label Text="{Loc 'honk-options-header-highlights'}"
+                       StyleClasses="LabelKeyText"/>
                 <CheckBox Name="AutoFillHighlightsCheckBox" Text="{Loc 'ui-options-auto-fill-highlights'}" />
                 <ui:OptionColorSlider Name="HighlightsColorSlider"
                     Title="{Loc 'ui-options-highlights-color'}"
                     Example="{Loc 'ui-options-highlights-color-example'}"/>
-                <!-- HONK START - Hover tooltip options -->
+                <CheckBox Name="HonkHighlightSoundCheckBox" Text="{Loc 'honk-options-highlight-sound-enabled'}"
+                          ToolTip="{Loc 'honk-options-highlight-sound-enabled-tooltip'}"/>
+                <ui:OptionSlider Name="HonkHighlightSoundCooldownSlider"
+                                 Title="{Loc 'honk-options-highlight-sound-cooldown'}"/>
+                <ui:OptionSlider Name="HonkHighlightSoundVolumeSlider"
+                                 Title="{Loc 'honk-options-highlight-sound-volume'}"/>
                 <Label Text="{Loc 'ui-options-header-hover-tooltip'}"
                        StyleClasses="LabelKeyText"/>
                 <CheckBox Name="HoverTooltipEnabledCheckBox" Text="{Loc 'ui-options-hover-tooltip-enabled'}" />
                 <ui:OptionSlider Name="HoverTooltipDelaySlider" Title="{Loc 'ui-options-hover-tooltip-delay'}" />
-                <!-- HONK END -->
-                <!-- HONK START - Font customization -->
                 <Label Text="{Loc 'ui-options-header-font'}"
                        StyleClasses="LabelKeyText"/>
                 <ui:OptionDropDown Name="FontFamilyDropDown" Title="{Loc 'ui-options-font-family'}" />
