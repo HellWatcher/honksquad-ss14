@@ -72,5 +72,8 @@ public sealed class ChannelSelectorButton : ChatPopupButton<ChannelSelectorPopup
     {
         Text = radio != null ? Loc.GetString(radio.Name) : ChannelSelectorName(channel);
         Modulate = radio?.Color ?? ChannelSelectColor(channel);
+        // HONK START - Tint parent ChatInputBox border to match active channel. Issue #581.
+        Content.Client.RussStation.Chat.ChatInputChannelTint.Apply(this, channel, radio);
+        // HONK END
     }
 }
