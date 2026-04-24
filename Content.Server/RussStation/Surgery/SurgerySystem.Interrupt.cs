@@ -70,7 +70,7 @@ public sealed partial class SurgerySystem
         var cauteryStep = -1;
         for (var i = 0; i < proto.Steps.Count; i++)
         {
-            var quality = proto.Steps[i].Quality;
+            var quality = proto.Steps[i].GetQuality();
             if (incisionStep < 0 && quality == InterruptSlicingQuality)
                 incisionStep = i;
             else if (incisionStep >= 0 && clampStep < 0 && quality == InterruptClampingQuality)
