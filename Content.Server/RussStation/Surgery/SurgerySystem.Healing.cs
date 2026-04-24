@@ -5,6 +5,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Effects;
+using Content.Shared.RussStation.Wounds;
 
 namespace Content.Server.RussStation.Surgery;
 
@@ -127,35 +128,48 @@ public sealed partial class SurgerySystem
     }
 
     /// <summary>
-    /// True if any healing step in the procedure has at least one target damage type
-    /// the patient currently carries above a small epsilon. Procedures whose only
-    /// useful effect is healing (tend-wounds) fail this check on an uninjured patient.
-    /// Procedures with no healing steps (e.g. organ manipulation) always pass.
+    /// True if the procedure has at least one useful step whose target condition
+    /// is present on the patient: a healing step matching current damage above a
+    /// small epsilon, or a wound-clearing step matching an active wound category.
+    /// Procedures with no healing or wound-clearing steps (e.g. organ manipulation)
+    /// always pass.
     /// </summary>
     private bool ProcedureHasAnythingToTend(EntityUid patient, SurgeryProcedurePrototype proto)
     {
-        if (!TryComp<DamageableComponent>(patient, out var damageable))
-            return true;
+        var hasUsefulStep = false;
+        DamageSpecifier? currentDamage = null;
+        if (TryComp<DamageableComponent>(patient, out var damageable))
+            currentDamage = _damageable.GetPositiveDamage((patient, damageable));
 
-        var hasHealingStep = false;
-        var currentDamage = _damageable.GetPositiveDamage((patient, damageable));
+        TryComp<WoundComponent>(patient, out var wounds);
 
         foreach (var step in proto.Steps)
         {
             var healing = step.GetHealing();
-            if (healing == null)
-                continue;
-
-            hasHealingStep = true;
-
-            foreach (var type in healing.DamageDict.Keys)
+            if (healing != null)
             {
-                if (currentDamage.DamageDict.TryGetValue(type, out var amount) && amount > FixedPoint2.New(SurgeryConstants.HealingDamageEpsilon))
+                hasUsefulStep = true;
+
+                if (currentDamage != null)
+                {
+                    foreach (var type in healing.DamageDict.Keys)
+                    {
+                        if (currentDamage.DamageDict.TryGetValue(type, out var amount) && amount > FixedPoint2.New(SurgeryConstants.HealingDamageEpsilon))
+                            return true;
+                    }
+                }
+            }
+
+            if (step.GetEffect() is ClearWoundCategoryEffect clear)
+            {
+                hasUsefulStep = true;
+
+                if (wounds != null && _wounds.GetWorstTier(wounds, clear.Category) > 0)
                     return true;
             }
         }
 
-        return !hasHealingStep;
+        return !hasUsefulStep;
     }
 
     private bool StepCanStillHeal(EntityUid patient, SurgeryStep step)
