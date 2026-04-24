@@ -373,9 +373,13 @@
 # === Lowpop scheduler ===
 
 - type: entity
-  id: LowpopBasicStationEventScheduler
+  id: LowpopRampingStationEventScheduler
   parent: BaseGameRule
   components:
-    - type: BasicStationEventScheduler
+    - type: RampingStationEventScheduler
+      # Lowpop runs calmer: 8-24 min baseline (double the 4-12 min upstream default)
+      # before the chaos modifier compresses intervals later in the round.
+      minBaselineInterval: 480
+      maxBaselineInterval: 1440
       scheduledGameRules: !type:NestedSelector
         tableId: LowpopGameRulesTable

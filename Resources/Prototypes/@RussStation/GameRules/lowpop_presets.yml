@@ -12,7 +12,7 @@
     - DummyNonAntagChance
     - LowpopTraitor
     - SubGamemodesRuleNoWizard
-    - LowpopBasicStationEventScheduler
+    - LowpopRampingStationEventScheduler
     - MeteorSwarmMildScheduler
     - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
@@ -28,7 +28,7 @@
     - DummyNonAntagChance
     - LowpopRevolutionary
     - SubGamemodesRuleNoWizard
-    - LowpopBasicStationEventScheduler
+    - LowpopRampingStationEventScheduler
     - MeteorSwarmMildScheduler
     - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
@@ -44,7 +44,7 @@
     - DummyNonAntagChance
     - LowpopChangeling
     - SubGamemodesRuleNoWizard
-    - LowpopBasicStationEventScheduler
+    - LowpopRampingStationEventScheduler
     - MeteorSwarmMildScheduler
     - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
@@ -58,7 +58,7 @@
   showInVote: false
   rules:
     - LowpopZombie
-    - LowpopBasicStationEventScheduler
+    - LowpopRampingStationEventScheduler
     - MeteorSwarmMildScheduler
     - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
