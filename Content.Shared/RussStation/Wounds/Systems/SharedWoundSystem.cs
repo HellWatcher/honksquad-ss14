@@ -186,6 +186,47 @@ public abstract class SharedWoundSystem : EntitySystem
     }
 
     /// <summary>
+    /// Appends a wound entry directly. Bypasses the damage-spike pipeline in
+    /// <see cref="OnDamageChanged"/>, so it's the right entry point for tests
+    /// and for external systems that already decided a wound should exist.
+    /// </summary>
+    public void AddWound(WoundComponent comp, WoundEntry entry)
+    {
+        comp.ActiveWounds.Add(entry);
+    }
+
+    /// <summary>
+    /// Overwrites the bleed source damage type without the precedence logic in
+    /// <see cref="WoundDisplaySystem.UpdateBleedSource"/>. For tests and resets.
+    /// </summary>
+    public void SetBleedSource(WoundComponent comp, string? damageType)
+    {
+        comp.BleedSourceDamageType = damageType;
+    }
+
+    /// <summary>
+    /// Removes the wound entry at <paramref name="index"/>. Caller is responsible
+    /// for calling <see cref="SharedEntitySystem.Dirty"/> after a batch of changes.
+    /// </summary>
+    public void RemoveWoundAt(WoundComponent comp, int index)
+    {
+        comp.ActiveWounds.RemoveAt(index);
+    }
+
+    /// <summary>
+    /// Multiplies <see cref="WoundComponent.ThresholdMultiplier"/> by the given
+    /// factor. Funnel for trait systems that raise or lower a mob's wound
+    /// resistance (apply with the trait's factor, remove with its reciprocal).
+    /// </summary>
+    public void ScaleThresholdMultiplier(EntityUid uid, float factor, WoundComponent? comp = null)
+    {
+        if (!Resolve(uid, ref comp, false))
+            return;
+
+        comp.ThresholdMultiplier *= factor;
+    }
+
+    /// <summary>
     /// Gets the highest tier among active wounds of a given category.
     /// Returns 0 if no wounds of that category exist.
     /// </summary>

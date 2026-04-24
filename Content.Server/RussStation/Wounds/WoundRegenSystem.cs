@@ -19,6 +19,7 @@ public sealed class WoundRegenSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly SharedWoundSystem _wound = default!;
 
     private TimeSpan _nextTick;
 
@@ -70,7 +71,7 @@ public sealed class WoundRegenSystem : EntitySystem
 
             if (wound.Tier <= 1)
             {
-                comp.ActiveWounds.RemoveAt(i);
+                _wound.RemoveWoundAt(comp, i);
                 changed = true;
                 if (IsCategoryCleared(comp, wound))
                     clearedCategory = true;

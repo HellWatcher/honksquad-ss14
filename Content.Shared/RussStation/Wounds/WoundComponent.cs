@@ -1,4 +1,5 @@
 using Content.Shared.Alert;
+using Content.Shared.RussStation.Wounds.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -11,6 +12,7 @@ namespace Content.Shared.RussStation.Wounds;
 /// Tracks active wounds (fractures and burns) and bleed source info for display.
 /// </summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[Access(typeof(SharedWoundSystem), typeof(WoundDisplaySystem))]
 public sealed partial class WoundComponent : Component
 {
     /// <summary>

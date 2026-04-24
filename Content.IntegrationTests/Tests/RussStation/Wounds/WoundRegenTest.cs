@@ -1,5 +1,6 @@
 using Content.Server.RussStation.Wounds;
 using Content.Shared.RussStation.Wounds;
+using Content.Shared.RussStation.Wounds.Systems;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Wounds;
@@ -26,7 +27,7 @@ public sealed class WoundRegenTest
             var entity = entityManager.SpawnEntity(null, mapData.GridCoords);
             var comp = entityManager.AddComponent<WoundComponent>(entity);
 
-            comp.ActiveWounds.Add(new WoundEntry("HeatBurn", 3) { NextDecayTime = TimeSpan.Zero });
+            entityManager.System<SharedWoundSystem>().AddWound(comp, new WoundEntry("HeatBurn", 3) { NextDecayTime = TimeSpan.Zero });
 
             entityManager.System<WoundRegenSystem>().DecayWounds(entity, comp);
 
@@ -53,7 +54,7 @@ public sealed class WoundRegenTest
             var entity = entityManager.SpawnEntity(null, mapData.GridCoords);
             var comp = entityManager.AddComponent<WoundComponent>(entity);
 
-            comp.ActiveWounds.Add(new WoundEntry("HeatBurn", 3) { NextDecayTime = FarFuture });
+            entityManager.System<SharedWoundSystem>().AddWound(comp, new WoundEntry("HeatBurn", 3) { NextDecayTime = FarFuture });
 
             entityManager.System<WoundRegenSystem>().DecayWounds(entity, comp);
 
@@ -78,7 +79,7 @@ public sealed class WoundRegenTest
             var entity = entityManager.SpawnEntity(null, mapData.GridCoords);
             var comp = entityManager.AddComponent<WoundComponent>(entity);
 
-            comp.ActiveWounds.Add(new WoundEntry("HeatBurn", 1) { NextDecayTime = TimeSpan.Zero });
+            entityManager.System<SharedWoundSystem>().AddWound(comp, new WoundEntry("HeatBurn", 1) { NextDecayTime = TimeSpan.Zero });
 
             entityManager.System<WoundRegenSystem>().DecayWounds(entity, comp);
 
@@ -103,8 +104,8 @@ public sealed class WoundRegenTest
             var comp = entityManager.AddComponent<WoundComponent>(entity);
 
             // One tier-1 Burn due to expire (will be removed) + one tier-3 Burn that stays.
-            comp.ActiveWounds.Add(new WoundEntry("HeatBurn", 1) { NextDecayTime = TimeSpan.Zero });
-            comp.ActiveWounds.Add(new WoundEntry("ColdBurn", 3) { NextDecayTime = FarFuture });
+            entityManager.System<SharedWoundSystem>().AddWound(comp, new WoundEntry("HeatBurn", 1) { NextDecayTime = TimeSpan.Zero });
+            entityManager.System<SharedWoundSystem>().AddWound(comp, new WoundEntry("ColdBurn", 3) { NextDecayTime = FarFuture });
 
             entityManager.System<WoundRegenSystem>().DecayWounds(entity, comp);
 

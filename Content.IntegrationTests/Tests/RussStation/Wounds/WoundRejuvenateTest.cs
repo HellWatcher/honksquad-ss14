@@ -1,5 +1,6 @@
 using Content.Shared.Rejuvenate;
 using Content.Shared.RussStation.Wounds;
+using Content.Shared.RussStation.Wounds.Systems;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.RussStation.Wounds;
@@ -20,9 +21,10 @@ public sealed class WoundRejuvenateTest
         {
             var entity = entityManager.SpawnEntity(null, mapData.GridCoords);
             var comp = entityManager.AddComponent<WoundComponent>(entity);
+            var wounds = entityManager.System<SharedWoundSystem>();
 
-            comp.ActiveWounds.Add(new WoundEntry("BluntFracture", 2));
-            comp.BleedSourceDamageType = "Slash";
+            wounds.AddWound(comp, new WoundEntry("BluntFracture", 2));
+            wounds.SetBleedSource(comp, "Slash");
 
             entityManager.EventBus.RaiseLocalEvent(entity, new RejuvenateEvent());
 
