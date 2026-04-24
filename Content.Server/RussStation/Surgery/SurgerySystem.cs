@@ -57,7 +57,6 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         SubscribeLocalEvent<ActiveSurgeryComponent, SurgeryStepDoAfterEvent>(OnStepDoAfter);
         SubscribeLocalEvent<ActiveSurgeryComponent, SurgeryCauteryDoAfterEvent>(OnCauteryDoAfter);
         SubscribeLocalEvent<SurgeryDrapedComponent, ComponentStartup>(OnDrapedStartup);
-        SubscribeLocalEvent<SurgeryDrapedComponent, RemoveSurgeryDrapeAlertEvent>(OnRemoveDrapeAlert);
 
         SubscribeNetworkEvent<SelectSurgeryProcedureEvent>(OnProcedureSelected);
         SubscribeNetworkEvent<SelectOrganEvent>(OnOrganSelected);
@@ -146,16 +145,6 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
     private void OnDrapedStartup(Entity<SurgeryDrapedComponent> ent, ref ComponentStartup args)
     {
         _alerts.ShowAlert(ent.Owner, SurgeryDrapedAlert);
-    }
-
-    private void OnRemoveDrapeAlert(Entity<SurgeryDrapedComponent> ent, ref RemoveSurgeryDrapeAlertEvent args)
-    {
-        if (args.Handled)
-            return;
-
-        args.Handled = true;
-        RemComp<ActiveSurgeryComponent>(ent);
-        RemComp<SurgeryDrapedComponent>(ent); // Triggers OnDrapedShutdown -> drops bedsheet, clears alert
     }
 
     private void OpenProcedureMenu(EntityUid surgeon, EntityUid patient, EntityUid bedsheet)
