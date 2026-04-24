@@ -391,7 +391,6 @@
         whitelist:
           tags:
           - PlushieSharkBlue
-        offset: 0, -0.03125
       cart_magicarp_e:
         whitelist:
           tags:
