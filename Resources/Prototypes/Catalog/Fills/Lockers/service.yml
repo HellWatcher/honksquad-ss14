@@ -104,6 +104,17 @@
       - id: WireBrush
     - id: PlushieLizardJobJanitor
       prob: 0.02
+    # HONK START - rare chance of a fish/shark plushie matching the trolley's plushie slot
+    - !type:GroupSelector
+      prob: 0.05
+      children:
+      - id: PlushieSharkBlue
+      - id: PlushieSharkPink
+      - id: PlushieSharkGrey
+      - id: PlushieCarp
+      - id: PlushieCarpHolo
+      - id: PlushieCarpMagi
+    # HONK END
 
 - type: entity
   id: ClosetLegalFilled
