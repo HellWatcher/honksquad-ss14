@@ -112,8 +112,8 @@
       - id: PlushieSharkPink
       - id: PlushieSharkGrey
       - id: PlushieCarp
-      - id: PlushieCarpHolo
-      - id: PlushieCarpMagi
+      - id: PlushieHolocarp
+      - id: PlushieMagicarp
     # HONK END
 
 - type: entity
