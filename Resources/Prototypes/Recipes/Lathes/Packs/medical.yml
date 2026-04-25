@@ -36,8 +36,9 @@
   - Drill
   - Saw
   - Hemostat
-  # HONK START - Surgical drape recipe
+  # HONK START - Surgical drape and tray recipes
   - SurgicalDrape
+  - SurgicalTray
   # HONK END
 
 - type: latheRecipePack
