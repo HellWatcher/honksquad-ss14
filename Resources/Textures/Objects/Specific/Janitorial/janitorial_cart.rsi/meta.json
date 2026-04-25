@@ -5,7 +5,7 @@
         "y": 32
     },
     "license": "CC-BY-SA-3.0",
-    "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/f8f4aeda930fcd0805ca4cc76d9bc9412a5b3428, cart_goldenplunger modified from cart_plunger by TiniestShark (github) and tweaked by Prole0 (github), cart_garbage_blue modified from cart_garbage by AndrewFenriz (github), cart_shark_blue derived by Katyes from mopbucket_shark_blue by Psychpsyo. cart_magicarp_e/w/ns derived by Katyes from mopbucket_magicarpplush by TiniestShark (github)",
+    "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/f8f4aeda930fcd0805ca4cc76d9bc9412a5b3428, cart_goldenplunger modified from cart_plunger by TiniestShark (github) and tweaked by Prole0 (github), cart_garbage_blue modified from cart_garbage by AndrewFenriz (github), cart_shark_blue derived by Katyes from mopbucket_shark_blue by Psychpsyo. cart_magicarp_e/w/ns derived by Katyes from mopbucket_magicarpplush by TiniestShark (github). cart_shark_pink_*, cart_shark_grey_*, cart_carp_*, cart_holocarp_* by Katyes (shark variants derived from mopbucket_shark_* by Psychpsyo; carp variants derived from mopbucket_carpplush, mopbucket_holocarpplush by TiniestShark/Psychpsyo)",
     "states": [
         {
             "name": "cart",
@@ -54,6 +54,240 @@
         {
             "name": "cart_magicarp_ns",
             "directions": 4
+        },
+        {
+            "name": "cart_shark_pink_e",
+            "directions": 4
+        },
+        {
+            "name": "cart_shark_pink_w",
+            "directions": 4
+        },
+        {
+            "name": "cart_shark_pink_ns",
+            "directions": 4
+        },
+        {
+            "name": "cart_shark_grey_e",
+            "directions": 4
+        },
+        {
+            "name": "cart_shark_grey_w",
+            "directions": 4
+        },
+        {
+            "name": "cart_shark_grey_ns",
+            "directions": 4
+        },
+        {
+            "name": "cart_carp_e",
+            "directions": 4
+        },
+        {
+            "name": "cart_carp_w",
+            "directions": 4
+        },
+        {
+            "name": "cart_carp_ns",
+            "directions": 4
+        },
+        {
+            "name": "cart_holocarp_e",
+            "directions": 4,
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
+        },
+        {
+            "name": "cart_holocarp_w",
+            "directions": 4,
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
+        },
+        {
+            "name": "cart_holocarp_ns",
+            "directions": 4,
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
         },
         {
             "name": "cart_replacer",
