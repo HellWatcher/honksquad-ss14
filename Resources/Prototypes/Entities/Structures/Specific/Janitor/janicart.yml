@@ -410,58 +410,62 @@
         whitelist:
           tags:
           - PlushieSharkPink
-        offset: -0.375, 0
+        offset: -0.375, -0.03125
       cart_shark_pink_w:
         whitelist:
           tags:
           - PlushieSharkPink
-        offset: 0.375, 0
+        offset: 0.375, -0.03125
       cart_shark_pink_ns:
         whitelist:
           tags:
           - PlushieSharkPink
+        offset: 0, -0.03125
       cart_shark_grey_e:
         whitelist:
           tags:
           - PlushieSharkGrey
-        offset: -0.375, 0
+        offset: -0.375, -0.03125
       cart_shark_grey_w:
         whitelist:
           tags:
           - PlushieSharkGrey
-        offset: 0.375, 0
+        offset: 0.375, -0.03125
       cart_shark_grey_ns:
         whitelist:
           tags:
           - PlushieSharkGrey
+        offset: 0, -0.03125
       cart_carp_e:
         whitelist:
           tags:
           - PlushieCarp
-        offset: -0.25, 0
+        offset: -0.25, -0.03125
       cart_carp_w:
         whitelist:
           tags:
           - PlushieCarp
-        offset: 0.25, 0
+        offset: 0.25, -0.03125
       cart_carp_ns:
         whitelist:
           tags:
           - PlushieCarp
+        offset: 0, -0.03125
       cart_holocarp_e:
         whitelist:
           tags:
           - PlushieCarpHolo
-        offset: -0.25, 0
+        offset: -0.25, -0.03125
       cart_holocarp_w:
         whitelist:
           tags:
           - PlushieCarpHolo
-        offset: 0.25, 0
+        offset: 0.25, -0.03125
       cart_holocarp_ns:
         whitelist:
           tags:
           - PlushieCarpHolo
+        offset: 0, -0.03125
       # HONK END
     sprite: Objects/Specific/Janitorial/janitorial_cart.rsi
   - type: Appearance
