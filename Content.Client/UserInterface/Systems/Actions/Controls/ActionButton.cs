@@ -2,6 +2,8 @@ using System.Numerics;
 using Content.Client.Actions;
 using Content.Client.Actions.UI;
 using Content.Client.Cooldown;
+//HONK START - upstream `using Content.Client.Stylesheets;` removed; label styling handled by HonkLabelFitter below
+//HONK END
 using Content.Shared.Actions.Components;
 using Content.Shared.Charges.Systems;
 using Content.Shared.Examine;

@@ -21,6 +21,9 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
 
     private bool _isPopulating;
 
+    //HONK START - upstream had `private StationRecordFilterType _currentFilterType;` here; managed by the shared filter widget below
+    //HONK END
+
     public GeneralStationRecordConsoleWindow()
     {
         RobustXamlLoader.Load(this);

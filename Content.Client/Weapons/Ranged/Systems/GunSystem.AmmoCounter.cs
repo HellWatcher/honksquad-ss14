@@ -246,6 +246,8 @@ public sealed partial class GunSystem
                 > 15 => BulletRender.BulletType.Normal,
                 _ => BulletRender.BulletType.Large
             };
+            //HONK START - upstream set `_ammoCount.Text = $"x{count:00}";` here; dropped alongside Visible=false above
+            //HONK END
         }
 
         public void PlayAlarmAnimation(Animation animation)

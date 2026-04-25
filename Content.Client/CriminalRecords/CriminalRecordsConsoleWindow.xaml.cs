@@ -51,6 +51,9 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
 
     private DialogWindow? _reasonDialog;
 
+    //HONK START - upstream had `private StationRecordFilterType _currentFilterType;` here; managed by shared filter widget
+    //HONK END
+
     private SecurityStatus _currentCrewListFilter;
 
     public CriminalRecordsConsoleWindow(EntityUid console, uint maxLength, IPlayerManager playerManager, IPrototypeManager prototypeManager, IRobustRandom robustRandom, AccessReaderSystem accessReader)
@@ -66,6 +69,8 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
         _spriteSystem = _entManager.System<SpriteSystem>();
 
         _maxLength = maxLength;
+        //HONK START - upstream initialized `_currentFilterType = StationRecordFilterType.Name;` here
+        //HONK END
 
         _currentCrewListFilter = SecurityStatus.None;
 
@@ -103,6 +108,9 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
         {
             OnKeySelected?.Invoke(null);
         };
+
+        //HONK START - upstream `FilterType.OnItemSelected` block lived here; replaced by SearchBar.OnFilterChanged below
+        //HONK END
 
         //Select Status to filter crew
         CrewListFilter.OnItemSelected += eventArgs =>
@@ -152,6 +160,8 @@ public sealed partial class CriminalRecordsConsoleWindow : FancyWindow
         }
 
         _selectedKey = state.SelectedKey;
+        //HONK START - upstream had `FilterType.SelectId((int)_currentFilterType);` here; SearchBar widget owns the type now
+        //HONK END
         CrewListFilter.SelectId((int)_currentCrewListFilter);
         NoRecords.Visible = state.RecordListing == null || state.RecordListing.Count == 0;
         PopulateRecordListing(state.RecordListing);

@@ -1,6 +1,8 @@
 using System.Linq;
 using Content.Client.Actions;
 using Content.Shared.Input;
+//HONK START - upstream `using Robust.Client.Input;` removed; IInputManager dependency below dropped
+//HONK END
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Utility;
@@ -11,6 +13,8 @@ namespace Content.Client.UserInterface.Systems.Actions.Controls;
 public class ActionButtonContainer : GridContainer
 {
     [Dependency] private readonly IEntityManager _entity = default!;
+    //HONK START - upstream had `[Dependency] private readonly IInputManager _input = default!;`; unused after fork refactor
+    //HONK END
 
     public event Action<GUIBoundKeyEventArgs, ActionButton>? ActionPressed;
     public event Action<GUIBoundKeyEventArgs, ActionButton>? ActionUnpressed;
