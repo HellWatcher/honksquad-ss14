@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "license": "AGPL-3.0",
+  "copyright": "Ported from RussStation (SS13) russstation/icons/mob/actions/actions_skaven.dmi",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "warpstone_blade0",
+      "delays": [
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "warpstone_blade1",
+      "delays": [
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "rat"
+    }
+  ]
+}

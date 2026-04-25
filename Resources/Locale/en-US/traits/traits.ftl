@@ -34,6 +34,7 @@ trait-accentless-desc-reptilian = Removes your lizard accent.
 trait-accentless-desc-moth = Removes your moth accent.
 trait-accentless-desc-dwarf = Removes your Scottish accent.
 trait-accentless-desc-skeleton = Removes your skeleton accent.
+trait-accentless-desc-skaven = Removes your Queekish chittering.
 # HONK END
 
 trait-frontal-lisp-name = Lisp

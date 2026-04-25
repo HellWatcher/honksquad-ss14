@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "license": "AGPL-3.0",
+  "copyright": "Ported from RussStation (SS13) russstation/icons/obj/skaven.dmi",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "skaven_dagger"
+    },
+    {
+      "name": "dagger",
+      "delays": [
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.1,
+          0.1
+        ]
+      ]
+    }
+  ]
+}

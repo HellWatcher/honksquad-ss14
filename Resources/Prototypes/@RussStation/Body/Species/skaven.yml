@@ -1,7 +1,6 @@
-# Ported from RussStation SS13 (AGPL-3.0)
-# Sprite refs point at Vox RSIs as placeholders until @RussStation/Mobs/Species/Skaven/
-# art lands. Search-replace Mobs/Species/Vox -> @RussStation/Mobs/Species/Skaven when
-# the Skaven RSIs drop in.
+# Ported from RussStation SS13 (AGPL-3.0). Body parts ported via Tools/honk/local/dmi_to_rsi.py
+# from russstation/icons/mob/human_parts_greyscale.dmi. Internal organs still reference Vox
+# until matching organ sprites are made (russtation has no Skaven-specific organ icons).
 
 - type: markingsGroup
   parent: Undergarments
@@ -79,7 +78,7 @@
       speechSounds: Squeak
       allowedEmotes: ["Squeak", "Squish"]
     - type: ReplacementAccent
-      accent: queekish
+      accents: [queekish]
     - type: Bloodstream
       bloodReferenceSolution:
         reagents:
@@ -128,7 +127,7 @@
   components:
     - type: VisualOrgan
       data:
-        sprite: Mobs/Species/Vox/parts.rsi
+        sprite: '@RussStation/Mobs/Species/Skaven/parts.rsi'
     - type: VisualOrganMarkings
       markingData:
         group: Skaven
@@ -139,7 +138,7 @@
   abstract: true
   components:
     - type: Sprite
-      sprite: Mobs/Species/Vox/parts.rsi
+      sprite: '@RussStation/Mobs/Species/Skaven/parts.rsi'
 
 - type: entity
   parent: [OrganBaseTorso, OrganSkavenExternal]
