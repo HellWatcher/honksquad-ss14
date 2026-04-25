@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+// HONK START - System.Numerics for Vector2 on map layer offset
 using System.Numerics;
+// HONK END
 using Content.Shared.Whitelist;
 using Robust.Shared.Serialization;
 

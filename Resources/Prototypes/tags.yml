@@ -1127,13 +1127,13 @@
               # Storage blacklist on BaseToilet due to conflicting actions.
 
 - type: Tag
-  id: PlushieCarp # Storage whitelist: MopBucket, JanitorialTrolley. ItemMapper: MopBucket, JanitorialTrolley
+  id: PlushieCarp # Storage whitelist: MopBucket. ItemMapper: MopBucket
 
 - type: Tag
-  id: PlushieCarpHolo # Storage whitelist: MopBucket, JanitorialTrolley. ItemMapper: MopBucket, JanitorialTrolley
+  id: PlushieCarpHolo # Storage whitelist: MopBucket. ItemMapper: MopBucket
 
 - type: Tag
-  id: PlushieCarpMagi # Storage whitelist: MopBucket, JanitorialTrolley. ItemMapper: MopBucket, JanitorialTrolley
+  id: PlushieCarpMagi # Storage whitelist: MopBucket. ItemMapper: MopBucket
 
 - type: Tag
   id: PlushieGhost # ConstructionGraph: PlushieGhostRevenant
@@ -1142,13 +1142,13 @@
   id: PlushieLizard # ConstructionGraph: ClothingShoeSlippersLizard
 
 - type: Tag
-  id: PlushieSharkBlue # Storage whitelist: MopBucket, JanitorialTrolley. ItemMapper: MopBucket, JanitorialTrolley
+  id: PlushieSharkBlue # Storage whitelist: MopBucket. ItemMapper: MopBucket
 
 - type: Tag
-  id: PlushieSharkGrey # Storage whitelist: MopBucket, JanitorialTrolley. ItemMapper: MopBucket, JanitorialTrolley
+  id: PlushieSharkGrey # Storage whitelist: MopBucket. ItemMapper: MopBucket
 
 - type: Tag
-  id: PlushieSharkPink # Storage whitelist: MopBucket, JanitorialTrolley. ItemMapper: MopBucket, JanitorialTrolley
+  id: PlushieSharkPink # Storage whitelist: MopBucket. ItemMapper: MopBucket
 
 - type: Tag
   id: Potato # ConstructionGraph: PowerCellPotato
