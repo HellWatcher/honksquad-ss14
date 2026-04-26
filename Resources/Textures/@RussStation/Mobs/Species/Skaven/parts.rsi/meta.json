@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Sprites by skeyuui (https://github.com/skeyuui) for RussStation, merged in russ-station/russ-station PR #78 (nezumimi). Original DMI: russstation/icons/mob/human_parts_greyscale.dmi",
+  "copyright": "Sprites by skeyuui (https://github.com/skeyuui) for RussStation (https://github.com/russ-station/russ-station), ported from russstation/icons/mob/human_parts_greyscale.dmi.",
   "size": {
     "x": 32,
     "y": 32

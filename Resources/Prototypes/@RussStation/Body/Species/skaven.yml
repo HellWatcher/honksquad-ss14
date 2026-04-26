@@ -30,9 +30,6 @@
     enum.HumanoidVisualLayers.HeadTop:
       limit: 1
       required: false
-    enum.HumanoidVisualLayers.Special:
-      limit: 1
-      required: false
     enum.HumanoidVisualLayers.UndergarmentTop:
       limit: 1
       required: false
