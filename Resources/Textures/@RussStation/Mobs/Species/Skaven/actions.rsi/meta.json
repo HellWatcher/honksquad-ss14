@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "license": "AGPL-3.0",
-  "copyright": "Ported from RussStation (SS13) russstation/icons/mob/actions/actions_skaven.dmi",
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Sprites by skeyuui (https://github.com/skeyuui) for RussStation, merged in russ-station/russ-station PR #78 (nezumimi). Original DMI: russstation/icons/mob/actions/actions_skaven.dmi",
   "size": {
     "x": 32,
     "y": 32

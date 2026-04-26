@@ -127,7 +127,7 @@
   components:
     - type: VisualOrgan
       data:
-        sprite: '@RussStation/Mobs/Species/Skaven/parts.rsi'
+        sprite: "@RussStation/Mobs/Species/Skaven/parts.rsi"
     - type: VisualOrganMarkings
       markingData:
         group: Skaven
@@ -138,7 +138,7 @@
   abstract: true
   components:
     - type: Sprite
-      sprite: '@RussStation/Mobs/Species/Skaven/parts.rsi'
+      sprite: "@RussStation/Mobs/Species/Skaven/parts.rsi"
 
 - type: entity
   parent: [OrganBaseTorso, OrganSkavenExternal]
