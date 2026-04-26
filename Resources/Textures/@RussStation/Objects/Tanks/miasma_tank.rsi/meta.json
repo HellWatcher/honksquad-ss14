@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Sprite by skeyuui (https://github.com/skeyuui) for RussStation (https://github.com/russ-station/russ-station), ported from russstation/icons/obj/tank.dmi.",
+  "copyright": "icon by skeyuui (https://github.com/skeyuui) for RussStation (https://github.com/russ-station/russ-station), ported from russstation/icons/obj/tank.dmi. equipped-BACKPACK and equipped-SUITSTORAGE adapted from upstream Objects/Tanks/red.rsi (SS14, CC-BY-SA-3.0). All states converted to greyscale at port time so Sprite.color can apply the species' tint.",
   "size": {
     "x": 32,
     "y": 32
@@ -9,6 +9,14 @@
   "states": [
     {
       "name": "icon"
+    },
+    {
+      "name": "equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "equipped-SUITSTORAGE",
+      "directions": 4
     }
   ]
 }
