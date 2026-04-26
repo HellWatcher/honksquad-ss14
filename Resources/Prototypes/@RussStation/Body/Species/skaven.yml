@@ -108,8 +108,6 @@
   abstract: true
   suffix: Skaven
 
-# P1: metabolizer left as default (Human via OrganBase*). P3 swaps to [ Skaven ]
-# when the miasma respiration edits land in gases.yml + botany.yml.
 - type: entity
   id: OrganSkavenMetabolizer
   abstract: true
@@ -207,6 +205,12 @@
 - type: entity
   parent: [OrganBaseLungs, OrganSkavenInternal, OrganSkavenMetabolizer]
   id: OrganSkavenLungs
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Mobs/Species/Skaven/organs.rsi"
+      state: lungs
+    - type: Lung
+      alert: LowAmmonia
 
 - type: entity
   parent: [OrganBaseHeart, OrganSkavenInternal, OrganSkavenMetabolizer]
