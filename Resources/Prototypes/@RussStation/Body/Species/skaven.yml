@@ -1,6 +1,7 @@
-# Ported from RussStation SS13 (AGPL-3.0). Body parts ported via Tools/honk/local/dmi_to_rsi.py
-# from russstation/icons/mob/human_parts_greyscale.dmi. Internal organs still reference Vox
-# until matching organ sprites are made (russtation has no Skaven-specific organ icons).
+# Body parts and lung organ ported from RussStation SS13 (CC-BY-SA-3.0, sprites by skeyuui)
+# via Tools/honk/local/dmi_to_rsi.py. Lungs is the only species-specific organ icon russtation
+# ships; the remaining internal organs (heart, liver, kidneys, etc.) still reference the upstream
+# Vox organs.rsi as visual stand-ins.
 
 - type: markingsGroup
   parent: Undergarments
@@ -24,6 +25,12 @@
       limit: 2
       required: false
     enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Special:
       limit: 1
       required: false
     enum.HumanoidVisualLayers.UndergarmentTop:
