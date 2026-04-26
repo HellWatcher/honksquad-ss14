@@ -73,6 +73,9 @@
   - EmergencyNitrogen
   - EmergencyOxygen
   - LoadoutSpeciesVoxNitrogen
+  # HONK START - Skaven (#481): species-gated entry, picked when the player is Skaven.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 # nitrogen or oxygen tank, depending on what your species needs
 - type: loadoutGroup

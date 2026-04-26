@@ -1,0 +1,35 @@
+# Skaven survival tank (#481). Skaven breathe Ammonia (atmos miasma) instead of O2,
+# so they get the same survival-kit shape Vox have for nitrogen: an extended-capacity
+# emergency tank pre-filled with the species' breathing gas. Sprite reuses the green
+# emergency_extended_red rsi for now (can swap in a dedicated ammonia/miasma tint
+# later); the gas content is what matters mechanically.
+
+- type: entity
+  parent: ExtendedEmergencyOxygenTank
+  id: ExtendedEmergencyAmmoniaTank
+  name: extended-capacity emergency ammonia tank
+  description: An emergency tank with extended capacity, filled with breathable miasma. It can hold 1.5 L of gas.
+  components:
+    - type: Sprite
+      sprite: Objects/Tanks/emergency_extended.rsi
+    - type: Item
+      sprite: Objects/Tanks/emergency_extended.rsi
+      storedSprite:
+        state: storage
+        sprite: Objects/Tanks/emergency_extended.rsi
+    - type: Clothing
+      sprite: Objects/Tanks/emergency_extended.rsi
+
+- type: entity
+  id: ExtendedEmergencyAmmoniaTankFilled
+  parent: ExtendedEmergencyAmmoniaTank
+  suffix: Filled
+  components:
+    - type: GasTank
+      outputPressure: 21.3
+      air:
+        # 9 minutes
+        volume: 1.5
+        moles:
+          Ammonia: 0.615413715
+        temperature: 293.15
