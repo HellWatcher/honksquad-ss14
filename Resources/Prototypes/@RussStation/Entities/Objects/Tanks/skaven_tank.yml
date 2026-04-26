@@ -39,8 +39,10 @@
         temperature: 293.15
 
 # Full-size 5 L ammonia tank for refilling Skaven survival kits and stocking
-# atmos/medbay. Reuses Objects/Tanks/red.rsi tinted with the Ammonia reagent color
-# (#77b58e), same trick as the double-emergency tank above.
+# atmos/medbay. Uses the russ-ported skeyuui silhouette in
+# @RussStation/Objects/Tanks/miasma_tank.rsi (greyscaled at import time) tinted
+# with the Ammonia reagent color (#77b58e), same recolor trick as the double-
+# emergency tank above.
 
 - type: entity
   parent: NitrogenTank
@@ -48,15 +50,15 @@
   name: ammonia tank
   description: A standard cylindrical gas tank for ammonia. It can hold 5 L of gas.
   components:
-  - type: Sprite
-    sprite: Objects/Tanks/red.rsi
-    color: "#77b58e"
-  - type: Item
-    sprite: Objects/Tanks/red.rsi
-    color: "#77b58e"
-  - type: Clothing
-    sprite: Objects/Tanks/red.rsi
-    color: "#77b58e"
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
+      color: "#77b58e"
+    - type: Item
+      sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
+      color: "#77b58e"
+    - type: Clothing
+      sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
+      color: "#77b58e"
 
 - type: entity
   id: AmmoniaTankFilled
@@ -64,10 +66,10 @@
   suffix: Filled
   name: ammonia tank
   components:
-  - type: GasTank
-    air:
-      # 31 minutes
-      volume: 5
-      moles:
-        Ammonia: 2.051379050
-      temperature: 293.15
+    - type: GasTank
+      air:
+        # 31 minutes
+        volume: 5
+        moles:
+          Ammonia: 2.051379050
+        temperature: 293.15
