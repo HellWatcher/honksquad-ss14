@@ -115,7 +115,7 @@
   abstract: true
   components:
     - type: Metabolizer
-      metabolizerTypes: [Human]
+      metabolizerTypes: [Skaven]
 
 - type: entity
   parent: OrganSkaven

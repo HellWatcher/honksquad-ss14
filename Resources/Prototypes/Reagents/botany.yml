@@ -12,10 +12,10 @@
   metabolisms:
     Digestion:
       effects:
-      - !type:SatiateHunger
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
+        - !type:SatiateHunger
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
 
 - type: reagent
   id: Left4Zed
@@ -36,17 +36,17 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:SatiateHunger
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: 1
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
+        - !type:SatiateHunger
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 1
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
 
 - type: reagent
   id: PestKiller
@@ -64,13 +64,13 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: 3
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 3
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
 
 - type: reagent
   id: PlantBGone
@@ -92,16 +92,16 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: -4
-            Blunt: 2
-            Slash: 1
-            Piercing: 1
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: -4
+              Blunt: 2
+              Slash: 1
+              Piercing: 1
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
 
 - type: reagent
   id: RobustHarvest
@@ -122,41 +122,41 @@
       amount: 1
     # HONK START - Default threshold is 30 (out of 50 cap), so any RH pump guarantees Seedless. Raise above cap so RH no longer forces seedless - the random mutation is the sole seedless source.
     - !type:RobustHarvest
-        potencySeedlessThreshold: 51
+      potencySeedlessThreshold: 51
     # HONK END
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: -2
-            Blunt: -3
-            Slash: -3
-            Piercing: -3
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
-      - !type:HealthChange
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
-        - !type:ReagentCondition
-          reagent: RobustHarvest
-          min: 30
-        damage:
-          types:
-            Asphyxiation: 1
-            Heat: 2
-            Poison: 1
-      - !type:Polymorph
-        prototype: TreeMorph
-        conditions:
-          - !type:MetabolizerTypeCondition
-            type: [Plant]
-          - !type:ReagentCondition
-            reagent: RobustHarvest
-            min: 80
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: -2
+              Blunt: -3
+              Slash: -3
+              Piercing: -3
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
+        - !type:HealthChange
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
+            - !type:ReagentCondition
+              reagent: RobustHarvest
+              min: 30
+          damage:
+            types:
+              Asphyxiation: 1
+              Heat: 2
+              Poison: 1
+        - !type:Polymorph
+          prototype: TreeMorph
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
+            - !type:ReagentCondition
+              reagent: RobustHarvest
+              min: 80
 
 - type: reagent
   id: Sedin
@@ -190,13 +190,13 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Poison: 4
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [Plant]
+        - !type:HealthChange
+          damage:
+            types:
+              Poison: 4
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Plant]
 
 - type: reagent
   id: Ammonia
@@ -209,76 +209,83 @@
   boilingPoint: -33.0
   meltingPoint: -77.7
   plantMetabolism:
-  - !type:PlantAdjustNutrition
-    amount: 1
-  - !type:PlantAdjustHealth
-    amount: 0.5
+    - !type:PlantAdjustNutrition
+      amount: 1
+    - !type:PlantAdjustHealth
+      amount: 0.5
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Caustic: 1
+        - !type:HealthChange
+          damage:
+            types:
+              Caustic: 1
     Respiration:
       effects:
-      - !type:HealthChange
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Rat ]
-          inverted: true
-        - !type:ReagentCondition
-          reagent: Ammonia
-          min: 1
-        ignoreResistances: true
-        scaling: true
-        damage:
-          types:
-            Poison: 1
-      - !type:Vomit
-        probability: 0.12
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Rat, Vox ]
-          inverted: true
-        - !type:ReagentCondition
-          reagent: Ammonia
-          min: 0.8
-      - !type:PopupMessage
-        type: Local
-        visualType: Medium
-        messages: [ "ammonia-smell" ]
-        probability: 0.1
-        conditions:
-        - !type:ReagentCondition
-          reagent: Ammonia
-          min: 0.25
-      - !type:EvenHealthChange
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Rat ]
-        - !type:ReagentCondition
-          reagent: Ammonia
-          min: 1
-        ignoreResistances: true
-        damage:
-          Brute: -2.5
-          Burn: -2.5
-          Airloss: -5
-      - !type:ModifyBloodLevel
-        amount: 1
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Rat ]
-        - !type:ReagentCondition
-          reagent: Ammonia
-          min: 1
-      - !type:Oxygenate # ammonia displaces nitrogen in vox blood
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Vox ]
-        factor: -4
-
+        # HONK START - Skaven (#481) breathes ammonia like rats / vox breathe nitrogen.
+        - !type:Oxygenate
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Skaven]
+        # HONK END
+        - !type:HealthChange
+          conditions:
+            - !type:MetabolizerTypeCondition # HONK START - exclude Skaven from ammonia poisoning, they breathe it.
+              type: [Rat, Skaven]
+              # HONK END
+              inverted: true
+            - !type:ReagentCondition
+              reagent: Ammonia
+              min: 1
+          ignoreResistances: true
+          scaling: true
+          damage:
+            types:
+              Poison: 1
+        - !type:Vomit
+          probability: 0.12
+          conditions:
+            - !type:MetabolizerTypeCondition # HONK START - Skaven (#481) doesn't vomit ammonia.
+              type: [Rat, Vox, Skaven]
+              # HONK END
+              inverted: true
+            - !type:ReagentCondition
+              reagent: Ammonia
+              min: 0.8
+        - !type:PopupMessage
+          type: Local
+          visualType: Medium
+          messages: ["ammonia-smell"]
+          probability: 0.1
+          conditions:
+            - !type:ReagentCondition
+              reagent: Ammonia
+              min: 0.25
+        - !type:EvenHealthChange
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Rat]
+            - !type:ReagentCondition
+              reagent: Ammonia
+              min: 1
+          ignoreResistances: true
+          damage:
+            Brute: -2.5
+            Burn: -2.5
+            Airloss: -5
+        - !type:ModifyBloodLevel
+          amount: 1
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Rat]
+            - !type:ReagentCondition
+              reagent: Ammonia
+              min: 1
+        - !type:Oxygenate # ammonia displaces nitrogen in vox blood
+          conditions:
+            - !type:MetabolizerTypeCondition
+              type: [Vox]
+          factor: -4
 
 - type: reagent
   id: Diethylamine
@@ -291,21 +298,21 @@
   boilingPoint: 55.5
   meltingPoint: -50.0
   plantMetabolism:
-  - !type:PlantAdjustNutrition
-    amount: 0.1
-  - !type:PlantAdjustPests
-    probability: 0.1
-    amount: -1
-  - !type:PlantAdjustHealth
-    amount: 0.1
-  - !type:PlantAffectGrowth
-    probability: 0.2
-    amount: 1
-  - !type:PlantDiethylamine {}
+    - !type:PlantAdjustNutrition
+      amount: 0.1
+    - !type:PlantAdjustPests
+      probability: 0.1
+      amount: -1
+    - !type:PlantAdjustHealth
+      amount: 0.1
+    - !type:PlantAffectGrowth
+      probability: 0.2
+      amount: 1
+    - !type:PlantDiethylamine {}
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange
-        damage:
-          types:
-            Caustic: 1
+        - !type:HealthChange
+          damage:
+            types:
+              Caustic: 1
