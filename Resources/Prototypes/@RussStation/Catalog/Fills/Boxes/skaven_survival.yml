@@ -12,7 +12,7 @@
       containers:
         storagebase: !type:AllSelector
           children:
-            - id: ClothingMaskBreath
+            - id: ClothingMaskGasSkaven
             - id: DoubleEmergencyAmmoniaTankFilled
             - id: EmergencyMedipen
             - id: Flare

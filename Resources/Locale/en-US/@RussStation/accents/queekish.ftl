@@ -127,7 +127,7 @@ accent-queekish-words-replace-54 = warlord
 accent-queekish-words-55 = boss
 accent-queekish-words-replace-55 = boss-boss
 accent-queekish-words-56 = friend
-accent-queekish-words-replace-56 = brother-rat
+accent-queekish-words-replace-56 = kin-rat
 
 # Weapons (57-60)
 accent-queekish-words-57 = knife
@@ -138,3 +138,5 @@ accent-queekish-words-59 = bomb
 accent-queekish-words-replace-59 = big-boom
 accent-queekish-words-60 = fire
 accent-queekish-words-replace-60 = burn-burn
+accent-queekish-words-61 = ammonia
+accent-queekish-words-replace-61 = miasma

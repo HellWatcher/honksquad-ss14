@@ -1,0 +1,19 @@
+# Skaven internals crate (#481). Mirrors CrateNitrogenInternals: two breath masks,
+# two skaven gas masks, four ammonia tanks. For Skaven crews / atmos resupply.
+
+- type: entity
+  parent: CrateInternals
+  id: CrateAmmoniaInternals
+  name: internals crate (ammonia)
+  description: Contains two breath masks, two skaven gas masks, and four ammonia tanks. Intended for ammonia-breathing species.
+  components:
+    - type: EntityTableContainerFill
+      containers:
+        entity_storage: !type:AllSelector
+          children:
+            - id: ClothingMaskGasSkaven
+              amount: 2
+            - id: ClothingMaskBreath
+              amount: 2
+            - id: AmmoniaTankFilled
+              amount: 4

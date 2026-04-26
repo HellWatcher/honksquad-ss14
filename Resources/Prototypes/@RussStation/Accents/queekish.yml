@@ -5,7 +5,7 @@
 
 - type: accent
   id: queekish
-  replacementChance: 0.65
+  replacementChance: 1.0
   wordReplacements:
     accent-queekish-words-1: accent-queekish-words-replace-1
     accent-queekish-words-2: accent-queekish-words-replace-2
@@ -67,3 +67,62 @@
     accent-queekish-words-58: accent-queekish-words-replace-58
     accent-queekish-words-59: accent-queekish-words-replace-59
     accent-queekish-words-60: accent-queekish-words-replace-60
+    accent-queekish-words-61: accent-queekish-words-replace-61
+  # Per-word chance overrides. Hyphenated replacements (the doubled and
+  # chittery flavor) fire 50% of the time even though replacementChance is 1.0;
+  # the plain word swaps (go -> scurry, captain -> warlord, etc.) always fire.
+  wordReplacementChances:
+    accent-queekish-words-1: 0.5
+    accent-queekish-words-2: 0.5
+    accent-queekish-words-3: 0.5
+    accent-queekish-words-4: 0.5
+    accent-queekish-words-5: 0.5
+    accent-queekish-words-6: 0.5
+    accent-queekish-words-7: 0.5
+    accent-queekish-words-8: 0.5
+    accent-queekish-words-9: 0.5
+    accent-queekish-words-10: 0.5
+    accent-queekish-words-12: 0.5
+    accent-queekish-words-13: 0.5
+    accent-queekish-words-14: 0.5
+    accent-queekish-words-15: 0.5
+    accent-queekish-words-16: 0.5
+    accent-queekish-words-17: 0.5
+    accent-queekish-words-18: 0.5
+    accent-queekish-words-19: 0.5
+    accent-queekish-words-20: 0.5
+    accent-queekish-words-21: 0.5
+    accent-queekish-words-22: 0.5
+    accent-queekish-words-23: 0.5
+    accent-queekish-words-24: 0.5
+    accent-queekish-words-25: 0.5
+    accent-queekish-words-26: 0.5
+    accent-queekish-words-27: 0.5
+    accent-queekish-words-28: 0.5
+    accent-queekish-words-29: 0.5
+    accent-queekish-words-30: 0.5
+    accent-queekish-words-31: 0.5
+    accent-queekish-words-32: 0.5
+    accent-queekish-words-33: 0.5
+    accent-queekish-words-34: 0.5
+    accent-queekish-words-35: 0.5
+    accent-queekish-words-36: 0.5
+    accent-queekish-words-37: 0.5
+    accent-queekish-words-38: 0.5
+    accent-queekish-words-39: 0.5
+    accent-queekish-words-40: 0.5
+    accent-queekish-words-41: 0.5
+    accent-queekish-words-42: 0.5
+    accent-queekish-words-43: 0.5
+    accent-queekish-words-44: 0.5
+    accent-queekish-words-45: 0.5
+    accent-queekish-words-49: 0.5
+    accent-queekish-words-50: 0.5
+    accent-queekish-words-51: 0.5
+    accent-queekish-words-52: 0.5
+    accent-queekish-words-55: 0.5
+    accent-queekish-words-56: 0.5
+    accent-queekish-words-57: 0.5
+    accent-queekish-words-58: 0.5
+    accent-queekish-words-59: 0.5
+    accent-queekish-words-60: 0.5
