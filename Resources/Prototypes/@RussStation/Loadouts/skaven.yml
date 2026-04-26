@@ -1,7 +1,7 @@
 # Skaven survival loadout (#481). Mirrors the Vox/nitrogen pattern: a species-gated
 # loadoutEffectGroup picks the right loadout out of the upstream Survival group's
-# list. Skaven get an extended-capacity ammonia tank in pocket1 and another inside
-# the BoxSurvivalSkaven survival box, matching the spec's two-extended-tank shape.
+# list. Skaven get a double-capacity ammonia tank in pocket1 and another inside
+# the BoxSurvivalSkaven survival box, two double tanks total.
 
 - type: loadoutEffectGroup
   id: AmmoniaBreather
@@ -19,4 +19,4 @@
     back:
       - BoxSurvivalSkaven
   equipment:
-    pocket1: ExtendedEmergencyAmmoniaTankFilled
+    pocket1: DoubleEmergencyAmmoniaTankFilled

@@ -1,35 +1,39 @@
 # Skaven survival tank (#481). Skaven breathe Ammonia (atmos miasma) instead of O2,
-# so they get the same survival-kit shape Vox have for nitrogen: an extended-capacity
-# emergency tank pre-filled with the species' breathing gas. Sprite reuses the green
-# emergency_extended_red rsi for now (can swap in a dedicated ammonia/miasma tint
-# later); the gas content is what matters mechanically.
+# so they get the same survival-kit shape Vox have for nitrogen: a double-capacity
+# emergency tank pre-filled with the species' breathing gas. Reuses the upstream
+# emergency_double.rsi sprite tinted to the Ammonia reagent's color (#77b58e) so we
+# don't ship a near-duplicate RSI just for the hue. The gas content is what matters
+# mechanically.
 
 - type: entity
-  parent: ExtendedEmergencyOxygenTank
-  id: ExtendedEmergencyAmmoniaTank
-  name: extended-capacity emergency ammonia tank
-  description: An emergency tank with extended capacity, filled with breathable miasma. It can hold 1.5 L of gas.
+  parent: DoubleEmergencyOxygenTank
+  id: DoubleEmergencyAmmoniaTank
+  name: double emergency ammonia tank
+  description: A high-grade dual-tank emergency life support container, filled with breathable miasma. It can hold 2.5 L of gas.
   components:
     - type: Sprite
-      sprite: Objects/Tanks/emergency_extended.rsi
+      sprite: Objects/Tanks/emergency_double.rsi
+      color: "#77b58e"
     - type: Item
-      sprite: Objects/Tanks/emergency_extended.rsi
+      sprite: Objects/Tanks/emergency_double.rsi
+      color: "#77b58e"
       storedSprite:
         state: storage
-        sprite: Objects/Tanks/emergency_extended.rsi
+        sprite: Objects/Tanks/emergency_double.rsi
     - type: Clothing
-      sprite: Objects/Tanks/emergency_extended.rsi
+      sprite: Objects/Tanks/emergency_double.rsi
+      color: "#77b58e"
 
 - type: entity
-  id: ExtendedEmergencyAmmoniaTankFilled
-  parent: ExtendedEmergencyAmmoniaTank
+  id: DoubleEmergencyAmmoniaTankFilled
+  parent: DoubleEmergencyAmmoniaTank
   suffix: Filled
   components:
     - type: GasTank
       outputPressure: 21.3
       air:
-        # 9 minutes
-        volume: 1.5
+        # 15 minutes
+        volume: 2.5
         moles:
-          Ammonia: 0.615413715
+          Ammonia: 1.025689525
         temperature: 293.15
