@@ -1,10 +1,11 @@
-# Ported from RussStation SS13 (CC-BY-SA-3.0, sprites by skeyuui). Russ ships
-# tail/ear sprites split across FRONT and BEHIND files where each file fills
-# only the directions where its layer is "in front of" or "behind" the body;
-# we composite the pair into one all-direction PNG (skaven_parts.rsi states)
-# so a single SS14 marking on a single HumanoidVisualLayer covers all four
-# rotations. The wagging-tail variant exists in the RSI but isn't yet
-# user-pickable; a follow-up can swap it in at runtime for an emote.
+# Ported from RussStation SS13 (CC-BY-SA-3.0, sprites by skeyuui).
+# Russ ships tail/ear sprites split into FRONT and BEHIND files (BYOND z-order
+# split: BEHIND drawn before body, FRONT after). SS14 has no per-direction
+# z-order, but it does have separate Tail + TailOverlay layers. We map BEHIND
+# to Tail and FRONT to TailOverlay so the south-facing tail wraps in front of
+# the body via TailOverlay while the side/back curls render on Tail. Ears use
+# the same split on HeadTop (only one head layer exists, so the BEHIND/FRONT
+# states are layered as a single multi-sprite marking).
 
 - type: marking
   id: SkavenTail
@@ -16,7 +17,19 @@
       type: !type:SkinColoring
   sprites:
     - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
-      state: tail
+      state: tail_behind
+
+- type: marking
+  id: SkavenTailOverlay
+  bodyPart: TailOverlay
+  forcedColoring: true
+  groupWhitelist: [Skaven]
+  coloring:
+    default:
+      type: !type:SkinColoring
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: tail_front
 
 - type: marking
   id: SkavenEars
@@ -28,10 +41,12 @@
       type: !type:SkinColoring
   sprites:
     - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
-      state: ears
+      state: ears_behind
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: ears_front
 
-# Animated tail variant lives here for future runtime swaps (see vox/lizard
-# wagging precedent). groupWhitelist is empty so it doesn't show in the
+# Animated tail variants live here for future runtime swaps (see vox/lizard
+# wagging precedent). groupWhitelist is empty so they don't show in the
 # species editor.
 - type: marking
   id: SkavenTailWagging
@@ -43,4 +58,49 @@
       type: !type:SkinColoring
   sprites:
     - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
-      state: tail_wagging
+      state: tail_wagging_behind
+
+- type: marking
+  id: SkavenTailWaggingOverlay
+  bodyPart: TailOverlay
+  forcedColoring: true
+  groupWhitelist: []
+  coloring:
+    default:
+      type: !type:SkinColoring
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: tail_wagging_front
+
+# Optional cosmetic horns (player-selectable, not auto-applied).
+- type: marking
+  id: SkavenHornsSeer
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_seer
+
+- type: marking
+  id: SkavenHornsQuad
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_quad
+
+- type: marking
+  id: SkavenHornsLong
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_long
+
+- type: marking
+  id: SkavenHornsDamaged
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_damaged

@@ -1,18 +1,22 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Sprites by skeyuui (https://github.com/skeyuui) for RussStation (https://github.com/russ-station/russ-station). Composited from FRONT and BEHIND complementary states in russstation/icons/mob/mutant_bodyparts.dmi.",
+  "copyright": "Sprites by skeyuui (https://github.com/skeyuui) for RussStation (https://github.com/russ-station/russ-station), ported from russstation/icons/mob/mutant_bodyparts.dmi via Tools/honk/local/dmi_to_rsi.py. tail/ears _behind and _front kept as separate states so SS14 can render them on Tail+TailOverlay layers (matches the upstream FRONT/BEHIND z-order split).",
   "size": {
     "x": 32,
     "y": 32
   },
   "states": [
     {
-      "name": "tail",
+      "name": "tail_behind",
       "directions": 4
     },
     {
-      "name": "tail_wagging",
+      "name": "tail_front",
+      "directions": 4
+    },
+    {
+      "name": "tail_wagging_behind",
       "directions": 4,
       "delays": [
         [
@@ -62,7 +66,77 @@
       ]
     },
     {
-      "name": "ears",
+      "name": "tail_wagging_front",
+      "directions": 4,
+      "delays": [
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "ears_behind",
+      "directions": 4
+    },
+    {
+      "name": "ears_front",
+      "directions": 4
+    },
+    {
+      "name": "horns_seer",
+      "directions": 4
+    },
+    {
+      "name": "horns_quad",
+      "directions": 4
+    },
+    {
+      "name": "horns_long",
+      "directions": 4
+    },
+    {
+      "name": "horns_damaged",
       "directions": 4
     }
   ]

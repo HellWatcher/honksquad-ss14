@@ -26,10 +26,16 @@
       required: false
     enum.HumanoidVisualLayers.Tail:
       limit: 1
-      required: false
-    enum.HumanoidVisualLayers.HeadTop:
+      required: true
+      default: [SkavenTail]
+    enum.HumanoidVisualLayers.TailOverlay:
       limit: 1
-      required: false
+      required: true
+      default: [SkavenTailOverlay]
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 2
+      required: true
+      default: [SkavenEars]
     enum.HumanoidVisualLayers.UndergarmentTop:
       limit: 1
       required: false
@@ -189,6 +195,10 @@
 - type: entity
   parent: [OrganSkavenVisual, OrganBaseEyes, OrganSkavenInternal]
   id: OrganSkavenEyes
+  components:
+    - type: VisualOrgan
+      data:
+        sprite: Mobs/Customization/eyes.rsi
 
 - type: entity
   parent: [OrganBaseTongue, OrganSkavenInternal]
@@ -208,7 +218,6 @@
   components:
     - type: Sprite
       sprite: "@RussStation/Mobs/Species/Skaven/organs.rsi"
-      state: lungs
     - type: Lung
       alert: LowAmmonia
 
