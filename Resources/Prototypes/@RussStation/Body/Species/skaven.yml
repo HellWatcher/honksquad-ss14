@@ -28,10 +28,6 @@
       limit: 1
       required: true
       default: [SkavenTail]
-    enum.HumanoidVisualLayers.TailOverlay:
-      limit: 1
-      required: true
-      default: [SkavenTailOverlay]
     enum.HumanoidVisualLayers.HeadTop:
       limit: 2
       required: true
