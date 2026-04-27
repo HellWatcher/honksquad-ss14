@@ -1,9 +1,9 @@
 # Skaven survival tank (#481). Skaven breathe Ammonia (atmos miasma) instead of O2,
 # so they get the same survival-kit shape Vox have for nitrogen: a double-capacity
-# emergency tank pre-filled with the species' breathing gas. Reuses the upstream
-# emergency_double.rsi sprite tinted to the Ammonia reagent's color (#77b58e) so we
-# don't ship a near-duplicate RSI just for the hue. The gas content is what matters
-# mechanically.
+# emergency tank pre-filled with the species' breathing gas. Sprite is a baked copy
+# of upstream emergency_double.rsi pixel-mapped through the AmmoniaCanister palette
+# (see Resources/Textures/@RussStation/Objects/Tanks/double_emergency_ammonia.rsi)
+# so every slot reads as the canister green without losing per-pixel shading.
 
 - type: entity
   parent: DoubleEmergencyOxygenTank
@@ -12,17 +12,14 @@
   description: A high-grade dual-tank emergency life support container, filled with breathable miasma. It can hold 2.5 L of gas.
   components:
     - type: Sprite
-      sprite: Objects/Tanks/emergency_double.rsi
-      color: "#77b58e"
+      sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
     - type: Item
-      sprite: Objects/Tanks/emergency_double.rsi
-      color: "#77b58e"
+      sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
       storedSprite:
         state: storage
-        sprite: Objects/Tanks/emergency_double.rsi
+        sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
     - type: Clothing
-      sprite: Objects/Tanks/emergency_double.rsi
-      color: "#77b58e"
+      sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
 
 - type: entity
   id: DoubleEmergencyAmmoniaTankFilled
@@ -39,10 +36,11 @@
         temperature: 293.15
 
 # Full-size 5 L ammonia tank for refilling Skaven survival kits and stocking
-# atmos/medbay. Uses the russ-ported skeyuui silhouette in
-# @RussStation/Objects/Tanks/miasma_tank.rsi (greyscaled at import time) tinted
-# with the Ammonia reagent color (#77b58e), same recolor trick as the double-
-# emergency tank above.
+# atmos/medbay. Sprites in @RussStation/Objects/Tanks/miasma_tank.rsi are
+# pre-baked: body pixels mapped to the canister green ramp anchored on
+# #1f8e2f and the warm low-saturation gauge band remapped through the
+# AmmoniaCanister pink valve palette (matches the structural canister and
+# the DoubleEmergencyAmmoniaTank).
 
 - type: entity
   parent: NitrogenTank
@@ -52,13 +50,10 @@
   components:
     - type: Sprite
       sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
-      color: "#77b58e"
     - type: Item
       sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
-      color: "#77b58e"
     - type: Clothing
       sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
-      color: "#77b58e"
 
 - type: entity
   id: AmmoniaTankFilled
