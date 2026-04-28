@@ -401,7 +401,11 @@
     heldPrefix: liver
   - type: Metabolizer
     maxReagents: 1
-    stages: [ Metabolites ]
+    # HONK START - issue #679 step 1: liver also runs Detoxification, the new fork stage
+    # reserved for toxin scrubbing on the bloodstream. No reagents declare a Detoxification
+    # entry yet, so the stage is a no-op until step 6 adds ToxinScrubRate.
+    stages: [ Metabolites, Detoxification ]
+    # HONK END
 
 - type: entity
   parent: OrganBase
