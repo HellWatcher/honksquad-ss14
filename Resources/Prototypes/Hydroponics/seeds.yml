@@ -562,6 +562,12 @@
   packetPrototype: BlueTomatoSeeds
   productPrototypes:
     - FoodBlueTomato
+  # HONK START - issue #697: mutates into bluespaceTomato (fork-side seed at
+  # @RussStation/Hydroponics/bluespace_seeds.yml). Mirrors SS13 mutatelist on
+  # /obj/item/seeds/tomato/blue.
+  mutationPrototypes:
+    - bluespaceTomato
+  # HONK END
   harvestRepeat: Repeat
   lifespan: 25
   maturation: 8

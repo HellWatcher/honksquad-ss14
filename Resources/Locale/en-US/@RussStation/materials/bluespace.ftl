@@ -18,3 +18,6 @@ entity-effect-guidebook-bluespace-teleport =
 
 bluespace-plant-backfire-self = The fruit slips out of your hand!
 bluespace-plant-backfire-others = { $user } fumbles a bluespace fruit!
+
+seeds-bluespacetomato-name = packet of bluespace tomato seeds
+seeds-bluespacetomato-display-name = bluespace tomato

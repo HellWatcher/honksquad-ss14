@@ -1,0 +1,31 @@
+# HONK - Issue #697 child: bluespace tomato food entity. Inherits from
+# FoodBlueTomato (lube, slip, vitamin) and adds BluespaceDust to its solution
+# plus the BluespacePlantTeleport + BluespacePlantBackfire components from
+# the parent traits PR (#698). Mirrors SS13's /obj/item/food/grown/tomato/blue/bluespace
+# at code/modules/hydroponics/grown/tomato.dm.
+
+- type: entity
+  parent: FoodBlueTomato
+  id: FoodBluespaceTomato
+  name: bluespace tomato
+  description: So lubricated, you might slip through space-time.
+  components:
+    - type: SolutionContainerManager
+      solutions:
+        food:
+          maxVol: 24
+          reagents:
+            - ReagentId: Nutriment
+              Quantity: 5
+            - ReagentId: SpaceLube
+              Quantity: 15
+            - ReagentId: BluespaceDust
+              Quantity: 5
+            - ReagentId: Vitamin
+              Quantity: 4
+    - type: Sprite
+      sprite: "@RussStation/Objects/Specific/Hydroponics/bluespace_tomato.rsi"
+    - type: Produce
+      seedId: bluespaceTomato
+    - type: BluespacePlantTeleport
+    - type: BluespacePlantBackfire
