@@ -118,14 +118,19 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
 
             // Make sure the character's name is highlighted only when mentioned directly (eg. it's said by someone),
             // for example in 'Name Surname says, "..."' 'Name Surname' won't be highlighted.
-            //HONK START - issue #656: upstream 6a1c1f3f50 narrowed the @-keyword lookbehind to
-            //(?<=^.?OOC:.*:.*)|(?<=,.*".*)|(?<=\n.*), which dropped highlighting of literal
-            //"@Name" mentions in radio, emotes, dead chat, and popups (none have a `, "..."`
-            //preamble or a leading newline). Restore the older permissive form: match anywhere
-            //the position is preceded by a `, "..."` quoted-speech preface OR is not inside the
-            //speaker's own [Name][/Name] tag, so the speaker is not highlighted in their own
-            //byline but everyone else's @-mentions still light up.
-            keyword = StartAtSign.Replace(keyword, @"(?<=(?<=,.*"".*)|(?<!\[Name].*))");
+            //HONK START - issue #656: upstream's @-keyword lookbehind only matches in OOC, after
+            //a `, "..."` quoted-speech preface, or after a literal newline. Two regressions
+            //collide there:
+            //  1. The `, "..."` clause uses ASCII `"`, but upstream 5bd9d21cb6 swapped chat
+            //     wrappers to curly quotes (“ ”), so even say-wrap mentions miss now.
+            //  2. Radio, dead chat, emotes, and popups never carried any of those prefaces, so
+            //     literal "@Name" mentions in those channels stopped highlighting outright.
+            //Add curly-quote support to the comma-quote clause and bring back the older
+            //"not inside the speaker's own [Name] tag" fallback as a fourth alternative. Keeps
+            //the speaker un-highlighted in their own byline while letting every other channel
+            //match again. The audible-ping path in HonkHighlightSound is unaffected (it strips
+            //the @ and substring-matches msg.Message directly).
+            keyword = StartAtSign.Replace(keyword, @"(?<=(?<=^.?OOC:.*:.*)|(?<=,.*[""“].*)|(?<=\n.*)|(?<!\[Name].*))");
             //HONK END
 
             _highlights.Add(keyword);
