@@ -200,9 +200,17 @@ public sealed class MetabolizerSystem : EntitySystem
             // Remove $rate, as long as there's enough reagent there to actually remove that much
             var mostToRemove = FixedPoint2.Clamp(rate, 0, quantity);
 
-            // we're done here entirely if this is true
-            if (reagents >= ent.Comp1.MaxReagentsProcessable)
-                return;
+            // HONK START - issue #679 step 3: drop the MaxReagentsProcessable cap. Upstream
+            // uses it to gate stacked-poison cocktails, but it also silently stalls oral
+            // medication and hides which reagents got skipped on a given tick. Anti-stacking
+            // moves to ReagentPrototype.MinEffectiveDose (step 5): reagents below tolerance
+            // drain without firing effects, so micro-doses can no longer cheese OD. Every
+            // reagent now ticks every interval.
+            //
+            // Original gate, preserved as a comment for upstream-merge readability:
+            //     if (reagents >= ent.Comp1.MaxReagentsProcessable)
+            //         return;
+            // HONK END
 
             var scale = (float) mostToRemove;
             if (!solutionData.MetabolizeAll)
