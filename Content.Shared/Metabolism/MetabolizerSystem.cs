@@ -163,6 +163,13 @@ public sealed class MetabolizerSystem : EntitySystem
         var isDead = _mobStateSystem.IsDead(deadCheckTarget);
         // HONK END
 
+        // HONK START - issue #679 step 5: kidney sub-tolerance filter. Once per stage tick,
+        // determine whether the body has a working kidney (any organ with the Excretion stage).
+        // If yes, reagents under their effective tolerance still drain but skip effects below.
+        // Missing kidneys -> filter fails, micro-stacking starts working again.
+        var hasKidneyFilter = BodyHasKidneyFilter(ent.Comp2?.Body);
+        // HONK END
+
         int reagents = 0;
         foreach (var (reagent, quantity) in list)
         {
@@ -245,9 +252,21 @@ public sealed class MetabolizerSystem : EntitySystem
 
             var actualEntity = ent.Comp2?.Body ?? solutionOwner.Value;
 
+            // HONK START - issue #679 step 5: skip effects when below tolerance. Reagent still
+            // drains via the removal block below, mirroring SS13's "consume without firing".
+            var subTolerance = hasKidneyFilter
+                && !solutionData.MetabolizeAll
+                && IsSubTolerance(proto, quantity);
+            // HONK END
+
             // do all effects, if conditions apply
             foreach (var effect in entry.Effects)
             {
+                // HONK START - tolerance gate (#679 step 5): drop effects but keep removal.
+                if (subTolerance)
+                    break;
+                // HONK END
+
                 if (scale < effect.MinScale)
                     continue;
 
@@ -350,5 +369,36 @@ public sealed class MetabolizerSystem : EntitySystem
 
         return true;
     }
+
+    // HONK START - issue #679 step 5: kidney filter helpers.
+    // Default tolerance for the toxin reagent class (group "Toxins"). Mirrors SS13's
+    // liver_tolerance baseline. Lives here as a const because the class lookup is cheap
+    // and the value is one number; if it grows into a per-class table we promote it to a
+    // RussStation/Metabolism constants file.
+    private static readonly FixedPoint2 ToxinDefaultTolerance = FixedPoint2.New(3);
+
+    private bool BodyHasKidneyFilter(EntityUid? body)
+    {
+        if (body is not { } bodyUid)
+            return false;
+        if (!TryComp<BodyComponent>(bodyUid, out var bodyComp) || bodyComp.Organs is not { } organs)
+            return false;
+        foreach (var organ in organs.ContainedEntities)
+        {
+            if (TryComp<MetabolizerComponent>(organ, out var meta) && meta.Stages.Contains("Excretion"))
+                return true;
+        }
+        return false;
+    }
+
+    private static bool IsSubTolerance(ReagentPrototype proto, FixedPoint2 quantity)
+    {
+        var tolerance = proto.MinEffectiveDose > FixedPoint2.Zero
+            ? proto.MinEffectiveDose
+            : proto.Group == "Toxins" ? ToxinDefaultTolerance : FixedPoint2.Zero;
+
+        return tolerance > FixedPoint2.Zero && quantity < tolerance;
+    }
+    // HONK END
 }
 
