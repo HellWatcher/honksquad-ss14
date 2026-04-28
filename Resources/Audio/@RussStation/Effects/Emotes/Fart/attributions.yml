@@ -1,0 +1,8 @@
+- files:
+    - russstation_sound_effects_mob_effects_poo1.ogg
+    - russstation_sound_effects_mob_effects_poo2.ogg
+    - russstation_sound_effects_mob_effects_poo3.ogg
+    - russstation_sound_effects_mob_effects_poo4.ogg
+  license: "AGPL-3.0-or-later"
+  copyright: "Russ Station 13 contributors"
+  source: "https://github.com/russstation/russstation/tree/master/sound/effects/mob_effects"

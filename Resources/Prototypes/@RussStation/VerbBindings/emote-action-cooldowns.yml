@@ -1,0 +1,13 @@
+# HONK Per-emote cooldown for the auto-granted HonkActionEmote button.
+# Prototype id matches the EmotePrototype id whose action gets this UseDelay.
+- type: emoteActionCooldown
+  id: Fart
+  cooldown: 2
+
+- type: emoteActionCooldown
+  id: Flip
+  cooldown: 1
+
+- type: emoteActionCooldown
+  id: Spin
+  cooldown: 3

@@ -1,0 +1,7 @@
+- type: soundCollection
+  id: Farts
+  files:
+    - /Audio/@RussStation/Effects/Emotes/Fart/russstation_sound_effects_mob_effects_poo1.ogg
+    - /Audio/@RussStation/Effects/Emotes/Fart/russstation_sound_effects_mob_effects_poo2.ogg
+    - /Audio/@RussStation/Effects/Emotes/Fart/russstation_sound_effects_mob_effects_poo3.ogg
+    - /Audio/@RussStation/Effects/Emotes/Fart/russstation_sound_effects_mob_effects_poo4.ogg
