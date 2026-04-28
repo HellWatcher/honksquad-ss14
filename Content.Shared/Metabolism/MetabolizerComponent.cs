@@ -85,6 +85,18 @@ public sealed partial class MetabolizerComponent : Component
             SolutionName = BloodstreamComponent.DefaultBloodSolutionName,
             TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
             TransferRate = 0,
+        },
+        // HONK END
+        // HONK START - issue #679 step 2: Excretion reads the bloodstream so the kidney
+        // can host the sub-tolerance filter (step 5) and the slow blood drain (step 7).
+        // No reagent declares an Excretion entry yet, so the stage runs and does nothing
+        // until later steps land. Same TransferRate = 0 self-loop as Detoxification so
+        // the no-entry fallback can't drain Ethanol or other bloodstream reagents.
+        ["Excretion"] = new()
+        {
+            SolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferRate = 0,
         }
         // HONK END
     };
