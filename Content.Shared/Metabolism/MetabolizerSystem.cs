@@ -180,7 +180,13 @@ public sealed class MetabolizerSystem : EntitySystem
                     continue;
                 // HONK END
 
-                var mostToTransfer = FixedPoint2.Clamp(solutionData.TransferRate, 0, quantity);
+                // HONK START - issue #491 Bug 1: apply MinTransferPerTick so oral meds without an
+                // explicit Digestion entry still push at the configured floor (stomach default 0.25u/tick).
+                var rawTransfer = solutionData.TransferRate > solutionData.MinTransferPerTick
+                    ? solutionData.TransferRate
+                    : solutionData.MinTransferPerTick;
+                var mostToTransfer = FixedPoint2.Clamp(rawTransfer, 0, quantity);
+                // HONK END
 
                 if (transferSolution is not null)
                 {
@@ -196,6 +202,13 @@ public sealed class MetabolizerSystem : EntitySystem
             }
 
             var rate = solutionData.MetabolizeAll ? quantity : entry.MetabolismRate;
+
+            // HONK START - issue #491 Bug 1: apply MinTransferPerTick to per-reagent Digestion rates
+            // too. Reagents with declared Digestion entries should still benefit from the floor; the
+            // bug is rate-driven, not entry-presence-driven.
+            if (!solutionData.MetabolizeAll && rate < solutionData.MinTransferPerTick)
+                rate = solutionData.MinTransferPerTick;
+            // HONK END
 
             // Remove $rate, as long as there's enough reagent there to actually remove that much
             var mostToRemove = FixedPoint2.Clamp(rate, 0, quantity);

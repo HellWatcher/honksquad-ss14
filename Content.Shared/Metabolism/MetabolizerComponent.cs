@@ -58,7 +58,12 @@ public sealed partial class MetabolizerComponent : Component
             SolutionName = "stomach",
             SolutionOnBody = false,
             TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
-            TransferEfficacy = 0.5
+            TransferEfficacy = 0.5,
+            // HONK START - issue #491: 0.25u/tick floor mirrors SS13 STOMACH_METABOLISM_CONSTANT.
+            // Lets oral meds reach Bloodstream-stage OD thresholds that are otherwise unreachable
+            // because per-reagent Digestion rates sit below heart clearance.
+            MinTransferPerTick = 0.25,
+            // HONK END
         },
         ["Bloodstream"] = new()
         {
