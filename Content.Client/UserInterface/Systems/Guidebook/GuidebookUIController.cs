@@ -298,7 +298,7 @@ public sealed class GuidebookUIController : UIController, IOnStateEntered<LobbyS
         }
 
         _popoutWindow ??= CreatePopoutWindow();
-        _popoutWindow.HostContent(_guideWindow.PopoutContent);
+        _popoutWindow.HostContent(_guideWindow, _guideWindow.PopoutContent);
         _popoutWindow.Show();
     }
 
