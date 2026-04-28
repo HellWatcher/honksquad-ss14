@@ -97,6 +97,9 @@ public sealed class HonkEmoteActionSystem : EntitySystem
             _actions.SetIcon(actionUid, emote.Icon);
             _meta.SetEntityName(actionUid, Loc.GetString(emote.Name));
 
+            if (_proto.TryIndex<EmoteActionCooldownPrototype>(emote.ID, out var cd))
+                _actions.SetUseDelay(actionUid, cd.Cooldown);
+
             _actions.AddActionDirect(performer, actionUid);
         }
     }
