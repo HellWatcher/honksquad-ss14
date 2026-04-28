@@ -5,7 +5,10 @@
   name: trait-blindness-name
   description: trait-blindness-desc
   traitGear: WhiteCane
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Senses
+  cost: -3
+  # HONK END
   # HONK START - fork tag-exclusion system: ScarredEye shares the sight domain
   tags:
     - sight
@@ -23,7 +26,10 @@
   name: trait-poor-vision-name
   description: trait-poor-vision-desc
   traitGear: ClothingEyesGlasses
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Senses
+  cost: -1
+  # HONK END
   whitelist:
     components:
       - Blindable
@@ -35,7 +41,10 @@
   id: Narcolepsy
   name: trait-narcolepsy-name
   description: trait-narcolepsy-desc
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Body
+  cost: -2
+  # HONK END
   components:
     - type: Narcolepsy
       maxTimeBetweenIncidents: 600
@@ -47,7 +56,10 @@
   id: Unrevivable
   name: trait-unrevivable-name
   description: trait-unrevivable-desc
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Body
+  cost: -3
+  # HONK END
   components:
     - type: Unrevivable
       cloneable: true
@@ -56,7 +68,10 @@
   id: Monochromacy
   name: trait-monochromacy-name
   description: trait-monochromacy-desc
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Senses
+  cost: -1
+  # HONK END
   components:
   - type: BlackAndWhiteOverlay
 
@@ -64,7 +79,10 @@
   id: Muted
   name: trait-muted-name
   description: trait-muted-desc
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: SpeechTraits
+  cost: -2
+  # HONK END
   # HONK START - fork tag-exclusion system: blocks BoomingVoice + other speech quirks
   tags:
     - speech
@@ -81,7 +99,10 @@
   id: Paracusia
   name: trait-paracusia-name
   description: trait-paracusia-desc
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Senses
+  cost: -1
+  # HONK END
   components:
     - type: Paracusia
       minTimeBetweenIncidents: 0.1
@@ -94,7 +115,10 @@
   id: PainNumbness
   name: trait-painnumbness-name
   description: trait-painnumbness-desc
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Body
+  cost: -1
+  # HONK END
   # HONK START - fork tag-exclusion system: SelfAware is the functional opposite
   tags:
     - awareness
@@ -110,7 +134,10 @@
   id: Hemophilia
   name: trait-hemophilia-name
   description: trait-hemophilia-desc
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Body
+  cost: -2
+  # HONK END
   specials:
   - !type:ApplyStatusEffectSpecial
     statusEffects:
@@ -121,7 +148,10 @@
   name: trait-impaired-mobility-name
   description: trait-impaired-mobility-desc
   traitGear: OffsetCane
-  category: Disabilities
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Body
+  cost: -2
+  # HONK END
   # HONK START - fork tag-exclusion system: blocks Skittish's sprint speed-up
   tags:
     - mobility
