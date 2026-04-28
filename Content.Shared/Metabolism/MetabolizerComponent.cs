@@ -68,7 +68,15 @@ public sealed partial class MetabolizerComponent : Component
         ["Metabolites"] = new()
         {
             SolutionName = BloodstreamComponent.DefaultMetabolitesSolutionName
+        },
+        // HONK START - issue #679 step 1: Detoxification reads the bloodstream so the
+        // liver can scrub toxin-class reagents in place. Step 1 only declares the entry;
+        // the per-tick scrub rate (ToxinScrubRate) and reagent-side opt-in arrive in step 6.
+        ["Detoxification"] = new()
+        {
+            SolutionName = BloodstreamComponent.DefaultBloodSolutionName
         }
+        // HONK END
     };
 
     /// <summary>
