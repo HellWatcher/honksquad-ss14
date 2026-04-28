@@ -59,4 +59,24 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<float> ChatHighlightSoundCooldown =
         CVarDef.Create("honk.chat.highlight_sound_cooldown", 2f, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// When true, popup chat log entries render in italics so they read distinct from speech.
+    /// </summary>
+    public static readonly CVarDef<bool> PopupLogItalic =
+        CVarDef.Create("honk.chat.popup_log_italic", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// Font size for popup chat log entries. Clamped to a sane range at apply-time.
+    /// 12 matches the chat default; 8-16 is the supported window.
+    /// </summary>
+    public static readonly CVarDef<int> PopupLogFontSize =
+        CVarDef.Create("honk.chat.popup_log_font_size", 12, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    /// Hex color (e.g. <c>#9999aa</c>) applied to popup chat log entries. Default matches the
+    /// pre-cvar dimmed prefix color so the out-of-the-box look is unchanged.
+    /// </summary>
+    public static readonly CVarDef<string> PopupLogColor =
+        CVarDef.Create("honk.chat.popup_log_color", "#9999aa", CVar.CLIENTONLY | CVar.ARCHIVE);
 }
