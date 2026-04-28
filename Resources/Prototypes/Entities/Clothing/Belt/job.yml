@@ -135,15 +135,11 @@
       - WetFloorSign
       - HolosignProjector
       - Plunger
-      # HONK START - blue trashbag variant
       - TrashBagBlue
-      # HONK END
       - GoldenPlunger
       - WireBrush
       - LightReplacer
-      # HONK START - cleaner grenade belt slot
       - CleanerGrenade
-      # HONK END
   - type: ItemMapper
     sprite: *BeltOverlay
     mapLayers:
@@ -155,7 +151,6 @@
         whitelist:
           tags:
           - Spray
-      # HONK START - per-tool sprite map layers for fork janitor belt contents
       light_replacer:
         whitelist:
           tags:
@@ -196,7 +191,6 @@
         whitelist:
           tags:
           - CleanerGrenade
-      # HONK END
   - type: Appearance
 
 - type: entity

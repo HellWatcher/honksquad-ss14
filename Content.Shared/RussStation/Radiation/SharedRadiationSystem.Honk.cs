@@ -14,7 +14,6 @@ public abstract partial class SharedRadiationSystem
             return;
 
         entity.Comp.Slope = slope;
-        UpdateSource((entity, entity.Comp));
     }
 
     public void SetEnabled(Entity<RadiationSourceComponent?> entity, bool enabled)
@@ -23,6 +22,5 @@ public abstract partial class SharedRadiationSystem
             return;
 
         entity.Comp.Enabled = enabled;
-        UpdateSource((entity, entity.Comp));
     }
 }
