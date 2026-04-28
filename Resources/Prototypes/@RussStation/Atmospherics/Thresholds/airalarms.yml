@@ -1,0 +1,9 @@
+# Fork-side air alarm thresholds for gases that should warn rather than scream
+# the moment a single mole shows up.
+
+- type: alarmThreshold
+  id: stationHalon
+  upperBound: !type:AlarmThresholdSetting
+    threshold: 0.05 # 5% halon, danger above this
+  upperWarnAround: !type:AlarmThresholdSetting
+    threshold: 0.5 # warn at 2.5%
