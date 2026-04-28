@@ -118,7 +118,15 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
 
             // Make sure the character's name is highlighted only when mentioned directly (eg. it's said by someone),
             // for example in 'Name Surname says, "..."' 'Name Surname' won't be highlighted.
-            keyword = StartAtSign.Replace(keyword, @"(?<=(?<=^.?OOC:.*:.*)|(?<=,.*"".*)|(?<=\n.*))");
+            //HONK START - issue #656: upstream 6a1c1f3f50 narrowed the @-keyword lookbehind to
+            //(?<=^.?OOC:.*:.*)|(?<=,.*".*)|(?<=\n.*), which dropped highlighting of literal
+            //"@Name" mentions in radio, emotes, dead chat, and popups (none have a `, "..."`
+            //preamble or a leading newline). Restore the older permissive form: match anywhere
+            //the position is preceded by a `, "..."` quoted-speech preface OR is not inside the
+            //speaker's own [Name][/Name] tag, so the speaker is not highlighted in their own
+            //byline but everyone else's @-mentions still light up.
+            keyword = StartAtSign.Replace(keyword, @"(?<=(?<=,.*"".*)|(?<!\[Name].*))");
+            //HONK END
 
             _highlights.Add(keyword);
         }
