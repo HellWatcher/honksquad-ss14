@@ -58,10 +58,14 @@ public sealed partial class MetabolizerComponent : Component
             SolutionName = "stomach",
             SolutionOnBody = false,
             TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
-            TransferEfficacy = 0.5,
-            // HONK START - issue #491: 0.25u/tick floor mirrors SS13 STOMACH_METABOLISM_CONSTANT.
-            // Lets oral meds reach Bloodstream-stage OD thresholds that are otherwise unreachable
-            // because per-reagent Digestion rates sit below heart clearance.
+            // HONK START - issue #491: align stomach pipeline with SS13.
+            //   * TransferEfficacy 1.0 (was 0.5): SS13 transfers stomach->blood 1:1, so a 30u oral
+            //     dose actually arrives in blood as 30u, reachable for Bloodstream-stage OD.
+            //   * MinTransferPerTick 0.25 mirrors SS13 STOMACH_METABOLISM_CONSTANT, so per-reagent
+            //     Digestion rates that sit below heart clearance still push enough to cross OD
+            //     thresholds. Anti-stacking is now provided by ReagentPrototype.MinEffectiveDose
+            //     (kidney-style sub-tolerance filter) instead of MetabolizerComponent.MaxReagents.
+            TransferEfficacy = 1,
             MinTransferPerTick = 0.25,
             // HONK END
         },

@@ -213,9 +213,16 @@ public sealed class MetabolizerSystem : EntitySystem
             // Remove $rate, as long as there's enough reagent there to actually remove that much
             var mostToRemove = FixedPoint2.Clamp(rate, 0, quantity);
 
-            // we're done here entirely if this is true
-            if (reagents >= ent.Comp1.MaxReagentsProcessable)
-                return;
+            // HONK START - issue #491: drop the MaxReagentsProcessable cap. Upstream uses it to
+            // gate stacked-poison cocktails, but it also silently stalls oral medication and
+            // hides which reagents got skipped on a given tick. Anti-stacking now goes through
+            // ReagentPrototype.MinEffectiveDose instead (sub-tolerance reagents drain without
+            // firing effects, so micro-doses can't cheese OD).
+            //
+            // The original gate:
+            //     if (reagents >= ent.Comp1.MaxReagentsProcessable)
+            //         return;
+            // HONK END
 
             var scale = (float) mostToRemove;
             if (!solutionData.MetabolizeAll)
@@ -229,9 +236,22 @@ public sealed class MetabolizerSystem : EntitySystem
 
             var actualEntity = ent.Comp2?.Body ?? solutionOwner.Value;
 
+            // HONK START - issue #491: sub-tolerance filter. If the reagent is below the proto's
+            // MinEffectiveDose in this stage's solution, drain it without firing effects. Mirrors
+            // SS13's `liver_tolerance` knob and replaces the dropped MaxReagentsProcessable cap as
+            // the anti-stacking gate, with the bonus that it scales with dose (2u still ticks
+            // silently, 20u ticks normally) instead of competing for fixed slots.
+            var subTolerance = !solutionData.MetabolizeAll && quantity < proto.MinEffectiveDose;
+            // HONK END
+
             // do all effects, if conditions apply
             foreach (var effect in entry.Effects)
             {
+                // HONK START - skip effects under MinEffectiveDose; reagent still drains below.
+                if (subTolerance)
+                    break;
+                // HONK END
+
                 if (scale < effect.MinScale)
                     continue;
 
