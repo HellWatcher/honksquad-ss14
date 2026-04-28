@@ -1,0 +1,30 @@
+# HONK - Issue #697 parent: throwaway test entity so the plant teleport + backfire
+# components can be exercised in admin before any actual crop content (tomato,
+# banana) lands. Spawn one of these and use it in hand to fumble, throw it at a
+# mob to teleport them, slip on it (when paired with a Slippery component) to
+# teleport the slipper. Subsequent crop PRs declare the same components on real
+# entities; this preview entity is removed once those land.
+
+- type: entity
+  id: BluespaceTestPlant
+  name: bluespace test fruit
+  description: A debug entity exposing the bluespace plant teleport + backfire mechanics. Crush, throw, or slip.
+  suffix: DEBUG
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+      state: bluespace_crystal
+    - type: Item
+    - type: Slippery
+    - type: Physics
+      bodyType: Dynamic
+    - type: Fixtures
+      fixtures:
+        fix1:
+          shape: !type:PhysShapeCircle
+            radius: 0.2
+          density: 20
+          mask:
+            - ItemMask
+    - type: BluespacePlantTeleport
+    - type: BluespacePlantBackfire
