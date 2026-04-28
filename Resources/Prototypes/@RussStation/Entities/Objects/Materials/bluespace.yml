@@ -8,7 +8,7 @@
   parent: MaterialBase
   id: MaterialBluespace
   name: bluespace crystal
-  description: A shard of crystallized bluespace. Hums faintly with non-Euclidean intent. Crushing one teleports you a short distance; thrown into a target it does the same to them.
+  description: A shard of crystallized bluespace. Hums faintly with non-Euclidean intent. Crushing one teleports you a short distance; thrown into a target it does the same to them. Grinds into bluespace dust.
   suffix: Full
   components:
     - type: Stack
@@ -25,6 +25,14 @@
     - type: BluespaceCrushTeleport
     - type: UseDelay
       delay: 1.0
+    - type: Extractable
+      grindableSolutionName: bluespace
+    - type: SolutionContainerManager
+      solutions:
+        bluespace:
+          reagents:
+            - ReagentId: BluespaceDust
+              Quantity: 20
 
 - type: entity
   parent: MaterialBluespace
