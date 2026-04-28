@@ -1017,8 +1017,11 @@
       food:
         maxVol: 14
         reagents:
-        - ReagentId: Blood
+        # HONK START - issue #645: blood tomato yields species-agnostic plasma so non-humans
+        # can eat it without a poison tick and chemists can grind it as a transfusion stock.
+        - ReagentId: BloodPlasma
           Quantity: 10
+        # HONK END
         - ReagentId: Vitamin
           Quantity: 4
   - type: Sprite
@@ -1031,8 +1034,10 @@
     grindableSolutionName: food
     juiceSolution:
       reagents:
-      - ReagentId: Blood
+      # HONK START - issue #645: blood tomato juice grinds out as plasma, see solution above.
+      - ReagentId: BloodPlasma
         Quantity: 10
+      # HONK END
   - type: Destructible
     thresholds:
     - trigger:

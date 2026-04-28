@@ -610,7 +610,10 @@
   idealHeat: 298
   splatPrototype: PuddleSplatter
   chemicals:
-    Blood:
+    # HONK START - issue #645: blood tomato now produces species-agnostic plasma instead
+    # of human-specific Blood; downstream synth recipes turn it into the right species blood.
+    BloodPlasma:
+    # HONK END
       Min: 1
       Max: 10
       PotencyDivisor: 10

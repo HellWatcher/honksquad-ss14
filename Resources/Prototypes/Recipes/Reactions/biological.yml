@@ -28,6 +28,8 @@
     CarbonDioxide: 5.5
     Protein: 6
 
+# HONK START - issue #645: rebalance Slime breakdown to the 20u species-blood template.
+# Old 5u yield made the synth recipe a net loss and broke parity with other bloods.
 - type: reaction
   id: SlimeBloodBreakdown
   source: true
@@ -35,11 +37,18 @@
   - Centrifuge
   reactants:
     Slime:
-      amount: 5
+      amount: 20
   products:
-    Water: 4
-    Nitrogen: 1
+    Water: 11
+    Nitrogen: 0.5
+    Sugar: 2
+    CarbonDioxide: 3
+    Protein: 4
+# HONK END
 
+# HONK START - issue #645: rebalance Sap breakdown to the 20u species-blood template.
+# Folds the defining-element Sugar into a higher single output and adds the
+# Protein/CO2 pair so synth -> centrifuge -> synth is no longer a Protein laundry.
 - type: reaction
   id: SapBloodBreakdown
   source: true
@@ -47,10 +56,13 @@
   - Centrifuge
   reactants:
     Sap:
-      amount: 10
+      amount: 20
   products:
-    Water: 9
-    Sugar: 1
+    Water: 11
+    Sugar: 2.5
+    CarbonDioxide: 3
+    Protein: 4
+# HONK END
 
 - type: reaction
   id: CopperBloodBreakdown
@@ -108,3 +120,97 @@
     Mold: 2
     Protein: 1
     Toxin: 1
+
+# HONK START - issue #645: chemistry can now synthesise species blood from a shared
+# plasma intermediate. Plasma reaction is electrolyser-gated so it does not re-form
+# inside centrifuge breakdowns, patient bloodstreams, or food prep where the same
+# constituents naturally co-occur. Downstream (plasma + element) reactions are
+# transitively gated because the only path to plasma is the electrolyser.
+- type: reaction
+  id: BloodPlasma
+  requiredMixerCategories:
+  - Electrolysis
+  reactants:
+    Water:
+      amount: 3
+    Protein:
+      amount: 2
+    Sugar:
+      amount: 1
+  products:
+    BloodPlasma: 6
+
+- type: reaction
+  id: BloodSynth
+  reactants:
+    BloodPlasma:
+      amount: 6
+    Iron:
+      amount: 1
+  products:
+    Blood: 7
+
+- type: reaction
+  id: CopperBloodSynth
+  reactants:
+    BloodPlasma:
+      amount: 6
+    Copper:
+      amount: 1
+  products:
+    CopperBlood: 7
+
+- type: reaction
+  id: SulfurBloodSynth
+  reactants:
+    BloodPlasma:
+      amount: 6
+    Sulfur:
+      amount: 1
+    Hydrogen:
+      amount: 1
+  products:
+    SulfurBlood: 8
+
+- type: reaction
+  id: AmmoniaBloodSynth
+  reactants:
+    BloodPlasma:
+      amount: 6
+    Ammonia:
+      amount: 2
+  products:
+    AmmoniaBlood: 8
+
+- type: reaction
+  id: InsectBloodSynth
+  reactants:
+    BloodPlasma:
+      amount: 6
+    Sodium:
+      amount: 1
+    Chlorine:
+      amount: 1
+  products:
+    InsectBlood: 8
+
+- type: reaction
+  id: SlimeSynth
+  reactants:
+    BloodPlasma:
+      amount: 6
+    Nitrogen:
+      amount: 1
+  products:
+    Slime: 7
+
+- type: reaction
+  id: SapSynth
+  reactants:
+    BloodPlasma:
+      amount: 6
+    Sugar:
+      amount: 1
+  products:
+    Sap: 7
+# HONK END

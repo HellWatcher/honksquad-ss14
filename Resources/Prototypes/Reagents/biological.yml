@@ -261,3 +261,16 @@
         damage:
           types:
             Cellular: 2
+
+# HONK START - issue #645: synth species blood. BloodPlasma is the shared root
+# compound; specific species bloods are made from plasma plus a defining element.
+- type: reagent
+  id: BloodPlasma
+  name: reagent-name-blood-plasma
+  group: Biological
+  desc: reagent-desc-blood-plasma
+  physicalDesc: reagent-physical-desc-viscous
+  flavor: metallic
+  color: "#c9b26c"
+  recognizable: true
+# HONK END

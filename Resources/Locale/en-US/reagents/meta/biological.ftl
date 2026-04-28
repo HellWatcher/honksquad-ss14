@@ -33,3 +33,8 @@ reagent-desc-vomit = You can see a few chunks of someone's last meal in it.
 
 reagent-name-grey-matter = grey matter
 reagent-desc-grey-matter = Thought juice, the stuff that leaks out of your ears.
+
+# HONK START - issue #645: synth species blood
+reagent-name-blood-plasma = blood plasma
+reagent-desc-blood-plasma = Cell-free blood serum. Inert on its own, but combined with the right element it becomes whatever blood the patient is missing.
+# HONK END
