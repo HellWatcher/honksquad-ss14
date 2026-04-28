@@ -78,22 +78,22 @@ public sealed partial class MetabolizerComponent : Component
         {
             SolutionName = BloodstreamComponent.DefaultMetabolitesSolutionName
         },
-        // HONK START - issue #679 step 1: Detoxification reads the bloodstream so the
-        // liver can scrub toxin-class reagents in place. Step 1 only declares the entry;
-        // the per-tick scrub rate (ToxinScrubRate) and reagent-side opt-in arrive in step 6.
+        // HONK START - issue #679 steps 1+6: Detoxification reads the bloodstream so the
+        // liver can scrub toxin-class reagents in place. Step 6 wires the actual scrub rate
+        // (LiverToxinScrubRate, see MetabolismConstants) so the liver pulls toxins out of
+        // blood at a steady pace, mirroring SS13's liver filter.
         //
-        // Engine quirk: TryMetabolizeStage's "this reagent has no entry for the stage"
-        // fallback either removes TransferRate units into a transfer solution, or removes
-        // 1 unit flat if there is no transfer solution. Until step 6 adds the toxin opt-in,
-        // we must look like a no-op so we don't quietly siphon Ethanol (and every other
-        // blood reagent waiting for the heart's Bloodstream transfer) before they reach
-        // the metabolites pool. Self-loop the transfer to the same blood solution with
-        // TransferRate = 0 so the fallback is "remove 0, add 0".
+        // Engine quirk also handled here: TryMetabolizeStage's "reagent has no entry for the
+        // stage" fallback removes TransferRate units into a transfer solution, or 1u flat if
+        // no transfer solution. Self-loop the transfer to the same blood solution with
+        // TransferRate = 0 so non-toxin reagents (Ethanol etc.) waiting for the heart's
+        // Bloodstream transfer aren't quietly siphoned before they reach metabolites.
         ["Detoxification"] = new()
         {
             SolutionName = BloodstreamComponent.DefaultBloodSolutionName,
             TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
             TransferRate = 0,
+            ToxinScrubRate = RussStation.Metabolism.MetabolismConstants.LiverToxinScrubRate,
         },
         // HONK END
         // HONK START - issue #679 step 2: Excretion reads the bloodstream so the kidney

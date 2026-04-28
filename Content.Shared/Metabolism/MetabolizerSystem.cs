@@ -180,6 +180,21 @@ public sealed class MetabolizerSystem : EntitySystem
             if (ev.Reagents.Contains(reagent))
                 continue;
 
+            // HONK START - issue #679 step 6: liver toxin scrub. Stages that opt in via
+            // ToxinScrubRate (the liver's Detoxification entry) consume toxin-class reagents
+            // at a fixed per-tick rate without firing effects. Skipped on corpses unless the
+            // reagent works on the dead, matching the dead-guard policy elsewhere.
+            if (solutionData.ToxinScrubRate > FixedPoint2.Zero
+                && proto.Group == "Toxins"
+                && (!isDead || proto.WorksOnTheDead))
+            {
+                var scrub = FixedPoint2.Clamp(solutionData.ToxinScrubRate, FixedPoint2.Zero, quantity);
+                if (scrub > FixedPoint2.Zero)
+                    solution.RemoveReagent(reagent, scrub);
+                continue;
+            }
+            // HONK END
+
             if (proto.Metabolisms is null || !proto.Metabolisms.Metabolisms.TryGetValue(stage, out var entry))
             {
                 // HONK START - freeze generic stomach transfer on corpses so revival chems don't drain (#491)
