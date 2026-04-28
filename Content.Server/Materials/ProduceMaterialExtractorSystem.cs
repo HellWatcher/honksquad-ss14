@@ -42,7 +42,11 @@ public sealed class ProduceMaterialExtractorSystem : EntitySystem
             .Where(r => ent.Comp.ExtractionReagents.Contains(r.Reagent.Prototype))
             .Sum(r => r.Quantity.Float());
 
-        var changed = (int)matAmount;
+        //HONK START - issue #647: scale produce-to-biomass yield via the fork-added
+        //YieldMultiplier (default 3x) so a baseline tomato harvest funds a print instead
+        //of a third of one. Multiply before flooring so small yield bumps still register.
+        var changed = (int)(matAmount * ent.Comp.YieldMultiplier);
+        //HONK END
 
         if (changed == 0)
         {
