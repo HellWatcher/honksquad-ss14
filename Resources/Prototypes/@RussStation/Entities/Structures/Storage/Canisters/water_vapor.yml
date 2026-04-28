@@ -1,0 +1,49 @@
+# water_vapor canister: layered Sprite parents and abstract Sprite parents inherited by the upstream entities (issue #689).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: WaterVaporCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#4c4e4d"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#fafffc"
+        - state: double_stripe
+          color: "#f7d5d3"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#7b6a69"
+        - state: outline
+          color: "#4c4e4d"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: WaterVaporCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#4c4e4d"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#fafffc"
+        - state: double_stripe
+          color: "#f7d5d3"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#7b6a69"
+        - state: outline
+          color: "#4c4e4d"
+        - state: lights
+        - state: broken

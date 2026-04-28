@@ -1,0 +1,17 @@
+// Aseprite/BYOND ICON_MULTIPLY approximation as a semi-transparent black
+// overlay: dark mask areas alpha-darken the underlying sprite, white mask
+// areas are transparent. World-background-independent, so it does not bleed
+// onto the floor under the canister the way a canvas-kind multiply blend
+// would.
+//
+// alpha = (1 - luma) * 1.15 produces a true gradient across the full mask
+// luma range with darkening concentrated in the shadow pixels. The 1.15
+// scale slightly pushes shadow pixels harder than a straight (1 - luma)
+// without crushing them to pure black.
+
+void fragment() {
+    highp vec4 mask = zTexture(UV);
+    highp float luma = dot(mask.rgb, vec3(0.299, 0.587, 0.114));
+    highp float alpha = clamp((1.0 - luma) * 1.15, 0.0, 1.0) * mask.a * VtxModulate.a;
+    COLOR = vec4(0.0, 0.0, 0.0, alpha);
+}

@@ -1,0 +1,43 @@
+# oxygen canister: layered Sprite parents and abstract Sprite parents inherited by the upstream entities (issue #689).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: OxygenCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#2786e5"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#6ab4ff"
+        - state: stripe
+          color: "#e8fefe"
+        - state: outline
+          color: "#2786e5"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: OxygenCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#2786e5"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#6ab4ff"
+        - state: stripe
+          color: "#e8fefe"
+        - state: outline
+          color: "#2786e5"
+        - state: lights
+        - state: broken

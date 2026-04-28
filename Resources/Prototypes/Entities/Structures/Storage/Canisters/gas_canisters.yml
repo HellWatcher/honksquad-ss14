@@ -152,16 +152,12 @@
       group: Canisters
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: StorageCanisterBase
+  # HONK END
   id: StorageCanister
   name: storage canister
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: storage
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -193,17 +189,13 @@
 # Filled canisters, contain 1871.71051 moles each
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: AirCanisterBase
+  # HONK END
   id: AirCanister
   name: air canister
   description: A canister that can contain any type of gas. This one is supposed to contain air mixture. It can be attached to connector ports using a wrench.
   components:
-  - type: Sprite
-    # HONK START - SS13 per-gas canister sprite
-    sprite: "@RussStation/Structures/Storage/canister.rsi"
-    layers:
-      - state: air
-    # HONK END
   - type: GasCanister
     air:
       volume: 1500
@@ -236,17 +228,13 @@
       - !type:DumpCanisterBehavior
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: OxygenCanisterBase
+  # HONK END
   id: OxygenCanister
   name: oxygen canister
   description: A canister that can contain any type of gas. This one is supposed to contain oxygen. It can be attached to connector ports using a wrench.
   components:
-  - type: Sprite
-    # HONK START - SS13 per-gas canister sprite
-    sprite: "@RussStation/Structures/Storage/canister.rsi"
-    layers:
-      - state: oxygen
-    # HONK END
   - type: GasCanister
     air:
       volume: 1500
@@ -293,17 +281,13 @@
     access: [["Atmospherics"]]
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: NitrogenCanisterBase
+  # HONK END
   id: NitrogenCanister
   name: nitrogen canister
   description: A canister that can contain any type of gas. This one is supposed to contain nitrogen. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: nitrogen
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -350,17 +334,13 @@
     access: [["Atmospherics"]]
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: CarbonDioxideCanisterBase
+  # HONK END
   id: CarbonDioxideCanister
   name: carbon dioxide canister
   description: A canister that can contain any type of gas. This one is supposed to contain carbon dioxide. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: carbon_dioxide
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -409,17 +389,13 @@
     access: [["Atmospherics"]]
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: PlasmaCanisterBase
+  # HONK END
   id: PlasmaCanister
   name: plasma canister
   description: A canister that can contain any type of gas. This one is supposed to contain plasma. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: plasma
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -453,17 +429,13 @@
       locked: true
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: TritiumCanisterBase
+  # HONK END
   id: TritiumCanister
   name: tritium canister
   description: A canister that can contain any type of gas. This one is supposed to contain tritium. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: tritium
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -497,17 +469,13 @@
       locked: true
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: WaterVaporCanisterBase
+  # HONK END
   id: WaterVaporCanister
   name: water vapor canister
   description: A canister that can contain any type of gas. This one is supposed to contain water vapor. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: water_vapor
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -539,17 +507,13 @@
         - !type:DumpCanisterBehavior
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: AmmoniaCanisterBase
+  # HONK END
   id: AmmoniaCanister
   name: ammonia canister
   description: A canister that can contain any type of gas. This one is supposed to contain ammonia. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: ammonia
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -583,17 +547,13 @@
       locked: true
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: NitrousOxideCanisterBase
+  # HONK END
   id: NitrousOxideCanister
   name: nitrous oxide canister
   description: A canister that can contain any type of gas. This one is supposed to contain nitrous oxide. It can be attached to connector ports using a wrench.
   components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      layers:
-        - state: nitrous_oxide
-      # HONK END
     - type: GasCanister
       air:
         volume: 1500
@@ -627,17 +587,13 @@
       locked: true
 
 - type: entity
-  parent: GasCanister
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: FrezonCanisterBase
+  # HONK END
   id: FrezonCanister
   name: frezon canister
   description: A canister that can contain any type of gas. This one is supposed to contain frezon. It can be attached to connector ports using a wrench.
   components:
-  - type: Sprite
-    # HONK START - SS13 per-gas canister sprite
-    sprite: "@RussStation/Structures/Storage/canister.rsi"
-    layers:
-    - state: frezon
-    # HONK END
   - type: GasCanister
     air:
       volume: 1500
@@ -745,123 +701,69 @@
       price: 125
 
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: StorageCanisterBrokenBase
+  # HONK END
   id: StorageCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: storage-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: AirCanisterBrokenBase
+  # HONK END
   id: AirCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    # HONK START - SS13 per-gas canister sprite
-    sprite: "@RussStation/Structures/Storage/canister.rsi"
-    state: air-1
-
-    # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: OxygenCanisterBrokenBase
+  # HONK END
   id: OxygenCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    # HONK START - SS13 per-gas canister sprite
-    sprite: "@RussStation/Structures/Storage/canister.rsi"
-    state: oxygen-1
-
-    # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: NitrogenCanisterBrokenBase
+  # HONK END
   id: NitrogenCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: nitrogen-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: CarbonDioxideCanisterBrokenBase
+  # HONK END
   id: CarbonDioxideCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: carbon_dioxide-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: PlasmaCanisterBrokenBase
+  # HONK END
   id: PlasmaCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: plasma-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: TritiumCanisterBrokenBase
+  # HONK END
   id: TritiumCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: tritium-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: WaterVaporCanisterBrokenBase
+  # HONK END
   id: WaterVaporCanisterBroken
   name: broken water vapor canister
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: water_vapor-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: AmmoniaCanisterBrokenBase
+  # HONK END
   id: AmmoniaCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: ammonia-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: NitrousOxideCanisterBrokenBase
+  # HONK END
   id: NitrousOxideCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-    - type: Sprite
-      # HONK START - SS13 per-gas canister sprite
-      sprite: "@RussStation/Structures/Storage/canister.rsi"
-      state: nitrous_oxide-1
-
-      # HONK END
 - type: entity
-  parent: GasCanisterBrokenBase
+  # HONK START - layered Sprite via fork template (issue #689)
+  parent: FrezonCanisterBrokenBase
+  # HONK END
   id: FrezonCanisterBroken
   categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    # HONK START - SS13 per-gas canister sprite
-    sprite: "@RussStation/Structures/Storage/canister.rsi"
-    state: frezon-1
-    # HONK END

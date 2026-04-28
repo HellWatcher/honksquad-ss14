@@ -1,0 +1,49 @@
+# nitrous_oxide canister: layered Sprite parents and abstract Sprite parents inherited by the upstream entities (issue #689).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: NitrousOxideCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#c63e3b"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ff8481"
+        - state: double_stripe
+          color: "#f7d5d3"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#7b6a69"
+        - state: outline
+          color: "#c63e3b"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: NitrousOxideCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#c63e3b"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ff8481"
+        - state: double_stripe
+          color: "#f7d5d3"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#7b6a69"
+        - state: outline
+          color: "#c63e3b"
+        - state: lights
+        - state: broken

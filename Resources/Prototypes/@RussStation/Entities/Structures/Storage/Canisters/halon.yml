@@ -1,0 +1,90 @@
+# halon canister: layered Sprite parents and concrete entities (upright + broken).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: HalonCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ffb7de"
+        - state: double_stripe
+          color: "#368bff"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#1b457f"
+        - state: outline
+          color: "#9b5d7f"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: HalonCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ffb7de"
+        - state: double_stripe
+          color: "#368bff"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#1b457f"
+        - state: outline
+          color: "#9b5d7f"
+        - state: lights
+        - state: broken
+
+- type: entity
+  parent: HalonCanisterBase
+  id: HalonCanister
+  name: halon canister
+  description: A canister that can contain any type of gas. This one is supposed to contain halon. It can be attached to connector ports using a wrench.
+  components:
+    - type: GasCanister
+      air:
+        volume: 1500
+        moles:
+          Halon: 2769.36
+        temperature: 293.15
+    - type: Destructible
+      thresholds:
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            HalonCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
+
+- type: entity
+  parent: HalonCanisterBrokenBase
+  id: HalonCanisterBroken
+  categories: [ HideSpawnMenu ]

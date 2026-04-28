@@ -1,0 +1,90 @@
+# hydrogen canister: layered Sprite parents and concrete entities (upright + broken).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: HydrogenCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#eaeaea"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#fefefe"
+        - state: double_stripe
+          color: "#be3455"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#5f1a2a"
+        - state: outline
+          color: "#eaeaea"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: HydrogenCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#eaeaea"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#fefefe"
+        - state: double_stripe
+          color: "#be3455"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#5f1a2a"
+        - state: outline
+          color: "#eaeaea"
+        - state: lights
+        - state: broken
+
+- type: entity
+  parent: HydrogenCanisterBase
+  id: HydrogenCanister
+  name: hydrogen canister
+  description: A canister that can contain any type of gas. This one is supposed to contain hydrogen. It can be attached to connector ports using a wrench.
+  components:
+    - type: GasCanister
+      air:
+        volume: 1500
+        moles:
+          Hydrogen: 2769.36
+        temperature: 293.15
+    - type: Destructible
+      thresholds:
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            HydrogenCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
+
+- type: entity
+  parent: HydrogenCanisterBrokenBase
+  id: HydrogenCanisterBroken
+  categories: [ HideSpawnMenu ]

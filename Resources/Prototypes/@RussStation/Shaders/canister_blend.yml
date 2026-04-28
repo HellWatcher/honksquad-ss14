@@ -1,0 +1,27 @@
+# HONK - Issue #689: blend shader prototypes for the runtime canister layer
+# composition. Mirrors the BYOND blend ops Tools/canister_sprite_baker.py uses
+# when baking flat per-gas PNGs, but applied per-layer at render time. Same
+# recipe as issue #692's tank layering.
+#
+# SpriteMultiply is a source shader that turns a luma mask into a black-alpha
+# overlay (world-bg independent darkening). The additive/subtractive shaders
+# are kind: canvas which blend against whatever is in the framebuffer; on a
+# floor-placed canister the additive bleed slightly brightens the floor tile
+# under the sprite, which is the trade-off for getting a true add/subtract.
+
+# Shared with issue #692; if both PRs land, the duplicate definition resolves
+# to a single copy at merge.
+- type: shader
+  id: SpriteMultiply
+  kind: source
+  path: "/Textures/Shaders/@RussStation/spritemultiply.swsl"
+
+- type: shader
+  id: SpriteSubtract
+  kind: source
+  path: "/Textures/Shaders/@RussStation/spritesubtract.swsl"
+
+- type: shader
+  id: SpriteAdd
+  kind: source
+  path: "/Textures/Shaders/@RussStation/spriteadd.swsl"

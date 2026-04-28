@@ -1,0 +1,49 @@
+# frezon canister: layered Sprite parents and abstract Sprite parents inherited by the upstream entities (issue #689).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: FrezonCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#6696ee"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#99bdff"
+        - state: double_stripe
+          color: "#fefb30"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#7f7d18"
+        - state: outline
+          color: "#6696ee"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: FrezonCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#6696ee"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#99bdff"
+        - state: double_stripe
+          color: "#fefb30"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#7f7d18"
+        - state: outline
+          color: "#6696ee"
+        - state: lights
+        - state: broken

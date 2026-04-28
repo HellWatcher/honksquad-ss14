@@ -1,0 +1,43 @@
+# plasma canister: layered Sprite parents and abstract Sprite parents inherited by the upstream entities (issue #689).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: PlasmaCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#f62800"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ff694c"
+        - state: hazard_stripes
+          color: "#ffee00"
+        - state: outline
+          color: "#f62800"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: PlasmaCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#f62800"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ff694c"
+        - state: hazard_stripes
+          color: "#ffee00"
+        - state: outline
+          color: "#f62800"
+        - state: lights
+        - state: broken
