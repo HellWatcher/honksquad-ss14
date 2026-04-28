@@ -44,4 +44,14 @@ public sealed partial class MetabolismSolutionEntry
     /// </summary>
     [DataField]
     public FixedPoint2 ToxinScrubRate = MetabolismConstants.DefaultToxinScrubRate;
+
+    /// <summary>
+    /// Per-tick removal applied to every reagent in this stage's solution, without firing
+    /// effects. Set on the kidney's Excretion entry so the kidney slowly drains the
+    /// bloodstream beyond what the heart's Bloodstream-stage transfer moves out. 0 = no
+    /// drain. Mirrors the body's natural excretion path; missing kidneys -> reagents
+    /// linger in blood for longer.
+    /// </summary>
+    [DataField]
+    public FixedPoint2 PerReagentDrain = MetabolismConstants.DefaultPerReagentDrain;
 }

@@ -195,6 +195,21 @@ public sealed class MetabolizerSystem : EntitySystem
             }
             // HONK END
 
+            // HONK START - issue #679 step 7: kidney slow drain. Stages that opt in via
+            // PerReagentDrain (the kidney's Excretion entry) consume every reagent at a
+            // small per-tick rate without firing effects. Same dead guard as the toxin
+            // scrub above; works in addition to whatever the heart's Bloodstream stage
+            // moves out, so missing kidneys -> reagents linger in blood for longer.
+            if (solutionData.PerReagentDrain > FixedPoint2.Zero
+                && (!isDead || proto.WorksOnTheDead))
+            {
+                var drain = FixedPoint2.Clamp(solutionData.PerReagentDrain, FixedPoint2.Zero, quantity);
+                if (drain > FixedPoint2.Zero)
+                    solution.RemoveReagent(reagent, drain);
+                continue;
+            }
+            // HONK END
+
             if (proto.Metabolisms is null || !proto.Metabolisms.Metabolisms.TryGetValue(stage, out var entry))
             {
                 // HONK START - freeze generic stomach transfer on corpses so revival chems don't drain (#491)

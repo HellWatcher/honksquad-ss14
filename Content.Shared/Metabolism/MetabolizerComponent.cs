@@ -96,11 +96,13 @@ public sealed partial class MetabolizerComponent : Component
             ToxinScrubRate = RussStation.Metabolism.MetabolismConstants.LiverToxinScrubRate,
         },
         // HONK END
-        // HONK START - issue #679 step 2: Excretion reads the bloodstream so the kidney
-        // can host the sub-tolerance filter (step 5) and the slow blood drain (step 7).
-        // No reagent declares an Excretion entry yet, so the stage runs and does nothing
-        // until later steps land. Same TransferRate = 0 self-loop as Detoxification so
-        // the no-entry fallback can't drain Ethanol or other bloodstream reagents.
+        // HONK START - issue #679 steps 2+7: Excretion reads the bloodstream so the kidney
+        // hosts the sub-tolerance filter (step 5, computed inline on the heart's tick) and
+        // the slow blood drain (step 7). PerReagentDrain pulls a small amount of every
+        // bloodstream reagent each kidney tick so chems do not linger forever after their
+        // effects fire; missing kidneys -> drain stops -> reagents accumulate. Same
+        // TransferRate = 0 self-loop as Detoxification so the no-entry fallback can't
+        // drain Ethanol before the heart can transfer it.
         ["Excretion"] = new()
         {
             SolutionName = BloodstreamComponent.DefaultBloodSolutionName,

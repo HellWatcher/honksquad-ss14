@@ -34,4 +34,20 @@ public static class MetabolismConstants
     /// failure feel noticeable.
     /// </summary>
     public static readonly FixedPoint2 LiverToxinScrubRate = FixedPoint2.New(1);
+
+    /// <summary>
+    /// Default per-stage per-reagent excretion drain. 0 means the stage does not drain on
+    /// its own; the kidney's Excretion entry overrides to a small per-tick value so every
+    /// reagent in blood loses a sliver of itself each interval. Mirrors SS13's "kidneys
+    /// pull from the body's reagent holder" behaviour, except framed per-reagent so it
+    /// doesn't bias against high-volume reagents.
+    /// </summary>
+    public static readonly FixedPoint2 DefaultPerReagentDrain = FixedPoint2.Zero;
+
+    /// <summary>
+    /// Kidney's per-tick drain on each bloodstream reagent. Tuning starting point; tweak
+    /// after play testing. Too high makes chems blast through; too low makes kidneys feel
+    /// decorative again.
+    /// </summary>
+    public static readonly FixedPoint2 KidneyPerReagentDrain = FixedPoint2.New("0.1");
 }
