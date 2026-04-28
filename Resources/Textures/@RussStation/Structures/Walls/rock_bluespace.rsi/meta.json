@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from tgstation icons/effects/ore_visuals.dmi (state: rock_BScrystal). Mining-scanner overlay for Bluespace ore veins.",
+  "size": { "x": 32, "y": 32 },
+  "states": [ { "name": "rock_bluespace" } ]
+}

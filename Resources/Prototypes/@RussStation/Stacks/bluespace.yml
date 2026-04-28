@@ -1,0 +1,19 @@
+# HONK - Issue #302: stack defs for refined bluespace and the raw ore form.
+
+- type: stack
+  parent: BaseMediumStack
+  id: Bluespace
+  name: stack-bluespace
+  icon:
+    sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+    state: bluespace_crystal
+  spawn: MaterialBluespace1
+
+- type: stack
+  parent: BaseMediumStack
+  id: BluespaceOre
+  name: stack-bluespace-ore
+  icon:
+    sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+    state: ore
+  spawn: BluespaceOre1
