@@ -20,4 +20,18 @@ public static class MetabolismConstants
     /// to mirror SS13 metabolism_efficiency.
     /// </summary>
     public const float DefaultVolumeScaledTransfer = 0f;
+
+    /// <summary>
+    /// Default per-stage toxin scrub rate. 0 means the stage does no toxin scrubbing; the
+    /// liver's Detoxification stage overrides to 1u/tick so toxin-class reagents in the
+    /// bloodstream get pulled out at a steady rate. Mirrors SS13's liver toxin filter.
+    /// </summary>
+    public static readonly FixedPoint2 DefaultToxinScrubRate = FixedPoint2.Zero;
+
+    /// <summary>
+    /// Liver's per-tick toxin scrub on the bloodstream. Tunable knob; start small enough
+    /// that a healthy liver does not trivialize toxin damage but big enough to make liver
+    /// failure feel noticeable.
+    /// </summary>
+    public static readonly FixedPoint2 LiverToxinScrubRate = FixedPoint2.New(1);
 }

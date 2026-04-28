@@ -35,4 +35,13 @@ public sealed partial class MetabolismSolutionEntry
     /// </summary>
     [DataField]
     public float VolumeScaledTransfer = MetabolismConstants.DefaultVolumeScaledTransfer;
+
+    /// <summary>
+    /// Per-tick removal applied to toxin-class reagents (group "Toxins") in this stage's
+    /// solution. The reagent is consumed at this rate without firing effects. Set on the
+    /// liver's Detoxification entry so the liver scrubs toxins from the bloodstream;
+    /// other stages stay at 0. Mirrors SS13's liver-driven toxin filter.
+    /// </summary>
+    [DataField]
+    public FixedPoint2 ToxinScrubRate = MetabolismConstants.DefaultToxinScrubRate;
 }
