@@ -89,6 +89,11 @@
     - FoodBanana
   mutationPrototypes:
     - mimana
+    # HONK START - issue #697: mutates into bluespaceBanana (fork-side seed at
+    # @RussStation/Hydroponics/bluespace_banana.yml). Mirrors SS13 mutatelist on
+    # /obj/item/seeds/banana.
+    - bluespaceBanana
+    # HONK END
   harvestRepeat: Repeat
   lifespan: 50
   maturation: 6

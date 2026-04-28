@@ -1,0 +1,13 @@
+# HONK - Issue #697 child: bluespace banana seed packet entity.
+
+- type: entity
+  parent: SeedBase
+  name: packet of bluespace banana seeds
+  id: BluespaceBananaSeeds
+  components:
+    - type: Seed
+      seedId: bluespaceBanana
+    - type: Sprite
+      sprite: "@RussStation/Objects/Specific/Hydroponics/bluespace_banana.rsi"
+      layers:
+        - state: seed

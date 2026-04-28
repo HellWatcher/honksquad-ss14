@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from tgstation/russstation icons/obj/service/hydroponics/harvest.dmi (states: bluenana, bluenana_peel) and seeds.dmi (state: seed-banana-blue). Plant growth stages are inherited from upstream's banana.rsi.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "produce"
+    },
+    {
+      "name": "peel"
+    },
+    {
+      "name": "seed"
+    }
+  ]
+}

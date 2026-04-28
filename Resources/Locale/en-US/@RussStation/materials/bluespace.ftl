@@ -21,3 +21,6 @@ bluespace-plant-backfire-others = { $user } fumbles a bluespace fruit!
 
 seeds-bluespacetomato-name = packet of bluespace tomato seeds
 seeds-bluespacetomato-display-name = bluespace tomato
+
+seeds-bluespacebanana-name = packet of bluespace banana seeds
+seeds-bluespacebanana-display-name = bluespace banana
