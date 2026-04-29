@@ -71,3 +71,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: sabrage_proficiency
+
+- type: skillchip
+  id: SkillchipChefKissData
+  name: Chef's Kiss
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: chefs_kiss

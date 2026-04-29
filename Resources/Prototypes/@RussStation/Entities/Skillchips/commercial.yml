@@ -107,3 +107,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipSabrageData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipChefKiss
+  name: K1SS skillchip
+  description: A small neural interface chip. Allows you to kiss food you've created to make it with love.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Food/Baked/misc.rsi
+    state: cookie-sugar
+  - type: Skillchip
+    chipProto: SkillchipChefKissData
