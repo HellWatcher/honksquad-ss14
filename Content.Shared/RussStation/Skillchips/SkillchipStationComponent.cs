@@ -14,7 +14,7 @@ public sealed partial class SkillchipStationComponent : Component
     /// How long the implant or removal operation takes.
     /// </summary>
     [DataField]
-    public TimeSpan OperationDuration = TimeSpan.FromSeconds(15);
+    public TimeSpan OperationDuration = TimeSpan.FromSeconds(SkillchipsConstants.StationOperationSeconds);
 
     [DataField]
     public SoundSpecifier OperationStartSound = new SoundPathSpecifier("/Audio/Machines/scanning.ogg");
