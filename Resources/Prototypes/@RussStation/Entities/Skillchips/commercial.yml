@@ -167,3 +167,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipKommandData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipMusical
+  name: SS13 Mus1c4L skillchip
+  description: A small neural interface chip. Play music like the legends of the old station. Your last vowels will stretch to the rafters and stay there.
+  components:
+  - type: Sprite
+    sprite: Objects/Fun/Instruments/guitar.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipMusicalData

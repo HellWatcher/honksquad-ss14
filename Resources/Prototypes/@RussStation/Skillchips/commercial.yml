@@ -111,3 +111,10 @@
   grants:
   - !type:CapabilityTagGrant
     tag: enhanced_pointing
+
+- type: skillchip
+  id: SkillchipMusicalData
+  name: SS13 Musical
+  capacityCost: 1
+  grants:
+  - !type:SingAccentGrant

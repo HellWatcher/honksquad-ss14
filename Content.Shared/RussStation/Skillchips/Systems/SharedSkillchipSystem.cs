@@ -150,6 +150,12 @@ public abstract class SharedSkillchipSystem : EntitySystem
         Dirty(brain, holder);
     }
 
+    public void EnsureMobComponent<T>(EntityUid mob) where T : Component, new()
+        => EnsureComp<T>(mob);
+
+    public void RemoveMobComponent<T>(EntityUid mob) where T : Component
+        => RemComp<T>(mob);
+
     // ── Internals ────────────────────────────────────────────────────────────
 
     protected void ApplyAllGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob)
