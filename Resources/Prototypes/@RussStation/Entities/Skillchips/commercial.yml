@@ -131,3 +131,15 @@
     state: bacon-cooked
   - type: Skillchip
     chipProto: SkillchipFlavourCalculusData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipDrunkenBrawler
+  name: F0RC3 4DD1CT10N skillchip
+  description: A small neural interface chip. When intoxicated, you gain increased unarmed effectiveness.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Drinks/alebottle.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipDrunkenBrawlerData

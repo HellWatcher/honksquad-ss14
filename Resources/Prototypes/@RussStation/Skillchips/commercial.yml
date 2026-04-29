@@ -87,3 +87,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: flavour_calculus
+
+- type: skillchip
+  id: SkillchipDrunkenBrawlerData
+  name: Drunken Unarmed Proficiency
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: drunken_brawler
