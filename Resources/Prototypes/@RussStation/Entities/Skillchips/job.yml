@@ -47,3 +47,15 @@
     state: pickaxe
   - type: Skillchip
     chipProto: SkillchipBattlebotEnthusiastData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipSupermatters
+  name: HYPERG1G4 skillchip
+  description: A small neural interface chip. Understand the correct mental patterns to remain immune to supermatter visions and act as a calming influence on matter in a hyperfractal state.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Research/anomalyscanner.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipSupermattersData
