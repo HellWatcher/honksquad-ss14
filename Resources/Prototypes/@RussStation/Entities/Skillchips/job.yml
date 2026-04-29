@@ -7,7 +7,7 @@
   description: A small neural interface chip. Contains several terabytes of uncannily religious, Honkmother-praising guides on how to reshape balloons into silly animals.
   components:
   - type: Sprite
-    sprite: Objects/Fun/Balloons/nanotrasen.rsi
+    sprite: "@RussStation/Objects/Skillchips/skillchip.rsi"
     state: icon
   - type: Skillchip
     chipProto: SkillchipBalloonSutraData
@@ -19,8 +19,8 @@
   description: A small neural interface chip. Detective "Encyclopedic Knowledge of Tastes" v1.21. Deduce the minute chemical compositions of any liquid substance just by swishing it around your mouth.
   components:
   - type: Sprite
-    sprite: Objects/Specific/Detective/evidence_marker.rsi
-    state: one
+    sprite: "@RussStation/Objects/Skillchips/skillchip.rsi"
+    state: icon
   - type: Skillchip
     chipProto: SkillchipDetectiveTasteData
 
@@ -31,8 +31,8 @@
   description: A small neural interface chip. Become a cleanbot whisperer. Gain the affection of all thankless, hardworking cleanbots on the station.
   components:
   - type: Sprite
-    sprite: Objects/Specific/Janitorial/mop.rsi
-    state: mop
+    sprite: "@RussStation/Objects/Skillchips/skillchip.rsi"
+    state: icon
   - type: Skillchip
     chipProto: SkillchipCleanbotWhispererData
 
@@ -43,8 +43,8 @@
   description: A small neural interface chip. Lead minebots into war.
   components:
   - type: Sprite
-    sprite: Objects/Weapons/Melee/pickaxe.rsi
-    state: pickaxe
+    sprite: "@RussStation/Objects/Skillchips/skillchip.rsi"
+    state: icon
   - type: Skillchip
     chipProto: SkillchipBattlebotEnthusiastData
 
@@ -55,7 +55,7 @@
   description: A small neural interface chip. Understand the correct mental patterns to remain immune to supermatter visions and act as a calming influence on matter in a hyperfractal state.
   components:
   - type: Sprite
-    sprite: Objects/Specific/Research/anomalyscanner.rsi
+    sprite: "@RussStation/Objects/Skillchips/skillchip.rsi"
     state: icon
   - type: Skillchip
     chipProto: SkillchipSupermattersData
@@ -67,8 +67,8 @@
   description: A small neural interface chip. A roboticist's second best friend. Recognize cyborg wire layouts and understand their functionality at a glance.
   components:
   - type: Sprite
-    sprite: Objects/Specific/Robotics/cyborg_parts.rsi
-    state: borg_l_arm
+    sprite: "@RussStation/Objects/Skillchips/skillchip.rsi"
+    state: icon
   - type: Skillchip
     chipProto: SkillchipCyborgCircuitryData
 
@@ -79,7 +79,7 @@
   description: A small neural interface chip. Endorsed by Poly. Recognize airlock and APC wire layouts and understand their functionality at a glance.
   components:
   - type: Sprite
-    sprite: Objects/Tools/wrench.rsi
+    sprite: "@RussStation/Objects/Skillchips/skillchip.rsi"
     state: icon
   - type: Skillchip
     chipProto: SkillchipEngineeringCircuitryData
