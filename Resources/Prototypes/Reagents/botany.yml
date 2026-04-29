@@ -269,6 +269,11 @@
         messages: [ "ammonia-smell" ]
         probability: 0.1
         conditions:
+        # HONK START - Skaven (#481): they breathe ammonia, no smell popup.
+        - !type:MetabolizerTypeCondition
+          type: [ Rat, Vox, Skaven ]
+          inverted: true
+        # HONK END
         - !type:ReagentCondition
           reagent: Ammonia
           min: 0.25

@@ -12,7 +12,10 @@
       containers:
         storagebase: !type:AllSelector
           children:
-            - id: ClothingMaskGasSkaven
+            # Mask omitted: Skaven auto-spawn wearing ClothingMaskGasSkaven
+            # via LoadoutSpeciesBreathToolSkaven, and the mask's Small footprint
+            # pushed the 9-cell box over capacity (the water bottle no longer
+            # fit). Standard BoxSurvival uses the Tiny ClothingMaskBreath here.
             - id: DoubleEmergencyAmmoniaTankFilled
             - id: EmergencyMedipen
             - id: Flare

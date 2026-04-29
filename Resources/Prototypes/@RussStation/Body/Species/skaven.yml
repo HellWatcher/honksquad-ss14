@@ -20,7 +20,8 @@
       required: false
     enum.HumanoidVisualLayers.Snout:
       limit: 1
-      required: false
+      required: true
+      default: [SkavenSnout]
     enum.HumanoidVisualLayers.Chest:
       limit: 2
       required: false
@@ -81,10 +82,14 @@
   components:
     - type: Speech
       speechVerb: SmallMob
-      speechSounds: Squeak
-      allowedEmotes: ["Squeak", "Squish"]
+      speechSounds: Vulpkanin
+      allowedEmotes: ["Squeak"]
     - type: ReplacementAccent
       accents: [queekish]
+    # Wagging disabled until the tail_wagging.png frames are fixed (see issue
+    # for tail wag animation). The bake we ship has frames out of order and
+    # too few to read as a smooth wag, so the action is more annoying than
+    # useful. Re-enable with `- type: Wagging\n  action: ActionToggleWaggingSkaven`.
     - type: Bloodstream
       bloodReferenceSolution:
         reagents:

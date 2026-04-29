@@ -36,11 +36,10 @@
         temperature: 293.15
 
 # Full-size 5 L ammonia tank for refilling Skaven survival kits and stocking
-# atmos/medbay. Sprites in @RussStation/Objects/Tanks/miasma_tank.rsi are
-# pre-baked: body pixels mapped to the canister green ramp anchored on
-# #1f8e2f and the warm low-saturation gauge band remapped through the
-# AmmoniaCanister pink valve palette (matches the structural canister and
-# the DoubleEmergencyAmmoniaTank).
+# atmos/medbay. Sprites in @RussStation/Objects/Tanks/ammonia_tank.rsi are
+# baked from upstream Objects/Tanks/anesthetic.rsi (NitrousOxideTank): body
+# remapped through the AmmoniaCanister secondary pink palette (#f7d5d3) and
+# the gauge stripe remapped through the primary green palette (#009823).
 
 - type: entity
   parent: NitrogenTank
@@ -49,11 +48,11 @@
   description: A standard cylindrical gas tank for ammonia. It can hold 5 L of gas.
   components:
     - type: Sprite
-      sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
+      sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
     - type: Item
-      sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
+      sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
     - type: Clothing
-      sprite: "@RussStation/Objects/Tanks/miasma_tank.rsi"
+      sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
 
 - type: entity
   id: AmmoniaTankFilled

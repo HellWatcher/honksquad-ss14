@@ -20,3 +20,14 @@
       - BoxSurvivalSkaven
   equipment:
     pocket1: DoubleEmergencyAmmoniaTankFilled
+
+# Mirrors LoadoutSpeciesBreathTool (Vox) so Skaven jobs auto-spawn with the
+# species mask. Added to GroupSpeciesBreathTool via the HONK block in
+# Resources/Prototypes/Loadouts/LoadoutGroups/loadout_groups.yml.
+- type: loadout
+  id: LoadoutSpeciesBreathToolSkaven
+  effects:
+    - !type:GroupLoadoutEffect
+      proto: AmmoniaBreather
+  equipment:
+    mask: ClothingMaskGasSkaven
