@@ -1,0 +1,6 @@
+- type: skillchip
+  id: SkillchipBulletDodgerData
+  name: Taunt 2 Dodge
+  capacityCost: 1
+  grants:
+  - !type:BulletDodgeGrant

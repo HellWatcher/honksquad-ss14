@@ -1,0 +1,11 @@
+<Document>
+# BULLET_DODGER
+
+At the cost of stamina, your taunts can also be used to dodge incoming projectiles.
+
+<Box>
+<GuideEntityEmbed Entity="SkillchipBulletDodger"/>
+</Box>
+
+Perform the [color=#a4885c]Flip[/color] or [color=#a4885c]Spin[/color] emote to open a brief deflect window. The next projectile that would hit you in that window is bounced off, but costs stamina, so spamming it puts you on the floor.
+</Document>
