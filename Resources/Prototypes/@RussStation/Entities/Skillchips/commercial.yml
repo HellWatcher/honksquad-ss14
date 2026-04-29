@@ -59,3 +59,15 @@
     state: normal
   - type: Skillchip
     chipProto: SkillchipLightbulbRemovingData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipDiskVerifier
+  name: K33P-TH4T-D15K skillchip
+  description: A small neural interface chip. Allows the user to automatically spot forged nuclear authentication disks by memorizing their extremely long serial numbers.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/nukedisk.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipDiskVerifierData
