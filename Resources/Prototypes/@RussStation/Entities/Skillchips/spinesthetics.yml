@@ -1,0 +1,11 @@
+- type: entity
+  parent: BaseItem
+  id: SkillchipSpinesthetics
+  name: 0LD F058UR7 skillchip
+  description: A small neural interface chip. Dated firmware, no documentation. The case is scratched in three places. It will make you very good at spinning and flipping, right up until it doesn't.
+  components:
+  - type: Sprite
+    sprite: @RussStation/Objects/Skillchips/skillchip.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipSpinesthesticsData

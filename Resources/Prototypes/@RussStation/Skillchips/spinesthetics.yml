@@ -1,0 +1,8 @@
+# Spinesthetics skillchip (Old F058UR7) -- depends on Spin and Flip emotes from this branch
+
+- type: skillchip
+  id: SkillchipSpinesthesticsData
+  name: Old F058UR7
+  capacityCost: 1
+  grants:
+  - !type:SpinesthesticsGrant
