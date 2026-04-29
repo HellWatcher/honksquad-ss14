@@ -79,3 +79,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: chefs_kiss
+
+- type: skillchip
+  id: SkillchipFlavourCalculusData
+  name: Mental Flavour Calculus
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: flavour_calculus
