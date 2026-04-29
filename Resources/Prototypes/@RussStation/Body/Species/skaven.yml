@@ -80,6 +80,11 @@
       allowedEmotes: ["Squeak", "Squish"]
     - type: ReplacementAccent
       accent: queekish
+    - type: Bloodstream
+      bloodReferenceSolution:
+        reagents:
+          - ReagentId: AmmoniaBlood
+            Quantity: 300
     - type: Butcherable
       butcheringType: Spike
       spawned:
