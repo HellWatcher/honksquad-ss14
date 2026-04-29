@@ -1,5 +1,6 @@
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
+using Content.Shared.Emp;
 using Content.Shared.RussStation.Skillchips;
 using Content.Shared.RussStation.Skillchips.Systems;
 using Robust.Shared.Containers;
@@ -26,6 +27,14 @@ public sealed class SkillchipGrantTest
   - !type:CapabilityTagGrant
     tag: test_capability
 
+- type: skillchip
+  id: TestChipData2
+  name: Test Chip 2
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: test_capability_2
+
 - type: entity
   id: TestBrain
   components:
@@ -33,6 +42,15 @@ public sealed class SkillchipGrantTest
   - type: Organ
     category: Brain
   - type: SkillchipHolder
+
+- type: entity
+  id: TestBrainSmall
+  components:
+  - type: Brain
+  - type: Organ
+    category: Brain
+  - type: SkillchipHolder
+    maxCapacity: 1
 
 - type: entity
   id: TestBody
@@ -236,6 +254,73 @@ public sealed class SkillchipGrantTest
                 "Second install of the same chip should fail");
             Assert.That(holder.ImplantedChips.Count, Is.EqualTo(1),
                 "Only one entry should exist after duplicate install attempt");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Adding EmpDisabledComponent to a mob that has a chipped brain should revert grants,
+    /// and removing it should restore them.
+    /// </summary>
+    [Test]
+    public async Task Emp_RevertsAndRestoresGrants()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var em = server.ResolveDependency<IEntityManager>();
+        var skillchips = server.System<SharedSkillchipSystem>();
+        var containers = server.System<SharedContainerSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var brain = em.SpawnEntity("TestBrain", mapData.GridCoords);
+            var body = em.SpawnEntity("TestBody", mapData.GridCoords);
+            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
+
+            skillchips.TryInstall((brain, holder), "TestChipData");
+            var organContainer = containers.EnsureContainer<Container>(body, BodyComponent.ContainerID);
+            containers.Insert(brain, organContainer);
+
+            Assert.That(holder.CapabilityTags, Contains.Item("test_capability"),
+                "Tag should be active before EMP");
+
+            em.AddComponent<EmpDisabledComponent>(body);
+
+            Assert.That(holder.CapabilityTags, Does.Not.Contain("test_capability"),
+                "Tag should be reverted while EMP-disabled");
+
+            em.RemoveComponent<EmpDisabledComponent>(body);
+
+            Assert.That(holder.CapabilityTags, Contains.Item("test_capability"),
+                "Tag should be restored after EMP clears");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Installing beyond max capacity should be rejected.
+    /// </summary>
+    [Test]
+    public async Task Install_OverCapacity_ReturnsFalse()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var em = server.ResolveDependency<IEntityManager>();
+        var skillchips = server.System<SharedSkillchipSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var brain = em.SpawnEntity("TestBrainSmall", mapData.GridCoords);
+            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
+
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData"), Is.True,
+                "First chip should install within capacity");
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData2"), Is.False,
+                "Second chip should be rejected when at capacity");
         });
 
         await pair.CleanReturnAsync();

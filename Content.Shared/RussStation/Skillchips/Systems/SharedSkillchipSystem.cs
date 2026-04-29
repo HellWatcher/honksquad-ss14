@@ -22,7 +22,7 @@ public abstract class SharedSkillchipSystem : EntitySystem
 
     private void OnBrainInserted(Entity<SkillchipHolderComponent> brain, ref OrganGotInsertedEvent args)
     {
-        ApplyAll(brain, args.Target);
+        ApplyAllGrants(brain, args.Target);
     }
 
     private void OnBrainRemoved(Entity<SkillchipHolderComponent> brain, ref OrganGotRemovedEvent args)
@@ -30,7 +30,7 @@ public abstract class SharedSkillchipSystem : EntitySystem
         if (LifeStage(args.Target) >= EntityLifeStage.Terminating)
             return;
 
-        RevertAll(brain, args.Target);
+        RevertAllGrants(brain, args.Target);
     }
 
     // ── Install / Remove ─────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ public abstract class SharedSkillchipSystem : EntitySystem
         Dirty(brain);
 
         if (GetBody(brain) is { } body)
-            ApplyChip(brain, body, prototype);
+            ApplyChipGrants(brain, body, prototype);
 
         return true;
     }
@@ -67,7 +67,7 @@ public abstract class SharedSkillchipSystem : EntitySystem
         Dirty(brain);
 
         if (GetBody(brain) is { } body)
-            RevertChip(brain, body, _proto.Index(chipProto));
+            RevertChipGrants(brain, body, _proto.Index(chipProto));
 
         return true;
     }
@@ -149,25 +149,25 @@ public abstract class SharedSkillchipSystem : EntitySystem
 
     // ── Internals ────────────────────────────────────────────────────────────
 
-    private void ApplyAll(Entity<SkillchipHolderComponent> brain, EntityUid mob)
+    protected void ApplyAllGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob)
     {
         foreach (var chipProto in brain.Comp.ImplantedChips)
-            ApplyChip(brain, mob, _proto.Index(chipProto));
+            ApplyChipGrants(brain, mob, _proto.Index(chipProto));
     }
 
-    private void RevertAll(Entity<SkillchipHolderComponent> brain, EntityUid mob)
+    protected void RevertAllGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob)
     {
         foreach (var chipProto in brain.Comp.ImplantedChips)
-            RevertChip(brain, mob, _proto.Index(chipProto));
+            RevertChipGrants(brain, mob, _proto.Index(chipProto));
     }
 
-    private void ApplyChip(Entity<SkillchipHolderComponent> brain, EntityUid mob, SkillchipPrototype prototype)
+    private void ApplyChipGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob, SkillchipPrototype prototype)
     {
         foreach (var grant in prototype.Grants)
             grant.Apply(mob, brain, this);
     }
 
-    private void RevertChip(Entity<SkillchipHolderComponent> brain, EntityUid mob, SkillchipPrototype prototype)
+    private void RevertChipGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob, SkillchipPrototype prototype)
     {
         foreach (var grant in prototype.Grants)
             grant.Revert(mob, brain, this);
