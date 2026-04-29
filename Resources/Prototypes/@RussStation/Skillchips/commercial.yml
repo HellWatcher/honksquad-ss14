@@ -23,3 +23,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: wine_tasting
+
+- type: skillchip
+  id: SkillchipHedgetrimmingData
+  name: Hedgetrimming
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: hedgetrimming
