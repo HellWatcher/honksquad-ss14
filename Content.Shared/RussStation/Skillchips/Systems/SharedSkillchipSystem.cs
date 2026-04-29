@@ -99,6 +99,64 @@ public abstract class SharedSkillchipSystem : EntitySystem
         return false;
     }
 
+    // ── Helpers for external systems ──────────────────────────────────────────
+
+    /// <summary>
+    /// Finds the first SkillchipHolderComponent child of the mob and returns it.
+    /// Returns false if the mob has no implanted brain.
+    /// </summary>
+    public bool TryGetBrain(EntityUid mob, out Entity<SkillchipHolderComponent> brain)
+    {
+        var enumerator = Transform(mob).ChildEnumerator;
+        while (enumerator.MoveNext(out var child))
+        {
+            if (TryComp<SkillchipHolderComponent>(child, out var holder))
+            {
+                brain = (child, holder);
+                return true;
+            }
+        }
+
+        brain = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if the given chip proto is installed in the mob's brain.
+    /// </summary>
+    public bool HasChipInstalled(EntityUid mob, ProtoId<SkillchipPrototype> chipProto)
+    {
+        if (!TryGetBrain(mob, out var brain))
+            return false;
+        return brain.Comp.ImplantedChips.Contains(chipProto);
+    }
+
+    /// <summary>
+    /// Returns a snapshot of the installed chip proto IDs for a mob.
+    /// </summary>
+    public IReadOnlyList<ProtoId<SkillchipPrototype>> GetInstalledChips(EntityUid mob)
+    {
+        if (!TryGetBrain(mob, out var brain))
+            return Array.Empty<ProtoId<SkillchipPrototype>>();
+        return brain.Comp.ImplantedChips;
+    }
+
+    /// <summary>
+    /// Returns current used and max capacity for a mob's brain.
+    /// </summary>
+    public (int used, int max) GetCapacity(EntityUid mob)
+    {
+        if (!TryGetBrain(mob, out var brain))
+            return (0, 0);
+        return (UsedCapacity(brain.Comp), brain.Comp.MaxCapacity);
+    }
+
+    public void EnsureMobComponent<T>(EntityUid mob) where T : Component, new()
+        => EnsureComp<T>(mob);
+
+    public void RemoveMobComponent<T>(EntityUid mob) where T : Component
+        => RemComp<T>(mob);
+
     // ── Grant application helpers (called by SkillchipGrant subclasses) ──────
 
     public void ApplyActionGrant(EntityUid mob, EntityUid brain, EntProtoId actionProto)
