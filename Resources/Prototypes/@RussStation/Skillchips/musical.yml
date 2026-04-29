@@ -1,0 +1,6 @@
+- type: skillchip
+  id: SkillchipMusicalData
+  name: Memory of a Musical
+  capacityCost: 1
+  grants:
+  - !type:SingAccentGrant
