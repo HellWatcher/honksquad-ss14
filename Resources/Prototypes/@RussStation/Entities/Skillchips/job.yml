@@ -71,3 +71,15 @@
     state: borg_l_arm
   - type: Skillchip
     chipProto: SkillchipCyborgCircuitryData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipEngineeringCircuitry
+  name: Engineering C1-RCU-1T skillchip
+  description: A small neural interface chip. Endorsed by Poly. Recognize airlock and APC wire layouts and understand their functionality at a glance.
+  components:
+  - type: Sprite
+    sprite: Objects/Tools/wrench.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipEngineeringCircuitryData

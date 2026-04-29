@@ -55,3 +55,12 @@
   grants:
   - !type:CapabilityTagGrant
     tag: cyborg_circuitry
+
+- type: skillchip
+  id: SkillchipEngineeringCircuitryData
+  name: Engineering Circuitry
+  capacityCost: 2
+  category: job
+  grants:
+  - !type:CapabilityTagGrant
+    tag: engineering_circuitry
