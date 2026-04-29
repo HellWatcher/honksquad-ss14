@@ -46,6 +46,9 @@ public abstract class SharedSkillchipSystem : EntitySystem
         if (UsedCapacity(brain.Comp) + prototype.CapacityCost > brain.Comp.MaxCapacity)
             return false;
 
+        if (prototype.Category != null && HasCategoryInstalled(brain.Comp, prototype.Category))
+            return false;
+
         // Apply grants first so a thrown grant leaves the holder untouched. Recording the chip
         // last keeps capacity accounting consistent with what is actually active on the mob.
         if (GetBody(brain) is { } body)
@@ -238,6 +241,17 @@ public abstract class SharedSkillchipSystem : EntitySystem
         foreach (var chipProto in holder.ImplantedChips)
             total += _proto.Index(chipProto).CapacityCost;
         return total;
+    }
+
+    private bool HasCategoryInstalled(SkillchipHolderComponent holder, string category)
+    {
+        foreach (var installed in holder.ImplantedChips)
+        {
+            if (_proto.Index(installed).Category == category)
+                return true;
+        }
+
+        return false;
     }
 
     private EntityUid? GetBody(Entity<SkillchipHolderComponent> brain)
