@@ -17,3 +17,12 @@
   grants:
   - !type:CapabilityTagGrant
     tag: detective_taste
+
+- type: skillchip
+  id: SkillchipCleanbotWhispererData
+  name: Voice Of The Voiceless
+  capacityCost: 2
+  category: job
+  grants:
+  - !type:CapabilityTagGrant
+    tag: cleanbot_whisperer

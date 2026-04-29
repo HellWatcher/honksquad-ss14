@@ -23,3 +23,15 @@
     state: one
   - type: Skillchip
     chipProto: SkillchipDetectiveTasteData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipCleanbotWhisperer
+  name: CL34NM4ST.R skillchip
+  description: A small neural interface chip. Become a cleanbot whisperer. Gain the affection of all thankless, hardworking cleanbots on the station.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Janitorial/mop.rsi
+    state: mop
+  - type: Skillchip
+    chipProto: SkillchipCleanbotWhispererData
