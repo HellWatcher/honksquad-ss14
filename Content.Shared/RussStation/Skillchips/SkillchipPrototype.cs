@@ -18,6 +18,13 @@ public sealed partial class SkillchipPrototype : IPrototype
     public int CapacityCost = SkillchipsConstants.DefaultCapacityCost;
 
     /// <summary>
+    /// Optional category string. Only one chip of a given category may be implanted at a time.
+    /// Null means no category restriction.
+    /// </summary>
+    [DataField]
+    public string? Category;
+
+    /// <summary>
     /// Grants applied to the mob when this chip is active.
     /// </summary>
     [DataField]

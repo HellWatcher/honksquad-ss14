@@ -47,6 +47,9 @@ public abstract class SharedSkillchipSystem : EntitySystem
         if (UsedCapacity(brain.Comp) + prototype.CapacityCost > brain.Comp.MaxCapacity)
             return false;
 
+        if (prototype.Category != null && HasCategoryInstalled(brain.Comp, prototype.Category))
+            return false;
+
         brain.Comp.ImplantedChips.Add(chipProto);
         Dirty(brain);
 
@@ -179,6 +182,17 @@ public abstract class SharedSkillchipSystem : EntitySystem
         foreach (var chipProto in holder.ImplantedChips)
             total += _proto.Index(chipProto).CapacityCost;
         return total;
+    }
+
+    private bool HasCategoryInstalled(SkillchipHolderComponent holder, string category)
+    {
+        foreach (var installed in holder.ImplantedChips)
+        {
+            if (_proto.Index(installed).Category == category)
+                return true;
+        }
+
+        return false;
     }
 
     private EntityUid? GetBody(Entity<SkillchipHolderComponent> brain)
