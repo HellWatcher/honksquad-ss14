@@ -143,3 +143,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipDrunkenBrawlerData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipFishingDiscernment
+  name: Mast-Angl-Er skillchip
+  description: A small neural interface chip. Reveals fish when examining a fishing spot and gives hints about whatever is biting the hook.
+  components:
+  - type: Sprite
+    sprite: Clothing/Head/Hats/fishcap.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipFishingDiscernmentData

@@ -95,3 +95,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: drunken_brawler
+
+- type: skillchip
+  id: SkillchipFishingDiscernmentData
+  name: Fisherman's Discernment
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: fishing_discernment
