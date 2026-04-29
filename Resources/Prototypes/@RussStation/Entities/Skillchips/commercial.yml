@@ -1,0 +1,13 @@
+# Skillchip entity items -- commercial tier (weak, widely available)
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipBureaucraticFiling
+  name: bureaucratic filing chip
+  description: A small neural interface chip. Implanting it grants the user comprehensive knowledge of station filing procedures.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/bureaucracy.rsi
+    state: paper
+  - type: Skillchip
+    chipProto: SkillchipBureaucraticFilingData

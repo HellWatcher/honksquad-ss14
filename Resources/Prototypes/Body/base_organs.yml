@@ -259,6 +259,9 @@
     entries:
       Burger: Brain
       Taco: Brain
+  # HONK START - skillchip system: holder lives on brain so it survives body transfer/cloning
+  - type: SkillchipHolder
+  # HONK END
 
 - type: entity
   parent: OrganBase
