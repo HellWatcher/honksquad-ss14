@@ -31,3 +31,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: hedgetrimming
+
+- type: skillchip
+  id: SkillchipLightbulbRemovingData
+  name: Lightbulb Removing
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: lightbulb_removing

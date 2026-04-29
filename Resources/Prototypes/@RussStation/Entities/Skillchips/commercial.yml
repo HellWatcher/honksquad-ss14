@@ -47,3 +47,15 @@
     state: skillchip
   - type: Skillchip
     chipProto: SkillchipHedgetrimmingData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipLightbulbRemoving
+  name: N16H7M4R3 skillchip
+  description: A small neural interface chip. Stop failing to take out lightbulbs today, no gloves needed!
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
+  - type: Skillchip
+    chipProto: SkillchipLightbulbRemovingData
