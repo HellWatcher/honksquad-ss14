@@ -12,8 +12,10 @@ public sealed class SkillchipSystem : SharedSkillchipSystem
 
         // EmpDisabledComponent is added to the mob entity when hit by an EMP pulse.
         // Walk the mob's direct children to find any implanted brain and revert/restore grants.
+        // Use EmpDisabledRemovedEvent instead of ComponentRemove: SharedEmpSystem already owns
+        // that subscription and the engine forbids duplicate (component, event) subscriptions.
         SubscribeLocalEvent<EmpDisabledComponent, ComponentInit>(OnEmpInit);
-        SubscribeLocalEvent<EmpDisabledComponent, ComponentRemove>(OnEmpRemove);
+        SubscribeLocalEvent<EmpDisabledRemovedEvent>(OnEmpRemove);
     }
 
     private void OnEmpInit(Entity<EmpDisabledComponent> mob, ref ComponentInit args)
@@ -21,7 +23,7 @@ public sealed class SkillchipSystem : SharedSkillchipSystem
         ForEachImplantedBrain(mob, (brain, holder) => RevertAllGrants((brain, holder), mob));
     }
 
-    private void OnEmpRemove(Entity<EmpDisabledComponent> mob, ref ComponentRemove args)
+    private void OnEmpRemove(EntityUid mob, ref EmpDisabledRemovedEvent args)
     {
         if (LifeStage(mob) >= EntityLifeStage.Terminating)
             return;
