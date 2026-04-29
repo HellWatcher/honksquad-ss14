@@ -71,3 +71,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipDiskVerifierData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipEntrailsReader
+  name: 3NTR41LS skillchip
+  description: A small neural interface chip. Learn about a person's life by looking at their internal organs. Not to be confused with looking into the future.
+  components:
+  - type: Sprite
+    sprite: Mobs/Species/Human/organs.rsi
+    state: liver
+  - type: Skillchip
+    chipProto: SkillchipEntrailsReaderData

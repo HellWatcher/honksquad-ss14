@@ -47,3 +47,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: disk_verifier
+
+- type: skillchip
+  id: SkillchipEntrailsReaderData
+  name: Entrails Reader
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: entrails_reader
