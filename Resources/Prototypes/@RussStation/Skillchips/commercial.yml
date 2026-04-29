@@ -15,3 +15,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: underwater_basketweaving
+
+- type: skillchip
+  id: SkillchipWineTastingData
+  name: Wine Tasting
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: wine_tasting
