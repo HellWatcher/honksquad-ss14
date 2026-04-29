@@ -95,3 +95,15 @@
     state: centcom
   - type: Skillchip
     chipProto: SkillchipIdAppraisalData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipSabrage
+  name: Le S48R4G3 skillchip
+  description: A small neural interface chip. Grants knowledge of the intricate structural weakness at a champagne bottle's neck, improving proficiency at being a show-off at officer parties.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Drinks/champagnebottle.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipSabrageData

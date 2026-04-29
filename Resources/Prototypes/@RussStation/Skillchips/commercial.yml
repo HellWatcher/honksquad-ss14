@@ -63,3 +63,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: id_appraisal
+
+- type: skillchip
+  id: SkillchipSabrageData
+  name: Sabrage Proficiency
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: sabrage_proficiency
