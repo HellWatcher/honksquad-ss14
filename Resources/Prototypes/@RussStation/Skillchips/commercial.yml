@@ -118,3 +118,10 @@
   capacityCost: 1
   grants:
   - !type:SingAccentGrant
+
+- type: skillchip
+  id: SkillchipBulletDodgerData
+  name: BULLET_DODGER
+  capacityCost: 1
+  grants:
+  - !type:BulletDodgeGrant

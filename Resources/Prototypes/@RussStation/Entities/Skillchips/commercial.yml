@@ -179,3 +179,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipMusicalData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipBulletDodger
+  name: BULL3T_D0DG3R skillchip
+  description: A small neural interface chip. Unlocks a previously theoretical reflex chain. Salute. Watch the bullet miss. It costs you, but you'll be alive to pay the bill.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
+    state: bolt
+  - type: Skillchip
+    chipProto: SkillchipBulletDodgerData
