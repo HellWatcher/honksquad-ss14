@@ -35,3 +35,15 @@
     state: mop
   - type: Skillchip
     chipProto: SkillchipCleanbotWhispererData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipBattlebotEnthusiast
+  name: TUNN3L_R4T skillchip
+  description: A small neural interface chip. Lead minebots into war.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/pickaxe.rsi
+    state: pickaxe
+  - type: Skillchip
+    chipProto: SkillchipBattlebotEnthusiastData
