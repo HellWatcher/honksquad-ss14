@@ -46,3 +46,12 @@
     tag: supermatter_soother
   - !type:CapabilityTagGrant
     tag: madness_immune
+
+- type: skillchip
+  id: SkillchipCyborgCircuitryData
+  name: Cyborg Circuitry
+  capacityCost: 2
+  category: job
+  grants:
+  - !type:CapabilityTagGrant
+    tag: cyborg_circuitry

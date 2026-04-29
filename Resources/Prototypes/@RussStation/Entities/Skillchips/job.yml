@@ -59,3 +59,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipSupermattersData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipCyborgCircuitry
+  name: Cyborg C1-RCU-1T skillchip
+  description: A small neural interface chip. A roboticist's second best friend. Recognize cyborg wire layouts and understand their functionality at a glance.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Robotics/cyborg_parts.rsi
+    state: borg_l_arm
+  - type: Skillchip
+    chipProto: SkillchipCyborgCircuitryData
