@@ -4,7 +4,7 @@
   description: A neural interface chair that reads and writes skill implants. Sit still.
   components:
   - type: Sprite
-    sprite: Structures/Machines/artifact_analyzer.rsi
+    sprite: "@RussStation/Machines/skillchip_station.rsi"
     state: icon
     noRot: true
   - type: Physics
