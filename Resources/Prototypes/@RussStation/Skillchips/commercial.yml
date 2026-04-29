@@ -103,3 +103,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: fishing_discernment
+
+- type: skillchip
+  id: SkillchipKommandData
+  name: Enhanced Pointing
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: enhanced_pointing

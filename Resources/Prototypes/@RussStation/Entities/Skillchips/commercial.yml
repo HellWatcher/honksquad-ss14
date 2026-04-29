@@ -155,3 +155,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipFishingDiscernmentData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipKommand
+  name: Kommand skillchip
+  description: A small neural interface chip. Learn to point at things in a more noticeable way.
+  components:
+  - type: Sprite
+    sprite: Clothing/Head/Hats/captain.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipKommandData
