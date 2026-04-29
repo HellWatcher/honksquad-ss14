@@ -11,3 +11,15 @@
     state: icon
   - type: Skillchip
     chipProto: SkillchipBalloonSutraData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipDetectiveTaste
+  name: DET.ekt skillchip
+  description: A small neural interface chip. Detective "Encyclopedic Knowledge of Tastes" v1.21. Deduce the minute chemical compositions of any liquid substance just by swishing it around your mouth.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Detective/evidence_marker.rsi
+    state: one
+  - type: Skillchip
+    chipProto: SkillchipDetectiveTasteData
