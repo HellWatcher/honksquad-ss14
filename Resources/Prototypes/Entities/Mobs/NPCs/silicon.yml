@@ -306,6 +306,9 @@
     interactFailureString: petting-failure-cleanbot
     interactSuccessSound:
       path: /Audio/Ambience/Objects/periodic_beep.ogg
+  # HONK START - CL34NM4ST.R skillchip consumer
+  - type: CleanbotWhispererBot
+  # HONK END
 
 - type: entity
   parent:
