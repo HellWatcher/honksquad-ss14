@@ -29,7 +29,6 @@ jobs:
           # Check required sections exist and aren't just the template placeholder
           check_section() {
             local heading="$1"
-            local placeholder="$2"
 
             if ! echo "$PR_BODY" | grep -q "## ${heading}"; then
               err "Missing section: ## ${heading}"
@@ -49,18 +48,19 @@ jobs:
             fi
           }
 
-          check_section "About the PR" "What did you change"
-          check_section "Why / Balance" "Discuss how this would affect"
+          check_section "About the PR"
+          check_section "Why / Balance"
 
-          # Check for changelog - :cl: should be outside comment block
-          # Template has :cl: inside <!-- --> comments; a filled-in PR moves it outside
+          # Check changelog if present.
+          # The template ships :cl: uncommented; authors delete the block for non-player-facing PRs.
+          # If the block is present, at least one entry must be filled in.
           CL_UNCOMMENTED=$(echo "$PR_BODY" | grep -v '^\s*<!--' | grep -c ':cl:' || true)
-          CL_COMMENTED=$(echo "$PR_BODY" | sed -n '/<!--/,/-->/p' | grep -c ':cl:' || true)
 
-          if [ "$CL_UNCOMMENTED" -eq 0 ] && [ "$CL_COMMENTED" -gt 0 ]; then
-            warn "Changelog (:cl:) is still inside a comment block. Uncomment it if this PR has player-facing changes."
-          elif [ "$CL_UNCOMMENTED" -eq 0 ] && [ "$CL_COMMENTED" -eq 0 ]; then
-            warn "No :cl: changelog found. Add one if this PR has player-facing changes."
+          if [ "$CL_UNCOMMENTED" -gt 0 ]; then
+            CL_FILLED=$(echo "$PR_BODY" | grep -cE '^\s*-\s+(add|tweak|fix|remove):\s+\S' || true)
+            if [ "$CL_FILLED" -eq 0 ]; then
+              warn "Changelog (:cl:) is present but all entries are empty. Fill them in or remove the :cl: block if this PR has no player-facing changes."
+            fi
           fi
 
           echo ""
