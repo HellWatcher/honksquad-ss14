@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update:
@@ -36,11 +37,24 @@ jobs:
             /tmp/prs.json \
             HellWatcher/honksquad-ss14
 
-      - name: Commit and push if changed
+      - name: Open PR if changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Resources/Changelog/HonksquadChangelog.yml
           git diff --staged --quiet && echo "No new entries." && exit 0
+
+          BRANCH="chore/changelog-update-$(date -u +%Y-%m-%d)"
+          git checkout -b "$BRANCH"
           git commit -m "honksquad: chore: weekly changelog update [skip ci]"
-          git push origin release
+          git push origin "$BRANCH"
+
+          gh pr create \
+            --repo HellWatcher/honksquad-ss14 \
+            --base release \
+            --head "$BRANCH" \
+            --title "honksquad: chore: weekly changelog update $(date -u +%Y-%m-%d)" \
+            --body "Automated weekly scan. Review entries for accuracy before merging." \
+            --label "A: Core Tech,T: Chore,size/XS,Changes: No C#"
