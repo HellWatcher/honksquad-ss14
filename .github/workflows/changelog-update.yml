@@ -18,11 +18,40 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: release
+          fetch-depth: 0
 
-      - name: Fetch merged PRs
+      - name: Select branch and fetch merged PRs
+        id: setup
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Check for an existing open changelog PR to accumulate into.
+          EXISTING=$(gh pr list \
+            --repo HellWatcher/honksquad-ss14 \
+            --base release \
+            --state open \
+            --json number,headRefName \
+            --jq '[.[] | select(.headRefName | startswith("chore/changelog-update-"))] | first')
+
+          if [ "$EXISTING" != "null" ] && [ -n "$EXISTING" ]; then
+            PR_NUM=$(echo "$EXISTING" | python3 -c "import sys,json; print(json.load(sys.stdin)['number'])")
+            BRANCH=$(echo "$EXISTING" | python3 -c "import sys,json; print(json.load(sys.stdin)['headRefName'])")
+            git fetch origin "$BRANCH"
+            git checkout "$BRANCH"
+            echo "Resuming existing PR #$PR_NUM on branch $BRANCH."
+            echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+            echo "pr_num=$PR_NUM" >> "$GITHUB_OUTPUT"
+            echo "is_new=false" >> "$GITHUB_OUTPUT"
+          else
+            BRANCH="chore/changelog-update-$(date -u +%Y-%m-%d)"
+            git checkout -b "$BRANCH"
+            echo "No existing PR. Starting fresh on $BRANCH."
+            echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+            echo "pr_num=" >> "$GITHUB_OUTPUT"
+            echo "is_new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Fetch merged PRs using the current branch's watermark.
           gh pr list \
             --repo HellWatcher/honksquad-ss14 \
             --state merged \
@@ -39,9 +68,12 @@ jobs:
             --watermark-file Resources/Changelog/.changelog-watermark \
             --deny-file Resources/Changelog/.changelog-deny
 
-      - name: Open PR if changed
+      - name: Commit and open or update PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.setup.outputs.branch }}
+          PR_NUM: ${{ steps.setup.outputs.pr_num }}
+          IS_NEW: ${{ steps.setup.outputs.is_new }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -49,15 +81,17 @@ jobs:
                   Resources/Changelog/.changelog-watermark
           git diff --staged --quiet && echo "No new entries." && exit 0
 
-          BRANCH="chore/changelog-update-$(date -u +%Y-%m-%d)"
-          git checkout -b "$BRANCH"
           git commit -m "honksquad: chore: weekly changelog update [skip ci]"
           git push origin "$BRANCH"
 
-          gh pr create \
-            --repo HellWatcher/honksquad-ss14 \
-            --base release \
-            --head "$BRANCH" \
-            --title "honksquad: chore: weekly changelog update $(date -u +%Y-%m-%d)" \
-            --body "Automated weekly scan. Review entries for accuracy before merging." \
-            --label "A: Core Tech,T: Chore,size/XS,Changes: No C#"
+          if [ "$IS_NEW" = "true" ]; then
+            gh pr create \
+              --repo HellWatcher/honksquad-ss14 \
+              --base release \
+              --head "$BRANCH" \
+              --title "honksquad: chore: weekly changelog update $(date -u +%Y-%m-%d)" \
+              --body "Automated weekly scan. Review entries before merging." \
+              --label "A: Core Tech,T: Chore,size/XS,Changes: No C#"
+          else
+            echo "Updated existing PR #$PR_NUM."
+          fi
