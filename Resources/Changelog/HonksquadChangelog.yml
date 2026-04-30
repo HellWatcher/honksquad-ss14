@@ -1,0 +1,1010 @@
+Entries:
+- author: HellWatcher
+  changes:
+  - message: Surgery system! Drape a downed patient with a bedsheet to begin. Procedures include wound
+      treatment (brute/burn), organ removal, and organ insertion.
+    type: Add
+  - message: Operating tables, medical beds, stasis beds, and roller beds provide surgery speed bonuses.
+    type: Add
+  - message: Patients can click their drape alert to cancel surgery.
+    type: Add
+  time: '2026-04-02T15:04:12.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/19
+- author: HellWatcher
+  changes:
+  - message: Surgery procedures now show distinct placeholder icons in the radial menu instead of all using
+      the same scalpel icon.
+    type: Tweak
+  time: '2026-04-02T17:58:50.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/248
+- author: SushiFish100
+  changes:
+  - message: white and gnorange plants.
+    type: Add
+  time: '2026-04-03T02:26:41.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/250
+- author: HellWatcher
+  changes:
+  - message: Font customization in Accessibility settings. Choose from built-in fonts or add custom TTF/OTF
+      files via the fonts folder.
+    type: Add
+  time: '2026-04-03T04:18:04.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/251
+- author: HellWatcher
+  changes:
+  - message: Surgical drapes, a sterile alternative to bedsheets for surgery preparation.
+    type: Add
+  - message: Surgery tool tiers (standard, advanced, experimental) that affect procedure speed.
+    type: Add
+  - message: Surgery difficulty levels that scale procedure duration.
+    type: Add
+  - message: Surgical tray, a foldable wheeled cart that holds and displays surgical tools.
+    type: Add
+  - message: Drag-drop fold for all foldable entities (drag onto yourself to fold and pick up).
+    type: Add
+  - message: Fold/unfold sound effect for all foldable entities.
+    type: Add
+  - message: Surgery now uses tool qualities instead of tags for step matching.
+    type: Tweak
+  - message: Bedsheets impose a 1.5x speed penalty compared to proper surgical drapes.
+    type: Tweak
+  - message: Surgery guidebook updated with tool tiers, drapes, surfaces, and surgical tray.
+    type: Tweak
+  - message: Drape alert icon now shows a surgical drape instead of a bedsheet.
+    type: Fix
+  time: '2026-04-03T04:38:10.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/249
+- author: HellWatcher
+  changes:
+  - message: Character memories panel in the character info screen for private player knowledge.
+    type: Add
+  time: '2026-04-03T09:27:59.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/253
+- author: HellWatcher
+  changes:
+  - message: Players now have hex bank account numbers, visible in the Memories panel.
+    type: Add
+  - message: ID cards carry your bank account number, stamped automatically at spawn.
+    type: Add
+  - message: '"Set Account" verb on ID cards to link a new ID to your bank account (case-insensitive).'
+    type: Add
+  - message: '"Withdraw" verb on ID cards to pull spesos out of your account as physical cash.'
+    type: Add
+  - message: Use speso cash on an ID card to deposit into the linked account.
+    type: Add
+  - message: Wallet PDA app shows last 4 hex digits of your account number.
+    type: Add
+  time: '2026-04-03T10:39:28.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/254
+- author: HellWatcher
+  changes:
+  - message: The guidebook now has a Memories entry.
+    type: Add
+  time: '2026-04-03T11:05:34.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/257
+- author: HellWatcher
+  changes:
+  - message: Players now receive automatic paychecks every 5 minutes based on job tier.
+    type: Add
+  - message: Starting balance increased from 100 to 250 spesos.
+    type: Tweak
+  time: '2026-04-03T23:58:14.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/256
+- author: HellWatcher
+  changes:
+  - message: Wallet PDA cartridge now shows recent transaction history.
+    type: Add
+  - message: Mute button in wallet to silence paycheck notification sounds.
+    type: Add
+  - message: Payroll timer is now staggered per-player so not everyone gets paid simultaneously.
+    type: Tweak
+  - message: Wallet no longer crashes when reopening PDA after removing ID card.
+    type: Fix
+  time: '2026-04-04T08:42:03.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/261
+- author: HellWatcher
+  changes:
+  - message: Seed packets now cost 5 spesos at vendors instead of 30.
+    type: Tweak
+  time: '2026-04-04T08:58:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/262
+- author: HellWatcher
+  changes:
+  - message: Right-click "Create Account" verb on blank ID cards (0 balance).
+    type: Add
+  - message: Creating a new account invalidates the old one (stolen IDs stop working).
+    type: Add
+  - message: Dropping an ID card auto-closes any open account dialog.
+    type: Add
+  - message: Error messages when using an ID with an invalidated account.
+    type: Add
+  - message: Ghost role mobs with blank IDs auto-get a bank account with starting balance on takeover.
+    type: Add
+  time: '2026-04-04T12:56:32.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/269
+- author: HellWatcher
+  changes:
+  - message: Foldable objects no longer play sounds during map loading.
+    type: Fix
+  time: '2026-04-04T14:18:26.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/274
+- author: HellWatcher
+  changes:
+  - message: Surgery healing steps no longer loop infinitely when remaining damage is too small to heal.
+    type: Fix
+  time: '2026-04-04T14:39:02.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/273
+- author: HellWatcher
+  changes:
+  - message: Bank account lookups no longer risk stale data between rounds.
+    type: Fix
+  time: '2026-04-04T14:54:05.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/272
+- author: HellWatcher
+  changes:
+  - message: Surgery drape no longer gets stuck on patient if bedsheet insertion fails.
+    type: Fix
+  time: '2026-04-04T15:10:40.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/271
+- author: HellWatcher
+  changes:
+  - message: Wallet app now requires an ID card to display balance and receive payroll notifications.
+    type: Fix
+  time: '2026-04-04T15:39:57.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/276
+- author: HellWatcher
+  changes:
+  - message: Wallet app now appears on all PDAs, including security, medical, command, and other specialized
+      roles.
+    type: Fix
+  - message: PDA programs are now listed in alphabetical order.
+    type: Tweak
+  time: '2026-04-05T05:07:49.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/283
+- author: HellWatcher
+  changes:
+  - message: Lowpop game ruleset for small servers (~10-15 players). Activate with
+      game.secret_weight_prototype = LowpopSecret.
+    type: Add
+  time: '2026-04-05T06:18:12.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/284
+- author: HellWatcher
+  changes:
+  - message: payroll wages now update when job changes mid-round.
+    type: Fix
+  time: '2026-04-07T06:00:57.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/356
+- author: HellWatcher
+  changes:
+  - message: prevent inserting duplicate organs during surgery when organ has no category.
+    type: Fix
+  time: '2026-04-07T06:19:57.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/355
+- author: HellWatcher
+  changes:
+  - message: emag and contraband vending items no longer cost spesos.
+    type: Fix
+  time: '2026-04-07T06:33:45.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/354
+- author: HellWatcher
+  changes:
+  - message: Bank account numbers are no longer leaked to nearby players.
+    type: Fix
+  - message: Only the account owner can withdraw from their account.
+    type: Fix
+  time: '2026-04-07T07:00:51.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/353
+- author: HellWatcher
+  changes:
+  - message: Vending prices now prefer recipe material cost over cargo value markup, making empty containers
+      like chemistry jugs cheaper.
+    type: Tweak
+  time: '2026-04-07T07:19:28.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/279
+- author: HellWatcher
+  changes:
+  - message: Gas overlay sprites for Nitrium, Healium, Proto-Nitrate, Zauker, Halon, and Antinoblium.
+    type: Add
+  time: '2026-04-07T13:50:20.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/366
+- author: HellWatcher
+  changes:
+  - message: Gas reactions can now emit radiation pulses that respect walls and shielding. Proto-Nitrate
+      reactions with Tritium and BZ will emit radiation once wired in the tier 1 gases PR.
+    type: Add
+  time: '2026-04-07T21:41:41.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/367
+- author: HellWatcher
+  changes:
+  - message: Added cybernetic organ sprites for all tiers and organ types.
+    type: Add
+  time: '2026-04-08T14:43:20.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/417
+- author: HellWatcher
+  changes:
+  - message: Restored click-to-strip functionality (was accidentally removed).
+    type: Fix
+  time: '2026-04-08T16:43:07.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/418
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-08T16:57:06.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/420
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-08T18:48:10.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/421
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-09T05:41:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/423
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-09T06:07:41.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/422
+- author: HellWatcher
+  changes:
+  - message: Trait point-buy system with 10-point global budget.
+    type: Add
+  - message: Domain categories (Combat, Diet, Movement, Senses, Social) for trait organization.
+    type: Add
+  - message: Trait names standardized to title case.
+    type: Tweak
+  time: '2026-04-09T08:07:48.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/376
+- author: HellWatcher
+  changes:
+  - message: Traits now use multi-tag exclusions, preventing incompatible quirk combinations with a tooltip
+      explaining conflicts.
+    type: Add
+  - message: Mutual trait exclusions no longer remove both traits when one is selected.
+    type: Fix
+  time: '2026-04-09T14:45:32.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/381
+- author: HellWatcher
+  changes:
+  - message: 'Wound system phase 1: damage spikes now cause visible fractures and burns with gameplay
+      effects.'
+    type: Add
+  - message: Health analyzer and examine text show active wounds with severity.
+    type: Add
+  - message: HUD alerts for fracture and burn wounds with severity-dependent tooltips.
+    type: Add
+  time: '2026-04-09T23:37:20.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/369
+- author: HellWatcher
+  changes:
+  - message: custom surgery procedure icons (brute, burn, organ manipulation) by Katyes.
+    type: Add
+  time: '2026-04-09T23:57:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/427
+- author: HellWatcher
+  changes:
+  - message: action gun sounds (like spitting) now play audibly instead of silently firing from nullspace.
+    type: Fix
+  time: '2026-04-10T00:15:50.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/425
+- author: HellWatcher
+  changes:
+  - message: 'Added Ageusia quirk. You can''t taste anything.'
+    type: Add
+  time: '2026-04-10T01:09:18.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/377
+- author: HellWatcher
+  changes:
+  - message: Fixed all HUD alert icons appearing shrunken after the wound alert update.
+    type: Fix
+  time: '2026-04-10T01:46:25.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/431
+- author: HellWatcher
+  changes:
+  - message: New Negotiator trait (+1 point) gives 50% higher paychecks.
+    type: Add
+  time: '2026-04-10T02:08:33.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/432
+- author: HellWatcher
+  changes:
+  - message: Ageusia now correctly suppresses foods with taste tags.
+    type: Fix
+  time: '2026-04-10T02:44:23.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/429
+- author: HellWatcher
+  changes:
+  - message: Steady Hand quirk (+4 points) improves your ranged accuracy.
+    type: Add
+  time: '2026-04-10T04:09:51.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/400
+- author: HellWatcher
+  changes:
+  - message: Iron Jaw quirk (+4 points) makes you harder to knock down from stamina damage.
+    type: Add
+  time: '2026-04-10T06:22:49.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/399
+- author: HellWatcher
+  changes:
+  - message: Booming Voice quirk (+2 points) increases your chat range by 50%.
+    type: Add
+  time: '2026-04-10T07:19:11.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/397
+- author: HellWatcher
+  changes:
+  - message: Indebted quirk (-1 point) halves your paycheck.
+    type: Add
+  time: '2026-04-10T07:43:42.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/396
+- author: HellWatcher
+  changes:
+  - message: Touchy quirk (-2 points) reduces your examine range to touch distance.
+    type: Add
+  time: '2026-04-10T07:57:40.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/395
+- author: HellWatcher
+  changes:
+  - message: Soft-Spoken quirk (-2 points) reduces your voice range by half.
+    type: Add
+  time: '2026-04-10T08:57:49.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/394
+- author: HellWatcher
+  changes:
+  - message: 'Added Prosopagnosia quirk. Players with this trait can''t recognize faces and see other humanoids'
+      as generic descriptions like "middle-aged woman".
+    type: Add
+  time: '2026-04-10T09:37:28.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/393
+- author: HellWatcher
+  changes:
+  - message: Added Poor Aim quirk (-4 points). Your ranged weapons have noticeably worse accuracy.
+    type: Add
+  time: '2026-04-10T10:01:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/392
+- author: HellWatcher
+  changes:
+  - message: Added Glass Jaw quirk (-4 points). Stamina damage from batons and disablers takes you down
+      faster.
+    type: Add
+  time: '2026-04-10T10:47:22.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/391
+- author: HellWatcher
+  changes:
+  - message: 'Added Vegetarian quirk (0 points). You can''t stomach meat, eating it makes you sick.'
+    type: Add
+  time: '2026-04-10T12:19:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/390
+- author: HellWatcher
+  changes:
+  - message: Added Light Step quirk (+4 points). Your footsteps are significantly quieter.
+    type: Add
+  time: '2026-04-10T12:38:18.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/389
+- author: HellWatcher
+  changes:
+  - message: Added Freerunning quirk (+8 points). Climb tables 50% faster and take no damage from glass
+      tables.
+    type: Add
+  time: '2026-04-10T13:09:43.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/388
+- author: HellWatcher
+  changes:
+  - message: Self-Aware quirk (+8 points) - see exact damage numbers when examining yourself.
+    type: Add
+  time: '2026-04-10T14:50:48.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/387
+- author: HellWatcher
+  changes:
+  - message: Papyrophobia quirk (-2 points), makes the holder recoil from paper and unable to read or write
+      on it.
+    type: Add
+  time: '2026-04-10T16:39:15.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/386
+- author: HellWatcher
+  changes:
+  - message: New quirk, Scarred Eye. One of your eyes is damaged, you start with an eyepatch and reduced
+      vision.
+    type: Add
+  time: '2026-04-11T01:31:13.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/385
+- author: HellWatcher
+  changes:
+  - message: New quirk, Blood Deficiency. Your blood slowly drains instead of regenerating. You start with a
+      canister of iron pills in your bag to manage it.
+    type: Add
+  time: '2026-04-11T02:34:15.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/384
+- author: HellWatcher
+  changes:
+  - message: New negative quirk "Weak Arm" - reduces throw speed by 50%, grants 2 trait points.
+    type: Add
+  time: '2026-04-11T03:06:59.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/383
+- author: HellWatcher
+  changes:
+  - message: 'Tough quirk: 25% higher wound thresholds, shrug off spike damage that would wound a normal
+      person (3 points).'
+    type: Add
+  time: '2026-04-11T03:27:38.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/382
+- author: HellWatcher
+  changes:
+  - message: 'Hard Drinker quirk: drunkenness effects last half as long (2 points).'
+    type: Add
+  time: '2026-04-11T05:46:53.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/380
+- author: HellWatcher
+  changes:
+  - message: 'Throwing Arm quirk: throw items 50% further and 50% faster (2 points).'
+    type: Add
+  time: '2026-04-11T06:04:54.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/379
+- author: HellWatcher
+  changes:
+  - message: 'Frail quirk: fracture and burn wounds trigger 20% more easily (-4 points).'
+    type: Add
+  time: '2026-04-11T06:28:12.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/378
+- author: HellWatcher
+  changes:
+  - message: Gas canisters now use SS13 russstation art across the board, including ammonia and the generic
+      storage canister. Plasma and tritium hazard stripes are now yellow instead of black.
+    type: Tweak
+  - message: Spray painter can now repaint canisters into every fork gas style (antinoblium, BZ, halon,
+      healium, helium, hydrogen, hyper-noblium, nitrium, pluoxium, proto-nitrate, zauker) as visual-only styles.
+    type: Add
+  time: '2026-04-11T09:37:01.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/442
+- author: HellWatcher
+  changes:
+  - message: Canister fill-indicator lights and tank-inserted overlays now line up with the fork canister
+      body.
+    type: Fix
+  time: '2026-04-11T10:48:23.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/443
+- author: HellWatcher
+  changes:
+  - message: Added 9 new atmospheric gases (Hydrogen, Helium, BZ, Pluoxium, Halon, Antinoblium, Healium,
+      Nitrium, Proto-Nitrate) with 11 gas reactions for atmospheric technicians to experiment with.
+    type: Add
+  - message: Healium gas heals burn, brute, and toxin damage but puts you to sleep.
+    type: Add
+  - message: Nitrium gas increases movement speed but causes toxin buildup.
+    type: Add
+  - message: Proto-Nitrate is a volatile catalyst that reacts with hydrogen, tritium, and BZ in different
+      ways.
+    type: Add
+  - message: Gas overlay sprites for nitrium, healium, proto-nitrate, zauker, halon, and antinoblium.
+    type: Add
+  - message: Hydrogen fires burn cooler, so a small hydrogen leak no longer melts the surrounding room.
+    type: Tweak
+  - message: Random gas leak events no longer pick tritium or frezon, and can now pick halon, BZ, or
+      nitrium.
+    type: Tweak
+  - message: Gas analyzer readouts now show the correct gas names instead of a broken locale lookup.
+    type: Fix
+  - message: Crafting menu ingredient labels now show the correct material and part names.
+    type: Fix
+  time: '2026-04-11T16:34:34.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/365
+- author: HellWatcher
+  changes:
+  - message: Added an Exotic Gases guidebook page covering every new fork gas and its formation reaction.
+    type: Add
+  time: '2026-04-11T17:03:43.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/444
+- author: HellWatcher
+  changes:
+  - message: Janitorial trolley has a radial eject menu. Alt-click with empty hand to pick which item to
+      eject.
+    type: Add
+  - message: Left-clicking the trolley with trash drops it straight into the stored trash bag.
+    type: Add
+  - message: Drag a sink or drain onto the trolley to refill the bucket.
+    type: Add
+  - message: Trolley item insertion uses the verb menu consistently, keeping regular click free for bucket
+      filling and draining.
+    type: Tweak
+  - message: Drink from the trolley bucket with E instead of the alt-click verb, so alt-click can open the
+      eject menu.
+    type: Tweak
+  time: '2026-04-11T19:14:43.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/286
+- author: Xythus
+  changes:
+  - message: Skittish trait.
+    type: Add
+  time: '2026-04-11T21:42:14.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/449
+- author: HellWatcher
+  changes:
+  - message: Firing normal weapons no longer plays the spit sound from the shooter.
+    type: Fix
+  - message: Clowns can no longer fumble the spit ability through clumsy gun backfire.
+    type: Fix
+  time: '2026-04-12T03:53:05.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/451
+- author: HellWatcher
+  changes:
+  - message: Upstream disability and quirk traits now participate in the trait point budget. Some
+      thematically-conflicting traits can no longer be selected together.
+    type: Tweak
+  - message: Shortened a handful of trait display names so they stop being clipped in the character setup
+      screen.
+    type: Tweak
+  time: '2026-04-14T05:45:02.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/461
+- author: HellWatcher
+  changes:
+  - message: The janitorial supply crate from Cargo now costs 750 instead of 560.
+    type: Tweak
+  time: '2026-04-16T06:55:07.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/479
+- author: HellWatcher
+  changes:
+  - message: The wallet paycheck notification is now a quieter two-beep instead of the louder chime.
+    type: Tweak
+  time: '2026-04-16T09:29:00.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/477
+- author: HellWatcher
+  changes:
+  - message: Cloning still preserves all the same fork traits it did before; the registration just lives in a
+      fork-side file now.
+    type: Tweak
+  time: '2026-04-16T10:02:55.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/468
+- author: HellWatcher
+  changes:
+  - message: Wounds no longer clutter the standard examine. Use the health-examine verb to see fracture and
+      burn descriptions in flavor text instead of a clinical tier list.
+    type: Tweak
+  time: '2026-04-16T10:37:29.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/467
+- author: HellWatcher
+  changes:
+  - message: Rejuvenate and Godmode now clear active fracture and burn wounds, so admins do not have to
+      follow up with surgery to fully heal a mob.
+    type: Fix
+  time: '2026-04-17T03:27:36.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/464
+- author: HellWatcher
+  changes:
+  - message: Surgery procedure icons in the radial menu now scale correctly regardless of source sprite size,
+      instead of only working for 16 and 32 pixel sprites.
+    type: Fix
+  time: '2026-04-17T13:48:48.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/466
+- author: HellWatcher
+  changes:
+  - message: Lockers welded shut on a station map now hold their air correctly on roundstart instead of
+      leaking until someone cycles the weld.
+    type: Fix
+  time: '2026-04-18T08:07:48.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/448
+- author: HellWatcher
+  changes:
+  - message: The health analyzer window is now tabbed. The new Reagents tab lists blood, metabolites, and
+      stomach contents on mobs, with quantity and an OD/UD flag for reagents whose metabolism gates say so.
+    type: Add
+  time: '2026-04-18T17:43:49.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/465
+- author: Xythus
+  changes:
+  - message: Skittish trait no longer activates on dead, critical, or downed players when their body is moved
+      near a container.
+    type: Fix
+  time: '2026-04-18T17:59:42.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/452
+- author: Xythus
+  changes:
+  - message: Botanists with 15+ hours in Hydroponics can now unlock the Rustic Botanist outfit — a straw hat,
+      earthy jumpsuit/jumpskirt, wooden shoes, and matching bags.
+    type: Add
+  time: '2026-04-18T19:29:36.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/494
+- author: HellWatcher
+  changes:
+  - message: PDA messenger app for sending messages between PDAs.
+    type: Add
+  time: '2026-04-18T21:09:19.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/277
+- author: HellWatcher
+  changes:
+  - message: Manual resuscitators (bag valve masks) are now stocked in medkits, medical belts, NanoMed
+      vendors, medical lockers, and maintenance loot, and printable at medical lathes. Squeeze one on a suffocating crit patient to stave off oxygen damage until a medic arrives.
+    type: Add
+  time: '2026-04-18T22:14:41.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/493
+- author: HellWatcher
+  changes:
+  - message: Unviable, Seedless, and Kudzu plant mutations now fire less often during mutation rolls.
+      RobustHarvest no longer locks plants as seedless, and cross-pollinating different species no longer automatically produces seedless hybrids.
+    type: Tweak
+  time: '2026-04-18T22:30:33.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/497
+- author: HellWatcher
+  changes:
+  - message: Fixed a crash when a carrying relationship ended (for instance buckling while being carried).
+    type: Fix
+  time: '2026-04-19T00:57:42.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/502
+- author: HellWatcher
+  changes:
+  - message: Fixed a client crash during arrivals FTL when a pull, carry, or buckle relay straddled the FTL
+      and station maps.
+    type: Fix
+  time: '2026-04-19T01:12:30.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/503
+- author: HellWatcher
+  changes:
+  - message: Fixed a client crash on reconnect when a storage UI (e.g. janitor trolley) was open at
+      disconnect.
+    type: Fix
+  time: '2026-04-19T01:35:09.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/504
+- author: HellWatcher
+  changes:
+  - message: Tend-wounds surgery now refuses to start on a patient with no matching damage and no longer emits
+      two overlapping popups at the end of the treatment step.
+    type: Fix
+  time: '2026-04-19T09:22:27.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/507
+- author: HellWatcher
+  changes:
+  - message: Fixed a crash when dropping someone mid fireman carry, and a related crash when the carrier got
+      buckled into a chair or bed.
+    type: Fix
+  time: '2026-04-19T13:59:10.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/511
+- author: HellWatcher
+  changes:
+  - message: Reptilians now show the pull hand item while pulling, matching other species.
+    type: Fix
+  time: '2026-04-19T14:47:28.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/510
+- author: HellWatcher
+  changes:
+  - message: Health analyzer reagent scanner now keeps its scan target in sync on the client side when the
+      server re-pins it or clears it mid-scan.
+    type: Fix
+  time: '2026-04-21T07:39:30.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/568
+- author: HellWatcher
+  changes:
+  - message: Magic numbers in Thickness/Vector2/Color/UIBox constructors and TimeSpan.FromX calls now fail CI
+      on fork code so they can't sneak into future PRs.
+    type: Fix
+  time: '2026-04-21T09:15:25.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/570
+- author: HellWatcher
+  changes:
+  - message: 'Magic numbers in DataField defaults now fail CI on fork code so they can''t sneak into future PRs.'
+    type: Fix
+  time: '2026-04-21T09:34:15.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/569
+- author: HellWatcher
+  changes:
+  - message: Escape now cancels any active progress-bar action you started (eating, drinking, channeled
+      actions, etc.), as long as no menu or text field is in the way.
+    type: Tweak
+  time: '2026-04-21T12:01:47.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/571
+- author: HellWatcher
+  changes:
+  - message: Doctors can now clear fractures with bonesetting surgery and burns with cautery surgery on a
+      draped patient.
+    type: Add
+  - message: 'Untreated wounds now slowly heal on their own over several minutes — tier-3 down to tier-2 in ~2
+      min, all the way cleared in ~10 min. Dead bodies don''t regenerate.'
+    type: Add
+  time: '2026-04-21T15:16:09.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/572
+- author: HellWatcher
+  changes:
+  - message: Surgery procedures are now grouped into categories in the drape radial menu.
+    type: Add
+  time: '2026-04-21T16:06:14.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/574
+- author: HellWatcher
+  changes:
+  - message: A dropped surgical drape now renders above patients lying on the same tile.
+    type: Fix
+  time: '2026-04-21T17:45:58.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/575
+- author: HellWatcher
+  changes:
+  - message: Added an optional floating chat input that appears above your character. Enable in Options,
+      Misc.
+    type: Add
+  - message: Optional sub-setting remembers the last-used channel, including specific radio channels, across
+      openings.
+    type: Add
+  time: '2026-04-22T07:47:43.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/583
+- author: HellWatcher
+  changes:
+  - message: Right-click any search box to clear its contents.
+    type: Add
+  - message: Redundant clear buttons next to the actions menu and mapper prototype search bars.
+    type: Remove
+  time: '2026-04-22T08:59:23.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/598
+- author: HellWatcher
+  changes:
+  - message: Actions menu filters are now an inline checkbox tray you can keep open alongside the search box,
+      not a dropdown. Right-click the filter header to reset it.
+    type: Tweak
+  time: '2026-04-22T10:13:00.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/599
+- author: HellWatcher
+  changes:
+  - message: Hotbar and top-bar keybind labels scale with the accessibility UI font size setting and shrink to
+      fit the button instead of clipping.
+    type: Fix
+  - message: Modifier keybinds like Shift+1 and Ctrl+0 now show on hotbar and top-bar buttons.
+    type: Fix
+  - message: Item-name labels on the hand status panels scale with the UI font size and shrink when a status
+      widget (ammo counter, beaker reagents) leaves less room.
+    type: Fix
+  - message: Guns no longer print a numeric round count on top of the bullet row.
+    type: Tweak
+  time: '2026-04-22T14:13:52.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/600
+- author: HellWatcher
+  changes:
+  - message: Station records and criminal records consoles now filter as you type. The Search and Reset
+      buttons have been removed from station records — right-click the search box to clear.
+    type: Tweak
+  time: '2026-04-22T15:37:47.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/601
+- author: HellWatcher
+  changes:
+  - message: Action bar layout is now customisable in Settings → Misc → Action Bar. Row count, slots per row,
+      slot spacing, show empty slots, show keybind label.
+    type: Add
+  - message: Action bar button background opacity is in Settings → Accessibility next to the other UI opacity
+      sliders.
+    type: Add
+  - message: Lock and Auto-add checkboxes on the actions window header. Lock blocks right-click clear and drag
+      rearrange. Auto-add off keeps server-granted actions out of the bar (still in the menu).
+    type: Add
+  - message: Empty action slots now render at a low alpha when shown, jump to full alpha while dragging an
+      action so drop targets are visible.
+    type: Tweak
+  - message: Hand/pocket swapping an item now restores its action to the same slot it sat in before, not
+      whichever slot the auto-populate happened to choose.
+    type: Fix
+  time: '2026-04-22T17:12:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/584
+- author: HellWatcher
+  changes:
+  - message: The guidebook now has a Pop Out button that detaches it into its own OS window. You can drag it
+      to a second monitor, resize it, and keep it open alongside the game.
+    type: Add
+  time: '2026-04-22T21:12:55.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/585
+- author: HellWatcher
+  changes:
+  - message: Popups now mirror into a dedicated Popup chat tab so you can scroll back through floating text.
+    type: Add
+  time: '2026-04-22T22:09:15.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/588
+- author: HellWatcher
+  changes:
+  - message: Guidebook now documents action bar customization, the Escape-to-cancel-progress-bars shortcut,
+      and the surgical wound repair procedures plus natural wound regen.
+    type: Tweak
+  time: '2026-04-22T22:28:07.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/605
+- author: HellWatcher
+  changes:
+  - message: Settings > Controls has an "Assign action bar slot hotkeys" checkbox. Tick it on, click a slot,
+      press a key. The key rebind also shows up in the Settings > Controls row for the matching `Hotbar` function.
+    type: Add
+  - message: Emotes the player can perform (the same set the radial menu shows) appear as action buttons in
+      the actions menu. Drag one onto a hotbar slot and keybind it like any other action; the placement persists across disconnects.
+    type: Add
+  - message: The actions menu filter panel gains an Emote checkbox so players can browse just their emote
+      buttons.
+    type: Add
+  time: '2026-04-23T10:21:10.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/591
+- author: HellWatcher
+  changes:
+  - message: 'Popup and emote repeats in chat now collapse into a single line with a count, matching the
+      floating popup counter. The count resets when there''s a 2 second gap.'
+    type: Tweak
+  - message: Emote speech bubbles above characters count repeats in place instead of stacking.
+    type: Tweak
+  - message: The floating popup counter no longer resets when the mob moves.
+    type: Fix
+  - message: 'Deathgasp no longer shows in chat to observers who can''t actually see the corpse.'
+    type: Fix
+  time: '2026-04-23T17:09:22.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/608
+- author: HellWatcher
+  changes:
+  - message: 'CentComm, ERT, and other off-station IDs no longer appear in the PDA messenger contacts list.
+      They can still reply in existing conversations, but station crew can''t cold-message them.'
+    type: Fix
+  time: '2026-04-23T18:00:06.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/607
+- author: HellWatcher
+  changes:
+  - message: Portable scrubbers have a filter UI. Switch them on/off, see current pressure, and change which
+      gases they scrub.
+    type: Add
+  - message: The filter list has a search bar and category groups with collapse and select-all.
+    type: Add
+  - message: Fresh portable scrubbers now default to filtering only dangerous gases (plasma, tritium,
+      hydrogen, frezon).
+    type: Tweak
+  time: '2026-04-23T18:17:04.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/281
+- author: HellWatcher
+  changes:
+  - message: Light replacers can now recycle broken bulbs and plain glass shards into points, print new bulbs
+      from those points, and be opened to browse and extract stored bulbs.
+    type: Add
+  - message: 'Fixing a light fixture with a replacer now prefers matching the broken bulb''s exact type first,
+      falls back to any bulb of the same type, and finally prints a new one from recycle points if nothing is stored.'
+    type: Tweak
+  - message: Light replacers hold up to 12 bulbs. The filled spawn starts at 12 (7 tubes + 5 bulbs).
+    type: Tweak
+  time: '2026-04-23T20:22:36.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/285
+- author: HellWatcher
+  changes:
+  - message: 'The Janitorial guidebook page now covers each tool''s actual behavior and the trolley''s alt-click'
+      / radial / drag interactions.
+    type: Add
+  time: '2026-04-23T22:24:46.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/445
+- author: HellWatcher
+  changes:
+  - message: Patients draped for surgery now show a drape sprite on top of them. Surgical drapes and bedsheets
+      each have their own overlay.
+    type: Add
+  time: '2026-04-23T23:02:09.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/613
+- author: HellWatcher
+  changes:
+  - message: 'You can drink from the janitorial trolley''s bucket even when tools are stowed in the other slots.'
+    type: Fix
+  - message: Alt-click on the trolley now opens the standard verb menu (drink, insert). Pressing
+      [ActivateItemInWorld] opens the radial eject menu. Empty-hand left-click still yanks the top-priority slot.
+    type: Tweak
+  time: '2026-04-24T00:44:28.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/617
+- author: HellWatcher
+  changes:
+  - message: Surgery step impact bumped. Incisions, retracts, and saw steps deal more damage and bleed
+      longer. Cautery is the only clean way to close.
+    type: Tweak
+  time: '2026-04-24T00:59:40.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/616
+- author: HellWatcher
+  changes:
+  - message: Wound-repair surgeries now refuse to start on patients who have no wounds in the matching
+      category.
+    type: Fix
+  time: '2026-04-24T01:50:58.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/618
+- author: HellWatcher
+  changes:
+  - message: Surgical drapes fall off when the patient stands or leaves the surgery surface, and the active
+      procedure is cancelled. If the incision was past the hemostat clamp, the clamp releases and bleeding resumes.
+    type: Tweak
+  - message: The drape alert can no longer be clicked to remove drapes. Stand up instead.
+    type: Remove
+  time: '2026-04-24T02:51:06.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/620
+- author: HellWatcher
+  changes:
+  - message: Highlighted chat words can now play a sound when they come through radio. Off by default; toggle
+      in Options - Accessibility - Highlights.
+    type: Add
+  time: '2026-04-24T03:07:44.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/622
+- author: HellWatcher
+  changes:
+  - message: 'Ramping event scheduler''s baseline roll interval is now configurable via component datafields'
+      (defaults unchanged).
+    type: Tweak
+  time: '2026-04-24T10:31:23.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/626
+- author: HellWatcher
+  changes:
+  - message: Lowpop rounds now use a ramping event scheduler with longer 8-24 minute baseline intervals, so
+      events ease in instead of arriving as often as on full pop.
+    type: Tweak
+  time: '2026-04-24T10:47:32.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/629
+- author: HellWatcher
+  changes:
+  - message: Surgery no longer spams two stacked popups when you begin a procedure.
+    type: Fix
+  time: '2026-04-24T16:19:15.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/624
+- author: HellWatcher
+  changes:
+  - message: 'Chat input border now tints to match the active channel (radio, OOC, dead, admin, etc.) so it''s
+      easier to tell at a glance which channel Enter will send to.'
+    type: Add
+  time: '2026-04-24T18:57:52.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/623
+- author: HellWatcher
+  changes:
+  - message: 'The action bar can be dragged anywhere on screen by grabbing its handle, and there''s now a
+      Presets window to save and reload curated layouts.'
+    type: Add
+  time: '2026-04-25T08:56:16.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/627
+- author: HellWatcher
+  changes:
+  - message: In-stock vendor items no longer randomly display as greyed out after scrolling or a restock.
+    type: Fix
+  time: '2026-04-25T09:56:12.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/628
+- author: HellWatcher
+  changes:
+  - message: 'You can now pry someone free from a fireman carry if you''re not the one carrying them. Takes a
+      few seconds of standing still, and drops the carrier onto their back when it finishes.'
+    type: Add
+  time: '2026-04-25T10:20:04.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/630
+- author: HellWatcher
+  changes:
+  - message: Fixed rapid progress-bar flicker above sleeping or stunned mobs.
+    type: Fix
+  time: '2026-04-25T11:05:59.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/633
+- author: HellWatcher
+  changes:
+  - message: Dead bodies no longer have their stomach contents drain into the bloodstream, so revival chems
+      placed on a corpse stick around until revival.
+    type: Fix
+  time: '2026-04-25T18:40:30.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/636
+- author: HellWatcher
+  changes:
+  - message: Bats, bees, butterflies, chickens, cockroaches, mallard ducks, and hamsters can now eat food.
+    type: Fix
+  time: '2026-04-25T20:15:21.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/638
+- author: HellWatcher
+  changes:
+  - message: Fish and shark plushies now fit on the janitorial trolley, not just in the mop bucket.
+    type: Add
+  time: '2026-04-25T20:30:20.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/641
+- author: HellWatcher
+  changes:
+  - message: 'Accentless now works on Skeletons, shows what it removes per species, and hides itself for
+      species that don''t have a baseline accent.'
+    type: Tweak
+  time: '2026-04-25T23:04:54.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/648
+- author: HellWatcher
+  changes:
+  - message: Accent traits (Liar, Scottish, etc.) now actually apply on species that have a built-in accent,
+      instead of being silently ignored.
+    type: Fix
+  time: '2026-04-25T23:20:28.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/649
+- author: HellWatcher
+  changes:
+  - message: Frontal lisp now consistently applies after the Lizard accent.
+    type: Fix
+  time: '2026-04-25T23:35:17.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/650
+- author: HellWatcher
+  changes:
+  - message: Surgical trays can now be printed at the medical techfab.
+    type: Add
+  time: '2026-04-25T23:39:38.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/654

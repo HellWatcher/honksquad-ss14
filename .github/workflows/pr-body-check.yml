@@ -60,6 +60,14 @@ jobs:
             if [ "$CL_FILLED" -eq 0 ]; then
               warn "Changelog (:cl:) is present but all entries are empty. Fill them in or delete the :cl: block for non-player-facing PRs."
             fi
+
+            # Warn on entries that exceed 80 characters (upstream median is ~65).
+            while IFS= read -r line; do
+              entry=$(echo "$line" | sed -E 's/^\s*-\s+(add|tweak|fix|remove):\s+//')
+              if [ "${#entry}" -gt 80 ]; then
+                warn "Changelog entry is too long (${#entry} chars, target ≤80): $entry"
+              fi
+            done < <(echo "$PR_BODY" | grep -E '^\s*-\s+(add|tweak|fix|remove):\s+\S')
           fi
 
           echo ""
