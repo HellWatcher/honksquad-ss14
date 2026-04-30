@@ -1,0 +1,46 @@
+name: "Weekly Changelog Update"
+
+on:
+  schedule:
+    # Saturdays 22:00 UTC = 6pm EDT (UTC-4). Shifts to 5pm during EST (UTC-5).
+    - cron: '0 22 * * 6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    name: Update HonksquadChangelog.yml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release
+
+      - name: Fetch merged PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr list \
+            --repo HellWatcher/honksquad-ss14 \
+            --state merged \
+            --limit 500 \
+            --json number,mergedAt,author,body \
+            > /tmp/prs.json
+
+      - name: Scan for new :cl: entries
+        run: |
+          python3 scripts/changelog-update.py \
+            Resources/Changelog/HonksquadChangelog.yml \
+            /tmp/prs.json \
+            HellWatcher/honksquad-ss14
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Resources/Changelog/HonksquadChangelog.yml
+          git diff --staged --quiet && echo "No new entries." && exit 0
+          git commit -m "honksquad: chore: weekly changelog update [skip ci]"
+          git push origin release
