@@ -1,0 +1,49 @@
+name: Spec / feature proposal
+description: Design proposal, refactor plan, or multi-PR feature work.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for planned features and design proposals. Bug reports go in the bug report template.
+  - type: textarea
+    attributes:
+      label: Goal
+      description: What state are we trying to reach? Player-visible outcome preferred over implementation framing.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Why
+      description: Motivation — constraint, balance reason, prior PR that left this open, upstream design pressure. Link related issues with #NNN.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Non-goals
+      description: Things explicitly out of scope. Helps prevent scope creep.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Approach
+      description: How the work gets done. For multi-PR work, use a "PR 1 / PR 2 / PR 3" breakdown. Cite files where changes land.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Files / areas
+      description: Paths or systems the work touches. Helps reviewers scope without re-discovery.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Acceptance
+      description: Observable outcomes that mean "done". Behavioral, not implementation. Two to five items.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Risks / open questions
+      description: Tradeoffs, balance concerns, upstream conflicts, unresolved design questions.
+    validations:
+      required: false
