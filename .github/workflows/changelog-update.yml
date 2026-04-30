@@ -35,7 +35,9 @@ jobs:
           python3 scripts/changelog-update.py \
             Resources/Changelog/HonksquadChangelog.yml \
             /tmp/prs.json \
-            HellWatcher/honksquad-ss14
+            HellWatcher/honksquad-ss14 \
+            --watermark-file Resources/Changelog/.changelog-watermark \
+            --deny-file Resources/Changelog/.changelog-deny
 
       - name: Open PR if changed
         env:
@@ -43,7 +45,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Resources/Changelog/HonksquadChangelog.yml
+          git add Resources/Changelog/HonksquadChangelog.yml \
+                  Resources/Changelog/.changelog-watermark
           git diff --staged --quiet && echo "No new entries." && exit 0
 
           BRANCH="chore/changelog-update-$(date -u +%Y-%m-%d)"
