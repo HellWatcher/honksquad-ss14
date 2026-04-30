@@ -19,7 +19,7 @@ Entries:
   url: https://github.com/HellWatcher/honksquad-ss14/pull/248
 - author: SushiFish100
   changes:
-  - message: white and gnorange plants.
+  - message: White and gnorange plants.
     type: Add
   time: '2026-04-03T02:26:41.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/250
@@ -136,12 +136,6 @@ Entries:
   url: https://github.com/HellWatcher/honksquad-ss14/pull/273
 - author: HellWatcher
   changes:
-  - message: Bank account lookups no longer risk stale data between rounds.
-    type: Fix
-  time: '2026-04-04T14:54:05.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/272
-- author: HellWatcher
-  changes:
   - message: Surgery drape no longer gets stuck on patient if bedsheet insertion fails.
     type: Fix
   time: '2026-04-04T15:10:40.0000000+00:00'
@@ -226,30 +220,6 @@ Entries:
     type: Fix
   time: '2026-04-08T16:43:07.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/418
-- author: HellWatcher
-  changes:
-  - message: No player-facing changes (internal refactor).
-    type: Tweak
-  time: '2026-04-08T16:57:06.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/420
-- author: HellWatcher
-  changes:
-  - message: No player-facing changes (internal refactor).
-    type: Tweak
-  time: '2026-04-08T18:48:10.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/421
-- author: HellWatcher
-  changes:
-  - message: No player-facing changes (internal refactor).
-    type: Tweak
-  time: '2026-04-09T05:41:35.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/423
-- author: HellWatcher
-  changes:
-  - message: No player-facing changes (internal refactor).
-    type: Tweak
-  time: '2026-04-09T06:07:41.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/422
 - author: HellWatcher
   changes:
   - message: Trait point-buy system with 10-point global budget.
@@ -552,13 +522,6 @@ Entries:
   url: https://github.com/HellWatcher/honksquad-ss14/pull/477
 - author: HellWatcher
   changes:
-  - message: Cloning still preserves all the same fork traits it did before; the registration just lives in a
-      fork-side file now.
-    type: Tweak
-  time: '2026-04-16T10:02:55.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/468
-- author: HellWatcher
-  changes:
   - message: Wounds no longer clutter the standard examine. Use the health-examine verb to see fracture and
       burn descriptions in flavor text instead of a clinical tier list.
     type: Tweak
@@ -673,19 +636,6 @@ Entries:
     type: Fix
   time: '2026-04-21T07:39:30.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/568
-- author: HellWatcher
-  changes:
-  - message: Magic numbers in Thickness/Vector2/Color/UIBox constructors and TimeSpan.FromX calls now fail CI
-      on fork code so they can't sneak into future PRs.
-    type: Fix
-  time: '2026-04-21T09:15:25.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/570
-- author: HellWatcher
-  changes:
-  - message: 'Magic numbers in DataField defaults now fail CI on fork code so they can''t sneak into future PRs.'
-    type: Fix
-  time: '2026-04-21T09:34:15.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/569
 - author: HellWatcher
   changes:
   - message: Escape now cancels any active progress-bar action you started (eating, drinking, channeled
@@ -910,13 +860,6 @@ Entries:
     type: Add
   time: '2026-04-24T03:07:44.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/622
-- author: HellWatcher
-  changes:
-  - message: 'Ramping event scheduler''s baseline roll interval is now configurable via component datafields'
-      (defaults unchanged).
-    type: Tweak
-  time: '2026-04-24T10:31:23.0000000+00:00'
-  url: https://github.com/HellWatcher/honksquad-ss14/pull/626
 - author: HellWatcher
   changes:
   - message: Lowpop rounds now use a ramping event scheduler with longer 8-24 minute baseline intervals, so
