@@ -20,7 +20,8 @@
 
 ## Changelog
 
-<!-- Delete this block if the change has no player-facing effect (refactors, tests, CI, etc.). -->
+<!-- Delete this block if the change has no player-facing effect (refactors, tests, CI, etc.).
+     Entries are harvested weekly and added to the in-game changelog. -->
 
 :cl:
 - add: 

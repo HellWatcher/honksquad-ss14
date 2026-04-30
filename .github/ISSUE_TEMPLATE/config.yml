@@ -1,8 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Submit a Pull Request
-    url: https://github.com/HellWatcher/honksquad-ss14/compare
-    about: Ready to contribute? Open a pull request against the HellWatcher/honksquad-ss14 fork.
   - name: Discord
     url: https://discord.gg/rGvu9hKffJ
     about: General feedback, help, or discussion.

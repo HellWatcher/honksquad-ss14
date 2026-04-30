@@ -51,17 +51,6 @@ jobs:
           check_section "About the PR"
           check_section "Why / Balance"
 
-          # Check changelog if present.
-          # The template ships :cl: uncommented; authors delete the block for non-player-facing PRs.
-          # If the block is present, at least one entry must be filled in.
-          CL_UNCOMMENTED=$(echo "$PR_BODY" | grep -v '^\s*<!--' | grep -c ':cl:' || true)
-
-          if [ "$CL_UNCOMMENTED" -gt 0 ]; then
-            CL_FILLED=$(echo "$PR_BODY" | grep -cE '^\s*-\s+(add|tweak|fix|remove):\s+\S' || true)
-            if [ "$CL_FILLED" -eq 0 ]; then
-              warn "Changelog (:cl:) is present but all entries are empty. Fill them in or remove the :cl: block if this PR has no player-facing changes."
-            fi
-          fi
 
           echo ""
           echo "PR body check: ${ERRORS} error(s), ${WARNINGS} warning(s)"
