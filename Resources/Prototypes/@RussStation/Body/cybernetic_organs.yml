@@ -337,7 +337,7 @@
   parent: [OrganBaseEyes, OrganCyberneticInternal]
   id: OrganCyberneticEyesStandard
   name: cybernetic eyes
-  description: Mid-tier cybernetic eyes with enhanced low-light sensors. You can see clearly even in near-total darkness.
+  description: Reliable mid-tier cybernetic eyes. A clean replacement for biological ones.
   components:
   - type: Sprite
     sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
@@ -357,7 +357,7 @@
   parent: [OrganBaseEyes, OrganCyberneticInternal]
   id: OrganCyberneticEyesAdvanced
   name: advanced cybernetic eyes
-  description: Top-of-the-line cybernetic eyes with hardened flash suppression optics. Immune to flashes.
+  description: Top-of-the-line cybernetic eyes with hardened flash suppression optics and an integrated flashlight. Immune to flashes; toggle the built-in light to see in dark areas.
   components:
   - type: Sprite
     sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
@@ -372,6 +372,13 @@
     empEffect: Flicker
     empVulnerability: 0.5
   - type: CyberneticEyes
+  - type: PointLight
+    enabled: false
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
+    radius: 6
+    netsync: false
+  - type: UnpoweredFlashlight
 
 # ============================================================
 # EARS - EmpEffect: Deafen
