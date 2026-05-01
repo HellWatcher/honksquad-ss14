@@ -66,6 +66,10 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         SubscribeLocalEvent<CyberneticEyesStandardComponent, OrganGotInsertedEvent>(OnStandardEyesInserted);
         SubscribeLocalEvent<CyberneticEyesStandardComponent, OrganGotRemovedEvent>(OnStandardEyesRemoved);
 
+        // Advanced eyes: night vision + flash immunity (flash immunity handled by OnFlashAttempt scan)
+        SubscribeLocalEvent<CyberneticEyesComponent, OrganGotInsertedEvent>(OnAdvancedEyesInserted);
+        SubscribeLocalEvent<CyberneticEyesComponent, OrganGotRemovedEvent>(OnAdvancedEyesRemoved);
+
         // Advanced ears: deafness resistance handled in shared DeafableSystem
 
         // Liver: overdose resistance (applied to body on insert/remove)
@@ -320,6 +324,34 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
             foreach (var organ in body.Organs.ContainedEntities)
             {
                 if (organ != uid && HasComp<CyberneticEyesStandardComponent>(organ))
+                    return;
+            }
+        }
+
+        _eye.SetDrawLight(args.Target, comp.OriginalDrawLight);
+    }
+
+    // ================================================================
+    // Advanced Eyes — night vision + flash immunity
+    // Flash immunity is handled by OnFlashAttempt scanning for CyberneticEyesComponent.
+    // Night vision uses the same SetDrawLight approach as standard eyes.
+    // ================================================================
+
+    private void OnAdvancedEyesInserted(EntityUid uid, CyberneticEyesComponent comp, ref OrganGotInsertedEvent args)
+    {
+        if (TryComp<EyeComponent>(args.Target, out var eye))
+            comp.OriginalDrawLight = eye.DrawLight;
+
+        _eye.SetDrawLight(args.Target, false);
+    }
+
+    private void OnAdvancedEyesRemoved(EntityUid uid, CyberneticEyesComponent comp, ref OrganGotRemovedEvent args)
+    {
+        if (TryComp<BodyComponent>(args.Target, out var body) && body.Organs != null)
+        {
+            foreach (var organ in body.Organs.ContainedEntities)
+            {
+                if (organ != uid && HasComp<CyberneticEyesComponent>(organ))
                     return;
             }
         }
