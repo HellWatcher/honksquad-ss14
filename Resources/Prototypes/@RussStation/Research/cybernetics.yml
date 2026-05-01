@@ -4,8 +4,8 @@
   id: BasicCybernetics
   name: research-technology-basic-cybernetics
   icon:
-    sprite: Mobs/Species/Human/organs.rsi
-    state: heart-on
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: heart-plastic-on
   discipline: CivilianServices
   tier: 1
   cost: 5000
@@ -21,8 +21,8 @@
   id: StandardCybernetics
   name: research-technology-standard-cybernetics
   icon:
-    sprite: Mobs/Species/Human/organs.rsi
-    state: heart-on
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: heart-plasma-on
   discipline: CivilianServices
   tier: 2
   cost: 10000
@@ -38,8 +38,8 @@
   id: AdvancedCybernetics
   name: research-technology-advanced-cybernetics
   icon:
-    sprite: Mobs/Species/Human/organs.rsi
-    state: heart-on
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: heart-bluespace-on
   discipline: CivilianServices
   tier: 3
   cost: 15000
