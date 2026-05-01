@@ -232,6 +232,63 @@
   - type: CyberneticLiver
 
 # ============================================================
+# KIDNEYS - EmpEffect: None (non-critical organ)
+# TODO (#679): wire Excretion stage effects per tier once the kidney
+# metabolizer chain is implemented:
+#   Basic: no sub-tolerance filter, reduced drain rate
+#   Standard: normal Excretion stage behavior
+#   Advanced: enhanced drain rate, lower tolerance threshold
+# ============================================================
+
+- type: entity
+  parent: [OrganBaseKidneys, OrganCyberneticInternal]
+  id: OrganCyberneticKidneysBasic
+  name: basic cybernetic kidneys
+  description: Cheap cybernetic kidneys. They filter blood, slowly.
+  components:
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    layers:
+    - state: kidney-plastic-l
+    - state: kidney-plastic-r
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: None
+    empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBaseKidneys, OrganCyberneticInternal]
+  id: OrganCyberneticKidneysStandard
+  name: cybernetic kidneys
+  description: Reliable cybernetic kidneys. A clean biological replacement.
+  components:
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    layers:
+    - state: kidney-plasma-l
+    - state: kidney-plasma-r
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: None
+    empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBaseKidneys, OrganCyberneticInternal]
+  id: OrganCyberneticKidneysAdvanced
+  name: advanced cybernetic kidneys
+  description: High-efficiency cybernetic kidneys. Chems clear faster and trace doses are filtered before they can accumulate.
+  components:
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    layers:
+    - state: kidney-bluespace-l
+    - state: kidney-bluespace-r
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: None
+    empVulnerability: 0.5
+
+# ============================================================
 # EYES - EmpEffect: Flicker
 # ============================================================
 
