@@ -188,7 +188,9 @@ public sealed partial class SurgerySystem
         }
 
         _pendingOrganRemovalTools.Remove(patient);
-        _xform.DropNextTo(organ.Value, patient);
+
+        if (!_hands.TryPickupAnyHand(args.User, organ.Value, checkActionBlocker: false))
+            _xform.DropNextTo(organ.Value, patient);
 
         if (args.User is { } surgeon)
         {
