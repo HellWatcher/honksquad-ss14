@@ -25,7 +25,9 @@ using Robust.Shared.Timing;
 namespace Content.Shared.Metabolism;
 
 /// <inheritdoc/>
-public sealed class MetabolizerSystem : EntitySystem
+//HONK START - partial so a fork-side .Honk.cs can expose the MetabolizerTypes setter to SharedCyberneticLungsSystem
+public sealed partial class MetabolizerSystem : EntitySystem
+//HONK END
 {
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;

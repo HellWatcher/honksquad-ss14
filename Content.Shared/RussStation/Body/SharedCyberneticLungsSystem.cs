@@ -11,6 +11,8 @@ namespace Content.Shared.RussStation.Body;
 /// </summary>
 public sealed class SharedCyberneticLungsSystem : EntitySystem
 {
+    [Dependency] private readonly MetabolizerSystem _metabolizer = default!;
+
     private EntityQuery<MetabolizerComponent> _metabolizerQuery;
 
     public override void Initialize()
@@ -45,7 +47,6 @@ public sealed class SharedCyberneticLungsSystem : EntitySystem
         if (types.Count == 0)
             return;
 
-        metabolizer.MetabolizerTypes = types;
-        Dirty(uid, metabolizer);
+        _metabolizer.SetMetabolizerTypes((uid, metabolizer), types);
     }
 }

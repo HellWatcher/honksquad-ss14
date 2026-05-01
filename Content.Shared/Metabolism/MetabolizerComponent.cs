@@ -1,8 +1,5 @@
 using Content.Shared.Body.Components;
 using Content.Shared.FixedPoint;
-//HONK START - SharedCyberneticLungsSystem access
-using Content.Shared.RussStation.Body;
-//HONK END
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
@@ -86,11 +83,9 @@ public sealed partial class MetabolizerComponent : Component
     /// <summary>
     ///     List of metabolizer types that this organ is. ex. Human, Slime, Felinid, w/e.
     /// </summary>
-    //HONK START - SharedCyberneticLungsSystem needs write access to inherit host body metabolizer types
     [DataField]
-    [Access(typeof(MetabolizerSystem), typeof(SharedCyberneticLungsSystem), Other = AccessPermissions.ReadExecute)] // FIXME Friends
+    [Access(typeof(MetabolizerSystem), Other = AccessPermissions.ReadExecute)] // FIXME Friends
     public HashSet<ProtoId<MetabolizerTypePrototype>>? MetabolizerTypes;
-    //HONK END
 
     /// <summary>
     ///     How many reagents can this metabolizer process at once?

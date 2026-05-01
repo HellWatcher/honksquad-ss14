@@ -40,5 +40,5 @@ public sealed partial class CyberneticOrganComponent : Component
     /// Multiplier for EMP duration/severity. Higher = more vulnerable.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float EmpVulnerability = 1.0f;
+    public float EmpVulnerability = CyberneticOrganConstants.DefaultEmpVulnerability;
 }

@@ -146,6 +146,7 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         var resistance = EnsureComp<OverdoseResistanceComponent>(args.Target);
         resistance.ThresholdMultiplier = liver.OverdoseThresholdMultiplier;
         Dirty(args.Target, resistance);
+        Dirty(args.Target, resistance);
     }
 
     private void OnLiverRemoved(EntityUid uid, CyberneticLiverComponent liver, ref OrganGotRemovedEvent args)

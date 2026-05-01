@@ -19,12 +19,12 @@ public sealed partial class AutosurgeonComponent : Component
     /// How long the installation takes when used on another person.
     /// </summary>
     [DataField]
-    public TimeSpan InstallTime = TimeSpan.FromSeconds(5);
+    public TimeSpan InstallTime = AutosurgeonConstants.DefaultInstallTime;
 
     /// <summary>
     /// How long the installation takes when used on yourself.
     /// Shorter than normal since you only need to hold still.
     /// </summary>
     [DataField]
-    public TimeSpan SelfInstallTime = TimeSpan.FromSeconds(3);
+    public TimeSpan SelfInstallTime = AutosurgeonConstants.DefaultSelfInstallTime;
 }

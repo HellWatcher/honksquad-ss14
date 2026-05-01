@@ -22,7 +22,7 @@ public sealed partial class CyberneticHeartComponent : Component
     /// Minimum time between auto-injections.
     /// </summary>
     [DataField]
-    public TimeSpan Cooldown = TimeSpan.FromSeconds(120);
+    public TimeSpan Cooldown = CyberneticOrganConstants.HeartEpinephrineCooldown;
 
     /// <summary>
     /// When the last injection occurred. Tracked on the component so it

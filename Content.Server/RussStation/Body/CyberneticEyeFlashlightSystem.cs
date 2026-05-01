@@ -2,8 +2,8 @@ using Content.Shared.Actions;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Light.Components;
+using Content.Shared.Light.EntitySystems;
 using Content.Shared.RussStation.Body;
-using Robust.Shared.GameObjects;
 
 namespace Content.Server.RussStation.Body;
 
@@ -16,7 +16,7 @@ namespace Content.Server.RussStation.Body;
 public sealed class CyberneticEyeFlashlightSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actions = default!;
-    [Dependency] private readonly SharedPointLightSystem _light = default!;
+    [Dependency] private readonly UnpoweredFlashlightSystem _flashlight = default!;
     [Dependency] private readonly BodySystem _body = default!;
 
     public override void Initialize()
@@ -48,14 +48,10 @@ public sealed class CyberneticEyeFlashlightSystem : EntitySystem
         if (!TryComp<UnpoweredFlashlightComponent>(uid, out var flashlight))
             return;
 
+        // Turn the light off through the upstream API so LightOn/Enabled/appearance stay
+        // in sync. RemoveAction below deletes the action entity; the stale UID on
+        // ToggleActionEntity is harmless and gets overwritten by the next AddAction.
+        _flashlight.SetLight((uid, flashlight), false, quiet: true);
         _actions.RemoveAction(args.Target, flashlight.ToggleActionEntity);
-        flashlight.ToggleActionEntity = null;
-
-        // Make sure the light is off when the eyes leave the body.
-        if (_light.TryGetLight(uid, out _))
-            _light.SetEnabled(uid, false);
-
-        flashlight.LightOn = false;
-        Dirty(uid, flashlight);
     }
 }
