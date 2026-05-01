@@ -4,6 +4,7 @@ using Content.Shared.Examine;
 using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.Tools;
 using Content.Shared.Tools.Systems;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.RussStation.Surgery.Systems;
@@ -53,6 +54,10 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
         // Drop bedsheet/drape when draping is removed
         if (ent.Comp.Bedsheet is not { } bedsheet || !Exists(bedsheet))
+            return;
+
+        // Skip during entity termination — the whole entity tree is going away.
+        if (MetaData(ent.Owner).EntityLifeStage >= EntityLifeStage.Terminating)
             return;
 
         var xformSys = EntityManager.System<SharedTransformSystem>();
