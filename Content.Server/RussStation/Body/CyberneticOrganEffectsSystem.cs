@@ -14,6 +14,8 @@ using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Body;
+using Content.Shared.RussStation.Hearing;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
@@ -32,6 +34,7 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
     [Dependency] private readonly HungerSystem _hunger = default!;
     [Dependency] private readonly SharedAtmosphereSystem _atmos = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SharedEyeSystem _eye = default!;
 
     private static readonly Gas[] AllGases = Enum.GetValues<Gas>();
 
@@ -55,7 +58,15 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         SubscribeLocalEvent<CyberneticStomachComponent, OrganGotInsertedEvent>(OnStomachInserted);
         SubscribeLocalEvent<CyberneticStomachComponent, OrganGotRemovedEvent>(OnStomachRemoved);
 
-        // Ears: deafness resistance handled in shared DeafableSystem
+        // Basic ears: hearing impairment (muffled audio)
+        SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotInsertedEvent>(OnBasicEarsInserted);
+        SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotRemovedEvent>(OnBasicEarsRemoved);
+
+        // Standard eyes: night vision (DrawLight = false on body)
+        SubscribeLocalEvent<CyberneticEyesStandardComponent, OrganGotInsertedEvent>(OnStandardEyesInserted);
+        SubscribeLocalEvent<CyberneticEyesStandardComponent, OrganGotRemovedEvent>(OnStandardEyesRemoved);
+
+        // Advanced ears: deafness resistance handled in shared DeafableSystem
 
         // Liver: overdose resistance (applied to body on insert/remove)
         SubscribeLocalEvent<CyberneticLiverComponent, OrganGotInsertedEvent>(OnLiverInserted);
@@ -265,5 +276,54 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         }
 
         RemComp<OverdoseResistanceComponent>(args.Target);
+    }
+
+    // ================================================================
+    // Basic Ears — hearing impairment (muffled audio)
+    // ================================================================
+
+    private void OnBasicEarsInserted(EntityUid uid, CyberneticEarsBasicComponent comp, ref OrganGotInsertedEvent args)
+    {
+        EnsureComp<HearingImpairmentComponent>(args.Target);
+    }
+
+    private void OnBasicEarsRemoved(EntityUid uid, CyberneticEarsBasicComponent comp, ref OrganGotRemovedEvent args)
+    {
+        if (TryComp<BodyComponent>(args.Target, out var body) && body.Organs != null)
+        {
+            foreach (var organ in body.Organs.ContainedEntities)
+            {
+                if (organ != uid && HasComp<CyberneticEarsBasicComponent>(organ))
+                    return;
+            }
+        }
+
+        RemComp<HearingImpairmentComponent>(args.Target);
+    }
+
+    // ================================================================
+    // Standard Eyes — night vision (disable lighting requirement)
+    // ================================================================
+
+    private void OnStandardEyesInserted(EntityUid uid, CyberneticEyesStandardComponent comp, ref OrganGotInsertedEvent args)
+    {
+        if (TryComp<EyeComponent>(args.Target, out var eye))
+            comp.OriginalDrawLight = eye.DrawLight;
+
+        _eye.SetDrawLight(args.Target, false);
+    }
+
+    private void OnStandardEyesRemoved(EntityUid uid, CyberneticEyesStandardComponent comp, ref OrganGotRemovedEvent args)
+    {
+        if (TryComp<BodyComponent>(args.Target, out var body) && body.Organs != null)
+        {
+            foreach (var organ in body.Organs.ContainedEntities)
+            {
+                if (organ != uid && HasComp<CyberneticEyesStandardComponent>(organ))
+                    return;
+            }
+        }
+
+        _eye.SetDrawLight(args.Target, comp.OriginalDrawLight);
     }
 }

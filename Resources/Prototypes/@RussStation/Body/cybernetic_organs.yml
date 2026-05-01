@@ -239,7 +239,7 @@
   parent: [OrganBaseEyes, OrganCyberneticInternal]
   id: OrganCyberneticEyesBasic
   name: basic cybernetic eyes
-  description: Cheap cybernetic eyes. They work, mostly.
+  description: Cheap cybernetic eyes. Functional but ordinary — no better than the ones you were born with.
   components:
   - type: Sprite
     sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
@@ -253,7 +253,7 @@
   parent: [OrganBaseEyes, OrganCyberneticInternal]
   id: OrganCyberneticEyesStandard
   name: cybernetic eyes
-  description: Standard cybernetic eyes with clear vision.
+  description: Mid-tier cybernetic eyes with enhanced low-light sensors. You can see clearly even in near-total darkness.
   components:
   - type: Sprite
     sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
@@ -262,12 +262,13 @@
     tier: Standard
     empEffect: Flicker
     empVulnerability: 1.0
+  - type: CyberneticEyesStandard
 
 - type: entity
   parent: [OrganBaseEyes, OrganCyberneticInternal]
   id: OrganCyberneticEyesAdvanced
   name: advanced cybernetic eyes
-  description: Top-of-the-line cybernetic eyes with enhanced visual acuity.
+  description: Top-of-the-line cybernetic eyes with hardened flash suppression optics. Immune to flashes.
   components:
   - type: Sprite
     sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
@@ -286,7 +287,7 @@
   parent: [OrganBaseEars, OrganCyberneticInternal]
   id: OrganCyberneticEarsBasic
   name: basic cybernetic ears
-  description: Budget cybernetic ears. You'll hear, sort of.
+  description: Budget cybernetic ears. They pick up sound, but the analog-to-digital conversion leaves something to be desired. Everything sounds slightly muffled.
   components:
   - type: Sprite
     sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
@@ -295,12 +296,13 @@
     tier: Basic
     empEffect: Deafen
     empVulnerability: 1.5
+  - type: CyberneticEarsBasic
 
 - type: entity
   parent: [OrganBaseEars, OrganCyberneticInternal]
   id: OrganCyberneticEarsStandard
   name: cybernetic ears
-  description: Reliable cybernetic ears with normal hearing.
+  description: Reliable cybernetic ears with normal hearing. A clean replacement for biological ones.
   components:
   - type: Sprite
     sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
@@ -314,7 +316,7 @@
   parent: [OrganBaseEars, OrganCyberneticInternal]
   id: OrganCyberneticEarsAdvanced
   name: advanced cybernetic ears
-  description: Advanced cybernetic ears with built-in deafness resistance.
+  description: High-end cybernetic ears with active deafness suppression. Flashbangs and explosions won't silence you.
   components:
   - type: Sprite
     sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
