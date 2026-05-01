@@ -89,7 +89,6 @@
         maxVol: 75.0
         canReact: false
   - type: Metabolizer
-    metabolizerTypes: [Human, Animal, Rat, Plant, Arachnid, Moth]
     stages: [Respiration]
     maxReagents: 2
   - type: CyberneticOrgan
@@ -109,7 +108,6 @@
     - state: lung-plasma-l
     - state: lung-plasma-r
   - type: Metabolizer
-    metabolizerTypes: [Human, Animal, Rat, Plant, Arachnid, Moth]
     stages: [Respiration]
   - type: CyberneticOrgan
     tier: Standard
@@ -133,7 +131,6 @@
         maxVol: 130.0
         canReact: false
   - type: Metabolizer
-    metabolizerTypes: [Human, Animal, Rat, Plant, Arachnid, Moth]
     stages: [Respiration]
   - type: CyberneticOrgan
     tier: Advanced
