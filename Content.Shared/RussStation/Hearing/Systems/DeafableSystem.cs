@@ -1,7 +1,9 @@
 using Content.Shared.Body;
+using Content.Shared.Body.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Rejuvenate;
 using Content.Shared.RussStation.Body;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.RussStation.Hearing.Systems;
 
@@ -11,6 +13,8 @@ namespace Content.Shared.RussStation.Hearing.Systems;
 /// </summary>
 public sealed class DeafableSystem : EntitySystem
 {
+    private static readonly ProtoId<OrganCategoryPrototype> EarsCategory = "Ears";
+
     public override void Initialize()
     {
         base.Initialize();
@@ -52,14 +56,22 @@ public sealed class DeafableSystem : EntitySystem
         if (body.Organs == null)
             return;
 
+        var hasEars = false;
         foreach (var organ in body.Organs.ContainedEntities)
         {
+            // Advanced cybernetic ears trump any other deafness source (earmuffs, no-ears, etc).
             if (HasComp<CyberneticEarsComponent>(organ))
             {
                 args.Uncancel();
                 return;
             }
+
+            if (TryComp<OrganComponent>(organ, out var organComp) && organComp.Category == EarsCategory)
+                hasEars = true;
         }
+
+        if (!hasEars)
+            args.Cancel();
     }
 }
 
