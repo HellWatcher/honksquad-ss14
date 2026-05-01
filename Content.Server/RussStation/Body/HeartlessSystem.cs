@@ -1,22 +1,29 @@
 using Content.Server.Body.Systems;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
+using Content.Shared.Eye.Blinding.Components;
+using Content.Shared.Eye.Blinding.Systems;
 using Content.Shared.RussStation.Body;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server.RussStation.Body;
 
 /// <summary>
-/// Tracks heart presence in bodies and applies a fatal saturation drain when no heart is installed.
-/// Uses NoHeartComponent as a persistent marker so a defibrillator cannot bypass it.
+/// Tracks essential-organ presence in bodies and applies penalties when they are absent.
+/// Adds <see cref="NoHeartComponent"/> when no heart is installed (drives a fatal saturation drain
+/// each tick) and <see cref="NoEyesComponent"/> when no eyes are installed (drives blindness via
+/// <see cref="BlindableSystem"/>). Both markers persist so defibrillation/temporary effects can't
+/// bypass the underlying organ loss.
 /// </summary>
 public sealed class HeartlessSystem : EntitySystem
 {
     [Dependency] private readonly RespiratorSystem _respirator = default!;
+    [Dependency] private readonly BlindableSystem _blinding = default!;
 
     private static readonly ProtoId<OrganCategoryPrototype> HeartCategory = "Heart";
+    private static readonly ProtoId<OrganCategoryPrototype> EyesCategory = "Eyes";
 
-    private const float DrainPerSecond = 3f;
+    private const float HeartlessDrainPerSecond = 3f;
 
     public override void Initialize()
     {
@@ -24,30 +31,42 @@ public sealed class HeartlessSystem : EntitySystem
 
         SubscribeLocalEvent<BodyComponent, OrganInsertedIntoEvent>(OnOrganInserted);
         SubscribeLocalEvent<BodyComponent, OrganRemovedFromEvent>(OnOrganRemoved);
+
+        SubscribeLocalEvent<NoEyesComponent, ComponentStartup>(OnNoEyesStartup);
+        SubscribeLocalEvent<NoEyesComponent, ComponentShutdown>(OnNoEyesShutdown);
     }
 
     private void OnOrganRemoved(Entity<BodyComponent> body, ref OrganRemovedFromEvent args)
     {
-        if (!IsHeartCategory(args.Organ))
+        // Body cleanup removes organs as it terminates; don't ensure markers in that window.
+        if (TerminatingOrDeleted(body.Owner))
             return;
 
-        if (!HasAnyHeart(body.Comp))
+        if (!TryComp<OrganComponent>(args.Organ, out var organ))
+            return;
+
+        if (organ.Category == HeartCategory && !HasAnyOrganOfCategory(body.Comp, HeartCategory))
             EnsureComp<NoHeartComponent>(body);
+        else if (organ.Category == EyesCategory && !HasAnyOrganOfCategory(body.Comp, EyesCategory))
+            EnsureComp<NoEyesComponent>(body);
     }
 
     private void OnOrganInserted(Entity<BodyComponent> body, ref OrganInsertedIntoEvent args)
     {
-        if (!IsHeartCategory(args.Organ))
+        if (!TryComp<OrganComponent>(args.Organ, out var organ))
             return;
 
-        RemComp<NoHeartComponent>(body);
+        if (organ.Category == HeartCategory)
+            RemComp<NoHeartComponent>(body);
+        else if (organ.Category == EyesCategory)
+            RemComp<NoEyesComponent>(body);
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
-        var drain = -DrainPerSecond * frameTime;
+        var drain = -HeartlessDrainPerSecond * frameTime;
         var query = EntityQueryEnumerator<NoHeartComponent>();
 
         while (query.MoveNext(out var uid, out _))
@@ -56,20 +75,34 @@ public sealed class HeartlessSystem : EntitySystem
         }
     }
 
-    private bool IsHeartCategory(EntityUid organ)
+    private void OnNoEyesStartup(Entity<NoEyesComponent> ent, ref ComponentStartup args)
     {
-        return TryComp<OrganComponent>(organ, out var organComp)
-               && organComp.Category == HeartCategory;
+        if (!TryComp<BlindableComponent>(ent, out var blindable))
+            return;
+
+        var maxBlindness = (int)BlurryVisionComponent.MaxMagnitude;
+        _blinding.SetMinDamage((ent.Owner, blindable), maxBlindness);
     }
 
-    private bool HasAnyHeart(BodyComponent body)
+    private void OnNoEyesShutdown(Entity<NoEyesComponent> ent, ref ComponentShutdown args)
+    {
+        if (!TryComp<BlindableComponent>(ent, out var blindable))
+            return;
+
+        if (blindable.MinDamage != 0)
+            _blinding.SetMinDamage((ent.Owner, blindable), 0);
+
+        _blinding.AdjustEyeDamage((ent.Owner, blindable), -blindable.EyeDamage);
+    }
+
+    private bool HasAnyOrganOfCategory(BodyComponent body, ProtoId<OrganCategoryPrototype> category)
     {
         if (body.Organs == null)
             return false;
 
         foreach (var organ in body.Organs.ContainedEntities)
         {
-            if (IsHeartCategory(organ))
+            if (TryComp<OrganComponent>(organ, out var organComp) && organComp.Category == category)
                 return true;
         }
 

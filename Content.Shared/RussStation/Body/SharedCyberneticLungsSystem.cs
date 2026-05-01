@@ -42,7 +42,10 @@ public sealed class SharedCyberneticLungsSystem : EntitySystem
             types.UnionWith(otherMet.MetabolizerTypes);
         }
 
-        metabolizer.MetabolizerTypes = types.Count > 0 ? types : null;
+        if (types.Count == 0)
+            return;
+
+        metabolizer.MetabolizerTypes = types;
         Dirty(uid, metabolizer);
     }
 }
