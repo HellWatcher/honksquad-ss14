@@ -8,3 +8,9 @@ public sealed partial class SurgeryStepDoAfterEvent : SimpleDoAfterEvent;
 
 [Serializable, NetSerializable]
 public sealed partial class SurgeryCauteryDoAfterEvent : SimpleDoAfterEvent;
+
+[Serializable, NetSerializable]
+public sealed partial class OrganRemovalDoAfterEvent : SimpleDoAfterEvent
+{
+    public NetEntity SelectedOrgan;
+}

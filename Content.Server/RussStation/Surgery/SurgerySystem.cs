@@ -6,6 +6,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
+using Content.Shared.RussStation.Surgery.Effects;
 using Content.Shared.RussStation.Surgery.Systems;
 using Content.Shared.RussStation.Wounds.Systems;
 using Content.Shared.Standing;
@@ -49,6 +50,9 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
     private List<string> _cachedProcedureIds = new();
 
+    // Tracks the tool held when the organ removal menu was opened, keyed by patient.
+    private readonly Dictionary<EntityUid, EntityUid> _pendingOrganRemovalTools = new();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -56,6 +60,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         SubscribeLocalEvent<BodyComponent, AfterInteractUsingEvent>(OnAfterInteract);
         SubscribeLocalEvent<ActiveSurgeryComponent, SurgeryStepDoAfterEvent>(OnStepDoAfter);
         SubscribeLocalEvent<ActiveSurgeryComponent, SurgeryCauteryDoAfterEvent>(OnCauteryDoAfter);
+        SubscribeLocalEvent<ActiveSurgeryComponent, OrganRemovalDoAfterEvent>(OnOrganRemovalDoAfter);
         SubscribeLocalEvent<SurgeryDrapedComponent, ComponentStartup>(OnDrapedStartup);
 
         SubscribeNetworkEvent<SelectSurgeryProcedureEvent>(OnProcedureSelected);
@@ -268,6 +273,14 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         // Tool matches current step
         if (ToolMatchesStep(tool, currentStep))
         {
+            // RemoveOrgan steps show the organ menu immediately; DoAfter runs after the surgeon picks an organ.
+            if (currentStep.GetEffect() is RemoveOrganEffect)
+            {
+                _pendingOrganRemovalTools[patient] = tool;
+                OpenOrganRemovalMenu(surgeon, patient);
+                return;
+            }
+
             StartStepDoAfter(surgeon, patient, tool, currentStep, proto.Difficulty);
             return;
         }
