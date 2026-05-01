@@ -80,8 +80,9 @@ public sealed class HeartlessSystem : EntitySystem
         if (!TryComp<BlindableComponent>(ent, out var blindable))
             return;
 
-        var maxBlindness = (int)BlurryVisionComponent.MaxMagnitude;
-        _blinding.SetMinDamage((ent.Owner, blindable), maxBlindness);
+        // Use MaxDamage so the patient is fully blind (greyscale BlindOverlay), not just blurred.
+        // Removing eyes is a more severe condition than the PermanentBlindness trait.
+        _blinding.SetMinDamage((ent.Owner, blindable), blindable.MaxDamage);
     }
 
     private void OnNoEyesShutdown(Entity<NoEyesComponent> ent, ref ComponentShutdown args)
