@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from tgstation at commit 71a1fee2f13 - autosurgeon states from icons/obj/devices/tool.dmi",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {"name": "autosurgeon"},
+    {"name": "autosurgeon_syndicate"},
+    {"name": "autosurgeon_loaded_overlay"},
+    {"name": "autosurgeon_syndicate_loaded_overlay"}
+  ]
+}
