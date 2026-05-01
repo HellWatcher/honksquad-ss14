@@ -9,7 +9,7 @@
   components:
   - type: Autosurgeon
   - type: Sprite
-    sprite: @RussStation/Objects/Specific/Medical/autosurgeon.rsi
+    sprite: "@RussStation/Objects/Specific/Medical/autosurgeon.rsi"
     layers:
     - state: autosurgeon
 

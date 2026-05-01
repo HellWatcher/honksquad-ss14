@@ -12,7 +12,7 @@
   abstract: true
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
 
 # ============================================================
 # HEART - EmpEffect: CardiacArrest
@@ -25,8 +25,9 @@
   description: A cheap cybernetic heart replacement. Keeps you alive, barely.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: heart-plastic-on
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: heart-plastic-on
   - type: Metabolizer
     maxReagents: 1
   - type: CyberneticOrgan
@@ -41,8 +42,9 @@
   description: A reliable cybernetic heart. Performs identically to a biological one.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: heart-plasma-on
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: heart-plasma-on
   - type: CyberneticOrgan
     tier: Standard
     empEffect: CardiacArrest
@@ -55,8 +57,9 @@
   description: A state-of-the-art cybernetic heart with enhanced circulatory efficiency.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: heart-bluespace-on
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: heart-bluespace-on
   - type: Metabolizer
     maxReagents: 3
   - type: CyberneticOrgan
@@ -76,8 +79,10 @@
   description: Budget cybernetic lungs. You'll breathe, but don't push it.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: lung-plastic-l
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: lung-plastic-l
+    - state: lung-plastic-r
   - type: SolutionContainerManager
     solutions:
       Lung:
@@ -95,8 +100,10 @@
   description: Reliable cybernetic lungs. Breathe easy.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: lung-plasma-l
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: lung-plasma-l
+    - state: lung-plasma-r
   - type: CyberneticOrgan
     tier: Standard
     empEffect: BreathingFailure
@@ -109,8 +116,10 @@
   description: High-end cybernetic lungs with extended oxygen reserves.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: lung-bluespace-l
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: lung-bluespace-l
+    - state: lung-bluespace-r
   - type: SolutionContainerManager
     solutions:
       Lung:
@@ -133,8 +142,9 @@
   description: A bare-bones cybernetic stomach. Digests slowly.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: stomach-plastic
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: stomach-plastic
   - type: SolutionContainerManager
     solutions:
       stomach:
@@ -153,8 +163,9 @@
   description: A dependable cybernetic stomach.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: stomach-plasma
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: stomach-plasma
   - type: CyberneticOrgan
     tier: Standard
     empEffect: None
@@ -167,8 +178,9 @@
   description: A high-efficiency cybernetic stomach that extracts more nutrients from food.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: stomach-bluespace
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: stomach-bluespace
   - type: SolutionContainerManager
     solutions:
       stomach:
@@ -192,8 +204,9 @@
   description: A cheap cybernetic liver. Filters toxins, eventually.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: liver-plastic
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: liver-plastic
   - type: CyberneticOrgan
     tier: Basic
     empEffect: None
@@ -206,8 +219,9 @@
   description: A reliable cybernetic liver.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: liver-plasma
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: liver-plasma
   - type: CyberneticOrgan
     tier: Standard
     empEffect: None
@@ -220,8 +234,9 @@
   description: A high-performance cybernetic liver with enhanced toxin processing.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: liver-bluespace
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: liver-bluespace
   - type: Metabolizer
     maxReagents: 2
     updateIntervalMultiplier: 0.75
@@ -247,7 +262,7 @@
   description: Cheap cybernetic kidneys. They filter blood, slowly.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
     layers:
     - state: kidney-plastic-l
     - state: kidney-plastic-r
@@ -263,7 +278,7 @@
   description: Reliable cybernetic kidneys. A clean biological replacement.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
     layers:
     - state: kidney-plasma-l
     - state: kidney-plasma-r
@@ -279,7 +294,7 @@
   description: High-efficiency cybernetic kidneys. Chems clear faster and trace doses are filtered before they can accumulate.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
     layers:
     - state: kidney-bluespace-l
     - state: kidney-bluespace-r
@@ -296,11 +311,16 @@
   parent: [OrganBaseEyes, OrganCyberneticInternal]
   id: OrganCyberneticEyesBasic
   name: basic cybernetic eyes
-  description: Cheap cybernetic eyes. Functional but ordinary — no better than the ones you were born with.
+  description: Cheap cybernetic eyes. Functional but ordinary -- no better than the ones you were born with.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: eyeball-plastic-l
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: eyeball-plastic-l
+    - state: eyeball-plastic-r
+  - type: VisualOrganMarkings
+    markingData:
+      group: Cybernetic
   - type: CyberneticOrgan
     tier: Basic
     empEffect: Flicker
@@ -313,8 +333,13 @@
   description: Mid-tier cybernetic eyes with enhanced low-light sensors. You can see clearly even in near-total darkness.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: eyeball-plasma-l
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: eyeball-plasma-l
+    - state: eyeball-plasma-r
+  - type: VisualOrganMarkings
+    markingData:
+      group: Cybernetic
   - type: CyberneticOrgan
     tier: Standard
     empEffect: Flicker
@@ -328,8 +353,13 @@
   description: Top-of-the-line cybernetic eyes with hardened flash suppression optics. Immune to flashes.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: eyeball-bluespace-l
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: eyeball-bluespace-l
+    - state: eyeball-bluespace-r
+  - type: VisualOrganMarkings
+    markingData:
+      group: Cybernetic
   - type: CyberneticOrgan
     tier: Advanced
     empEffect: Flicker
@@ -347,8 +377,9 @@
   description: Budget cybernetic ears. They pick up sound, but the analog-to-digital conversion leaves something to be desired. Everything sounds slightly muffled.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: ears-plastic
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: ears-plastic
   - type: CyberneticOrgan
     tier: Basic
     empEffect: Deafen
@@ -362,8 +393,9 @@
   description: Reliable cybernetic ears with normal hearing. A clean replacement for biological ones.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: ears-plasma
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: ears-plasma
   - type: CyberneticOrgan
     tier: Standard
     empEffect: Deafen
@@ -376,8 +408,9 @@
   description: High-end cybernetic ears with active deafness suppression. Flashbangs and explosions won't silence you.
   components:
   - type: Sprite
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
-    state: ears-bluespace
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: ears-bluespace
   - type: CyberneticOrgan
     tier: Advanced
     empEffect: Deafen

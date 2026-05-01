@@ -4,7 +4,7 @@
   id: BasicCybernetics
   name: research-technology-basic-cybernetics
   icon:
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
     state: heart-plastic-on
   discipline: CivilianServices
   tier: 1
@@ -21,7 +21,7 @@
   id: StandardCybernetics
   name: research-technology-standard-cybernetics
   icon:
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
     state: heart-plasma-on
   discipline: CivilianServices
   tier: 2
@@ -38,7 +38,7 @@
   id: AdvancedCybernetics
   name: research-technology-advanced-cybernetics
   icon:
-    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
     state: heart-bluespace-on
   discipline: CivilianServices
   tier: 3
