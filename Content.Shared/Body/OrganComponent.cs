@@ -1,4 +1,6 @@
-using Content.Shared.RussStation.Surgery.Systems; //HONK
+//HONK START - surgery system access
+using Content.Shared.RussStation.Surgery.Systems;
+//HONK END
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 

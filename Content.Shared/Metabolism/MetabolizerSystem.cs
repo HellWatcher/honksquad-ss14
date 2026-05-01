@@ -309,8 +309,8 @@ public sealed class MetabolizerSystem : EntitySystem
                     if (_entityConditions.TryCondition(organ, condition))
                         continue;
                     break;
+                //HONK START - cybernetic liver overdose threshold
                 case ReagentCondition reagentCondition:
-                    //HONK START - cybernetic liver overdose threshold
                     if (TryComp<OverdoseResistanceComponent>(body, out var overdoseResist)
                         && reagentCondition.Min > FixedPoint2.Zero)
                     {
@@ -325,7 +325,7 @@ public sealed class MetabolizerSystem : EntitySystem
                             continue;
                         break;
                     }
-                    //HONK END
+                //HONK END
                     if (_entityConditions.TryCondition(solution, condition))
                         continue;
                     break;

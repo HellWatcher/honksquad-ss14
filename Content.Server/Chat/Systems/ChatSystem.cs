@@ -20,7 +20,9 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Players;
 using Content.Shared.Players.RateLimiting;
 using Content.Shared.Radio;
-using Content.Shared.RussStation.Hearing; //HONK
+//HONK START - deafness system
+using Content.Shared.RussStation.Hearing;
+//HONK END
 using Content.Shared.Station.Components;
 using Content.Shared.Whitelist;
 using Robust.Server.Player;
