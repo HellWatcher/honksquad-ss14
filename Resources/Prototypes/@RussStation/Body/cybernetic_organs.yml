@@ -1,18 +1,18 @@
 # Cybernetic organ replacements - 6 organs x 3 tiers (Basic, Standard, Advanced)
-# All use human organ sprites as placeholders until cybernetic sprites are made.
+# Sprites: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi (Katyes, CC-BY-SA-4.0)
 # Parent organ-specific bases (OrganBaseHeart, etc.) to inherit correct components.
 # GibbableOrgan is inherited but suppressed in C# (GibbableOrganSystem skips CyberneticOrgan entities).
 
 # ============================================================
-# Abstract bases for shared cybernetic sprite path
+# Abstract base for shared cybernetic RSI path
 # ============================================================
 
 - type: entity
   id: OrganCyberneticInternal
   abstract: true
   components:
-    - type: Sprite
-      sprite: Mobs/Species/Human/organs.rsi
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
 
 # ============================================================
 # HEART - EmpEffect: CardiacArrest
@@ -24,12 +24,15 @@
   name: basic cybernetic heart
   description: A cheap cybernetic heart replacement. Keeps you alive, barely.
   components:
-    - type: Metabolizer
-      maxReagents: 1
-    - type: CyberneticOrgan
-      tier: Basic
-      empEffect: CardiacArrest
-      empVulnerability: 1.5
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: heart-plastic-on
+  - type: Metabolizer
+    maxReagents: 1
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: CardiacArrest
+    empVulnerability: 1.5
 
 - type: entity
   parent: [OrganBaseHeart, OrganCyberneticInternal]
@@ -37,10 +40,13 @@
   name: cybernetic heart
   description: A reliable cybernetic heart. Performs identically to a biological one.
   components:
-    - type: CyberneticOrgan
-      tier: Standard
-      empEffect: CardiacArrest
-      empVulnerability: 1.0
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: heart-plasma-on
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: CardiacArrest
+    empVulnerability: 1.0
 
 - type: entity
   parent: [OrganBaseHeart, OrganCyberneticInternal]
@@ -48,13 +54,16 @@
   name: advanced cybernetic heart
   description: A state-of-the-art cybernetic heart with enhanced circulatory efficiency.
   components:
-    - type: Metabolizer
-      maxReagents: 3
-    - type: CyberneticOrgan
-      tier: Advanced
-      empEffect: CardiacArrest
-      empVulnerability: 0.5
-    - type: CyberneticHeart
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: heart-bluespace-on
+  - type: Metabolizer
+    maxReagents: 3
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: CardiacArrest
+    empVulnerability: 0.5
+  - type: CyberneticHeart
 
 # ============================================================
 # LUNGS - EmpEffect: BreathingFailure
@@ -66,15 +75,18 @@
   name: basic cybernetic lungs
   description: Budget cybernetic lungs. You'll breathe, but don't push it.
   components:
-    - type: SolutionContainerManager
-      solutions:
-        Lung:
-          maxVol: 75.0
-          canReact: false
-    - type: CyberneticOrgan
-      tier: Basic
-      empEffect: BreathingFailure
-      empVulnerability: 1.5
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: lung-plastic-l
+  - type: SolutionContainerManager
+    solutions:
+      Lung:
+        maxVol: 75.0
+        canReact: false
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: BreathingFailure
+    empVulnerability: 1.5
 
 - type: entity
   parent: [OrganBaseLungs, OrganCyberneticInternal]
@@ -82,10 +94,13 @@
   name: cybernetic lungs
   description: Reliable cybernetic lungs. Breathe easy.
   components:
-    - type: CyberneticOrgan
-      tier: Standard
-      empEffect: BreathingFailure
-      empVulnerability: 1.0
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: lung-plasma-l
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: BreathingFailure
+    empVulnerability: 1.0
 
 - type: entity
   parent: [OrganBaseLungs, OrganCyberneticInternal]
@@ -93,16 +108,19 @@
   name: advanced cybernetic lungs
   description: High-end cybernetic lungs with extended oxygen reserves.
   components:
-    - type: SolutionContainerManager
-      solutions:
-        Lung:
-          maxVol: 130.0
-          canReact: false
-    - type: CyberneticOrgan
-      tier: Advanced
-      empEffect: BreathingFailure
-      empVulnerability: 0.5
-    - type: CyberneticLungs
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: lung-bluespace-l
+  - type: SolutionContainerManager
+    solutions:
+      Lung:
+        maxVol: 130.0
+        canReact: false
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: BreathingFailure
+    empVulnerability: 0.5
+  - type: CyberneticLungs
 
 # ============================================================
 # STOMACH - EmpEffect: None (non-critical organ)
@@ -114,16 +132,19 @@
   name: basic cybernetic stomach
   description: A bare-bones cybernetic stomach. Digests slowly.
   components:
-    - type: SolutionContainerManager
-      solutions:
-        stomach:
-          maxVol: 35
-    - type: Metabolizer
-      maxReagents: 2
-    - type: CyberneticOrgan
-      tier: Basic
-      empEffect: None
-      empVulnerability: 1.5
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: stomach-plastic
+  - type: SolutionContainerManager
+    solutions:
+      stomach:
+        maxVol: 35
+  - type: Metabolizer
+    maxReagents: 2
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: None
+    empVulnerability: 1.5
 
 - type: entity
   parent: [OrganBaseStomach, OrganCyberneticInternal]
@@ -131,10 +152,13 @@
   name: cybernetic stomach
   description: A dependable cybernetic stomach.
   components:
-    - type: CyberneticOrgan
-      tier: Standard
-      empEffect: None
-      empVulnerability: 1.0
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: stomach-plasma
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: None
+    empVulnerability: 1.0
 
 - type: entity
   parent: [OrganBaseStomach, OrganCyberneticInternal]
@@ -142,17 +166,20 @@
   name: advanced cybernetic stomach
   description: A high-efficiency cybernetic stomach that extracts more nutrients from food.
   components:
-    - type: SolutionContainerManager
-      solutions:
-        stomach:
-          maxVol: 70
-    - type: Metabolizer
-      maxReagents: 4
-    - type: CyberneticOrgan
-      tier: Advanced
-      empEffect: None
-      empVulnerability: 0.5
-    - type: CyberneticStomach
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: stomach-bluespace
+  - type: SolutionContainerManager
+    solutions:
+      stomach:
+        maxVol: 70
+  - type: Metabolizer
+    maxReagents: 4
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: None
+    empVulnerability: 0.5
+  - type: CyberneticStomach
 
 # ============================================================
 # LIVER - EmpEffect: None (non-critical organ)
@@ -164,10 +191,13 @@
   name: basic cybernetic liver
   description: A cheap cybernetic liver. Filters toxins, eventually.
   components:
-    - type: CyberneticOrgan
-      tier: Basic
-      empEffect: None
-      empVulnerability: 1.5
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: liver-plastic
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: None
+    empVulnerability: 1.5
 
 - type: entity
   parent: [OrganBaseLiver, OrganCyberneticInternal]
@@ -175,10 +205,13 @@
   name: cybernetic liver
   description: A reliable cybernetic liver.
   components:
-    - type: CyberneticOrgan
-      tier: Standard
-      empEffect: None
-      empVulnerability: 1.0
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: liver-plasma
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: None
+    empVulnerability: 1.0
 
 - type: entity
   parent: [OrganBaseLiver, OrganCyberneticInternal]
@@ -186,14 +219,17 @@
   name: advanced cybernetic liver
   description: A high-performance cybernetic liver with enhanced toxin processing.
   components:
-    - type: Metabolizer
-      maxReagents: 2
-      updateIntervalMultiplier: 0.75
-    - type: CyberneticOrgan
-      tier: Advanced
-      empEffect: None
-      empVulnerability: 0.5
-    - type: CyberneticLiver
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: liver-bluespace
+  - type: Metabolizer
+    maxReagents: 2
+    updateIntervalMultiplier: 0.75
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: None
+    empVulnerability: 0.5
+  - type: CyberneticLiver
 
 # ============================================================
 # EYES - EmpEffect: Flicker
@@ -205,10 +241,13 @@
   name: basic cybernetic eyes
   description: Cheap cybernetic eyes. They work, mostly.
   components:
-    - type: CyberneticOrgan
-      tier: Basic
-      empEffect: Flicker
-      empVulnerability: 1.5
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: eyeball-plastic-l
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: Flicker
+    empVulnerability: 1.5
 
 - type: entity
   parent: [OrganBaseEyes, OrganCyberneticInternal]
@@ -216,10 +255,13 @@
   name: cybernetic eyes
   description: Standard cybernetic eyes with clear vision.
   components:
-    - type: CyberneticOrgan
-      tier: Standard
-      empEffect: Flicker
-      empVulnerability: 1.0
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: eyeball-plasma-l
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: Flicker
+    empVulnerability: 1.0
 
 - type: entity
   parent: [OrganBaseEyes, OrganCyberneticInternal]
@@ -227,11 +269,14 @@
   name: advanced cybernetic eyes
   description: Top-of-the-line cybernetic eyes with enhanced visual acuity.
   components:
-    - type: CyberneticOrgan
-      tier: Advanced
-      empEffect: Flicker
-      empVulnerability: 0.5
-    - type: CyberneticEyes
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: eyeball-bluespace-l
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: Flicker
+    empVulnerability: 0.5
+  - type: CyberneticEyes
 
 # ============================================================
 # EARS - EmpEffect: Deafen
@@ -243,10 +288,13 @@
   name: basic cybernetic ears
   description: Budget cybernetic ears. You'll hear, sort of.
   components:
-    - type: CyberneticOrgan
-      tier: Basic
-      empEffect: Deafen
-      empVulnerability: 1.5
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: ears-plastic
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: Deafen
+    empVulnerability: 1.5
 
 - type: entity
   parent: [OrganBaseEars, OrganCyberneticInternal]
@@ -254,10 +302,13 @@
   name: cybernetic ears
   description: Reliable cybernetic ears with normal hearing.
   components:
-    - type: CyberneticOrgan
-      tier: Standard
-      empEffect: Deafen
-      empVulnerability: 1.0
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: ears-plasma
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: Deafen
+    empVulnerability: 1.0
 
 - type: entity
   parent: [OrganBaseEars, OrganCyberneticInternal]
@@ -265,8 +316,11 @@
   name: advanced cybernetic ears
   description: Advanced cybernetic ears with built-in deafness resistance.
   components:
-    - type: CyberneticOrgan
-      tier: Advanced
-      empEffect: Deafen
-      empVulnerability: 0.5
-    - type: CyberneticEars
+  - type: Sprite
+    sprite: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi
+    state: ears-bluespace
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: Deafen
+    empVulnerability: 0.5
+  - type: CyberneticEars
