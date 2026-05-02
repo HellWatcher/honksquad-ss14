@@ -1,0 +1,10 @@
+# Markings group for cybernetic organ visual markings (e.g. cybernetic eyes).
+# onlyGroupWhitelisted: false so existing Human-whitelisted eye markings still work.
+
+- type: markingsGroup
+  id: Cybernetic
+  onlyGroupWhitelisted: false
+  limits:
+    enum.HumanoidVisualLayers.Eyes:
+      limit: 1
+      required: false

@@ -134,3 +134,72 @@
     empEffect: BreathingFailure
     empVulnerability: 0.5
   - type: CyberneticLungs
+
+# ============================================================
+# EYES - EmpEffect: Flicker
+# ============================================================
+
+- type: entity
+  parent: [OrganBaseEyes, OrganCyberneticInternal]
+  id: OrganCyberneticEyesBasic
+  name: basic cybernetic eyes
+  description: Cheap cybernetic eyes. Functional but ordinary -- no better than the ones you were born with.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: eyeball-plastic-l
+    - state: eyeball-plastic-r
+  - type: VisualOrganMarkings
+    markingData:
+      group: Cybernetic
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: Flicker
+    empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBaseEyes, OrganCyberneticInternal]
+  id: OrganCyberneticEyesStandard
+  name: cybernetic eyes
+  description: Reliable mid-tier cybernetic eyes. A clean replacement for biological ones.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: eyeball-plasma-l
+    - state: eyeball-plasma-r
+  - type: VisualOrganMarkings
+    markingData:
+      group: Cybernetic
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: Flicker
+    empVulnerability: 1.0
+  - type: CyberneticEyesStandard
+
+- type: entity
+  parent: [OrganBaseEyes, OrganCyberneticInternal]
+  id: OrganCyberneticEyesAdvanced
+  name: advanced cybernetic eyes
+  description: Top-of-the-line cybernetic eyes with hardened flash suppression optics and an integrated flashlight. Immune to flashes; toggle the built-in light to see in dark areas.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: eyeball-bluespace-l
+    - state: eyeball-bluespace-r
+  - type: VisualOrganMarkings
+    markingData:
+      group: Cybernetic
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: Flicker
+    empVulnerability: 0.5
+  - type: CyberneticEyes
+  - type: PointLight
+    enabled: false
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
+    radius: 6
+  - type: UnpoweredFlashlight
