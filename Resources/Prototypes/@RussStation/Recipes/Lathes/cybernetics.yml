@@ -132,3 +132,22 @@
   parent: BaseCyberneticRecipeAdvanced
   id: CyberneticStomachAdvanced
   result: OrganCyberneticStomachAdvanced
+
+# ============================================================
+# Liver
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticLiverBasic
+  result: OrganCyberneticLiverBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticLiverStandard
+  result: OrganCyberneticLiverStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticLiverAdvanced
+  result: OrganCyberneticLiverAdvanced

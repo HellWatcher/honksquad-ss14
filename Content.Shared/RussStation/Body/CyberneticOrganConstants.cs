@@ -15,4 +15,8 @@ public static class CyberneticOrganConstants
 
     /// <summary>Default hunger-decay multiplier on <see cref="CyberneticStomachComponent"/>.</summary>
     public const float DefaultStomachDecayMultiplier = 0.5f;
+
+    /// <summary>Default overdose-threshold multiplier on the cybernetic liver and the
+    /// derived <see cref="OverdoseResistanceComponent"/> applied to its host body.</summary>
+    public const float DefaultOverdoseThresholdMultiplier = 1.5f;
 }
