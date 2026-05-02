@@ -10,3 +10,57 @@
   components:
   - type: Sprite
     sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+
+# ============================================================
+# HEART - EmpEffect: CardiacArrest
+# ============================================================
+
+- type: entity
+  parent: [OrganBaseHeart, OrganCyberneticInternal]
+  id: OrganCyberneticHeartBasic
+  name: basic cybernetic heart
+  description: A cheap cybernetic heart replacement. Keeps you alive, barely.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: heart-plastic-on
+  - type: Metabolizer
+    maxReagents: 1
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: CardiacArrest
+    empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBaseHeart, OrganCyberneticInternal]
+  id: OrganCyberneticHeartStandard
+  name: cybernetic heart
+  description: A reliable cybernetic heart. Performs identically to a biological one.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: heart-plasma-on
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: CardiacArrest
+    empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBaseHeart, OrganCyberneticInternal]
+  id: OrganCyberneticHeartAdvanced
+  name: advanced cybernetic heart
+  description: A state-of-the-art cybernetic heart with enhanced circulatory efficiency.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: heart-bluespace-on
+  - type: Metabolizer
+    maxReagents: 3
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: CardiacArrest
+    empVulnerability: 0.5
+  - type: CyberneticHeart
