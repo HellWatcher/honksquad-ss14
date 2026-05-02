@@ -2,7 +2,7 @@
   id: Freerunning
   name: trait-freerunning-name
   description: trait-freerunning-desc
-  category: Body
+  category: Movement
   cost: 8
   tags:
     - climbing

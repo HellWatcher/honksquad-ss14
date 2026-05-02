@@ -116,7 +116,7 @@
   name: trait-painnumbness-name
   description: trait-painnumbness-desc
   # HONK START - issue #655: bring free trait into the points budget
-  category: Body
+  category: Senses
   cost: -1
   # HONK END
   # HONK START - fork tag-exclusion system: SelfAware is the functional opposite
@@ -149,7 +149,7 @@
   description: trait-impaired-mobility-desc
   traitGear: OffsetCane
   # HONK START - issue #655: bring free trait into the points budget
-  category: Body
+  category: Movement
   cost: -2
   # HONK END
   # HONK START - fork tag-exclusion system: blocks Skittish's sprint speed-up
