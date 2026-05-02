@@ -86,10 +86,8 @@
       allowedEmotes: ["Squeak"]
     - type: ReplacementAccent
       accents: [queekish]
-    # Wagging disabled until the tail_wagging.png frames are fixed (see issue
-    # for tail wag animation). The bake we ship has frames out of order and
-    # too few to read as a smooth wag, so the action is more annoying than
-    # useful. Re-enable with `- type: Wagging\n  action: ActionToggleWaggingSkaven`.
+    - type: Wagging
+      action: ActionToggleWaggingSkaven
     - type: Bloodstream
       bloodReferenceSolution:
         reagents:
