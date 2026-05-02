@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Drawn by Katyes for honksquad-ss14.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "base"
+    },
+    {
+      "name": "base-equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "base-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "base-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "band"
+    },
+    {
+      "name": "band-equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "band-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "band-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "multi-base"
+    },
+    {
+      "name": "multi-band"
+    },
+    {
+      "name": "detail"
+    },
+    {
+      "name": "detail-equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "detail-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "detail-inhand-right",
+      "directions": 4
+    }
+  ]
+}

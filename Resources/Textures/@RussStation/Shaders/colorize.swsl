@@ -1,0 +1,32 @@
+// Implements Aseprite's "Color" blend mode (HSL_COLOR):
+// takes the layer color: (VtxModulate) chrominance and maps it to the sprite's luma.
+// backdrop = sprite pixel, src = VtxModulate (layer color:)
+
+highp float aseLuma(highp vec3 c) {
+    return 0.3 * c.r + 0.59 * c.g + 0.11 * c.b;
+}
+
+highp vec3 clipColor(highp vec3 c) {
+    highp float l = aseLuma(c);
+    highp float n = min(c.r, min(c.g, c.b));
+    highp float x = max(c.r, max(c.g, c.b));
+    if (n < 0.0) {
+        c = l + (c - vec3(l)) * (l / (l - n));
+    }
+    if (x > 1.0) {
+        c = l + (c - vec3(l)) * ((1.0 - l) / (x - l));
+    }
+    return c;
+}
+
+highp vec3 setLum(highp vec3 c, highp float l) {
+    highp float d = l - aseLuma(c);
+    return clipColor(c + vec3(d));
+}
+
+void fragment() {
+    highp vec4 sprite = zTexture(UV);
+    highp float l = aseLuma(sprite.rgb);
+    highp vec3 result = setLum(VtxModulate.rgb, l);
+    COLOR = vec4(result, sprite.a * VtxModulate.a);
+}

@@ -1,0 +1,39 @@
+- type: shader
+  id: Colorize
+  kind: source
+  path: "/Textures/@RussStation/Shaders/colorize.swsl"
+
+- type: shader
+  id: SpriteMultiply
+  kind: source
+  path: "/Textures/@RussStation/Shaders/spritemultiply.swsl"
+
+- type: shader
+  id: TankBlendNone
+  kind: canvas
+  blend_mode: none
+
+- type: shader
+  id: TankBlendNormal
+  kind: canvas
+  blend_mode: normal
+
+- type: shader
+  id: TankBlendMix
+  kind: canvas
+  blend_mode: mix
+
+- type: shader
+  id: TankBlendAdd
+  kind: canvas
+  blend_mode: add
+
+- type: shader
+  id: TankBlendSubtract
+  kind: canvas
+  blend_mode: subtract
+
+- type: shader
+  id: TankBlendMultiply
+  kind: canvas
+  blend_mode: multiply
