@@ -1,0 +1,13 @@
+# Fork metabolism stages for the #679 organ chain refactor.
+# Detoxification: liver toxin scrubbing stage (Metabolites -> Waste).
+# Excretion: kidney sub-tolerance filter + slow blood drain stage.
+# Neither stage has backing systems yet; prototypes are prewired so
+# organ YAML can reference them once #679 implementation lands.
+
+- type: metabolismStage
+  id: Detoxification
+  name: metabolism-stage-detoxification
+
+- type: metabolismStage
+  id: Excretion
+  name: metabolism-stage-excretion
