@@ -15,9 +15,14 @@
   id: LightweightDrunk
   name: trait-lightweight-name
   description: trait-lightweight-desc
-  # HONK START - issue #655: bring free trait into the points budget
+  # HONK START - issue #655: bring free trait into the points budget,
+  # plus alcohol tag-exclusion so it mutexes with AlcoholTolerance.
   category: Diet
   cost: -1
+  tags:
+    - alcohol
+  excludedTags:
+    - alcohol
   # HONK END
   components:
   - type: LightweightDrunk
