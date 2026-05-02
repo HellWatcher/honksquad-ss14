@@ -122,14 +122,13 @@
     Toxin: 1
 
 # HONK START - issue #645: chemistry can now synthesise species blood from a shared
-# plasma intermediate. Plasma reaction is electrolyser-gated so it does not re-form
+# plasma intermediate. Plasma reaction needs heat (hotplate) so it does not re-form
 # inside centrifuge breakdowns, patient bloodstreams, or food prep where the same
-# constituents naturally co-occur. Downstream (plasma + element) reactions are
-# transitively gated because the only path to plasma is the electrolyser.
+# constituents naturally co-occur at room temperature. Downstream (plasma + element)
+# reactions are transitively gated because the only path to plasma is heat-gated.
 - type: reaction
   id: BloodPlasma
-  requiredMixerCategories:
-  - Electrolysis
+  minTemp: 370
   reactants:
     Water:
       amount: 3
@@ -205,11 +204,14 @@
     Slime: 7
 
 - type: reaction
+  # Phosphorus rather than Sugar so leftover Sugar from the BloodPlasma reaction
+  # doesn't auto-cascade Plasma -> Sap inside the same beaker. Phosphorus is also
+  # the plant-fertilizer thematic match (NPK).
   id: SapSynth
   reactants:
     BloodPlasma:
       amount: 6
-    Sugar:
+    Phosphorus:
       amount: 1
   products:
     Sap: 7
