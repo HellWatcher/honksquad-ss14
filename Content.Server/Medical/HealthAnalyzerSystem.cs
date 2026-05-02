@@ -19,9 +19,10 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 using Content.Server.Body.Systems;
-//HONK START
+//HONK START - Wounds + Cardiac arrest
 using Content.Shared.RussStation.Wounds;
 using Content.Shared.RussStation.Wounds.Systems;
+using Content.Shared.RussStation.Body;
 //HONK END
 
 namespace Content.Server.Medical;
@@ -263,6 +264,11 @@ public sealed partial class HealthAnalyzerSystem : EntitySystem
             wounds = _woundDisplay.GetWoundDisplayInfo(entity, woundComp, bloodstream);
         //HONK END
 
+        // HONK START - Cardiac arrest alert
+        // TODO: Move cardiac arrest detection under wound checking once that system is implemented (#323)
+        var cardiacArrest = HasComp<ActiveCardiacArrestComponent>(entity);
+        // HONK END
+
         return new HealthAnalyzerUiState(
             GetNetEntity(entity),
             bodyTemperature,
@@ -271,7 +277,8 @@ public sealed partial class HealthAnalyzerSystem : EntitySystem
             bleeding,
             //HONK START - add trailing comma + wounds arg
             unrevivable,
-            wounds
+            wounds,
+            cardiacArrest
             //HONK END
         );
     }
