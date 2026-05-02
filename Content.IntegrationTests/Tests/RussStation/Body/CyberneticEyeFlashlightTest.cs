@@ -29,7 +29,6 @@ public sealed class CyberneticEyeFlashlightTest
     mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
     radius: 6
-    netsync: false
   - type: UnpoweredFlashlight
 
 - type: entity
