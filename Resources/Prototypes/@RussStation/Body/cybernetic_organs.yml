@@ -1,0 +1,12 @@
+# Cybernetic organ replacements - shared base. Specific organ prototypes (Heart/Lungs/Eyes/etc.)
+# land alongside their per-organ feature PRs and inherit OrganCyberneticInternal for the shared
+# RSI path. GibbableOrgan is inherited but suppressed in C# (GibbableOrganSystem skips
+# CyberneticOrgan entities).
+# Sprites: @RussStation/Objects/Cybernetics/cybernetic_organs.rsi (Katyes, CC-BY-SA-4.0)
+
+- type: entity
+  id: OrganCyberneticInternal
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
