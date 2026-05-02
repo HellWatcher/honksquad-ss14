@@ -14,3 +14,7 @@ escalated-grab-resist-success-others = {CAPITALIZE(THE($target))} breaks free!
 
 # Grab broken by damage
 escalated-grab-broken-by-damage = Your grip loosens from the impact!
+
+# Partial drop (down one stage, still grabbed)
+escalated-grab-loosened-puller = Your grip on {THE($target)} loosens.
+escalated-grab-loosened-others = {CAPITALIZE(THE($puller))}'s grip on {THE($target)} loosens.

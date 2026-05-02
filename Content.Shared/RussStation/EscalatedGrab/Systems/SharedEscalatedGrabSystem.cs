@@ -159,7 +159,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         if (total < component.DamageDropThreshold)
             return;
 
-        _popup.PopupClient(
+        _popup.PopupEntity(
             Loc.GetString("escalated-grab-broken-by-damage"),
             uid, uid, PopupType.MediumCaution);
 
@@ -467,5 +467,13 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
         var newStage = state.Stage - 1;
         SetStage(puller, state, newStage);
+
+        if (target.IsValid())
+        {
+            _popup.PopupPredicted(
+                Loc.GetString("escalated-grab-loosened-puller", ("target", target)),
+                Loc.GetString("escalated-grab-loosened-others", ("puller", puller), ("target", target)),
+                target, puller);
+        }
     }
 }
