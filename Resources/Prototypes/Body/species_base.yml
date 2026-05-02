@@ -195,6 +195,9 @@
   - type: Wound
   # HONK END
   - type: Blindable
+  # HONK START - Deafness system
+  - type: Deafable
+  # HONK END
   - type: Temperature
     currentTemperature: 310.15
     specificHeat: 42
