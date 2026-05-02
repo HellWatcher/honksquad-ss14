@@ -4,8 +4,8 @@ honk-options-highlight-sound-enabled-tooltip = Plays a short ping when one of yo
 honk-options-highlight-sound-cooldown = Highlight sound cooldown
 honk-options-highlight-sound-volume = Highlight sound volume
 
-honk-options-header-popup-log = Popup chat tab
-honk-options-popup-log-italic = Italicize popup entries
-honk-options-popup-log-font-size = Popup entry font size
-honk-options-popup-log-color = Popup entry color
+honk-options-header-popup-log = Popups
+honk-options-popup-log-italic = Italicize
+honk-options-popup-log-font-size = Font size
+honk-options-popup-log-color = Color
 honk-options-popup-log-color-example = popup text
