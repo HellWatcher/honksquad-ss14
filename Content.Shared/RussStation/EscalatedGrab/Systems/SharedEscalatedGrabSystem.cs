@@ -3,6 +3,7 @@ using Content.Shared.Buckle.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.DoAfter;
 using Content.Shared.Movement.Events;
+using Content.Shared.Mobs;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Events;
 using Content.Shared.Movement.Pulling.Systems;
@@ -47,6 +48,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         SubscribeLocalEvent<GrabStateComponent, DamageChangedEvent>(OnPullerDamaged);
         SubscribeLocalEvent<PullerComponent, DamageChangedEvent>(OnVanillaPullerDamaged);
         SubscribeLocalEvent<PullableComponent, BeforeGettingStrippedEvent>(OnTargetBeingStripped);
+        SubscribeLocalEvent<PullableComponent, MobStateChangedEvent>(OnTargetMobStateChanged);
 
         // Portal interactions: force-break the pull before the portal teleports either side.
         // Upstream's SharedPortalSystem already calls TryStopPull on portal collision, but the
@@ -196,6 +198,25 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
             return;
 
         args.Multiplier *= GrabStateComponent.StripTimeModifiers[(int) state.Stage];
+    }
+
+    private void OnTargetMobStateChanged(EntityUid uid, PullableComponent component, MobStateChangedEvent args)
+    {
+        // Choke ticks shouldn't keep going on a corpse; release the grab when the target dies.
+        // Crit alone doesn't release - you can choke an unconscious target until they die.
+        if (args.NewMobState != MobState.Dead)
+            return;
+
+        if (component.Puller is not { } puller)
+            return;
+
+        if (!TryComp<GrabStateComponent>(puller, out var state) || state.Target != uid)
+            return;
+
+        ClearEscalation(puller);
+
+        if (TryComp<PullableComponent>(uid, out var pullable) && pullable.Puller == puller)
+            _pulling.TryStopPull(uid, pullable);
     }
 
     private void OnAttemptStopPulling(EntityUid uid, PullableComponent component, ref AttemptStopPullingEvent args)

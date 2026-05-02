@@ -49,7 +49,10 @@ public sealed class PullMapGuardSystem : EntitySystem
     {
         base.Update(frameTime);
 
-        // Pass 1 - active pulls: tear down any pull whose endpoints now sit on different maps.
+        // Active pulls: tear down any pull whose endpoints now sit on different maps.
+        // We deliberately do NOT scan all JointComponents here - that approach feedback-loops
+        // with state replication when the server has a stuck cross-map joint and floods the
+        // log with ClearJoints calls every tick.
         var pullerQuery = EntityQueryEnumerator<PullerComponent>();
         while (pullerQuery.MoveNext(out var uid, out var puller))
         {
@@ -64,36 +67,6 @@ public sealed class PullMapGuardSystem : EntitySystem
 
             _joints.ClearJoints(pulled);
             _joints.ClearJoints(uid);
-        }
-
-        // Pass 2 - orphaned joints: a joint can outlive its pull state when it was deferred
-        // into SharedJointSystem.AddedJoints during state replication (transform was Nullspace
-        // when the joint state arrived) and the matching pull was broken before the deferred
-        // joint got drained. The next physics tick processes AddedJoints via InitJoint, which
-        // asserts cross-map. We can't enumerate AddedJoints from outside the engine, but
-        // ClearJoints does sweep it for the targeted entity, so walk every JointComponent and
-        // clear ones whose own committed joints already point cross-map. The same call will
-        // drop any same-pair entries waiting in AddedJoints.
-        var jointQuery = EntityQueryEnumerator<JointComponent>();
-        while (jointQuery.MoveNext(out var uid, out var jointComp))
-        {
-            if (jointComp.GetJoints.Count == 0)
-                continue;
-
-            var myMap = _transform.GetMapId(uid);
-            var diverged = false;
-            foreach (var joint in jointComp.GetJoints.Values)
-            {
-                var other = joint.BodyAUid == uid ? joint.BodyBUid : joint.BodyAUid;
-                if (_transform.GetMapId(other) != myMap)
-                {
-                    diverged = true;
-                    break;
-                }
-            }
-
-            if (diverged)
-                _joints.ClearJoints(uid);
         }
     }
 
