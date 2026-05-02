@@ -34,7 +34,7 @@ public sealed class PopupLogSystem : EntitySystem
     private const int MaxFontSize = 16;
     private const string FallbackColor = "#9999aa";
 
-    private bool _italic;
+    private string _style = "normal";
     private int _fontSize;
     private string _color = FallbackColor;
 
@@ -49,11 +49,11 @@ public sealed class PopupLogSystem : EntitySystem
         // popups, and fork categorized calls all land here exactly once.
         SubscribeLocalEvent<CategorizedPopupRaisedEvent>(OnCategorizedPopup);
 
-        _italic = _config.GetCVar(CCVars.PopupLogItalic);
+        _style = SanitizeStyle(_config.GetCVar(CCVars.PopupLogStyle));
         _fontSize = ClampFontSize(_config.GetCVar(CCVars.PopupLogFontSize));
         _color = SanitizeColor(_config.GetCVar(CCVars.PopupLogColor));
 
-        _config.OnValueChanged(CCVars.PopupLogItalic, v => _italic = v);
+        _config.OnValueChanged(CCVars.PopupLogStyle, v => _style = SanitizeStyle(v));
         _config.OnValueChanged(CCVars.PopupLogFontSize, v => _fontSize = ClampFontSize(v));
         _config.OnValueChanged(CCVars.PopupLogColor, v => _color = SanitizeColor(v));
     }
@@ -66,6 +66,14 @@ public sealed class PopupLogSystem : EntitySystem
     }
 
     private static int ClampFontSize(int v) => Math.Clamp(v, MinFontSize, MaxFontSize);
+
+    private static string SanitizeStyle(string raw) => raw switch
+    {
+        "italic" => "italic",
+        "bold" => "bold",
+        "bold-italic" => "bold-italic",
+        _ => "normal",
+    };
 
     private static string SanitizeColor(string raw)
     {
@@ -105,11 +113,13 @@ public sealed class PopupLogSystem : EntitySystem
             : escaped;
 
         // Apply user-tunable formatting last so all three knobs compose: color wraps the line,
-        // italic wraps the colored line, font size wraps everything. Default values reproduce
-        // the pre-cvar look (dim grey prefix, no italic, default size).
+        // style (italic/bold) wraps the colored line, font size wraps everything. Default values
+        // reproduce the pre-cvar look (dim grey prefix, no style, default size).
         var wrapped = $"[color={_color}]{body}[/color]";
-        if (_italic)
+        if (_style == "italic" || _style == "bold-italic")
             wrapped = $"[italic]{wrapped}[/italic]";
+        if (_style == "bold" || _style == "bold-italic")
+            wrapped = $"[bold]{wrapped}[/bold]";
         wrapped = $"[font size={_fontSize}]{wrapped}[/font]";
 
         var mirror = new ChatMessage(

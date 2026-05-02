@@ -61,10 +61,11 @@ public sealed partial class CCVars
         CVarDef.Create("honk.chat.highlight_sound_cooldown", 2f, CVar.CLIENTONLY | CVar.ARCHIVE);
 
     /// <summary>
-    /// When true, popup chat log entries render in italics so they read distinct from speech.
+    /// Text style applied to popup chat log entries. One of <c>normal</c>, <c>italic</c>,
+    /// <c>bold</c>, <c>bold-italic</c>. Unknown values fall back to <c>normal</c>.
     /// </summary>
-    public static readonly CVarDef<bool> PopupLogItalic =
-        CVarDef.Create("honk.chat.popup_log_italic", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+    public static readonly CVarDef<string> PopupLogStyle =
+        CVarDef.Create("honk.chat.popup_log_style", "normal", CVar.CLIENTONLY | CVar.ARCHIVE);
 
     /// <summary>
     /// Font size for popup chat log entries. Clamped to a sane range at apply-time.

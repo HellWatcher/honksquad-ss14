@@ -30,7 +30,8 @@
                                  Title="{Loc 'honk-options-highlight-sound-volume'}"/>
                 <Label Text="{Loc 'honk-options-header-popup-log'}"
                        StyleClasses="LabelKeyText"/>
-                <CheckBox Name="HonkPopupLogItalicCheckBox" Text="{Loc 'honk-options-popup-log-italic'}"/>
+                <ui:OptionDropDown Name="HonkPopupLogStyleDropDown"
+                                   Title="{Loc 'honk-options-popup-log-style'}"/>
                 <ui:OptionSlider Name="HonkPopupLogFontSizeSlider"
                                  Title="{Loc 'honk-options-popup-log-font-size'}"/>
                 <ui:OptionColorSlider Name="HonkPopupLogColorSlider"
