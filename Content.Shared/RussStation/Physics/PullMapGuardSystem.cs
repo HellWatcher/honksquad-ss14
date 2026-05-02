@@ -9,6 +9,13 @@
 // state rollback) before it lands in JointComponent.Joints, in which
 // case the JointComponent-only path misses the transition (e.g. a
 // pullable walking into a portal while the joint is mid-init).
+//
+// Per-tick sweep: the EntParentChanged handlers can miss the case where
+// one body's transform arrives from server state on a later tick than
+// the joint state (the engine defers such joints into AddedJoints, and
+// our parent-changed handler ran before the second transform landed).
+// The sweep runs UpdatesBefore SharedJointSystem.Update so divergent
+// pulls are torn down before InitJoint trips its cross-map assert.
 using System.Collections.Generic;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
@@ -31,9 +38,35 @@ public sealed class PullMapGuardSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
+        UpdatesBefore.Add(typeof(SharedJointSystem));
         SubscribeLocalEvent<JointComponent, EntParentChangedMessage>(OnJointParentChanged);
         SubscribeLocalEvent<PullerComponent, EntParentChangedMessage>(OnPullerParentChanged);
         SubscribeLocalEvent<PullableComponent, EntParentChangedMessage>(OnPullableParentChanged);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var query = EntityQueryEnumerator<PullerComponent>();
+        while (query.MoveNext(out var uid, out var puller))
+        {
+            if (puller.Pulling is not { } pulled)
+                continue;
+
+            if (!MapsDiverged(uid, pulled))
+                continue;
+
+            // Tear down both the high-level pull state and the joints themselves.
+            // ClearJoints sweeps SharedJointSystem.AddedJoints too, which is the
+            // path that the EntParentChanged handlers can't reach for joints that
+            // arrived via server state replication mid-teleport.
+            if (TryComp<PullableComponent>(pulled, out var pullable))
+                _pulling.TryStopPull(pulled, pullable);
+
+            _joints.ClearJoints(pulled);
+            _joints.ClearJoints(uid);
+        }
     }
 
     private void OnJointParentChanged(Entity<JointComponent> ent, ref EntParentChangedMessage args)
