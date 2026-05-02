@@ -1,7 +1,6 @@
 using Content.Server.Body.Systems;
 using Content.Shared.Body;
 using Content.Shared.Chemistry.Components;
-using Content.Shared.Flash;
 using Content.Shared.Mobs;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
@@ -32,8 +31,9 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         // Heart: auto-inject epinephrine on crit
         SubscribeLocalEvent<BodyComponent, MobStateChangedEvent>(OnMobStateChanged);
 
-        // Eyes: flash protection
-        SubscribeLocalEvent<BodyComponent, FlashAttemptEvent>(OnFlashAttempt);
+        // Eyes: flash protection lives in SharedCyberneticEyesSystem so client prediction agrees
+        // with the server (otherwise the wearer's screen flashes and then snaps back when the
+        // cancellation arrives from the server).
 
         // Lungs: advanced lungs are a marker tier; toxic-gas filtering deferred to a follow-up PR.
 
@@ -45,8 +45,8 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotInsertedEvent>(OnBasicEarsInserted);
         SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotRemovedEvent>(OnBasicEarsRemoved);
 
-        // Advanced eyes: flash immunity (handled via OnFlashAttempt scan).
-        // The flashlight-style body light + toggle action live in SharedCyberneticEyeLightSystem.
+        // Advanced eyes: flash immunity lives in SharedCyberneticEyesSystem; the flashlight-style
+        // body light + toggle action live in CyberneticEyeFlashlightSystem.
 
         // Advanced ears: deafness resistance handled in shared DeafableSystem
 
@@ -94,25 +94,6 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         _popup.PopupEntity(
             Loc.GetString("cybernetic-heart-inject"),
             body, body, PopupType.MediumCaution);
-    }
-
-    // ================================================================
-    // Eyes — flash protection (Advanced tier)
-    // ================================================================
-
-    private void OnFlashAttempt(EntityUid uid, BodyComponent body, ref FlashAttemptEvent args)
-    {
-        if (args.Cancelled || body.Organs == null)
-            return;
-
-        foreach (var organ in body.Organs.ContainedEntities)
-        {
-            if (HasComp<CyberneticEyesComponent>(organ))
-            {
-                args.Cancelled = true;
-                return;
-            }
-        }
     }
 
     // ================================================================
