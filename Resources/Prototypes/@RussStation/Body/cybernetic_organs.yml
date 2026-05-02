@@ -316,3 +316,56 @@
     empEffect: None
     empVulnerability: 0.5
   - type: CyberneticStomach
+
+# ============================================================
+# LIVER - EmpEffect: None (non-critical organ)
+# ============================================================
+
+- type: entity
+  parent: [OrganBaseLiver, OrganCyberneticInternal]
+  id: OrganCyberneticLiverBasic
+  name: basic cybernetic liver
+  description: A cheap cybernetic liver. Filters toxins, eventually.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: liver-plastic
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: None
+    empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBaseLiver, OrganCyberneticInternal]
+  id: OrganCyberneticLiverStandard
+  name: cybernetic liver
+  description: A reliable cybernetic liver.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: liver-plasma
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: None
+    empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBaseLiver, OrganCyberneticInternal]
+  id: OrganCyberneticLiverAdvanced
+  name: advanced cybernetic liver
+  description: A high-performance cybernetic liver with enhanced toxin processing.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: liver-bluespace
+  - type: Metabolizer
+    maxReagents: 2
+    updateIntervalMultiplier: 0.75
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: None
+    empVulnerability: 0.5
+  - type: CyberneticLiver

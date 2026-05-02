@@ -37,6 +37,10 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         // Stomach: nutrient efficiency (reduced hunger decay)
         SubscribeLocalEvent<CyberneticStomachComponent, OrganGotInsertedEvent>(OnStomachInserted);
         SubscribeLocalEvent<CyberneticStomachComponent, OrganGotRemovedEvent>(OnStomachRemoved);
+
+        // Liver: overdose resistance (applied to body on insert/remove)
+        SubscribeLocalEvent<CyberneticLiverComponent, OrganGotInsertedEvent>(OnLiverInserted);
+        SubscribeLocalEvent<CyberneticLiverComponent, OrganGotRemovedEvent>(OnLiverRemoved);
     }
 
     // ================================================================
@@ -123,5 +127,31 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
         _hunger.SetBaseDecayRate(args.Target, stomach.OriginalDecayRate.Value, hunger);
         stomach.OriginalDecayRate = null;
+    }
+
+    // ================================================================
+    // Liver — overdose resistance
+    // ================================================================
+
+    private void OnLiverInserted(EntityUid uid, CyberneticLiverComponent liver, ref OrganGotInsertedEvent args)
+    {
+        var resistance = EnsureComp<OverdoseResistanceComponent>(args.Target);
+        resistance.ThresholdMultiplier = liver.OverdoseThresholdMultiplier;
+        Dirty(args.Target, resistance);
+    }
+
+    private void OnLiverRemoved(EntityUid uid, CyberneticLiverComponent liver, ref OrganGotRemovedEvent args)
+    {
+        // Check if any other cybernetic liver remains in the body
+        if (TryComp<BodyComponent>(args.Target, out var body) && body.Organs != null)
+        {
+            foreach (var organ in body.Organs.ContainedEntities)
+            {
+                if (organ != uid && HasComp<CyberneticLiverComponent>(organ))
+                    return;
+            }
+        }
+
+        RemComp<OverdoseResistanceComponent>(args.Target);
     }
 }
