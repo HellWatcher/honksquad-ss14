@@ -208,6 +208,12 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
     private void OnPullStopped(EntityUid uid, GrabStateComponent component, PullStoppedMessage args)
     {
+        // Mutual grab: if A and B are grabbing each other, ending A's pull on B raises
+        // PullStoppedMessage on both A and B. B has its own GrabStateComponent for its
+        // grab on A, which is unrelated; only clear when this message is for our pull.
+        if (args.PullerUid != uid || args.PulledUid != component.Target)
+            return;
+
         ClearEscalation(uid);
     }
 
