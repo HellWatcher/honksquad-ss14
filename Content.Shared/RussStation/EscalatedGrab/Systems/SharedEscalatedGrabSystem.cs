@@ -45,6 +45,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         SubscribeLocalEvent<GrabStateComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshPullerSpeed);
         SubscribeLocalEvent<PullableComponent, GrabResistDoAfterEvent>(OnResistDoAfterFinished);
         SubscribeLocalEvent<GrabStateComponent, DamageChangedEvent>(OnPullerDamaged);
+        SubscribeLocalEvent<PullerComponent, DamageChangedEvent>(OnVanillaPullerDamaged);
         SubscribeLocalEvent<PullableComponent, BeforeGettingStrippedEvent>(OnTargetBeingStripped);
 
         // Portal interactions: force-break the pull before the portal teleports either side.
@@ -164,6 +165,26 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
             uid, uid, PopupType.MediumCaution);
 
         DropStage(uid, component);
+    }
+
+    private void OnVanillaPullerDamaged(EntityUid uid, PullerComponent component, DamageChangedEvent args)
+    {
+        // Escalated grabs are handled by OnPullerDamaged; this only covers vanilla pulls so a
+        // pull on its own can also be broken by a solid hit.
+        if (HasComp<GrabStateComponent>(uid))
+            return;
+
+        if (!args.DamageIncreased || args.DamageDelta == null)
+            return;
+
+        if (component.Pulling is not { } pulled)
+            return;
+
+        if (args.DamageDelta.GetTotal() < GrabStateComponent.DefaultDamageDropThreshold)
+            return;
+
+        if (TryComp<PullableComponent>(pulled, out var pullable))
+            _pulling.TryStopPull(pulled, pullable);
     }
 
     private void OnTargetBeingStripped(EntityUid uid, PullableComponent component, BeforeGettingStrippedEvent args)

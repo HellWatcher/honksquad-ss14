@@ -60,7 +60,13 @@ public sealed partial class GrabStateComponent : Component
     /// Minimum single-hit damage to drop one grab stage.
     /// </summary>
     [DataField]
-    public FixedPoint2 DamageDropThreshold = FixedPoint2.New(15);
+    public FixedPoint2 DamageDropThreshold = FixedPoint2.New(DefaultDamageDropThreshold);
+
+    /// <summary>
+    /// Default value for <see cref="DamageDropThreshold"/>. Also used by the vanilla-pull
+    /// damage break in <c>SharedEscalatedGrabSystem</c> for entities with no GrabState.
+    /// </summary>
+    public const int DefaultDamageDropThreshold = 15;
 
     /// <summary>
     /// Do-after durations for each escalation step (index = target stage).
