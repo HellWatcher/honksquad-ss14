@@ -1,10 +1,10 @@
 name: "Weekly Changelog Update"
 
 on:
+  workflow_dispatch:
   schedule:
     # Saturdays 22:00 UTC = 6pm EDT (UTC-4). Shifts to 5pm during EST (UTC-5).
     - cron: '0 22 * * 6'
-  workflow_dispatch:
 
 permissions:
   contents: write
