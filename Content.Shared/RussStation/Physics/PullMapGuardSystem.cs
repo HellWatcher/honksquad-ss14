@@ -49,8 +49,9 @@ public sealed class PullMapGuardSystem : EntitySystem
     {
         base.Update(frameTime);
 
-        var query = EntityQueryEnumerator<PullerComponent>();
-        while (query.MoveNext(out var uid, out var puller))
+        // Pass 1 - active pulls: tear down any pull whose endpoints now sit on different maps.
+        var pullerQuery = EntityQueryEnumerator<PullerComponent>();
+        while (pullerQuery.MoveNext(out var uid, out var puller))
         {
             if (puller.Pulling is not { } pulled)
                 continue;
@@ -58,15 +59,41 @@ public sealed class PullMapGuardSystem : EntitySystem
             if (!MapsDiverged(uid, pulled))
                 continue;
 
-            // Tear down both the high-level pull state and the joints themselves.
-            // ClearJoints sweeps SharedJointSystem.AddedJoints too, which is the
-            // path that the EntParentChanged handlers can't reach for joints that
-            // arrived via server state replication mid-teleport.
             if (TryComp<PullableComponent>(pulled, out var pullable))
                 _pulling.TryStopPull(pulled, pullable);
 
             _joints.ClearJoints(pulled);
             _joints.ClearJoints(uid);
+        }
+
+        // Pass 2 - orphaned joints: a joint can outlive its pull state when it was deferred
+        // into SharedJointSystem.AddedJoints during state replication (transform was Nullspace
+        // when the joint state arrived) and the matching pull was broken before the deferred
+        // joint got drained. The next physics tick processes AddedJoints via InitJoint, which
+        // asserts cross-map. We can't enumerate AddedJoints from outside the engine, but
+        // ClearJoints does sweep it for the targeted entity, so walk every JointComponent and
+        // clear ones whose own committed joints already point cross-map. The same call will
+        // drop any same-pair entries waiting in AddedJoints.
+        var jointQuery = EntityQueryEnumerator<JointComponent>();
+        while (jointQuery.MoveNext(out var uid, out var jointComp))
+        {
+            if (jointComp.GetJoints.Count == 0)
+                continue;
+
+            var myMap = _transform.GetMapId(uid);
+            var diverged = false;
+            foreach (var joint in jointComp.GetJoints.Values)
+            {
+                var other = joint.BodyAUid == uid ? joint.BodyBUid : joint.BodyAUid;
+                if (_transform.GetMapId(other) != myMap)
+                {
+                    diverged = true;
+                    break;
+                }
+            }
+
+            if (diverged)
+                _joints.ClearJoints(uid);
         }
     }
 
@@ -103,6 +130,8 @@ public sealed class PullMapGuardSystem : EntitySystem
 
         if (TryComp<PullableComponent>(pullable, out var pullableComp))
             _pulling.TryStopPull(pullable, pullableComp);
+
+        DrainPendingJoints(ent.Owner, pullable);
     }
 
     private void OnPullableParentChanged(Entity<PullableComponent> ent, ref EntParentChangedMessage args)
@@ -114,6 +143,21 @@ public sealed class PullMapGuardSystem : EntitySystem
             return;
 
         _pulling.TryStopPull(ent.Owner, ent.Comp);
+        DrainPendingJoints(ent.Owner, puller);
+    }
+
+    /// <summary>
+    /// Removes both endpoints' joints, including any deferred ones in <c>SharedJointSystem.AddedJoints</c>.
+    /// Plain <c>RemoveJoint(uid, id)</c> only touches <c>JointComponent.Joints</c>, so a joint that arrived
+    /// via state replication while one transform was Nullspace can outlive the pull state that birthed it
+    /// and still reach <c>InitJoint</c> the next tick. <c>ClearJoints</c> drains both sets.
+    /// </summary>
+    private void DrainPendingJoints(EntityUid a, EntityUid b)
+    {
+        if (HasComp<JointComponent>(a))
+            _joints.ClearJoints(a);
+        if (HasComp<JointComponent>(b))
+            _joints.ClearJoints(b);
     }
 
     private bool MapsDiverged(EntityUid a, EntityUid b)
