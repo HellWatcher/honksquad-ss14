@@ -21,6 +21,9 @@
   - BioGenEZNutrient
   - BioGenRobustHarvest
   - BioGenDiseaseSwab
+  # HONK START - #647 followup: mutagen ungated, emag pack drained.
+  - BioGenUnstableMutagen
+  # HONK END
 
 - type: latheRecipePack
   id: BioGenMaterialsStatic
@@ -30,7 +33,10 @@
   - BioGenPaper
   - BioGenPaperRolling1
 
+# HONK START - #647 followup: BioGenEmagStatic is empty now that mutagen moved
+# into the regular ingredients pack. Pack stays so the lathe entity's
+# emagStaticPacks reference doesn't break, ready for future emag-only recipes.
 - type: latheRecipePack
   id: BioGenEmagStatic
-  recipes:
-  - BioGenUnstableMutagen
+  recipes: []
+# HONK END
