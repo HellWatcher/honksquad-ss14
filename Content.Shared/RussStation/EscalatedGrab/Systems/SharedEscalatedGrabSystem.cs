@@ -309,7 +309,8 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
             _ => null,
         };
 
-        if (localeKey != null)
+        // Only announce the stage popup on escalation; dropping a stage has its own messaging.
+        if (localeKey != null && newStage > oldStage)
         {
             _popup.PopupPredicted(
                 Loc.GetString($"{localeKey}-puller", ("target", target)),
@@ -467,13 +468,5 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
         var newStage = state.Stage - 1;
         SetStage(puller, state, newStage);
-
-        if (target.IsValid())
-        {
-            _popup.PopupPredicted(
-                Loc.GetString("escalated-grab-resist-success-target"),
-                Loc.GetString("escalated-grab-resist-success-others", ("target", target)),
-                target, target);
-        }
     }
 }
