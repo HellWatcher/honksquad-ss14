@@ -2,7 +2,7 @@
   id: LightStep
   name: trait-lightstep-name
   description: trait-lightstep-desc
-  category: Social
+  category: Movement
   cost: 4
   tags:
     - footsteps

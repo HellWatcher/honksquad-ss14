@@ -2,7 +2,7 @@
   id: SoftSpoken
   name: trait-softspoken-name
   description: trait-softspoken-desc
-  category: Social
+  category: SpeechTraits
   cost: -2
   tags:
     - speech

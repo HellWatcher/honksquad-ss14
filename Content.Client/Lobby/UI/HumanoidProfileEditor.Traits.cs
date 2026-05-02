@@ -267,10 +267,13 @@ public sealed partial class HumanoidProfileEditor
 
             // HONK END
 
-            //HONK START - 2-column grid for trait selectors, routed to the per-category column
+            //HONK START - 2-column grid for trait selectors, routed to the per-category column.
+            // Single-entry categories collapse to one column so the lone trait doesn't render
+            // beside an empty grid cell that visibly takes up half the column.
+            var nonNullCount = selectors.Count(s => s != null);
             var traitGrid = new GridContainer
             {
-                Columns = 2,
+                Columns = nonNullCount <= 1 ? 1 : 2,
                 HorizontalExpand = true,
             };
 

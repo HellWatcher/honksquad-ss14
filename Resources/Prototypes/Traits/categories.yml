@@ -1,11 +1,7 @@
-- type: traitCategory
-  id: Disabilities
-  name: trait-category-disabilities
-
+# HONK START - #655: Disabilities and Quirks drained as their entries moved into
+# priced domain categories (Senses, Body, SpeechTraits, Social, Diet, Movement).
+# Removing both empty prototypes so the editor doesn't reserve column slots.
 - type: traitCategory
   id: SpeechTraits
   name: trait-category-speech
-
-- type: traitCategory
-  id: Quirks
-  name: trait-category-quirks
+# HONK END

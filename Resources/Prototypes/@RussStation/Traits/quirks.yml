@@ -2,7 +2,7 @@
   id: Pushover
   name: trait-pushover-name
   description: trait-pushover-desc
-  category: Quirks
+  category: Body
   cost: -8
   components:
     - type: Pushover
