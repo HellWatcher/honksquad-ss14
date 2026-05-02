@@ -28,7 +28,7 @@
   name: trait-snoring-name
   description: trait-snoring-desc
   # HONK START - issue #655: bring free trait into the points budget
-  category: Quirks
+  category: SpeechTraits
   cost: -1
   # HONK END
   components:
