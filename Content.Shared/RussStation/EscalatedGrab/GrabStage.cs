@@ -15,7 +15,17 @@ public enum GrabStage : byte
     Pull = 0,
 
     /// <summary>
-    /// Aggressive grab. First escalation from a standard pull.
+    /// Target locked to puller, cannot move independently. Can still act.
     /// </summary>
-    Aggressive = 1,
+    Grab = 1,
+
+    /// <summary>
+    /// Target locked and cannot act (use/interact blocked). Enables easier stripping.
+    /// </summary>
+    Aggressive = 2,
+
+    /// <summary>
+    /// Target takes periodic stamina damage. Near-helpless.
+    /// </summary>
+    Choke = 3,
 }

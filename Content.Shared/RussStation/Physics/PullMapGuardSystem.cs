@@ -9,6 +9,13 @@
 // state rollback) before it lands in JointComponent.Joints, in which
 // case the JointComponent-only path misses the transition (e.g. a
 // pullable walking into a portal while the joint is mid-init).
+//
+// Per-tick sweep: the EntParentChanged handlers can miss the case where
+// one body's transform arrives from server state on a later tick than
+// the joint state (the engine defers such joints into AddedJoints, and
+// our parent-changed handler ran before the second transform landed).
+// The sweep runs UpdatesBefore SharedJointSystem.Update so divergent
+// pulls are torn down before InitJoint trips its cross-map assert.
 using System.Collections.Generic;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
@@ -31,9 +38,36 @@ public sealed class PullMapGuardSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
+        UpdatesBefore.Add(typeof(SharedJointSystem));
         SubscribeLocalEvent<JointComponent, EntParentChangedMessage>(OnJointParentChanged);
         SubscribeLocalEvent<PullerComponent, EntParentChangedMessage>(OnPullerParentChanged);
         SubscribeLocalEvent<PullableComponent, EntParentChangedMessage>(OnPullableParentChanged);
+
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        // Active pulls: tear down any pull whose endpoints now sit on different maps.
+        // We deliberately do NOT scan all JointComponents here - that approach feedback-loops
+        // with state replication when the server has a stuck cross-map joint and floods the
+        // log with ClearJoints calls every tick.
+        var pullerQuery = EntityQueryEnumerator<PullerComponent>();
+        while (pullerQuery.MoveNext(out var uid, out var puller))
+        {
+            if (puller.Pulling is not { } pulled)
+                continue;
+
+            if (!MapsDiverged(uid, pulled))
+                continue;
+
+            if (TryComp<PullableComponent>(pulled, out var pullable))
+                _pulling.TryStopPull(pulled, pullable);
+
+            _joints.ClearJoints(pulled);
+            _joints.ClearJoints(uid);
+        }
     }
 
     private void OnJointParentChanged(Entity<JointComponent> ent, ref EntParentChangedMessage args)
@@ -69,6 +103,8 @@ public sealed class PullMapGuardSystem : EntitySystem
 
         if (TryComp<PullableComponent>(pullable, out var pullableComp))
             _pulling.TryStopPull(pullable, pullableComp);
+
+        DrainPendingJoints(ent.Owner, pullable);
     }
 
     private void OnPullableParentChanged(Entity<PullableComponent> ent, ref EntParentChangedMessage args)
@@ -80,12 +116,32 @@ public sealed class PullMapGuardSystem : EntitySystem
             return;
 
         _pulling.TryStopPull(ent.Owner, ent.Comp);
+        DrainPendingJoints(ent.Owner, puller);
+    }
+
+    /// <summary>
+    /// Removes both endpoints' joints, including any deferred ones in <c>SharedJointSystem.AddedJoints</c>.
+    /// Plain <c>RemoveJoint(uid, id)</c> only touches <c>JointComponent.Joints</c>, so a joint that arrived
+    /// via state replication while one transform was Nullspace can outlive the pull state that birthed it
+    /// and still reach <c>InitJoint</c> the next tick. <c>ClearJoints</c> drains both sets.
+    /// </summary>
+    private void DrainPendingJoints(EntityUid a, EntityUid b)
+    {
+        if (HasComp<JointComponent>(a))
+            _joints.ClearJoints(a);
+        if (HasComp<JointComponent>(b))
+            _joints.ClearJoints(b);
     }
 
     private bool MapsDiverged(EntityUid a, EntityUid b)
     {
+        // Treat Nullspace-vs-real as divergent too. The engine's deferred-joint path
+        // (JointComponent state arriving while one body's transform is still Nullspace)
+        // queues the joint into AddedJoints, where the next physics tick's InitJoint
+        // asserts on the cross-map comparison once the transform lands. We need to
+        // tear down before that happens, even if one side is currently Nullspace.
         var mapA = _transform.GetMapId(a);
         var mapB = _transform.GetMapId(b);
-        return mapA != mapB && mapA != MapId.Nullspace && mapB != MapId.Nullspace;
+        return mapA != mapB;
     }
 }
