@@ -195,9 +195,6 @@ public sealed partial class SurgerySystem
         if (args.User is { } surgeon)
         {
             _popup.PopupEntity(
-                Loc.GetString("surgery-step-remove-organ", ("user", surgeon), ("target", patient)),
-                patient, surgeon);
-            _popup.PopupEntity(
                 Loc.GetString("surgery-organ-removed", ("organ", MetaData(organ.Value).EntityName)),
                 patient, surgeon);
         }
