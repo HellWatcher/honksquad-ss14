@@ -1,0 +1,4 @@
+- type: latheRecipe
+  parent: BaseHydroToolRecipe
+  id: HandheldPlantAnalyzer
+  result: HandheldPlantAnalyzer

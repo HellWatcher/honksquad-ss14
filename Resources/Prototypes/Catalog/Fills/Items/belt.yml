@@ -156,6 +156,9 @@
         - id: HydroponicsToolSpade
         - id: HydroponicsToolClippers
         - id: ChemistryBottleRobustHarvest
+# HONK START
+        - id: HandheldPlantAnalyzer
+# HONK END
 
 - type: entity
   id: ClothingBeltSheathFilled

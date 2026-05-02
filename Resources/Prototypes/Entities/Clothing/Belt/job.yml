@@ -301,6 +301,11 @@
       - Syringe
       - CigPack
       - Dropper
+# HONK START
+      # No corresponding ItemMapper layer below: the plant analyzer is intentionally
+      # not represented as an overlay sprite on the belt.
+      - DiscretePlantAnalyzer
+# HONK END
       components:
       - Seed
       - Smokable

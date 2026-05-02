@@ -161,6 +161,9 @@
     - id: Dropper
     - id: HandLabeler
     - id: ClothingUniformOveralls
+# HONK START
+    - id: HandheldPlantAnalyzer
+# HONK END
     - id: ClothingHeadHatTrucker
       prob: 0.1
     - id: PlushieLizardJobBotanist
