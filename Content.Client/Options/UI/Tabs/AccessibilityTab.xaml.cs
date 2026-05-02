@@ -55,6 +55,22 @@ public sealed partial class AccessibilityTab : Control
             -20f, 0f, 1f,
             (_, value) => $"{value:F0} dB"));
 
+        Control.AddOptionDropDown(CCVars.PopupLogStyle, HonkPopupLogStyleDropDown, new List<OptionDropDownCVar<string>.ValueOption>
+        {
+            new("normal", Loc.GetString("honk-options-popup-log-style-normal")),
+            new("italic", Loc.GetString("honk-options-popup-log-style-italic")),
+            new("bold", Loc.GetString("honk-options-popup-log-style-bold")),
+            new("bold-italic", Loc.GetString("honk-options-popup-log-style-bold-italic")),
+        });
+        Control.AddOption(new OptionSliderIntCVar(
+            Control,
+            IoCManager.Resolve<IConfigurationManager>(),
+            CCVars.PopupLogFontSize,
+            HonkPopupLogFontSizeSlider,
+            8, 16,
+            (_, value) => $"{value}px"));
+        Control.AddOptionColorSlider(CCVars.PopupLogColor, HonkPopupLogColorSlider);
+
         Control.AddOptionCheckBox(CCVars.HoverTooltipEnabled, HoverTooltipEnabledCheckBox);
         Control.AddOption(new OptionSliderFloatCVar(
             Control,

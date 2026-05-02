@@ -1,10 +1,13 @@
 using Content.Client.UserInterface.Systems.Chat;
+using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.Examine;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Popups;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
+using Robust.Shared.Configuration;
+using Robust.Shared.Maths;
 using Robust.Shared.Utility;
 
 namespace Content.Client.RussStation.Popups;
@@ -25,6 +28,15 @@ public sealed class PopupLogSystem : EntitySystem
     [Dependency] private readonly IUserInterfaceManager _ui = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
     [Dependency] private readonly ExamineSystemShared _examine = default!;
+    [Dependency] private readonly IConfigurationManager _config = default!;
+
+    private const int MinFontSize = 8;
+    private const int MaxFontSize = 16;
+    private const string FallbackColor = "#9999aa";
+
+    private string _style = "normal";
+    private int _fontSize;
+    private string _color = FallbackColor;
 
     private ChatUIController? _chat;
     private ChatUIController Chat => _chat ??= _ui.GetUIController<ChatUIController>();
@@ -36,6 +48,39 @@ public sealed class PopupLogSystem : EntitySystem
         // PopupMessage / PopupCursorInternal (HONK blocks), so network-sent popups, client-predicted
         // popups, and fork categorized calls all land here exactly once.
         SubscribeLocalEvent<CategorizedPopupRaisedEvent>(OnCategorizedPopup);
+
+        _style = SanitizeStyle(_config.GetCVar(CCVars.PopupLogStyle));
+        _fontSize = ClampFontSize(_config.GetCVar(CCVars.PopupLogFontSize));
+        _color = SanitizeColor(_config.GetCVar(CCVars.PopupLogColor));
+
+        _config.OnValueChanged(CCVars.PopupLogStyle, v => _style = SanitizeStyle(v));
+        _config.OnValueChanged(CCVars.PopupLogFontSize, v => _fontSize = ClampFontSize(v));
+        _config.OnValueChanged(CCVars.PopupLogColor, v => _color = SanitizeColor(v));
+    }
+
+    public override void Shutdown()
+    {
+        // OnValueChanged handlers are weak via the lambdas, but the controller cleans them up
+        // anyway when the system is destroyed; nothing to do here yet beyond the base call.
+        base.Shutdown();
+    }
+
+    private static int ClampFontSize(int v) => Math.Clamp(v, MinFontSize, MaxFontSize);
+
+    private static string SanitizeStyle(string raw) => raw switch
+    {
+        "italic" => "italic",
+        "bold" => "bold",
+        "bold-italic" => "bold-italic",
+        _ => "normal",
+    };
+
+    private static string SanitizeColor(string raw)
+    {
+        // Trip-wire against malformed user input: an unparseable color would corrupt the rich
+        // text. Fall back to the original dim grey if Color.TryFromHex rejects it.
+        var trimmed = raw.Trim();
+        return Color.TryFromHex(trimmed) is null ? FallbackColor : trimmed;
     }
 
     private void OnCategorizedPopup(CategorizedPopupRaisedEvent ev)
@@ -63,9 +108,19 @@ public sealed class PopupLogSystem : EntitySystem
             return;
 
         var escaped = FormattedMessage.EscapeText(message);
-        var wrapped = category is { } cat
-            ? $"[color=#9999aa]\\[{cat}\\][/color] {escaped}"
+        var body = category is { } cat
+            ? $"\\[{cat}\\] {escaped}"
             : escaped;
+
+        // Apply user-tunable formatting last so all three knobs compose: color wraps the line,
+        // style (italic/bold) wraps the colored line, font size wraps everything. Default values
+        // reproduce the pre-cvar look (dim grey prefix, no style, default size).
+        var wrapped = $"[color={_color}]{body}[/color]";
+        if (_style == "italic" || _style == "bold-italic")
+            wrapped = $"[italic]{wrapped}[/italic]";
+        if (_style == "bold" || _style == "bold-italic")
+            wrapped = $"[bold]{wrapped}[/bold]";
+        wrapped = $"[font size={_fontSize}]{wrapped}[/font]";
 
         var mirror = new ChatMessage(
             ChatChannel.Popup,
