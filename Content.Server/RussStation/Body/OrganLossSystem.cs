@@ -4,6 +4,7 @@ using Content.Shared.Body.Components;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Eye.Blinding.Systems;
 using Content.Shared.RussStation.Body;
+using Content.Shared.RussStation.Hearing.Systems;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server.RussStation.Body;
@@ -19,9 +20,11 @@ public sealed class OrganLossSystem : EntitySystem
 {
     [Dependency] private readonly RespiratorSystem _respirator = default!;
     [Dependency] private readonly BlindableSystem _blinding = default!;
+    [Dependency] private readonly DeafableSystem _deafable = default!;
 
     private static readonly ProtoId<OrganCategoryPrototype> HeartCategory = "Heart";
     private static readonly ProtoId<OrganCategoryPrototype> EyesCategory = "Eyes";
+    private static readonly ProtoId<OrganCategoryPrototype> EarsCategory = "Ears";
 
     /// <summary>Saturation drained per second while the body has no heart.</summary>
     private const float NoHeartDrainPerSecond = 3f;
@@ -50,6 +53,8 @@ public sealed class OrganLossSystem : EntitySystem
             EnsureComp<NoHeartComponent>(body);
         else if (organ.Category == EyesCategory && !HasAnyOrganOfCategory(body.Comp, EyesCategory))
             EnsureComp<NoEyesComponent>(body);
+        else if (organ.Category == EarsCategory)
+            _deafable.UpdateIsDeaf(body.Owner);
     }
 
     private void OnOrganInserted(Entity<BodyComponent> body, ref OrganInsertedIntoEvent args)
@@ -61,6 +66,8 @@ public sealed class OrganLossSystem : EntitySystem
             RemComp<NoHeartComponent>(body);
         else if (organ.Category == EyesCategory)
             RemComp<NoEyesComponent>(body);
+        else if (organ.Category == EarsCategory)
+            _deafable.UpdateIsDeaf(body.Owner);
     }
 
     public override void Update(float frameTime)

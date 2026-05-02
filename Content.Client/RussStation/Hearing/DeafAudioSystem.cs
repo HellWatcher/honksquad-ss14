@@ -12,10 +12,9 @@ using Robust.Shared.Player;
 namespace Content.Client.RussStation.Hearing;
 
 /// <summary>
-/// Applies audio occlusion to muffle sounds for the local player while their
-/// <see cref="DeafableComponent.IsDeaf"/> is set. Partial-occlusion sources like
-/// hearing impairment from cybernetic ears live in their own systems and stack on
-/// top via the same <see cref="AudioSystem.GetOcclusionOverride"/> delegate hook.
+/// Applies audio occlusion effects based on the local player's hearing state:
+/// - Fully deaf: high occlusion (8f) via DeafableComponent.IsDeaf
+/// - Impaired (basic cybernetic ears): partial occlusion (3.5f) via HearingImpairmentComponent
 /// </summary>
 public sealed class DeafAudioSystem : EntitySystem
 {
@@ -27,6 +26,8 @@ public sealed class DeafAudioSystem : EntitySystem
     private const float DeafOcclusion = 8f;
 
     private bool _isDeaf;
+    private bool _isImpaired;
+    private float _impairedOcclusion;
     private float _maxRayLength;
 
     public override void Initialize()
@@ -39,8 +40,15 @@ public sealed class DeafAudioSystem : EntitySystem
         SubscribeLocalEvent<DeafableComponent, ComponentRemove>(OnDeafRemove);
         SubscribeLocalEvent<DeafableComponent, DeafnessChangedEvent>(OnDeafnessChanged);
 
+        SubscribeLocalEvent<HearingImpairmentComponent, ComponentStartup>(OnImpairmentStartup);
+        SubscribeLocalEvent<HearingImpairmentComponent, LocalPlayerAttachedEvent>(OnImpairmentAttached);
+        SubscribeLocalEvent<HearingImpairmentComponent, LocalPlayerDetachedEvent>(OnImpairmentDetached);
+        SubscribeLocalEvent<HearingImpairmentComponent, ComponentRemove>(OnImpairmentRemove);
+
         Subs.CVar(_cfg, Robust.Shared.CVars.AudioRaycastLength, v => _maxRayLength = v, true);
     }
+
+    // ── Deafness handlers ────────────────────────────────────────────────────
 
     private void OnDeafStartup(EntityUid uid, DeafableComponent comp, ComponentStartup args)
     {
@@ -70,22 +78,68 @@ public sealed class DeafAudioSystem : EntitySystem
             SetDeaf(args.Deaf);
     }
 
+    // ── Impairment handlers ───────────────────────────────────────────────────
+
+    private void OnImpairmentStartup(EntityUid uid, HearingImpairmentComponent comp, ComponentStartup args)
+    {
+        if (uid == _player.LocalEntity)
+            SetImpaired(true, comp.OcclusionBonus);
+    }
+
+    private void OnImpairmentAttached(EntityUid uid, HearingImpairmentComponent comp, LocalPlayerAttachedEvent args)
+    {
+        SetImpaired(true, comp.OcclusionBonus);
+    }
+
+    private void OnImpairmentDetached(EntityUid uid, HearingImpairmentComponent comp, LocalPlayerDetachedEvent args)
+    {
+        SetImpaired(false, 0f);
+    }
+
+    private void OnImpairmentRemove(EntityUid uid, HearingImpairmentComponent comp, ComponentRemove args)
+    {
+        if (uid == _player.LocalEntity)
+            SetImpaired(false, 0f);
+    }
+
+    // ── State management ──────────────────────────────────────────────────────
+
     private void SetDeaf(bool deaf)
     {
         if (_isDeaf == deaf)
             return;
 
+        var wasActive = _isDeaf || _isImpaired;
         _isDeaf = deaf;
+        var isActive = _isDeaf || _isImpaired;
 
-        if (_isDeaf)
+        UpdateOcclusionDelegate(wasActive, isActive);
+    }
+
+    private void SetImpaired(bool impaired, float occlusion)
+    {
+        if (_isImpaired == impaired)
+            return;
+
+        var wasActive = _isDeaf || _isImpaired;
+        _isImpaired = impaired;
+        _impairedOcclusion = occlusion;
+        var isActive = _isDeaf || _isImpaired;
+
+        UpdateOcclusionDelegate(wasActive, isActive);
+    }
+
+    private void UpdateOcclusionDelegate(bool wasActive, bool isActive)
+    {
+        if (isActive && !wasActive)
             _audio.GetOcclusionOverride += OcclusionOverride;
-        else
+        else if (!isActive && wasActive)
             _audio.GetOcclusionOverride -= OcclusionOverride;
     }
 
-    // Mirrors the engine's baseline occlusion raycast, then adds the deaf bonus on top so
-    // wall muffling still stacks. Keep in sync with
-    // RobustToolbox/Robust.Client/Audio/AudioSystem.cs GetOcclusion during rebases.
+    // Mirrors the engine's baseline occlusion raycast, then adds the appropriate
+    // bonus on top so wall muffling still stacks.
+    // Keep in sync with RobustToolbox/Robust.Client/Audio/AudioSystem.cs GetOcclusion during rebases.
     private float OcclusionOverride(MapCoordinates listener, Vector2 delta, float distance, EntityUid? ignoredEnt)
     {
         float occlusion = 0;
@@ -97,6 +151,8 @@ public sealed class DeafAudioSystem : EntitySystem
             occlusion = _physics.IntersectRayPenetration(listener.MapId, ray, rayLength, ignoredEnt);
         }
 
-        return occlusion + DeafOcclusion;
+        // Full deafness takes priority over impairment
+        var bonus = _isDeaf ? DeafOcclusion : _impairedOcclusion;
+        return occlusion + bonus;
     }
 }

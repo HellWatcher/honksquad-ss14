@@ -203,3 +203,54 @@
     autoRot: true
     radius: 6
   - type: UnpoweredFlashlight
+
+# ============================================================
+# EARS - EmpEffect: Deafen
+# ============================================================
+
+- type: entity
+  parent: [OrganBaseEars, OrganCyberneticInternal]
+  id: OrganCyberneticEarsBasic
+  name: basic cybernetic ears
+  description: Budget cybernetic ears. They pick up sound, but the analog-to-digital conversion leaves something to be desired. Everything sounds slightly muffled.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: ears-plastic
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: Deafen
+    empVulnerability: 1.5
+  - type: CyberneticEarsBasic
+
+- type: entity
+  parent: [OrganBaseEars, OrganCyberneticInternal]
+  id: OrganCyberneticEarsStandard
+  name: cybernetic ears
+  description: Reliable cybernetic ears with normal hearing. A clean replacement for biological ones.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: ears-plasma
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: Deafen
+    empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBaseEars, OrganCyberneticInternal]
+  id: OrganCyberneticEarsAdvanced
+  name: advanced cybernetic ears
+  description: High-end cybernetic ears with active deafness suppression. Flashbangs and explosions won't silence you.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: ears-bluespace
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: Deafen
+    empVulnerability: 0.5
+  - type: CyberneticEars
