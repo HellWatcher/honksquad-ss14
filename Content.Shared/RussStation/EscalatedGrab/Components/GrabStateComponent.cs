@@ -29,13 +29,13 @@ public sealed partial class GrabStateComponent : Component
     /// <summary>
     /// Active escalation do-after, if any.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public DoAfterId? EscalateDoAfter;
 
     /// <summary>
     /// Active resist do-after on the target, if any.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public DoAfterId? ResistDoAfter;
 
     /// <summary>
@@ -48,13 +48,13 @@ public sealed partial class GrabStateComponent : Component
     /// Seconds between choke damage ticks.
     /// </summary>
     [DataField]
-    public float ChokeTickInterval = 0.5f;
+    public float ChokeTickInterval = EscalatedGrabConstants.ChokeTickInterval;
 
     /// <summary>
     /// Stamina damage dealt per choke tick.
     /// </summary>
     [DataField]
-    public float ChokeStaminaPerTick = 5f;
+    public float ChokeStaminaPerTick = EscalatedGrabConstants.ChokeStaminaPerTick;
 
     /// <summary>
     /// Minimum single-hit damage to drop one grab stage.
