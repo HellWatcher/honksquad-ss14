@@ -9,4 +9,7 @@ public static class CyberneticOrganConstants
 {
     /// <summary>Default EMP vulnerability multiplier on <see cref="CyberneticOrganComponent"/>.</summary>
     public const float DefaultEmpVulnerability = 1.0f;
+
+    /// <summary>Cooldown between auto-injections for <see cref="CyberneticHeartComponent"/>.</summary>
+    public static readonly TimeSpan HeartEpinephrineCooldown = TimeSpan.FromSeconds(120);
 }

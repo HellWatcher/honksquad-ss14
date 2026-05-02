@@ -1,0 +1,58 @@
+# Cybernetic organ lathe recipes. Per-organ recipes are added by their respective PRs.
+# Printed at the exosuit fabricator (Robotics category).
+
+# ============================================================
+# Abstract bases per tier
+# ============================================================
+
+- type: latheRecipe
+  abstract: true
+  id: BaseCyberneticRecipeBasic
+  categories:
+    - Robotics
+  completetime: 4
+  materials:
+    Steel: 500
+    Plastic: 300
+
+- type: latheRecipe
+  abstract: true
+  id: BaseCyberneticRecipeStandard
+  categories:
+    - Robotics
+  completetime: 6
+  materials:
+    Steel: 500
+    Plastic: 300
+    Gold: 200
+
+- type: latheRecipe
+  abstract: true
+  id: BaseCyberneticRecipeAdvanced
+  categories:
+    - Robotics
+  completetime: 8
+  materials:
+    Steel: 500
+    Plasma: 300
+    Gold: 300
+    Silver: 200
+
+# ============================================================
+# Heart
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticHeartBasic
+  result: OrganCyberneticHeartBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticHeartStandard
+  result: OrganCyberneticHeartStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticHeartAdvanced
+  result: OrganCyberneticHeartAdvanced
