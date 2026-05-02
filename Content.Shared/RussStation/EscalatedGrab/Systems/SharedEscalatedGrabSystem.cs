@@ -1,15 +1,19 @@
 using Content.Shared.ActionBlocker;
+using Content.Shared.Buckle.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.DoAfter;
 using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Events;
+using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Pulling.Events;
 using Content.Shared.RussStation.EscalatedGrab.Components;
 using Content.Shared.RussStation.EscalatedGrab.Events;
 using Content.Shared.Strip.Components;
+using Content.Shared.Teleportation.Components;
+using Robust.Shared.Physics.Events;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.EscalatedGrab.Systems;
@@ -26,6 +30,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedStaminaSystem _stamina = default!;
+    [Dependency] private readonly PullingSystem _pulling = default!;
 
     public override void Initialize()
     {
@@ -41,6 +46,50 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         SubscribeLocalEvent<PullableComponent, GrabResistDoAfterEvent>(OnResistDoAfterFinished);
         SubscribeLocalEvent<GrabStateComponent, DamageChangedEvent>(OnPullerDamaged);
         SubscribeLocalEvent<PullableComponent, BeforeGettingStrippedEvent>(OnTargetBeingStripped);
+
+        // Portal interactions: force-break the pull before the portal teleports either side.
+        // Upstream's SharedPortalSystem already calls TryStopPull on portal collision, but the
+        // joint can survive a re-prediction race when escalated grab keeps the pair tethered
+        // longer than vanilla pulls. We pre-empt the teleport here so the joint is fully torn
+        // down before SetCoordinates runs and the next physics tick tries to re-init it cross-map.
+        SubscribeLocalEvent<GrabStateComponent, StartCollideEvent>(OnPullerStartCollide);
+        SubscribeLocalEvent<PullableComponent, StartCollideEvent>(OnPullableStartCollide);
+
+        // Puller getting buckled: drop escalation and stop the pull so the puller's joint
+        // doesn't get reparented onto the strap. (The pulled-getting-buckled side is already
+        // handled by upstream's PullingSystem.OnGotBuckled, which calls StopPulling and
+        // therefore fires PullStoppedMessage into our OnPullStopped clean-up path.)
+        SubscribeLocalEvent<GrabStateComponent, BuckledEvent>(OnPullerBuckled);
+    }
+
+    private void OnPullerStartCollide(EntityUid uid, GrabStateComponent component, ref StartCollideEvent args)
+    {
+        if (!HasComp<PortalComponent>(args.OtherEntity))
+            return;
+
+        var target = component.Target;
+        ClearEscalation(uid);
+
+        if (target.IsValid() && TryComp<PullableComponent>(target, out var pullable) && pullable.Puller == uid)
+            _pulling.TryStopPull(target, pullable);
+    }
+
+    private void OnPullableStartCollide(EntityUid uid, PullableComponent component, ref StartCollideEvent args)
+    {
+        if (!HasComp<PortalComponent>(args.OtherEntity))
+            return;
+
+        if (component.Puller is { } puller && HasComp<GrabStateComponent>(puller))
+            ClearEscalation(puller);
+    }
+
+    private void OnPullerBuckled(EntityUid uid, GrabStateComponent component, ref BuckledEvent args)
+    {
+        var target = component.Target;
+        ClearEscalation(uid);
+
+        if (target.IsValid() && TryComp<PullableComponent>(target, out var pullable) && pullable.Puller == uid)
+            _pulling.TryStopPull(target, pullable);
     }
 
     public override void Update(float frameTime)
