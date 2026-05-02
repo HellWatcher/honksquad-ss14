@@ -28,6 +28,14 @@
                                  Title="{Loc 'honk-options-highlight-sound-cooldown'}"/>
                 <ui:OptionSlider Name="HonkHighlightSoundVolumeSlider"
                                  Title="{Loc 'honk-options-highlight-sound-volume'}"/>
+                <Label Text="{Loc 'honk-options-header-popup-log'}"
+                       StyleClasses="LabelKeyText"/>
+                <CheckBox Name="HonkPopupLogItalicCheckBox" Text="{Loc 'honk-options-popup-log-italic'}"/>
+                <ui:OptionSlider Name="HonkPopupLogFontSizeSlider"
+                                 Title="{Loc 'honk-options-popup-log-font-size'}"/>
+                <ui:OptionColorSlider Name="HonkPopupLogColorSlider"
+                                      Title="{Loc 'honk-options-popup-log-color'}"
+                                      Example="{Loc 'honk-options-popup-log-color-example'}"/>
                 <Label Text="{Loc 'ui-options-header-hover-tooltip'}"
                        StyleClasses="LabelKeyText"/>
                 <CheckBox Name="HoverTooltipEnabledCheckBox" Text="{Loc 'ui-options-hover-tooltip-enabled'}" />
