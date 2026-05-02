@@ -122,6 +122,10 @@ namespace Content.Server.Speech.EntitySystems
             // ensuring that the replaced words cannot be replaced again.
             var maskMessage = message;
 
+            // HONK START - #481: tuple gains per-word chance, plus an inner roll that masks
+            // a non-replaced match so it doesn't get reconsidered next iteration. Block wraps
+            // the whole loop because the foreach signature change (third tuple element) and
+            // the inner chance check both belong to the same fork patch.
             foreach (var (regex, replace, perWordChance) in GetCachedReplacements(prototype))
             {
                 // this is kind of slow but its not that bad
@@ -133,15 +137,12 @@ namespace Content.Server.Speech.EntitySystems
                     Match match = regex.Match(maskMessage);
                     var replacement = replace;
 
-                    // HONK START - #481: roll per-word chance if specified. Mask the match
-                    // either way so the same word isn't reconsidered on the next iteration.
                     if (perWordChance is { } chance && !_random.Prob(chance))
                     {
                         var skipMask = new string('_', match.Length);
                         maskMessage = maskMessage.Remove(match.Index, match.Length).Insert(match.Index, skipMask);
                         continue;
                     }
-                    // HONK END
 
                     // Intelligently replace capitalization
                     // two cases where we will do so:
@@ -168,6 +169,7 @@ namespace Content.Server.Speech.EntitySystems
                     maskMessage = maskMessage.Remove(match.Index, match.Length).Insert(match.Index, mask);
                 }
             }
+            // HONK END
 
             return message;
         }
