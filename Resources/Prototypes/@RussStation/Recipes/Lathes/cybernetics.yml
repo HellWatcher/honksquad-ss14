@@ -113,3 +113,22 @@
   parent: BaseCyberneticRecipeAdvanced
   id: CyberneticEarsAdvanced
   result: OrganCyberneticEarsAdvanced
+
+# ============================================================
+# Stomach
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticStomachBasic
+  result: OrganCyberneticStomachBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticStomachStandard
+  result: OrganCyberneticStomachStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticStomachAdvanced
+  result: OrganCyberneticStomachAdvanced

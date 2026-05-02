@@ -12,4 +12,7 @@ public static class CyberneticOrganConstants
 
     /// <summary>Cooldown between auto-injections for <see cref="CyberneticHeartComponent"/>.</summary>
     public static readonly TimeSpan HeartEpinephrineCooldown = TimeSpan.FromSeconds(120);
+
+    /// <summary>Default hunger-decay multiplier on <see cref="CyberneticStomachComponent"/>.</summary>
+    public const float DefaultStomachDecayMultiplier = 0.5f;
 }
