@@ -123,14 +123,17 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
             //collide there:
             //  1. The `, "..."` clause uses ASCII `"`, but upstream 5bd9d21cb6 swapped chat
             //     wrappers to curly quotes (“ ”), so even say-wrap mentions miss now.
-            //  2. Radio, dead chat, emotes, and popups never carried any of those prefaces, so
-            //     literal "@Name" mentions in those channels stopped highlighting outright.
-            //Add curly-quote support to the comma-quote clause and bring back the older
-            //"not inside the speaker's own [Name] tag" fallback as a fourth alternative. Keeps
-            //the speaker un-highlighted in their own byline while letting every other channel
-            //match again. The audible-ping path in HonkHighlightSound is unaffected (it strips
-            //the @ and substring-matches msg.Message directly).
-            keyword = StartAtSign.Replace(keyword, @"(?<=(?<=^.?OOC:.*:.*)|(?<=,.*[""“].*)|(?<=\n.*)|(?<!\[Name].*))");
+            //  2. Radio and dead-chat never carried any of those prefaces, so literal "@Name"
+            //     mentions in those channels stopped highlighting outright.
+            //Add curly-quote support to the comma-quote clause and a fourth alternative that
+            //anchors after the speaker's closing `[/bold]` tag. Radio (`[bold]Bob[/bold]
+            //says, "..."`) and dead-chat (`Dead: [bold]Bob[/bold]: ...`) both have `[/bold]`
+            //sitting between byline and message, so the byline itself can't match (it's BEFORE
+            //its own `[/bold]`). Emote and popup channels don't have a `[/bold]` and so won't
+            //match @-prefixed highlights, which is the same as pre-curly-quote behaviour.
+            //The audible-ping path in HonkHighlightSound is unaffected (it strips the @ and
+            //substring-matches msg.Message directly).
+            keyword = StartAtSign.Replace(keyword, @"(?<=(?<=^.?OOC:.*:.*)|(?<=,.*[""“].*)|(?<=\n.*)|(?<=\[/bold\].*))");
             //HONK END
 
             _highlights.Add(keyword);
