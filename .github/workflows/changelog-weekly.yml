@@ -59,7 +59,7 @@ jobs:
             --json number,mergedAt,author,body \
             > /tmp/prs.json
 
-      - name: Scan for new :cl: entries
+      - name: "Scan for new :cl: entries"
         run: |
           python3 scripts/changelog-update.py \
             Resources/Changelog/HonksquadChangelog.yml \
