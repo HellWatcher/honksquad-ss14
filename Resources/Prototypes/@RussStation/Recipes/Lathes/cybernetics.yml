@@ -56,3 +56,22 @@
   parent: BaseCyberneticRecipeAdvanced
   id: CyberneticHeartAdvanced
   result: OrganCyberneticHeartAdvanced
+
+# ============================================================
+# Lungs
+# ============================================================
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeBasic
+  id: CyberneticLungsBasic
+  result: OrganCyberneticLungsBasic
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeStandard
+  id: CyberneticLungsStandard
+  result: OrganCyberneticLungsStandard
+
+- type: latheRecipe
+  parent: BaseCyberneticRecipeAdvanced
+  id: CyberneticLungsAdvanced
+  result: OrganCyberneticLungsAdvanced

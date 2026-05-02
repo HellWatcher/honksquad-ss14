@@ -64,3 +64,73 @@
     empEffect: CardiacArrest
     empVulnerability: 0.5
   - type: CyberneticHeart
+
+# ============================================================
+# LUNGS - EmpEffect: BreathingFailure
+# ============================================================
+
+- type: entity
+  parent: [OrganBaseLungs, OrganCyberneticInternal]
+  id: OrganCyberneticLungsBasic
+  name: basic cybernetic lungs
+  description: Budget cybernetic lungs. You'll breathe, but don't push it.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: lung-plastic-l
+    - state: lung-plastic-r
+  - type: SolutionContainerManager
+    solutions:
+      Lung:
+        maxVol: 75.0
+        canReact: false
+  - type: Metabolizer
+    stages: [Respiration]
+    maxReagents: 2
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: BreathingFailure
+    empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBaseLungs, OrganCyberneticInternal]
+  id: OrganCyberneticLungsStandard
+  name: cybernetic lungs
+  description: Reliable cybernetic lungs. Breathe easy.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: lung-plasma-l
+    - state: lung-plasma-r
+  - type: Metabolizer
+    stages: [Respiration]
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: BreathingFailure
+    empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBaseLungs, OrganCyberneticInternal]
+  id: OrganCyberneticLungsAdvanced
+  name: advanced cybernetic lungs
+  description: High-end cybernetic lungs with extended oxygen reserves.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: lung-bluespace-l
+    - state: lung-bluespace-r
+  - type: SolutionContainerManager
+    solutions:
+      Lung:
+        maxVol: 130.0
+        canReact: false
+  - type: Metabolizer
+    stages: [Respiration]
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: BreathingFailure
+    empVulnerability: 0.5
+  - type: CyberneticLungs
