@@ -871,3 +871,411 @@ Entries:
     type: Add
   time: '2026-04-25T23:39:38.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/654
+- author: SushiFish100
+  changes:
+  - message: Added spitting.
+    type: Add
+  - message: Fixed gun action sound bug.
+    type: Fix
+  time: '2026-03-26T01:35:38.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/6
+- author: HellWatcher
+  changes:
+  - message: You can now fireman carry downed or incapacitated mobs over your shoulder. Requires an aggressive
+      grab and both hands free.
+    type: Add
+  - message: Carrying slows you down but moves the carried person with you.
+    type: Add
+  - message: Drag-dropping a mob you have an escalated grab on no longer opens the strip menu.
+    type: Fix
+  time: '2026-03-26T01:35:40.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/7
+- author: HellWatcher
+  changes:
+  - message: Pulling someone and clicking pull again now escalates to an aggressive grab instead of releasing.
+    type: Add
+  - message: Aggressive grabs hold the target in place. Use the release keybind to let go.
+    type: Add
+  - message: Dropping a pull virtual item from your hand now properly stops the pull.
+    type: Fix
+  time: '2026-03-26T01:35:41.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/8
+- author: HellWatcher
+  changes:
+  - message: Lockers no longer block atmosphere unless welded shut.
+    type: Tweak
+  time: '2026-03-26T01:41:52.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/11
+- author: HellWatcher
+  changes:
+  - message: Clicking a player's sprite no longer opens the strip menu. Use the strip verb instead.
+    type: Remove
+  time: '2026-03-26T01:42:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/12
+- author: HellWatcher
+  changes:
+  - message: Crates are no longer airtight by default; they only become airtight when welded shut.
+    type: Fix
+  time: '2026-03-26T02:25:24.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/15
+- author: SushiFish100
+  changes:
+  - message: Added goblins.
+    type: Add
+  time: '2026-03-27T09:32:32.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/16
+- author: HellWatcher
+  changes:
+  - message: 'Entity names now appear as a tooltip when hovering over things in the game world. Can be toggled
+      off in console with `hud.hover_tooltip_enabled`.'
+    type: Add
+  time: '2026-03-28T00:57:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/17
+- author: HellWatcher
+  changes:
+  - message: Added hover tooltip toggle and delay settings to the Accessibility options tab.
+    type: Fix
+  time: '2026-03-28T22:04:19.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/22
+- author: Xythus
+  changes:
+  - message: 'Seed extractor storage, based on the SS13 implementation.'
+    type: Add
+  time: '2026-03-30T12:07:22.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/24
+- author: HellWatcher
+  changes:
+  - message: Fixed fireman carry not dropping when buckling carried entity onto a bed.
+    type: Fix
+  time: '2026-03-30T13:10:59.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/28
+- author: HellWatcher
+  changes:
+  - message: Fixed carry state getting permanently stuck when carrying a buckled person or when other edge
+      cases corrupted the carry mid-setup.
+    type: Fix
+  - message: Buckled entities can no longer be picked up via fireman carry.
+    type: Fix
+  - message: Buckling a carried entity now drops them instead of blocking the buckle.
+    type: Tweak
+  time: '2026-03-30T13:39:31.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/29
+- author: HellWatcher
+  changes:
+  - message: Holopads no longer block entities from being pulled over them.
+    type: Fix
+  time: '2026-03-31T13:20:49.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/31
+- author: HellWatcher
+  changes:
+  - message: Vending machines now charge per-item prices based on recipe material cost or cargo value.
+    type: Add
+  - message: Vending machine UI shows item prices.
+    type: Add
+  - message: Wallet PDA cartridge no longer freezes after removing or inserting an ID card.
+    type: Fix
+  - message: Alt-clicking an ID card no longer opens duplicate dialogs.
+    type: Fix
+  - message: 'Vending payment reads your bank account from your ID card, with cash fallback.'
+    type: Tweak
+  - message: No free vending. All items have a minimum price.
+    type: Tweak
+  time: '2026-04-03T14:09:37.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/255
+- author: HellWatcher
+  changes:
+  - message: Alt-click a blank ID card to create a new bank account.
+    type: Add
+  - message: 'Creating a new account invalidates your old one, making stolen IDs useless.'
+    type: Add
+  - message: ID cards with invalid accounts now show an error on examine and block transactions.
+    type: Add
+  - message: ID card dialogs auto-cancel when the card is dropped from hand.
+    type: Fix
+  time: '2026-04-03T23:58:30.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/260
+- author: HellWatcher
+  changes:
+  - message: Bank account lookups no longer risk stale data between rounds.
+    type: Fix
+  time: '2026-04-04T14:54:05.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/272
+- author: HellWatcher
+  changes:
+  - message: Autosurgeon self-use now requires a short delay instead of being instant.
+    type: Fix
+  time: '2026-04-06T07:35:26.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/311
+- author: HellWatcher
+  changes:
+  - message: Advanced cybernetic heart now auto-injects epinephrine on crit instead of a non-functional speed
+      buff.
+    type: Fix
+  time: '2026-04-06T07:45:57.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/313
+- author: HellWatcher
+  changes:
+  - message: Deafness system. Deaf entities receive garbled chat messages and can't make out whispers.
+    type: Add
+  - message: Advanced cybernetic ears now provide deafness resistance.
+    type: Add
+  - message: EMP deafen effect on cybernetic ears now causes actual deafness instead of slurred speech.
+    type: Fix
+  time: '2026-04-06T09:08:11.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/315
+- author: HellWatcher
+  changes:
+  - message: Advanced cybernetic eyes now provide flash immunity.
+    type: Add
+  - message: 'Advanced cybernetic lungs now filter 50% of toxic gases (species-aware, auto-excludes host''s
+      breathing gas).'
+    type: Add
+  - message: Advanced cybernetic stomach now reduces hunger decay.
+    type: Add
+  - message: 'Advanced cybernetic liver now increases overdose thresholds by 50%.'
+    type: Add
+  - message: Advanced cybernetic ears now provide deafness resistance.
+    type: Add
+  - message: Deafness system with temporary deafness status effect and chat obfuscation.
+    type: Add
+  - message: EMP deafen effect on cybernetic ears now causes actual temporary deafness.
+    type: Add
+  time: '2026-04-06T13:09:21.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/314
+- author: HellWatcher
+  changes:
+  - message: Cybernetic organs now properly inherit base organ properties.
+    type: Tweak
+  time: '2026-04-06T13:43:57.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/319
+- author: HellWatcher
+  changes:
+  - message: 'Cardiac arrest status effect, hearts stopping now causes stun and oxygen deprivation instead of
+      shock damage.'
+    type: Add
+  - message: Health analyzer now warns when a patient is in cardiac arrest.
+    type: Add
+  - message: Defibrillator can cure cardiac arrest (patient must be critical/dead first).
+    type: Add
+  time: '2026-04-07T00:33:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/322
+- author: HellWatcher
+  changes:
+  - message: Cardiac arrest now shows a heart alert icon and examine text.
+    type: Add
+  time: '2026-04-07T01:29:48.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/347
+- author: HellWatcher
+  changes:
+  - message: EMP now causes cybernetic lungs to stop processing air instead of stunning the player.
+    type: Tweak
+  time: '2026-04-07T01:54:42.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/321
+- author: HellWatcher
+  changes:
+  - message: Autosurgeon now shows feedback when installation fails.
+    type: Fix
+  time: '2026-04-07T03:09:53.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/351
+- author: HellWatcher
+  changes:
+  - message: Cybernetic ears deafness resistance no longer desyncs between client and server.
+    type: Fix
+  time: '2026-04-07T03:15:17.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/350
+- author: HellWatcher
+  changes:
+  - message: Cybernetic liver overdose resistance now correctly scales both minimum and maximum thresholds.
+    type: Fix
+  time: '2026-04-07T03:20:29.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/349
+- author: HellWatcher
+  changes:
+  - message: Cybernetic stomach no longer drifts hunger decay rate after repeated insert/remove cycles.
+    type: Fix
+  - message: Cybernetic liver overdose resistance is no longer removed when a second cybernetic liver exists.
+    type: Fix
+  time: '2026-04-07T03:26:30.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/348
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-08T16:57:06.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/420
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-08T18:48:10.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/421
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-09T05:41:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/423
+- author: HellWatcher
+  changes:
+  - message: No player-facing changes (internal refactor).
+    type: Tweak
+  time: '2026-04-09T06:07:41.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/422
+- author: HellWatcher
+  changes:
+  - message: 'Negotiator quirk (+1 point) increases your paycheck by 50%.'
+    type: Add
+  time: '2026-04-10T01:24:18.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/401
+- author: HellWatcher
+  changes:
+  - message: Deaf entities now hear all sounds muffled through a lowpass filter.
+    type: Add
+  time: '2026-04-11T17:22:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/359
+- author: HellWatcher
+  changes:
+  - message: Cloning still preserves all the same fork traits it did before; the registration just lives in a
+      fork-side file now.
+    type: Tweak
+  time: '2026-04-16T10:02:55.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/468
+- author: HellWatcher
+  changes:
+  - message: Magic numbers in Thickness/Vector2/Color/UIBox constructors and TimeSpan.FromX calls now fail CI
+      on fork code so they can't sneak into future PRs.
+    type: Fix
+  time: '2026-04-21T09:15:25.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/570
+- author: HellWatcher
+  changes:
+  - message: Magic numbers in DataField defaults now fail CI on fork code so they can't sneak into future PRs.
+    type: Fix
+  time: '2026-04-21T09:34:15.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/569
+- author: HellWatcher
+  changes:
+  - message: 'Popup and emote repeats in chat now collapse into a single line with a count, matching the
+      floating popup counter. The count resets when there''s a 2 second gap.'
+    type: Tweak
+  - message: Emote speech bubbles above characters count repeats in place instead of stacking.
+    type: Tweak
+  - message: The floating popup counter no longer resets when the mob moves.
+    type: Fix
+  - message: Deathgasp no longer shows in chat to observers who can't actually see the corpse.
+    type: Fix
+  time: '2026-04-23T16:40:12.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/592
+- author: HellWatcher
+  changes:
+  - message: Ramping event scheduler's baseline roll interval is now configurable via component datafields
+      (defaults unchanged).
+    type: Tweak
+  time: '2026-04-24T10:31:23.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/626
+- author: HellWatcher
+  changes:
+  - message: Organ removal surgery now actually removes organs.
+    type: Fix
+  - message: Selecting an organ from the surgery menu starts a progress bar before removal.
+    type: Fix
+  - message: Removed organs go to the surgeon's free hand when one is available.
+    type: Fix
+  - message: 'The "patient already has that organ" popup now names the existing organ, not the one being
+      inserted.'
+    type: Fix
+  - message: 'Paired organ icons (lungs, kidneys) now show both sides in the organ removal menu.'
+    type: Fix
+  time: '2026-05-01T14:41:11.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/737
+- author: Xythus
+  changes:
+  - message: 'Botanists now have access to a hand-held plant analyzer that scans plant trays and harvested
+      produce, showing stats, traits, chemicals, and gas exchange in a tabbed UI.'
+    type: Add
+  - message: 'The plant analyzer is available in the botanist locker, botany crate, botanist belt, and the
+      NutriMax vending machine.'
+    type: Add
+  time: '2026-05-02T17:40:50.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/664
+- author: HellWatcher
+  changes:
+  - message: 'Grabs now escalate through four stages (Pull, Grab, Aggressive, Choke) with a resist alert that
+      breaks out one stage at a time.'
+    type: Add
+  - message: Higher grab stages slow the grabber and Choke deals stamina damage over time.
+    type: Add
+  - message: 'Pushover quirk: resist grabs 50% slower, -8 points.'
+    type: Add
+  - message: 'Solid hits (15+ damage in one hit) break the puller''s pull, not just escalated grabs.'
+    type: Tweak
+  - message: Pulls no longer survive a portal teleport with a stale joint that desyncs the puller and pulled
+      across maps.
+    type: Fix
+  time: '2026-05-02T18:48:49.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/476
+- author: HellWatcher
+  changes:
+  - message: 'Air alarms no longer panic at the first whiff of halon. Warns at 2.5%, danger at 5%.'
+    type: Tweak
+  time: '2026-05-02T19:53:20.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/667
+- author: HellWatcher
+  changes:
+  - message: 'Popup chat tab entries can be restyled in Options > Accessibility (text style, font size,
+      color).'
+    type: Add
+  time: '2026-05-02T20:29:47.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/672
+- author: HellWatcher
+  changes:
+  - message: 'Skaven species is available in character creation. Rat-people who chitter in Queekish, breathe
+      atmos miasma instead of oxygen, need ammonia tanks the way Vox need nitrogen, and pick from ported RussStation name tables.'
+    type: Add
+  - message: Queekish accent is available as a speech trait for one point on any species.
+    type: Add
+  - message: Skaven survival kit ships with an extended-capacity ammonia tank.
+    type: Add
+  time: '2026-05-02T20:47:10.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/643
+- author: HellWatcher
+  changes:
+  - message: 'Popup chat tab now logs popups within local-chat range instead of examine range, so it stops
+      collecting noise from across the room.'
+    type: Tweak
+  time: '2026-05-02T21:11:59.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/668
+- author: HellWatcher
+  changes:
+  - message: 'Typing in the floating chat input now shows the over-head typing indicator to nearby players,
+      same as the docked chat box.'
+    type: Fix
+  time: '2026-05-02T21:26:45.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/669
+- author: HellWatcher
+  changes:
+  - message: Guidebook links and anchor jumps now work while the guidebook is popped out into its own window.
+    type: Fix
+  time: '2026-05-02T21:41:44.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/670
+- author: HellWatcher
+  changes:
+  - message: 'Eating no longer pops a message over the eater for everyone nearby. The eater still sees their
+      own popup, and force-feeding is loud as before.'
+    type: Tweak
+  time: '2026-05-02T21:55:46.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/671
+- author: HellWatcher
+  changes:
+  - message: 'Blindness, Pacifist, Narcolepsy, and 10 other downside traits now refund points in the character
+      editor instead of being free.'
+    type: Tweak
+  - message: 'Trait editor categories: traits regrouped across Senses, Body, Movement, SpeechTraits, Social,
+      Diet to match the priced layout.'
+    type: Tweak
+  - message: Lightweight Drunk and Hard Drinker now mutually exclude in the trait editor.
+    type: Tweak
+  - message: Single-entry trait categories no longer leave an empty cell beside their lone trait.
+    type: Fix
+  time: '2026-05-02T22:11:18.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/673
