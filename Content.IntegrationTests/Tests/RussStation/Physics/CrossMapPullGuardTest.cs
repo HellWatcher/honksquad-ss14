@@ -1,5 +1,7 @@
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
+using Content.Shared.RussStation.EscalatedGrab;
+using Content.Shared.RussStation.EscalatedGrab.Components;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -103,6 +105,53 @@ public sealed class CrossMapPullGuardTest
 
             Assert.That(entMan.GetComponent<PullerComponent>(puller).Pulling, Is.Null);
             Assert.That(entMan.GetComponent<PullableComponent>(pullable).Puller, Is.Null);
+
+            entMan.DeleteEntity(mapSys.GetMap(mapA));
+            entMan.DeleteEntity(mapSys.GetMap(mapB));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Escalated-grab counterpart to <see cref="PullStateClearsWhenPullableCrossesMaps"/>:
+    /// the joint guard already breaks the underlying pull on cross-map reparent, but the
+    /// fork-side <see cref="GrabStateComponent"/> has to fall along with it via the
+    /// <c>PullStoppedMessage</c> cascade. The full shuttle-FTL case (grid reparents while
+    /// mobs keep grid as their parent) isn't reachable through plain SetParent in tests
+    /// — the engine's grid-map propagation has its own pathway — but the direct reparent
+    /// still exercises the grab cleanup path that FTL ultimately depends on.
+    /// </summary>
+    [Test]
+    public async Task EscalatedGrabClearsWhenPairCrossesMaps()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapSys = entMan.System<SharedMapSystem>();
+        var pulling = entMan.System<PullingSystem>();
+        var xformSys = entMan.System<SharedTransformSystem>();
+
+        await server.WaitAssertion(() =>
+        {
+            mapSys.CreateMap(out var mapA);
+            mapSys.CreateMap(out var mapB);
+
+            var puller = entMan.SpawnEntity("CrossMapPullBody", new MapCoordinates(0, 0, mapA));
+            var pullable = entMan.SpawnEntity("CrossMapPullBody", new MapCoordinates(0.5f, 0, mapA));
+
+            Assert.That(pulling.TryStartPull(puller, pullable), Is.True);
+
+            var grab = entMan.EnsureComponent<GrabStateComponent>(puller);
+            grab.Target = pullable;
+            grab.Stage = GrabStage.Aggressive;
+
+            xformSys.SetParent(pullable, mapSys.GetMap(mapB));
+
+            Assert.That(entMan.GetComponent<PullerComponent>(puller).Pulling, Is.Null,
+                "Pull should be torn down after the pullable crosses maps");
+            Assert.That(entMan.HasComponent<GrabStateComponent>(puller), Is.False,
+                "Escalated grab state should clear when its underlying pull breaks");
 
             entMan.DeleteEntity(mapSys.GetMap(mapA));
             entMan.DeleteEntity(mapSys.GetMap(mapB));
