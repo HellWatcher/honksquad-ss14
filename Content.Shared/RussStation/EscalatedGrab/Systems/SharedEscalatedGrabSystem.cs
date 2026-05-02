@@ -451,8 +451,11 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
         if (state.Stage <= GrabStage.Grab)
         {
-            // At Grab or below, fully release.
+            // At Grab or below, fully release - drop both the escalation and the underlying pull.
             ClearEscalation(puller);
+
+            if (target.IsValid() && TryComp<PullableComponent>(target, out var pullable) && pullable.Puller == puller)
+                _pulling.TryStopPull(target, pullable);
 
             if (target.IsValid())
             {
