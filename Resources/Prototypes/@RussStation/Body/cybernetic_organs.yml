@@ -254,3 +254,65 @@
     empEffect: Deafen
     empVulnerability: 0.5
   - type: CyberneticEars
+
+# ============================================================
+# STOMACH - EmpEffect: None (non-critical organ)
+# ============================================================
+
+- type: entity
+  parent: [OrganBaseStomach, OrganCyberneticInternal]
+  id: OrganCyberneticStomachBasic
+  name: basic cybernetic stomach
+  description: A bare-bones cybernetic stomach. Digests slowly.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: stomach-plastic
+  - type: SolutionContainerManager
+    solutions:
+      stomach:
+        maxVol: 35
+  - type: Metabolizer
+    maxReagents: 2
+  - type: CyberneticOrgan
+    tier: Basic
+    empEffect: None
+    empVulnerability: 1.5
+
+- type: entity
+  parent: [OrganBaseStomach, OrganCyberneticInternal]
+  id: OrganCyberneticStomachStandard
+  name: cybernetic stomach
+  description: A dependable cybernetic stomach.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: stomach-plasma
+  - type: CyberneticOrgan
+    tier: Standard
+    empEffect: None
+    empVulnerability: 1.0
+
+- type: entity
+  parent: [OrganBaseStomach, OrganCyberneticInternal]
+  id: OrganCyberneticStomachAdvanced
+  name: advanced cybernetic stomach
+  description: A high-efficiency cybernetic stomach that extracts more nutrients from food.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Cybernetics/cybernetic_organs.rsi"
+    layers:
+    - state: stomach-bluespace
+  - type: SolutionContainerManager
+    solutions:
+      stomach:
+        maxVol: 70
+  - type: Metabolizer
+    maxReagents: 4
+  - type: CyberneticOrgan
+    tier: Advanced
+    empEffect: None
+    empVulnerability: 0.5
+  - type: CyberneticStomach

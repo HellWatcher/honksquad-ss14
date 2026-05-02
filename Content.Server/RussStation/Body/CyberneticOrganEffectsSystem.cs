@@ -2,6 +2,8 @@ using Content.Server.Body.Systems;
 using Content.Shared.Body;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Mobs;
+using Content.Shared.Nutrition.Components;
+using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Body;
 using Content.Shared.RussStation.Hearing;
@@ -18,6 +20,7 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstream = default!;
+    [Dependency] private readonly HungerSystem _hunger = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
     public override void Initialize()
@@ -30,6 +33,10 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         // Basic ears: hearing impairment (muffled audio)
         SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotInsertedEvent>(OnBasicEarsInserted);
         SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotRemovedEvent>(OnBasicEarsRemoved);
+
+        // Stomach: nutrient efficiency (reduced hunger decay)
+        SubscribeLocalEvent<CyberneticStomachComponent, OrganGotInsertedEvent>(OnStomachInserted);
+        SubscribeLocalEvent<CyberneticStomachComponent, OrganGotRemovedEvent>(OnStomachRemoved);
     }
 
     // ================================================================
@@ -94,5 +101,27 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         }
 
         RemComp<HearingImpairmentComponent>(args.Target);
+    }
+
+    // ================================================================
+    // Stomach — nutrient efficiency (reduced hunger decay)
+    // ================================================================
+
+    private void OnStomachInserted(EntityUid uid, CyberneticStomachComponent stomach, ref OrganGotInsertedEvent args)
+    {
+        if (!TryComp<HungerComponent>(args.Target, out var hunger))
+            return;
+
+        stomach.OriginalDecayRate = hunger.BaseDecayRate;
+        _hunger.SetBaseDecayRate(args.Target, hunger.BaseDecayRate * stomach.DecayMultiplier, hunger);
+    }
+
+    private void OnStomachRemoved(EntityUid uid, CyberneticStomachComponent stomach, ref OrganGotRemovedEvent args)
+    {
+        if (stomach.OriginalDecayRate == null || !TryComp<HungerComponent>(args.Target, out var hunger))
+            return;
+
+        _hunger.SetBaseDecayRate(args.Target, stomach.OriginalDecayRate.Value, hunger);
+        stomach.OriginalDecayRate = null;
     }
 }
