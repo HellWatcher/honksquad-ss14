@@ -1,7 +1,6 @@
 using Content.Client.UserInterface.Systems.Chat;
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
-using Content.Shared.Examine;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Popups;
 using Robust.Client.Player;
@@ -27,8 +26,12 @@ public sealed class PopupLogSystem : EntitySystem
 {
     [Dependency] private readonly IUserInterfaceManager _ui = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly ExamineSystemShared _examine = default!;
+    [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
+
+    // Matches SharedChatSystem.VoiceRange so popups log at roughly the same radius as local speech,
+    // instead of the 16-tile examine range that lets popups two screens away into the log.
+    private const float LogRange = SharedChatSystem.VoiceRange;
 
     private const int MinFontSize = 8;
     private const int MaxFontSize = 16;
@@ -85,15 +88,15 @@ public sealed class PopupLogSystem : EntitySystem
 
     private void OnCategorizedPopup(CategorizedPopupRaisedEvent ev)
     {
-        // Filter out popups the player shouldn't be able to perceive. Server PVS may ship popups
-        // for entities outside the player's line of sight (proximity filters, broad broadcast);
-        // gate those behind the same visibility rule the examine system uses. Self-sourced popups
-        // (combat mode, spit, ActionGun text) and popups that don't carry an entity source always
-        // log since those are directly addressed to the local player.
+        // Drop popups whose source is further than local-chat range. Server PVS ships popups for
+        // entities well outside the player's chat radius (proximity filters, broad broadcast), and
+        // the previous examine-range gate (16 tiles) was wider than VoiceRange (10 tiles), so the
+        // popup tab filled with text from people two screens over. Self-sourced popups and popups
+        // without an entity source always log since those are addressed to the local player.
         if (ev.Source is { } sourceUid
             && _player.LocalEntity is { } examiner
             && sourceUid != examiner
-            && !_examine.CanExamine(examiner, sourceUid))
+            && !_transform.InRange(examiner, sourceUid, LogRange))
         {
             return;
         }
