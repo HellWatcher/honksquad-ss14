@@ -4,6 +4,7 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Body;
+using Content.Shared.RussStation.Hearing;
 using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Body;
@@ -25,6 +26,10 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
 
         // Heart: auto-inject epinephrine on crit
         SubscribeLocalEvent<BodyComponent, MobStateChangedEvent>(OnMobStateChanged);
+
+        // Basic ears: hearing impairment (muffled audio)
+        SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotInsertedEvent>(OnBasicEarsInserted);
+        SubscribeLocalEvent<CyberneticEarsBasicComponent, OrganGotRemovedEvent>(OnBasicEarsRemoved);
     }
 
     // ================================================================
@@ -66,5 +71,28 @@ public sealed class CyberneticOrganEffectsSystem : EntitySystem
         _popup.PopupEntity(
             Loc.GetString("cybernetic-heart-inject"),
             body, body, PopupType.MediumCaution);
+    }
+
+    // ================================================================
+    // Basic ears — hearing impairment (muffled audio)
+    // ================================================================
+
+    private void OnBasicEarsInserted(EntityUid uid, CyberneticEarsBasicComponent comp, ref OrganGotInsertedEvent args)
+    {
+        EnsureComp<HearingImpairmentComponent>(args.Target);
+    }
+
+    private void OnBasicEarsRemoved(EntityUid uid, CyberneticEarsBasicComponent comp, ref OrganGotRemovedEvent args)
+    {
+        if (TryComp<BodyComponent>(args.Target, out var body) && body.Organs != null)
+        {
+            foreach (var organ in body.Organs.ContainedEntities)
+            {
+                if (organ != uid && HasComp<CyberneticEarsBasicComponent>(organ))
+                    return;
+            }
+        }
+
+        RemComp<HearingImpairmentComponent>(args.Target);
     }
 }
