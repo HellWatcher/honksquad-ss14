@@ -140,6 +140,14 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         if (!TryComp<GrabStateComponent>(puller, out var state) || state.Target != uid)
             return;
 
+        // The puller releasing their own grab always succeeds; resist is target-side only.
+        if (args.User == puller)
+            return;
+
+        // Anyone other than the grabbed target (e.g. third-party rescuers) goes through normal stop-pull.
+        if (args.User != uid)
+            return;
+
         // At Pull stage, no resist needed - let the normal stop-pull proceed.
         if (state.Stage <= GrabStage.Pull)
             return;
@@ -292,10 +300,18 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
         var target = state.Target;
 
-        _doAfter.Cancel(state.EscalateDoAfter);
-        _doAfter.Cancel(state.ResistDoAfter);
+        // Capture and null the ids before cancelling so the do-after handlers don't see a stale id,
+        // and so we don't re-cancel an id the engine already retired (which logs an error).
+        var escalateId = state.EscalateDoAfter;
+        var resistId = state.ResistDoAfter;
         state.EscalateDoAfter = null;
         state.ResistDoAfter = null;
+        Dirty(puller, state);
+
+        if (escalateId != null && _doAfter.GetStatus(escalateId) == DoAfterStatus.Running)
+            _doAfter.Cancel(escalateId);
+        if (resistId != null && _doAfter.GetStatus(resistId) == DoAfterStatus.Running)
+            _doAfter.Cancel(resistId);
 
         RemComp<GrabStateComponent>(puller);
 
