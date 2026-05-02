@@ -425,6 +425,18 @@
     itemIconStyle: NoItem
     useDelay: 1 # Prevents Emote Spam
 
+# HONK START - #481: Skaven tail wag action.
+- type: entity
+  parent: ActionToggleWagging
+  id: ActionToggleWaggingSkaven
+  components:
+  - type: Action
+    icon: { sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi", state: tail-icon }
+    iconOn: { sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi", state: tail-icon }
+    itemIconStyle: NoItem
+    useDelay: 1 # Prevents Emote Spam
+# HONK END
+
 - type: entity
   parent: BaseAction
   id: ActionGravityJump

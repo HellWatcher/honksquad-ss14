@@ -28,4 +28,12 @@ public sealed partial class ReplacementAccentPrototype : IPrototype
     /// </summary>
     [DataField]
     public float ReplacementChance = 1f;
+
+    //HONK START - #481: per-word chance overrides. Keys here mirror the
+    //WordReplacements keys; the value is the probability that a matched
+    //instance gets swapped. Words not listed here use the global
+    //ReplacementChance default once the message-level gate passes.
+    [DataField]
+    public Dictionary<string, float>? WordReplacementChances;
+    //HONK END
 }

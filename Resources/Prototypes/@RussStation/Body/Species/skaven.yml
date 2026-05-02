@@ -1,0 +1,237 @@
+# Body parts and lung organ ported from RussStation SS13 (CC-BY-SA-3.0, sprites by skeyuui)
+# via Tools/honk/local/dmi_to_rsi.py. Lungs is the only species-specific organ icon russtation
+# ships; the remaining internal organs (heart, liver, kidneys, etc.) still reference the upstream
+# Vox organs.rsi as visual stand-ins.
+
+- type: markingsGroup
+  parent: Undergarments
+  id: Skaven
+  limits:
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+      onlyGroupWhitelisted: true
+      required: false
+    enum.HumanoidVisualLayers.FacialHair:
+      limit: 1
+      onlyGroupWhitelisted: true
+      required: false
+    enum.HumanoidVisualLayers.Head:
+      limit: 4
+      required: false
+    enum.HumanoidVisualLayers.Snout:
+      limit: 1
+      required: true
+      default: [SkavenSnout]
+    enum.HumanoidVisualLayers.Chest:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: true
+      default: [SkavenTail]
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 2
+      required: true
+      default: [SkavenEars]
+    enum.HumanoidVisualLayers.UndergarmentTop:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.UndergarmentBottom:
+      limit: 1
+      required: false
+
+- type: entity
+  parent: BaseSpeciesAppearance
+  id: AppearanceSkaven
+  categories: [HideSpawnMenu]
+  name: skaven appearance
+  components:
+    - type: Inventory
+      speciesId: skaven
+    - type: InitialBody
+      organs:
+        Torso: OrganSkavenTorso
+        Head: OrganSkavenHead
+        ArmLeft: OrganSkavenArmLeft
+        ArmRight: OrganSkavenArmRight
+        HandRight: OrganSkavenHandRight
+        HandLeft: OrganSkavenHandLeft
+        LegLeft: OrganSkavenLegLeft
+        LegRight: OrganSkavenLegRight
+        FootLeft: OrganSkavenFootLeft
+        FootRight: OrganSkavenFootRight
+        Brain: OrganSkavenBrain
+        Eyes: OrganSkavenEyes
+        Tongue: OrganSkavenTongue
+        Appendix: OrganSkavenAppendix
+        Ears: OrganSkavenEars
+        Lungs: OrganSkavenLungs
+        Heart: OrganSkavenHeart
+        Stomach: OrganSkavenStomach
+        Liver: OrganSkavenLiver
+        Kidneys: OrganSkavenKidneys
+    - type: HumanoidProfile
+      species: Skaven
+
+- type: entity
+  parent:
+    - AppearanceSkaven
+    - BaseSpeciesMobOrganic
+  id: MobSkaven
+  name: Urist McSkaven
+  components:
+    - type: Speech
+      speechVerb: SmallMob
+      speechSounds: Vulpkanin
+      allowedEmotes: ["Squeak"]
+    - type: ReplacementAccent
+      accents: [queekish]
+    - type: Wagging
+      action: ActionToggleWaggingSkaven
+    - type: Bloodstream
+      bloodReferenceSolution:
+        reagents:
+          - ReagentId: AmmoniaBlood
+            Quantity: 300
+    - type: Butcherable
+      butcheringType: Spike
+      spawned:
+        - id: FoodMeatRat
+          amount: 3
+    - type: MeleeWeapon
+      soundHit:
+        collection: AlienClaw
+      angle: 30
+      animation: WeaponArcClaw
+      damage:
+        types:
+          Slash: 5
+
+- type: entity
+  parent: OrganBase
+  id: OrganSkaven
+  abstract: true
+  suffix: Skaven
+
+- type: entity
+  id: OrganSkavenMetabolizer
+  abstract: true
+  components:
+    - type: Metabolizer
+      metabolizerTypes: [Skaven]
+
+- type: entity
+  parent: OrganSkaven
+  id: OrganSkavenInternal
+  abstract: true
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Vox/organs.rsi
+
+- type: entity
+  id: OrganSkavenVisual
+  abstract: true
+  components:
+    - type: VisualOrgan
+      data:
+        sprite: "@RussStation/Mobs/Species/Skaven/parts.rsi"
+    - type: VisualOrganMarkings
+      markingData:
+        group: Skaven
+
+- type: entity
+  parent: [OrganSkaven, OrganSkavenVisual]
+  id: OrganSkavenExternal
+  abstract: true
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Mobs/Species/Skaven/parts.rsi"
+
+- type: entity
+  parent: [OrganBaseTorso, OrganSkavenExternal]
+  id: OrganSkavenTorso
+
+- type: entity
+  parent: [OrganBaseHead, OrganSkavenExternal]
+  id: OrganSkavenHead
+
+- type: entity
+  parent: [OrganBaseArmLeft, OrganSkavenExternal]
+  id: OrganSkavenArmLeft
+
+- type: entity
+  parent: [OrganBaseArmRight, OrganSkavenExternal]
+  id: OrganSkavenArmRight
+
+- type: entity
+  parent: [OrganBaseHandLeft, OrganSkavenExternal]
+  id: OrganSkavenHandLeft
+
+- type: entity
+  parent: [OrganBaseHandRight, OrganSkavenExternal]
+  id: OrganSkavenHandRight
+
+- type: entity
+  parent: [OrganBaseLegLeft, OrganSkavenExternal]
+  id: OrganSkavenLegLeft
+
+- type: entity
+  parent: [OrganBaseLegRight, OrganSkavenExternal]
+  id: OrganSkavenLegRight
+
+- type: entity
+  parent: [OrganBaseFootLeft, OrganSkavenExternal]
+  id: OrganSkavenFootLeft
+
+- type: entity
+  parent: [OrganBaseFootRight, OrganSkavenExternal]
+  id: OrganSkavenFootRight
+
+- type: entity
+  parent: [OrganBaseBrain, OrganSpriteHumanInternal, OrganSkavenInternal]
+  id: OrganSkavenBrain
+
+- type: entity
+  parent: [OrganSkavenVisual, OrganBaseEyes, OrganSkavenInternal]
+  id: OrganSkavenEyes
+  components:
+    - type: VisualOrgan
+      data:
+        sprite: Mobs/Customization/eyes.rsi
+
+- type: entity
+  parent: [OrganBaseTongue, OrganSkavenInternal]
+  id: OrganSkavenTongue
+
+- type: entity
+  parent: [OrganBaseAppendix, OrganSpriteHumanInternal, OrganSkavenInternal]
+  id: OrganSkavenAppendix
+
+- type: entity
+  parent: [OrganBaseEars, OrganSpriteHumanInternal, OrganSkavenInternal]
+  id: OrganSkavenEars
+
+- type: entity
+  parent: [OrganBaseLungs, OrganSkavenInternal, OrganSkavenMetabolizer]
+  id: OrganSkavenLungs
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Mobs/Species/Skaven/organs.rsi"
+    - type: Lung
+      alert: LowAmmonia
+
+- type: entity
+  parent: [OrganBaseHeart, OrganSkavenInternal, OrganSkavenMetabolizer]
+  id: OrganSkavenHeart
+
+- type: entity
+  parent: [OrganBaseStomach, OrganSkavenInternal, OrganSkavenMetabolizer]
+  id: OrganSkavenStomach
+
+- type: entity
+  parent: [OrganBaseLiver, OrganSpriteHumanInternal, OrganSkavenInternal, OrganSkavenMetabolizer]
+  id: OrganSkavenLiver
+
+- type: entity
+  parent: [OrganBaseKidneys, OrganSpriteHumanInternal, OrganSkavenInternal, OrganSkavenMetabolizer]
+  id: OrganSkavenKidneys

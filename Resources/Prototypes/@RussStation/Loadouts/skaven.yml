@@ -1,0 +1,33 @@
+# Skaven survival loadout (#481). Mirrors the Vox/nitrogen pattern: a species-gated
+# loadoutEffectGroup picks the right loadout out of the upstream Survival group's
+# list. Skaven get a double-capacity ammonia tank in pocket1 and another inside
+# the BoxSurvivalSkaven survival box, two double tanks total.
+
+- type: loadoutEffectGroup
+  id: AmmoniaBreather
+  effects:
+    - !type:SpeciesLoadoutEffect
+      species:
+        - Skaven
+
+- type: loadout
+  id: EmergencySkavenAmmonia
+  effects:
+    - !type:GroupLoadoutEffect
+      proto: AmmoniaBreather
+  storage:
+    back:
+      - BoxSurvivalSkaven
+  equipment:
+    pocket1: DoubleEmergencyAmmoniaTankFilled
+
+# Mirrors LoadoutSpeciesBreathTool (Vox) so Skaven jobs auto-spawn with the
+# species mask. Added to GroupSpeciesBreathTool via the HONK block in
+# Resources/Prototypes/Loadouts/LoadoutGroups/loadout_groups.yml.
+- type: loadout
+  id: LoadoutSpeciesBreathToolSkaven
+  effects:
+    - !type:GroupLoadoutEffect
+      proto: AmmoniaBreather
+  equipment:
+    mask: ClothingMaskGasSkaven

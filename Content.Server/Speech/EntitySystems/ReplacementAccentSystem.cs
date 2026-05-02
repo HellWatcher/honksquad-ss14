@@ -22,8 +22,10 @@ namespace Content.Server.Speech.EntitySystems
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly ILocalizationManager _loc = default!;
 
-        private readonly Dictionary<ProtoId<ReplacementAccentPrototype>, (Regex regex, string replacement)[]>
+        // HONK START - #481: cache tuple gains a per-word chance (null = use global).
+        private readonly Dictionary<ProtoId<ReplacementAccentPrototype>, (Regex regex, string replacement, float? chance)[]>
             _cachedReplacements = new();
+        // HONK END
 
         public override void Initialize()
         {
@@ -120,7 +122,11 @@ namespace Content.Server.Speech.EntitySystems
             // ensuring that the replaced words cannot be replaced again.
             var maskMessage = message;
 
-            foreach (var (regex, replace) in GetCachedReplacements(prototype))
+            // HONK START - #481: tuple gains per-word chance, plus an inner roll that masks
+            // a non-replaced match so it doesn't get reconsidered next iteration. Block wraps
+            // the whole loop because the foreach signature change (third tuple element) and
+            // the inner chance check both belong to the same fork patch.
+            foreach (var (regex, replace, perWordChance) in GetCachedReplacements(prototype))
             {
                 // this is kind of slow but its not that bad
                 // essentially: go over all matches, try to match capitalization where possible, then replace
@@ -130,6 +136,13 @@ namespace Content.Server.Speech.EntitySystems
                     // fetch the match again as the character indices may have changed
                     Match match = regex.Match(maskMessage);
                     var replacement = replace;
+
+                    if (perWordChance is { } chance && !_random.Prob(chance))
+                    {
+                        var skipMask = new string('_', match.Length);
+                        maskMessage = maskMessage.Remove(match.Index, match.Length).Insert(match.Index, skipMask);
+                        continue;
+                    }
 
                     // Intelligently replace capitalization
                     // two cases where we will do so:
@@ -156,11 +169,13 @@ namespace Content.Server.Speech.EntitySystems
                     maskMessage = maskMessage.Remove(match.Index, match.Length).Insert(match.Index, mask);
                 }
             }
+            // HONK END
 
             return message;
         }
 
-        private (Regex regex, string replacement)[] GetCachedReplacements(ReplacementAccentPrototype prototype)
+        // HONK START - #481: cache tuple includes optional per-word chance.
+        private (Regex regex, string replacement, float? chance)[] GetCachedReplacements(ReplacementAccentPrototype prototype)
         {
             if (!_cachedReplacements.TryGetValue(prototype.ID, out var replacements))
             {
@@ -171,7 +186,7 @@ namespace Content.Server.Speech.EntitySystems
             return replacements;
         }
 
-        private (Regex regex, string replacement)[] GenerateCachedReplacements(ReplacementAccentPrototype prototype)
+        private (Regex regex, string replacement, float? chance)[] GenerateCachedReplacements(ReplacementAccentPrototype prototype)
         {
             if (prototype.WordReplacements is not { } replacements)
                 return [];
@@ -184,11 +199,16 @@ namespace Content.Server.Speech.EntitySystems
 
                     var regex = new Regex($@"(?<![\w']){firstLoc}(?![\w'])", RegexOptions.IgnoreCase);
 
-                    return (regex, replaceLoc);
+                    float? chance = null;
+                    if (prototype.WordReplacementChances is { } chances && chances.TryGetValue(first, out var c))
+                        chance = c;
+
+                    return (regex, replaceLoc, chance);
 
                 })
                 .ToArray();
         }
+        // HONK END
 
         private void OnPrototypesReloaded(PrototypesReloadedEventArgs obj)
         {

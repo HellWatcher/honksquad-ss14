@@ -17,11 +17,14 @@
         conditions:
         - !type:MetabolizerTypeCondition
           type: [ Human, Animal, Rat, Plant ]
+      # HONK START - Skaven (#481) joins Vox in the O2-toxic group: no CO2
+      # conversion from O2, instead Poison damage and the Toxins alert. Same
+      # block on both Bloodstream and Respiration metabolisms below.
       # Convert Oxygen into CO2.
       - !type:ModifyLungGas
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Vox ]
+          type: [ Vox, Skaven ]
           inverted: true
         ratios:
           CarbonDioxide: 1.0
@@ -29,7 +32,7 @@
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Vox ]
+          type: [ Vox, Skaven ]
         ignoreResistances: true
         damage:
           types:
@@ -39,20 +42,22 @@
         minScale: 1
         conditions:
           - !type:MetabolizerTypeCondition
-            type: [ Vox ]
+            type: [ Vox, Skaven ]
         clear: true
         time: 5
+      # HONK END
     Respiration:
       effects:
       - !type:Oxygenate
         conditions:
         - !type:MetabolizerTypeCondition
           type: [ Human, Animal, Rat, Plant, Arachnid, Moth ]
+      # HONK START - Skaven (#481) joins Vox in the inhaled-O2-toxic group.
       # Convert Oxygen into CO2.
       - !type:ModifyLungGas
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Vox ]
+          type: [ Vox, Skaven ]
           inverted: true
         ratios:
           CarbonDioxide: 1.0
@@ -60,7 +65,7 @@
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Vox ]
+          type: [ Vox, Skaven ]
         ignoreResistances: true
         damage:
           types:
@@ -70,9 +75,10 @@
         minScale: 0.5
         conditions:
           - !type:MetabolizerTypeCondition
-            type: [ Vox ]
+            type: [ Vox, Skaven ]
         clear: true
         time: 5
+      # HONK END
 
 - type: reagent
   id: Plasma

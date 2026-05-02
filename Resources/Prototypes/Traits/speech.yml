@@ -9,12 +9,13 @@
   category: SpeechTraits
   cost: 2
   # HONK START - #634: species-aware Accentless. Per-species strip lists instead of one flat list.
-  speciesWhitelist: [ Reptilian, Moth, Dwarf, Skeleton ]
+  speciesWhitelist: [ Reptilian, Moth, Dwarf, Skeleton, Skaven ]
   descriptionOverrides:
     Reptilian: trait-accentless-desc-reptilian
     Moth: trait-accentless-desc-moth
     Dwarf: trait-accentless-desc-dwarf
     Skeleton: trait-accentless-desc-skeleton
+    Skaven: trait-accentless-desc-skaven
   # HONK END
   components:
   - type: Accentless
@@ -31,6 +32,8 @@
       Skeleton:
         strips:
         - type: SkeletonAccent
+      Skaven:
+        stripsReplacementAccents: [ queekish ]
     # HONK END
 
 # 1 Cost
@@ -90,6 +93,18 @@
   components:
   - type: ReplacementAccent
     accent: scottish
+
+# HONK START - Queekish accent trait (Skaven species flavor, also picks for non-Skaven)
+- type: trait
+  id: QueekishAccent
+  name: trait-queekish-name
+  description: trait-queekish-desc
+  category: SpeechTraits
+  cost: 1
+  components:
+  - type: ReplacementAccent
+    accents: [queekish]
+# HONK END
 
 # 2 Cost
 

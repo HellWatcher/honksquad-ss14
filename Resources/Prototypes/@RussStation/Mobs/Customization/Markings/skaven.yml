@@ -1,0 +1,224 @@
+# Ported from RussStation SS13 (CC-BY-SA-3.0, sprites by skeyuui).
+# Tail uses a single Tail-layer marking (matches lizard's tail_smooth pattern).
+# The composite tail.png masks BEHIND pixels overlapping the body silhouette
+# so SS14's always-on-top Tail rendering looks right; FRONT pixels overlay
+# unchanged for the north view. Ears stack BEHIND+FRONT on HeadTop.
+
+# Reuse reptilian's snout sprites — same source data russstation pulls from
+# (lizard_misc.dmi). Round is the default since the russstation skaven preview
+# composites skaven_head with m_snout_round_ADJ.
+- type: marking
+  id: SkavenSnout
+  bodyPart: Snout
+  forcedColoring: true
+  groupWhitelist: [Skaven]
+  coloring:
+    default:
+      type: !type:SkinColoring
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: snout_round
+
+- type: marking
+  id: SkavenSnoutSharp
+  bodyPart: Snout
+  forcedColoring: true
+  groupWhitelist: [Skaven]
+  coloring:
+    default:
+      type: !type:SkinColoring
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: snout_sharp
+
+- type: marking
+  id: SkavenSnoutRoundLight
+  bodyPart: Snout
+  forcedColoring: true
+  groupWhitelist: [Skaven]
+  coloring:
+    default:
+      type: !type:SkinColoring
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: snout_roundlight
+
+- type: marking
+  id: SkavenSnoutSharpLight
+  bodyPart: Snout
+  forcedColoring: true
+  groupWhitelist: [Skaven]
+  coloring:
+    default:
+      type: !type:SkinColoring
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: snout_sharplight
+
+- type: marking
+  id: SkavenTail
+  bodyPart: Tail
+  forcedColoring: true
+  groupWhitelist: [Skaven]
+  coloring:
+    default:
+      type: !type:SimpleColoring
+        color: "#e5a8a8"
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: tail
+
+- type: marking
+  id: SkavenEars
+  bodyPart: HeadTop
+  forcedColoring: true
+  groupWhitelist: [Skaven]
+  coloring:
+    default:
+      type: !type:SkinColoring
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: ears_behind
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: ears_front
+
+# Animated tail variant lives here for future runtime swaps (see vox/lizard
+# wagging precedent). groupWhitelist is empty so it doesn't show in the
+# species editor.
+# Suffix must match WaggingComponent.Suffix (default "Animated") so the
+# wag system can swap SkavenTail -> SkavenTailAnimated at runtime.
+- type: marking
+  id: SkavenTailAnimated
+  bodyPart: Tail
+  forcedColoring: true
+  groupWhitelist: []
+  coloring:
+    default:
+      type: !type:SimpleColoring
+        color: "#e5a8a8"
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: tail_wagging
+
+# Optional cosmetic horns (player-selectable, not auto-applied).
+- type: marking
+  id: SkavenHornsSeer
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_seer
+
+- type: marking
+  id: SkavenHornsQuad
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_quad
+
+- type: marking
+  id: SkavenHornsLong
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_long
+
+- type: marking
+  id: SkavenHornsDamaged
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: "@RussStation/Mobs/Customization/skaven_parts.rsi"
+      state: horns_damaged
+
+# Reuse the lizard horn library so Skaven get the same selection of horns
+# without duplicating sprites. All states live in reptilian_parts.rsi.
+- type: marking
+  id: SkavenHornsSimple
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_simple
+
+- type: marking
+  id: SkavenHornsShort
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_short
+
+- type: marking
+  id: SkavenHornsCurled
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_curled
+
+- type: marking
+  id: SkavenHornsRam
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_ram
+
+- type: marking
+  id: SkavenHornsAngler
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_angler
+
+- type: marking
+  id: SkavenHornsDouble
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_double
+
+- type: marking
+  id: SkavenHornsArgali
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_argali
+
+- type: marking
+  id: SkavenHornsAyrshire
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_ayrshire
+
+- type: marking
+  id: SkavenHornsMyrsore
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_myrsore
+
+- type: marking
+  id: SkavenHornsBighorn
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_bighorn
+
+- type: marking
+  id: SkavenHornsDemonic
+  bodyPart: HeadTop
+  groupWhitelist: [Skaven]
+  sprites:
+    - sprite: Mobs/Customization/reptilian_parts.rsi
+      state: horns_demonic
