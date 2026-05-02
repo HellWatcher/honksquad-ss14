@@ -18,6 +18,7 @@
     sprite: "@RussStation/Structures/Storage/canister.rsi"
     state: ammonia
   product: AmmoniaCanister
-  cost: 500
+  # Higher than NitrogenCanister's 500: the ammonia gas mix sells for ~615 and CargoTest.NoCargoOrderArbitrage requires cost >= sell price.
+  cost: 650
   category: cargoproduct-category-name-atmospherics
   group: market
