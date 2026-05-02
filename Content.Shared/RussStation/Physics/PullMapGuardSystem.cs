@@ -42,6 +42,7 @@ public sealed class PullMapGuardSystem : EntitySystem
         SubscribeLocalEvent<JointComponent, EntParentChangedMessage>(OnJointParentChanged);
         SubscribeLocalEvent<PullerComponent, EntParentChangedMessage>(OnPullerParentChanged);
         SubscribeLocalEvent<PullableComponent, EntParentChangedMessage>(OnPullableParentChanged);
+
     }
 
     public override void Update(float frameTime)
@@ -117,8 +118,13 @@ public sealed class PullMapGuardSystem : EntitySystem
 
     private bool MapsDiverged(EntityUid a, EntityUid b)
     {
+        // Treat Nullspace-vs-real as divergent too. The engine's deferred-joint path
+        // (JointComponent state arriving while one body's transform is still Nullspace)
+        // queues the joint into AddedJoints, where the next physics tick's InitJoint
+        // asserts on the cross-map comparison once the transform lands. We need to
+        // tear down before that happens, even if one side is currently Nullspace.
         var mapA = _transform.GetMapId(a);
         var mapB = _transform.GetMapId(b);
-        return mapA != mapB && mapA != MapId.Nullspace && mapB != MapId.Nullspace;
+        return mapA != mapB;
     }
 }
