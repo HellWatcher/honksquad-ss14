@@ -424,6 +424,11 @@
     heldPrefix: kidneys
   - type: Metabolizer
     maxReagents: 5
+    # HONK START - issue #679 step 2: kidneys run the new Excretion stage on the
+    # bloodstream. Sub-tolerance filtering (step 5) and the slow blood drain (step 7)
+    # land later; for now the stage runs and does nothing per reagent.
+    stages: [ Excretion ]
+    # HONK END
 
 - type: entity
   id: OrganSpriteHumanInternal
