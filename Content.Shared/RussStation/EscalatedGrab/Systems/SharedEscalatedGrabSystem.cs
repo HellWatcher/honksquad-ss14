@@ -261,6 +261,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
     private void OnEscalateDoAfterFinished(EntityUid uid, GrabStateComponent component, GrabEscalateDoAfterEvent args)
     {
         component.EscalateDoAfter = null;
+        Dirty(uid, component);
 
         if (args.Cancelled)
             return;
@@ -461,6 +462,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         if (_doAfter.TryStartDoAfter(doAfterArgs, out var doAfterId))
         {
             state.ResistDoAfter = doAfterId;
+            Dirty(puller, state);
         }
     }
 
@@ -473,6 +475,7 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
             return;
 
         state.ResistDoAfter = null;
+        Dirty(puller, state);
 
         if (args.Cancelled)
             return;

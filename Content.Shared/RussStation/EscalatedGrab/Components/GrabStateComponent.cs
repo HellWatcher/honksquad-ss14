@@ -27,15 +27,18 @@ public sealed partial class GrabStateComponent : Component
     public GrabStage Stage = GrabStage.Pull;
 
     /// <summary>
-    /// Active escalation do-after, if any.
+    /// Active escalation do-after, if any. Server-only handle, not networked
+    /// (DoAfterId is not netserializable). Writers must Dirty the component to
+    /// satisfy HONK0010 even though this field itself does not replicate.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [DataField]
     public DoAfterId? EscalateDoAfter;
 
     /// <summary>
-    /// Active resist do-after on the target, if any.
+    /// Active resist do-after on the target, if any. Server-only handle; see note on
+    /// <see cref="EscalateDoAfter"/>.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [DataField]
     public DoAfterId? ResistDoAfter;
 
     /// <summary>
