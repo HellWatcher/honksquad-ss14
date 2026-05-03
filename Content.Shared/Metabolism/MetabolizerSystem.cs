@@ -371,11 +371,10 @@ public sealed class MetabolizerSystem : EntitySystem
     }
 
     // HONK START - issue #679 step 5: kidney filter helpers.
-    // Default tolerance for the toxin reagent class (group "Toxins"). Mirrors SS13's
-    // liver_tolerance baseline. Lives here as a const because the class lookup is cheap
-    // and the value is one number; if it grows into a per-class table we promote it to a
-    // RussStation/Metabolism constants file.
-    private static readonly FixedPoint2 ToxinDefaultTolerance = FixedPoint2.New(3);
+    // Universal tolerance floor applied to every reagent that doesn't override it via
+    // MinEffectiveDose. Mirrors SS13's liver_tolerance baseline. Reagents that need to
+    // fire at trace (medicines especially) declare MinEffectiveDose: 0 to opt out.
+    private static readonly FixedPoint2 DefaultTolerance = FixedPoint2.New(3);
 
     private static readonly ProtoId<MetabolismStagePrototype> ExcretionStage = "Excretion";
 
@@ -400,13 +399,24 @@ public sealed class MetabolizerSystem : EntitySystem
 
     private static bool IsSubTolerance(ReagentPrototype proto, FixedPoint2 quantity)
     {
-        // Per-reagent override wins. Otherwise the harmful-by-default groups (toxin family,
-        // heavy metals, pyrotechnics like welder fuel and phlogiston) share the 3u floor,
-        // since all three deal damage at trace amounts in upstream and need the same
-        // anti-stack gate. Medicine, Drinks, Foods, etc. fire at any dose so they pass.
-        var tolerance = proto.MinEffectiveDose > FixedPoint2.Zero
-            ? proto.MinEffectiveDose
-            : proto.Group is "Toxins" or "Elements" or "Pyrotechnic" ? ToxinDefaultTolerance : FixedPoint2.Zero;
+        // Negative MinEffectiveDose is the "unset" sentinel - apply the group default.
+        // Explicit 0 means no floor, fire at any dose. Positive overrides up or down.
+        FixedPoint2 tolerance;
+        if (proto.MinEffectiveDose >= FixedPoint2.Zero)
+        {
+            tolerance = proto.MinEffectiveDose;
+        }
+        else
+        {
+            // Benign groups intentionally fire at trace (medicines heal small doses, food
+            // nourishes, drinks flavor, biological reagents are structural, etc.). Everything
+            // else - toxins, heavy metals, welder fuel, even unclassified protos - gets the
+            // anti-stack floor by default.
+            tolerance = proto.Group is "Medicine" or "Foods" or "Drinks" or "Biological"
+                or "Botanical" or "Narcotics" or "Special" or "Unknown"
+                ? FixedPoint2.Zero
+                : DefaultTolerance;
+        }
 
         return tolerance > FixedPoint2.Zero && quantity < tolerance;
     }
