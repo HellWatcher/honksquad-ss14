@@ -377,6 +377,8 @@ public sealed class MetabolizerSystem : EntitySystem
     // RussStation/Metabolism constants file.
     private static readonly FixedPoint2 ToxinDefaultTolerance = FixedPoint2.New(3);
 
+    private static readonly ProtoId<MetabolismStagePrototype> ExcretionStage = "Excretion";
+
     private bool BodyHasKidneyFilter(EntityUid? body)
     {
         if (body is not { } bodyUid)
@@ -385,8 +387,13 @@ public sealed class MetabolizerSystem : EntitySystem
             return false;
         foreach (var organ in organs.ContainedEntities)
         {
-            if (TryComp<MetabolizerComponent>(organ, out var meta) && meta.Stages.Contains("Excretion"))
-                return true;
+            if (!TryComp<MetabolizerComponent>(organ, out var meta))
+                continue;
+            foreach (var stage in meta.Stages)
+            {
+                if (stage == ExcretionStage)
+                    return true;
+            }
         }
         return false;
     }
