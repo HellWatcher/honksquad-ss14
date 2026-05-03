@@ -408,12 +408,12 @@ public sealed class MetabolizerSystem : EntitySystem
         }
         else
         {
-            // Benign groups intentionally fire at trace (medicines heal small doses, food
-            // nourishes, drinks flavor, biological reagents are structural, etc.). Everything
-            // else - toxins, heavy metals, welder fuel, even unclassified protos - gets the
-            // anti-stack floor by default.
-            tolerance = proto.Group is "Medicine" or "Foods" or "Drinks" or "Biological"
-                or "Botanical" or "Narcotics" or "Special" or "Unknown"
+            // Only Medicine and food/drink groups intentionally fire at trace. Everything
+            // else - toxins, heavy metals, pyrotechnics, narcotics, biologicals (cyanide is
+            // here), botanicals (weed killer), special (lube, holy water) - has dangerous
+            // members and gets the anti-stack floor. Reagents in the gated groups that
+            // legitimately need trace effects can opt out via MinEffectiveDose: 0.
+            tolerance = proto.Group is "Medicine" or "Foods" or "Drinks" or "Unknown"
                 ? FixedPoint2.Zero
                 : DefaultTolerance;
         }
