@@ -58,7 +58,16 @@ public sealed partial class MetabolizerComponent : Component
             SolutionName = "stomach",
             SolutionOnBody = false,
             TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
-            TransferEfficacy = 0.5
+            // HONK START - issue #679 step 4: align stomach throughput with SS13.
+            //   * TransferEfficacy 1.0 (was 0.5): SS13 transfers stomach->blood 1:1, so
+            //     a 30u oral dose actually arrives in blood as 30u, reachable for OD.
+            //   * MinTransferPerTick mirrors SS13 STOMACH_METABOLISM_CONSTANT (0.25u).
+            //   * VolumeScaledTransfer mirrors SS13 metabolism_efficiency (0.05) so a
+            //     fuller stomach pushes faster.
+            TransferEfficacy = 1,
+            MinTransferPerTick = 0.25,
+            VolumeScaledTransfer = 0.05f,
+            // HONK END
         },
         ["Bloodstream"] = new()
         {
@@ -68,7 +77,37 @@ public sealed partial class MetabolizerComponent : Component
         ["Metabolites"] = new()
         {
             SolutionName = BloodstreamComponent.DefaultMetabolitesSolutionName
+        },
+        // HONK START - issue #679 step 1: Detoxification reads the bloodstream so the
+        // liver can scrub toxin-class reagents in place. Step 1 only declares the entry;
+        // the per-tick scrub rate (ToxinScrubRate) and reagent-side opt-in arrive in step 6.
+        //
+        // Engine quirk: TryMetabolizeStage's "this reagent has no entry for the stage"
+        // fallback either removes TransferRate units into a transfer solution, or removes
+        // 1 unit flat if there is no transfer solution. Until step 6 adds the toxin opt-in,
+        // we must look like a no-op so we don't quietly siphon Ethanol (and every other
+        // blood reagent waiting for the heart's Bloodstream transfer) before they reach
+        // the metabolites pool. Self-loop the transfer to the same blood solution with
+        // TransferRate = 0 so the fallback is "remove 0, add 0".
+        ["Detoxification"] = new()
+        {
+            SolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferRate = 0,
+        },
+        // HONK END
+        // HONK START - issue #679 step 2: Excretion reads the bloodstream so the kidney
+        // can host the sub-tolerance filter (step 5) and the slow blood drain (step 7).
+        // No reagent declares an Excretion entry yet, so the stage runs and does nothing
+        // until later steps land. Same TransferRate = 0 self-loop as Detoxification so
+        // the no-entry fallback can't drain Ethanol or other bloodstream reagents.
+        ["Excretion"] = new()
+        {
+            SolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferRate = 0,
         }
+        // HONK END
     };
 
     /// <summary>

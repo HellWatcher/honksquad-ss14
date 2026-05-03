@@ -1,0 +1,16 @@
+# HONK - Issue #679 step 1: define metabolism stages introduced by the chain refactor.
+# Detoxification: liver pass over the bloodstream that scrubs toxin-class reagents at a
+# per-tick rate. This step only declares the stage; the toxin scrubbing logic lands in
+# step 6 (ToxinScrubRate on the Detoxification solution entry). Until then the stage
+# runs and does nothing per reagent because no reagent declares a Detoxification entry.
+
+- type: metabolismStage
+  id: Detoxification
+  name: metabolism-stage-detoxification
+
+# Excretion: kidney pass over the bloodstream. Step 2 declares the stage and routes the
+# kidney's Metabolizer at it. Sub-tolerance filtering (#679 step 5) and the slow blood
+# drain (#679 step 7) land in later steps; until then the stage runs and does nothing.
+- type: metabolismStage
+  id: Excretion
+  name: metabolism-stage-excretion
