@@ -129,7 +129,19 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
         {
             var strategy = proto.Index(speciesProto.SkinColoration).Strategy;
             var organs = markingManager.GetOrgans(species);
-            skinColor = strategy.EnsureVerified(skinColor);
+            //HONK START - Iterate EnsureVerified + ClampColor to a byte-stable fixed point.
+            // The constructor's ClampColor (8-bit truncation) introduces ~1/255 RGB error,
+            // which can shift HSV outside the strategy's valid range by more than Epsilon
+            // (1e-5). A single EnsureVerified + clamp can then leave a value that the
+            // server's next EnsureValid snaps elsewhere, breaking client/server round-trip.
+            // Iterating until VerifySkinColor(ClampColor(...)) holds guarantees the stored
+            // SkinColor is a fixed point of f(x) = ClampColor(EnsureVerified(x)), which is
+            // exactly what the server applies on receipt.
+            var candidate = ClampColor(strategy.EnsureVerified(skinColor));
+            for (var i = 0; i < 8 && !strategy.VerifySkinColor(candidate); i++)
+                candidate = ClampColor(strategy.ClosestSkinColor(candidate));
+            skinColor = candidate;
+            //HONK END
 
             foreach (var (organ, markings) in appearance.Markings)
             {
