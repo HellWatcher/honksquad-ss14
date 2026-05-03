@@ -58,7 +58,16 @@ public sealed partial class MetabolizerComponent : Component
             SolutionName = "stomach",
             SolutionOnBody = false,
             TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
-            TransferEfficacy = 0.5
+            // HONK START - issue #679 step 4: align stomach throughput with SS13.
+            //   * TransferEfficacy 1.0 (was 0.5): SS13 transfers stomach->blood 1:1, so
+            //     a 30u oral dose actually arrives in blood as 30u, reachable for OD.
+            //   * MinTransferPerTick mirrors SS13 STOMACH_METABOLISM_CONSTANT (0.25u).
+            //   * VolumeScaledTransfer mirrors SS13 metabolism_efficiency (0.05) so a
+            //     fuller stomach pushes faster.
+            TransferEfficacy = 1,
+            MinTransferPerTick = 0.25,
+            VolumeScaledTransfer = 0.05f,
+            // HONK END
         },
         ["Bloodstream"] = new()
         {

@@ -180,7 +180,15 @@ public sealed class MetabolizerSystem : EntitySystem
                     continue;
                 // HONK END
 
-                var mostToTransfer = FixedPoint2.Clamp(solutionData.TransferRate, 0, quantity);
+                // HONK START - issue #679 step 4: apply MinTransferPerTick + VolumeScaledTransfer
+                // to the generic-transfer branch so reagents without a Digestion entry also benefit
+                // from the SS13 stomach pipeline (floor + 5%-of-volume scaling).
+                var rawGeneric = solutionData.TransferRate > solutionData.MinTransferPerTick
+                    ? solutionData.TransferRate
+                    : solutionData.MinTransferPerTick;
+                rawGeneric += quantity * solutionData.VolumeScaledTransfer;
+                var mostToTransfer = FixedPoint2.Clamp(rawGeneric, 0, quantity);
+                // HONK END
 
                 if (transferSolution is not null)
                 {
@@ -196,6 +204,19 @@ public sealed class MetabolizerSystem : EntitySystem
             }
 
             var rate = solutionData.MetabolizeAll ? quantity : entry.MetabolismRate;
+
+            // HONK START - issue #679 step 4: apply MinTransferPerTick + VolumeScaledTransfer to
+            // per-reagent rates too. Mirrors SS13's
+            //     amount = (0.05 * stomach_volume + max(rate, 0.25)) * dt
+            // formula on the stomach. Skipped when MetabolizeAll is on (lungs already process
+            // every reagent in full).
+            if (!solutionData.MetabolizeAll)
+            {
+                if (rate < solutionData.MinTransferPerTick)
+                    rate = solutionData.MinTransferPerTick;
+                rate += quantity * solutionData.VolumeScaledTransfer;
+            }
+            // HONK END
 
             // Remove $rate, as long as there's enough reagent there to actually remove that much
             var mostToRemove = FixedPoint2.Clamp(rate, 0, quantity);
