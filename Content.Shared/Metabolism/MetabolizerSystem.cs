@@ -400,13 +400,13 @@ public sealed class MetabolizerSystem : EntitySystem
 
     private static bool IsSubTolerance(ReagentPrototype proto, FixedPoint2 quantity)
     {
-        // Per-reagent override wins. Otherwise default the toxin family (group "Toxins")
-        // and the heavy-metal family (group "Elements") to the 3u floor — both deal damage
-        // at trace amounts in upstream and need the same anti-stack gate. Other groups
-        // (Medicine, Drinks, Foods, etc.) intentionally fire at any dose, so they pass.
+        // Per-reagent override wins. Otherwise the harmful-by-default groups (toxin family,
+        // heavy metals, pyrotechnics like welder fuel and phlogiston) share the 3u floor,
+        // since all three deal damage at trace amounts in upstream and need the same
+        // anti-stack gate. Medicine, Drinks, Foods, etc. fire at any dose so they pass.
         var tolerance = proto.MinEffectiveDose > FixedPoint2.Zero
             ? proto.MinEffectiveDose
-            : proto.Group is "Toxins" or "Elements" ? ToxinDefaultTolerance : FixedPoint2.Zero;
+            : proto.Group is "Toxins" or "Elements" or "Pyrotechnic" ? ToxinDefaultTolerance : FixedPoint2.Zero;
 
         return tolerance > FixedPoint2.Zero && quantity < tolerance;
     }
