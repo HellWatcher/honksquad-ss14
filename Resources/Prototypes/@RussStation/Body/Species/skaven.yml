@@ -88,6 +88,7 @@
       accents: [queekish]
     - type: Wagging
       action: ActionToggleWaggingSkaven
+    - type: SkavenPayday
     - type: Bloodstream
       bloodReferenceSolution:
         reagents:
