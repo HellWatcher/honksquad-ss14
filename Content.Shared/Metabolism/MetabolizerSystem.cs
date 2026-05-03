@@ -163,6 +163,13 @@ public sealed class MetabolizerSystem : EntitySystem
         var isDead = _mobStateSystem.IsDead(deadCheckTarget);
         // HONK END
 
+        // HONK START - issue #679 step 5: kidney sub-tolerance filter. Once per stage tick,
+        // determine whether the body has a working kidney (any organ with the Excretion stage).
+        // If yes, reagents under their effective tolerance still drain but skip effects below.
+        // Missing kidneys -> filter fails, micro-stacking starts working again.
+        var hasKidneyFilter = BodyHasKidneyFilter(ent.Comp2?.Body);
+        // HONK END
+
         int reagents = 0;
         foreach (var (reagent, quantity) in list)
         {
@@ -245,9 +252,21 @@ public sealed class MetabolizerSystem : EntitySystem
 
             var actualEntity = ent.Comp2?.Body ?? solutionOwner.Value;
 
+            // HONK START - issue #679 step 5: skip effects when below tolerance. Reagent still
+            // drains via the removal block below, mirroring SS13's "consume without firing".
+            var subTolerance = hasKidneyFilter
+                && !solutionData.MetabolizeAll
+                && IsSubTolerance(proto, quantity);
+            // HONK END
+
             // do all effects, if conditions apply
             foreach (var effect in entry.Effects)
             {
+                // HONK START - tolerance gate (#679 step 5): drop effects but keep removal.
+                if (subTolerance)
+                    break;
+                // HONK END
+
                 if (scale < effect.MinScale)
                     continue;
 
@@ -350,5 +369,57 @@ public sealed class MetabolizerSystem : EntitySystem
 
         return true;
     }
+
+    // HONK START - issue #679 step 5: kidney filter helpers.
+    // Universal tolerance floor applied to every reagent that doesn't override it via
+    // MinEffectiveDose. Mirrors SS13's liver_tolerance baseline. Reagents that need to
+    // fire at trace (medicines especially) declare MinEffectiveDose: 0 to opt out.
+    private static readonly FixedPoint2 DefaultTolerance = FixedPoint2.New(3);
+
+    private static readonly ProtoId<MetabolismStagePrototype> ExcretionStage = "Excretion";
+
+    private bool BodyHasKidneyFilter(EntityUid? body)
+    {
+        if (body is not { } bodyUid)
+            return false;
+        if (!TryComp<BodyComponent>(bodyUid, out var bodyComp) || bodyComp.Organs is not { } organs)
+            return false;
+        foreach (var organ in organs.ContainedEntities)
+        {
+            if (!TryComp<MetabolizerComponent>(organ, out var meta))
+                continue;
+            foreach (var stage in meta.Stages)
+            {
+                if (stage == ExcretionStage)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool IsSubTolerance(ReagentPrototype proto, FixedPoint2 quantity)
+    {
+        // Negative MinEffectiveDose is the "unset" sentinel - apply the group default.
+        // Explicit 0 means no floor, fire at any dose. Positive overrides up or down.
+        FixedPoint2 tolerance;
+        if (proto.MinEffectiveDose >= FixedPoint2.Zero)
+        {
+            tolerance = proto.MinEffectiveDose;
+        }
+        else
+        {
+            // Only Medicine and food/drink groups intentionally fire at trace. Everything
+            // else - toxins, heavy metals, pyrotechnics, narcotics, biologicals (cyanide is
+            // here), botanicals (weed killer), special (lube, holy water), and the catch-all
+            // Unknown bucket (mostly dangerous one-offs) - gets the anti-stack floor.
+            // Reagents in gated groups that need trace effects opt out via MinEffectiveDose: 0.
+            tolerance = proto.Group is "Medicine" or "Foods" or "Drinks"
+                ? FixedPoint2.Zero
+                : DefaultTolerance;
+        }
+
+        return tolerance > FixedPoint2.Zero && quantity < tolerance;
+    }
+    // HONK END
 }
 
