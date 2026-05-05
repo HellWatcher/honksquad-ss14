@@ -33,6 +33,12 @@
   - !type:AddComponentSpecial
     components:
       - type: CommandStaff
+  # HONK START - issue #481 P5: Skaven head-roles speak in third person ("Thanquol-speak").
+  # System guards by species so non-Skaven crew on this job are unaffected.
+  - !type:AddComponentSpecial
+    components:
+      - type: QueekishThirdPerson
+  # HONK END
 
 - type: startingGear
   id: CaptainGear
