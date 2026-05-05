@@ -52,6 +52,12 @@
       "name": "multi-band"
     },
     {
+      "name": "add-base"
+    },
+    {
+      "name": "add-band"
+    },
+    {
       "name": "detail"
     },
     {

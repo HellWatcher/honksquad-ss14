@@ -21,6 +21,10 @@
           color: "#c6c0b5"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -40,6 +44,10 @@
           color: "#e8fefe"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -59,6 +67,10 @@
           color: "#f4fce8"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -78,6 +90,10 @@
           color: "#eaeaea"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -97,6 +113,10 @@
           color: "#ffee00"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -116,6 +136,10 @@
           color: "#ffee00"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -135,6 +159,10 @@
           color: "#f7d5d3"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -154,6 +182,10 @@
           color: "#fefb30"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -173,6 +205,10 @@
           color: "#f7d5d3"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -192,6 +228,10 @@
           color: "#f7d5d3"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -211,6 +251,10 @@
           color: "#6b6b80"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 # --- Fork-only gases ---
@@ -232,6 +276,10 @@
           color: "#fefb30"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -251,6 +299,10 @@
           color: "#d0d2a0"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -270,6 +322,10 @@
           color: "#368bff"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -289,6 +345,10 @@
           color: "#ff0e00"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -308,6 +368,10 @@
           color: "#368bff"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -327,6 +391,10 @@
           color: "#be3455"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -346,6 +414,10 @@
           color: "#b2b2b2"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -365,6 +437,10 @@
           color: "#7b4732"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -384,6 +460,10 @@
           color: "#2786e5"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -403,6 +483,10 @@
           color: "#33cc33"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
 
 - type: entity
@@ -422,4 +506,8 @@
           color: "#006600"
         - state: multi-band
           shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
         - state: detail
