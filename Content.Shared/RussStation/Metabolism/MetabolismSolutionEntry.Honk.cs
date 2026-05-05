@@ -35,4 +35,23 @@ public sealed partial class MetabolismSolutionEntry
     /// </summary>
     [DataField]
     public float VolumeScaledTransfer = MetabolismConstants.DefaultVolumeScaledTransfer;
+
+    /// <summary>
+    /// Per-tick removal applied to toxin-class reagents (group "Toxins") in this stage's
+    /// solution. The reagent is consumed at this rate without firing effects. Set on the
+    /// liver's Detoxification entry so the liver scrubs toxins from the bloodstream;
+    /// other stages stay at 0. Mirrors SS13's liver-driven toxin filter.
+    /// </summary>
+    [DataField]
+    public FixedPoint2 ToxinScrubRate = MetabolismConstants.DefaultToxinScrubRate;
+
+    /// <summary>
+    /// Per-tick removal applied to every reagent in this stage's solution, without firing
+    /// effects. Set on the kidney's Excretion entry so the kidney slowly drains the
+    /// bloodstream beyond what the heart's Bloodstream-stage transfer moves out. 0 = no
+    /// drain. Mirrors the body's natural excretion path; missing kidneys -> reagents
+    /// linger in blood for longer.
+    /// </summary>
+    [DataField]
+    public FixedPoint2 PerReagentDrain = MetabolismConstants.DefaultPerReagentDrain;
 }
