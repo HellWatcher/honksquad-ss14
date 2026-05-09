@@ -8,19 +8,18 @@ using Content.Shared.Popups;
 using Content.Shared.RussStation.Bluespace.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Throwing;
+using System;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Systems;
-using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.Bluespace.EntitySystems;
 
 public sealed class BluespaceCrushTeleportSystem : EntitySystem
 {
-    [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedJointSystem _joints = default!;
@@ -99,22 +98,16 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
 
     private void Blink(EntityUid target, float range)
     {
-        // The client replays this handler each tick until the server acks the
-        // input. Gate the random scan and the actual coordinate change so they
-        // run once on the client (and once on the server), otherwise the target
-        // gets snapped to a fresh random spot on every replayed tick.
-        if (!_timing.IsFirstTimePredicted)
-            return;
-
         var sourceXform = Transform(target);
         var coords = sourceXform.Coordinates;
 
-        // Try several candidate offsets and pick the first one that lands on a
-        // walkable tile. Without this, the user can end up wedged between a wall
-        // and a dense entity (e.g. a machine) and get stuck. If every candidate
-        // is blocked the crystal still gets consumed, but the target stays put;
-        // that mirrors SS13's "the bluespace fizzled" behaviour in tight spaces.
-        if (!TryFindBlinkDestination(coords, range, out var dest))
+        // Seed the candidate scan from the current tick + the target's id so the
+        // client's predicted blink lands on the exact same tile the server picks
+        // (no IsFirstTimePredicted gate, no replay reroll, no end-of-RTT snap).
+        var seed = HashCode.Combine(_timing.CurTick.Value, target.Id);
+        var rng = new System.Random(seed);
+
+        if (!TryFindBlinkDestination(rng, coords, range, out var dest))
             return;
 
         _xform.AttachToGridOrMap(target);
@@ -124,11 +117,21 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         _audio.PlayPredicted(PortalSound, target, target);
     }
 
-    private bool TryFindBlinkDestination(EntityCoordinates source, float range, out EntityCoordinates dest)
+    private bool TryFindBlinkDestination(System.Random rng, EntityCoordinates source, float range, out EntityCoordinates dest)
     {
+        // Try several candidate offsets and pick the first one that lands on a
+        // walkable tile. Without this filter the target can end up wedged
+        // between a wall and a dense entity (e.g. a machine) and get stuck.
+        // If every candidate is blocked the crystal still gets consumed, but
+        // the target stays put; that mirrors SS13's "the bluespace fizzled"
+        // behaviour in tight spaces.
         for (var i = 0; i < BlinkCandidateAttempts; i++)
         {
-            var offset = _random.NextVector2(range);
+            var angle = rng.NextDouble() * Math.PI * 2.0;
+            var magnitude = (float)(rng.NextDouble() * range);
+            var offset = new System.Numerics.Vector2(
+                (float)Math.Cos(angle) * magnitude,
+                (float)Math.Sin(angle) * magnitude);
             var candidate = source.Offset(offset);
 
             if (!_turf.TryGetTileRef(candidate, out var tile))
