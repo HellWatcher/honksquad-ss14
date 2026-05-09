@@ -1,7 +1,8 @@
-# HONK - Issue #302: refined bluespace crystal + raw ore stack entities.
-# Mirrors the Diamond chain (parent: MaterialBase / OreBase). Single sprite state
-# at every stack count for both since Bluespace is exotic and rarely appears in
-# big piles.
+# HONK - Issue #302: refined bluespace crystal stack entity.
+# Mirrors the Diamond chain (parent: MaterialBase). Single sprite state at every
+# stack count since Bluespace is exotic and rarely appears in big piles. Bluespace
+# has no separate raw-ore form: tg ships the same sprite for raw and refined, so
+# mining drops the crystal directly with no ore-processor stage.
 
 - type: entity
   parent: MaterialBase
@@ -24,37 +25,6 @@
 - type: entity
   parent: MaterialBluespace
   id: MaterialBluespace1
-  suffix: Single
-  components:
-    - type: Stack
-      count: 1
-
-- type: entity
-  parent: OreBase
-  id: BluespaceOre
-  name: raw bluespace crystal
-  description: Unrefined bluespace ore. Faintly translucent, with a deep blue glow at the edges.
-  suffix: Full
-  components:
-    - type: Stack
-      stackType: BluespaceOre
-    - type: Sprite
-      sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
-      state: ore
-    - type: Item
-      sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
-    - type: Material
-    - type: PhysicalComposition
-      materialComposition:
-        RawBluespace: 100
-    - type: Tag
-      tags:
-        - Ore
-        - RawMaterial
-
-- type: entity
-  parent: BluespaceOre
-  id: BluespaceOre1
   suffix: Single
   components:
     - type: Stack

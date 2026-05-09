@@ -6,7 +6,7 @@
 
 - type: ore
   id: OreBluespace
-  oreEntity: BluespaceOre1
+  oreEntity: MaterialBluespace1
   minOreYield: 1
   maxOreYield: 2
 
