@@ -1,13 +1,16 @@
 // HONK - Issue #302: see BluespaceCrushTeleportComponent for the design rationale.
 
 using Content.Shared.Interaction.Events;
+using Content.Shared.Maps;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Physics;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Bluespace.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Throwing;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Random;
@@ -23,6 +26,9 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedStackSystem _stack = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private readonly TurfSystem _turf = default!;
+
+    private const int BlinkCandidateAttempts = 12;
 
     private static readonly SoundSpecifier PortalSound =
         new SoundPathSpecifier("/Audio/Effects/teleport_arrival.ogg");
@@ -93,13 +99,43 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
     {
         var sourceXform = Transform(target);
         var coords = sourceXform.Coordinates;
-        var offset = _random.NextVector2(range);
-        var dest = coords.Offset(offset);
+
+        // Try several candidate offsets and pick the first one that lands on a
+        // walkable tile. Without this, the user can end up wedged between a wall
+        // and a dense entity (e.g. a machine) and get stuck. If every candidate
+        // is blocked the crystal still gets consumed, but the target stays put;
+        // that mirrors SS13's "the bluespace fizzled" behaviour in tight spaces.
+        if (!TryFindBlinkDestination(coords, range, out var dest))
+            return;
 
         _xform.AttachToGridOrMap(target);
         _joints.ClearJoints(target);
         _xform.SetCoordinates(target, sourceXform, dest);
 
         _audio.PlayPredicted(PortalSound, target, target);
+    }
+
+    private bool TryFindBlinkDestination(EntityCoordinates source, float range, out EntityCoordinates dest)
+    {
+        for (var i = 0; i < BlinkCandidateAttempts; i++)
+        {
+            var offset = _random.NextVector2(range);
+            var candidate = source.Offset(offset);
+
+            if (!_turf.TryGetTileRef(candidate, out var tile))
+                continue;
+
+            if (_turf.IsSpace(tile.Value))
+                continue;
+
+            if (_turf.IsTileBlocked(tile.Value, CollisionGroup.MobMask))
+                continue;
+
+            dest = _turf.GetTileCenter(tile.Value);
+            return true;
+        }
+
+        dest = default;
+        return false;
     }
 }
