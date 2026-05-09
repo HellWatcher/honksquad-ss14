@@ -14,6 +14,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Random;
+using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.Bluespace.EntitySystems;
 
@@ -26,6 +27,7 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedStackSystem _stack = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly TurfSystem _turf = default!;
 
     private const int BlinkCandidateAttempts = 12;
@@ -97,6 +99,13 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
 
     private void Blink(EntityUid target, float range)
     {
+        // The client replays this handler each tick until the server acks the
+        // input. Gate the random scan and the actual coordinate change so they
+        // run once on the client (and once on the server), otherwise the target
+        // gets snapped to a fresh random spot on every replayed tick.
+        if (!_timing.IsFirstTimePredicted)
+            return;
+
         var sourceXform = Transform(target);
         var coords = sourceXform.Coordinates;
 
