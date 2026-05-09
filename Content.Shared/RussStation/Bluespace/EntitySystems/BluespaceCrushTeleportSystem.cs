@@ -9,6 +9,7 @@ using Content.Shared.RussStation.Bluespace.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Throwing;
 using System;
+using Content.Shared.Random.Helpers;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
@@ -101,11 +102,12 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         var sourceXform = Transform(target);
         var coords = sourceXform.Coordinates;
 
-        // Seed the candidate scan from the current tick + the target's id so the
-        // client's predicted blink lands on the exact same tile the server picks
-        // (no IsFirstTimePredicted gate, no replay reroll, no end-of-RTT snap).
-        var seed = HashCode.Combine(_timing.CurTick.Value, target.Id);
-        var rng = new System.Random(seed);
+        // Use the canonical predicted RNG helper (deterministic djb2 over CurTick
+        // + NetEntity id) so the client's predicted blink lands on the exact
+        // same tile the server picks. HashCode.Combine + EntityUid.Id would
+        // diverge: HashCode.Combine uses a per-process random salt, and
+        // EntityUid.Id is local rather than network-stable.
+        var rng = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(target));
 
         if (!TryFindBlinkDestination(rng, coords, range, out var dest))
             return;
