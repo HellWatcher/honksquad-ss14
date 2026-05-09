@@ -1,0 +1,51 @@
+# HONK - Issue #302: short-lived sparks effects ported from SS13's
+# icons/effects/effects.dmi. Used by the bluespace crystal blink so the
+# player can see both endpoints of the teleport. Baked sprites are
+# directional (4-dir) and animated.
+
+- type: entity
+  id: EffectSparksSS13
+  name: sparks
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Effects/sparks_ss13.rsi"
+      drawdepth: Effects
+      noRot: true
+      layers:
+        - state: sparks
+          shader: unshaded
+          map: ["enum.EffectLayers.Unshaded"]
+    - type: EffectVisuals
+    - type: AnimationPlayer
+    - type: TimedDespawn
+      lifetime: 0.45
+    - type: Tag
+      tags:
+        - HideContextMenu
+
+- type: entity
+  id: EffectQuantumSparksSS13
+  name: quantum sparks
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Effects/quantum_sparks_ss13.rsi"
+      drawdepth: Effects
+      noRot: true
+      layers:
+        - state: quantum_sparks
+          shader: unshaded
+          map: ["enum.EffectLayers.Unshaded"]
+    - type: PointLight
+      color: "#2E50B7"
+      radius: 2.0
+      energy: 4
+      netsync: false
+    - type: EffectVisuals
+    - type: AnimationPlayer
+    - type: TimedDespawn
+      lifetime: 0.5
+    - type: Tag
+      tags:
+        - HideContextMenu

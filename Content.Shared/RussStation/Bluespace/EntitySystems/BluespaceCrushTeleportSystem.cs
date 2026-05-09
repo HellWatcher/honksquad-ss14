@@ -125,8 +125,8 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
 
         // Spawn the departure VFX + sound at the source tile (matches SS13's
         // attack_self / throw_impact sparks + SFX_PORTAL_ENTER).
-        if (comp.BlinkEffect is { } effect)
-            PredictedSpawnAtPosition(effect, coords);
+        if (comp.BlinkEffectSource is { } sourceEffect)
+            PredictedSpawnAtPosition(sourceEffect, coords);
         _audio.PlayPredicted(DepartureSound, coords, target);
 
         _xform.AttachToGridOrMap(target);
@@ -135,8 +135,8 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
 
         // And again at the destination (matches do_teleport's phasein.ogg
         // arrival cue).
-        if (comp.BlinkEffect is { } effectDest)
-            PredictedSpawnAtPosition(effectDest, dest);
+        if (comp.BlinkEffectDestination is { } destEffect)
+            PredictedSpawnAtPosition(destEffect, dest);
         _audio.PlayPredicted(ArrivalSound, target, target);
     }
 

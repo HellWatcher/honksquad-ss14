@@ -27,10 +27,18 @@ public sealed partial class BluespaceCrushTeleportComponent : Component
     public float BlinkRange = BluespaceConstants.DefaultBlinkRange;
 
     /// <summary>
-    /// Visual effect spawned at both the source and destination tiles when a
-    /// blink fires. Defaults to the generic sparks effect to match SS13's
-    /// /obj/item/stack/ore/bluespace_crystal. Set to null to suppress.
+    /// Visual effect spawned at the source tile when a blink fires. Defaults
+    /// to the SS13 generic sparks (matches /obj/item/stack/ore/bluespace_crystal's
+    /// attack_self / throw_impact). Set to null to suppress.
     /// </summary>
     [DataField]
-    public EntProtoId? BlinkEffect = "EffectSparks";
+    public EntProtoId? BlinkEffectSource = "EffectSparksSS13";
+
+    /// <summary>
+    /// Visual effect spawned at the destination tile. Defaults to the SS13
+    /// quantum sparks variant (the bluespace-themed sibling) so the two
+    /// endpoints read distinctly in-game.
+    /// </summary>
+    [DataField]
+    public EntProtoId? BlinkEffectDestination = "EffectQuantumSparksSS13";
 }
