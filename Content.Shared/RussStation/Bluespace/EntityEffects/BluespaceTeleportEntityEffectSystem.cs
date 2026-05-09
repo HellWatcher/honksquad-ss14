@@ -13,7 +13,7 @@ namespace Content.Shared.RussStation.Bluespace.EntityEffects;
 public sealed partial class BluespaceTeleportEntityEffectSystem
     : EntityEffectSystem<TransformComponent, BluespaceTeleport>
 {
-    [Dependency] private readonly BluespaceCrushTeleportSystem _blink = default!;
+    [Dependency] private readonly BluespaceBlinkSystem _blink = default!;
 
     protected override void Effect(Entity<TransformComponent> entity, ref EntityEffectEvent<BluespaceTeleport> args)
     {

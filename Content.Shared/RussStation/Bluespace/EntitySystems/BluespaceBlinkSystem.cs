@@ -23,7 +23,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.Bluespace.EntitySystems;
 
-public sealed class BluespaceCrushTeleportSystem : EntitySystem
+public sealed class BluespaceBlinkSystem : EntitySystem
 {
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;

@@ -15,7 +15,7 @@ using BluespaceConstants = Content.Shared.RussStation.Bluespace.BluespaceConstan
 namespace Content.Shared.RussStation.Bluespace.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-[Access(typeof(BluespaceCrushTeleportSystem))]
+[Access(typeof(BluespaceBlinkSystem))]
 public sealed partial class BluespaceCrushTeleportComponent : Component
 {
     /// <summary>

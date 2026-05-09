@@ -8,7 +8,7 @@
 # - 7.5% chance to jitter (the "feel unstable" pulse from SS13's on_mob_life).
 # - 7.5% chance to blink up to 5 tiles in a random direction, reusing the same
 #   path as the crystal's UseInHand and ThrowDoHit
-#   (BluespaceCrushTeleportSystem.TryBlink), so VFX, audio, and tile-blocked
+#   (BluespaceBlinkSystem.TryBlink), so VFX, audio, and tile-blocked
 #   filtering match what players see on a crush.
 #
 # SS13 ties jitter and teleport to the same 7.5% roll with a 3s delay between
