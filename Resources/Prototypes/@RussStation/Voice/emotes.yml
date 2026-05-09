@@ -1,0 +1,65 @@
+- type: emote
+  id: Fart
+  name: chat-emote-name-fart
+  category: General
+  whitelist:
+    components:
+      - Body
+  blacklist:
+    tags:
+      - SiliconEmotes
+  chatMessages: ["chat-emote-msg-fart"]
+  chatTriggers:
+    - fart
+    - farts
+    - farted
+    - fart.
+    - farts.
+    - farted.
+    - fart!
+    - farts!
+    - farted!
+
+- type: emote
+  id: Flip
+  name: chat-emote-name-flip
+  category: Hands
+  whitelist:
+    components:
+      - Hands
+  blacklist:
+    tags:
+      - SiliconEmotes
+  chatMessages: ["chat-emote-msg-flip"]
+  chatTriggers:
+    - flip
+    - flips
+    - flipped
+    - flip.
+    - flips.
+    - flipped.
+    - flip!
+    - flips!
+    - flipped!
+
+- type: emote
+  id: Spin
+  name: chat-emote-name-spin
+  category: Hands
+  whitelist:
+    components:
+      - Hands
+  blacklist:
+    tags:
+      - SiliconEmotes
+  chatMessages: ["chat-emote-msg-spin"]
+  chatTriggers:
+    - spin
+    - spins
+    - spun
+    - spin.
+    - spins.
+    - spun.
+    - spin!
+    - spins!
+    - spun!

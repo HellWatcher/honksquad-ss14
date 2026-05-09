@@ -1,0 +1,8 @@
+- files:
+    - poo1.ogg
+    - poo2.ogg
+    - poo3.ogg
+    - poo4.ogg
+  license: "CC-BY-SA-3.0"
+  copyright: "HippaDilla (Russ Station 13)"
+  source: "https://github.com/russstation/russstation/pull/71"
