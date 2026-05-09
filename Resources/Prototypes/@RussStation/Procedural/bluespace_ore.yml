@@ -1,0 +1,32 @@
+# HONK - Issue #302: Bluespace ore distribution.
+# Spawn config matches SS14's Diamond tier (maxCount 6, group 1-2). SS13 puts
+# Bluespace and Diamond at the same MATERIAL_RARITY_RARE + MATERIAL_QUANTITY_EXOTIC,
+# so they're tier-mates and SS14 mirrors that. Salvage-only for now (no asteroid_ore_gens
+# entry); per #302 cargo purchase is intentionally absent (matches SS13).
+
+- type: ore
+  id: OreBluespace
+  oreEntity: MaterialBluespace1
+  minOreYield: 1
+  maxOreYield: 2
+
+- type: biomeMarkerLayer
+  id: OreBluespace
+  entityMask:
+    AsteroidRock: AsteroidRockBluespace
+    WallRock: WallRockBluespace
+    WallRockBasalt: WallRockBasaltBluespace
+    WallRockChromite: WallRockChromiteBluespace
+    WallRockSand: WallRockSandBluespace
+    WallRockSnow: WallRockSnowBluespace
+  maxCount: 6
+  minGroupSize: 1
+  maxGroupSize: 2
+  radius: 4
+
+- type: salvageLoot
+  id: OreBluespace
+  guaranteed: true
+  loots:
+    - !type:BiomeMarkerLoot
+      proto: OreBluespace

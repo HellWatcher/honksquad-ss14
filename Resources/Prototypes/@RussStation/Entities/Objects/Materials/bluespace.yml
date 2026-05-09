@@ -1,0 +1,35 @@
+# HONK - Issue #302: refined bluespace crystal stack entity.
+# Mirrors the Diamond chain (parent: MaterialBase). Single sprite state at every
+# stack count since Bluespace is exotic and rarely appears in big piles. Bluespace
+# has no separate raw-ore form: tg ships the same sprite for raw and refined, so
+# mining drops the crystal directly with no ore-processor stage.
+
+- type: entity
+  parent: MaterialBase
+  id: MaterialBluespace
+  name: bluespace crystal
+  description: A shard of crystallized bluespace. Hums faintly with non-Euclidean intent. Crushing one teleports you a short distance; thrown into a target it does the same to them.
+  suffix: Full
+  components:
+    - type: Stack
+      stackType: Bluespace
+    - type: Sprite
+      sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+      state: bluespace_crystal
+    - type: Item
+      sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+    - type: Material
+    - type: PhysicalComposition
+      materialComposition:
+        Bluespace: 100
+    - type: BluespaceCrushTeleport
+    - type: UseDelay
+      delay: 1.0
+
+- type: entity
+  parent: MaterialBluespace
+  id: MaterialBluespace1
+  suffix: Single
+  components:
+    - type: Stack
+      count: 1

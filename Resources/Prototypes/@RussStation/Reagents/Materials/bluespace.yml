@@ -1,0 +1,14 @@
+# HONK - Issue #302: Bluespace as a salvage/crafting material.
+# Tier-matches Diamond per SS13 (both MATERIAL_RARITY_RARE + MATERIAL_QUANTITY_EXOTIC).
+# Price uses the SS13->SS14 Diamond ratio (500 -> 20 = /25), so SS13 Bluespace 300 -> 12.
+
+- type: material
+  id: Bluespace
+  stackEntity: MaterialBluespace1
+  name: materials-bluespace
+  unit: materials-unit-piece
+  icon:
+    sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+    state: bluespace_crystal
+  color: "#2E50B7"
+  price: 12 # exotic salvage; tier matches Diamond per SS13 rarity tables

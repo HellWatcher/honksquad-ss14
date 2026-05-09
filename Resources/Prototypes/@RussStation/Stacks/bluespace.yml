@@ -1,0 +1,10 @@
+# HONK - Issue #302: stack def for refined bluespace crystal.
+
+- type: stack
+  parent: BaseMediumStack
+  id: Bluespace
+  name: stack-bluespace
+  icon:
+    sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+    state: bluespace_crystal
+  spawn: MaterialBluespace1
