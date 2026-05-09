@@ -18,6 +18,7 @@
       state: bluespace_crystal
     - type: Item
       sprite: "@RussStation/Objects/Materials/bluespace_crystal.rsi"
+    - type: Material
     - type: PhysicalComposition
       materialComposition:
         Bluespace: 100
