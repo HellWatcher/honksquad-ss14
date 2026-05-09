@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from tgstation icons/effects/effects.dmi (state: phasein). Animated.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "phasein",
+      "delays": [
+        [
+          0.05,
+          0.075,
+          0.075,
+          0.075,
+          0.075,
+          0.1,
+          0.01,
+          0.01,
+          0.01,
+          0.01,
+          0.01
+        ]
+      ]
+    }
+  ]
+}

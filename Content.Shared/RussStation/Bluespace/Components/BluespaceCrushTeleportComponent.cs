@@ -28,17 +28,16 @@ public sealed partial class BluespaceCrushTeleportComponent : Component
 
     /// <summary>
     /// Visual effect spawned at the source tile when a blink fires. Defaults
-    /// to the SS13 generic sparks (matches /obj/item/stack/ore/bluespace_crystal's
-    /// attack_self / throw_impact). Set to null to suppress.
+    /// to the SS13 phaseout animation. Set to null to suppress.
     /// </summary>
     [DataField]
-    public EntProtoId? BlinkEffectSource = "EffectSparksSS13";
+    public EntProtoId? BlinkEffectSource = "EffectPhaseOut";
 
     /// <summary>
     /// Visual effect spawned at the destination tile. Defaults to the SS13
-    /// quantum sparks variant (the bluespace-themed sibling) so the two
-    /// endpoints read distinctly in-game.
+    /// phasein animation, the canonical companion to do_teleport's
+    /// phasein.ogg arrival cue.
     /// </summary>
     [DataField]
-    public EntProtoId? BlinkEffectDestination = "EffectQuantumSparksSS13";
+    public EntProtoId? BlinkEffectDestination = "EffectPhaseIn";
 }
