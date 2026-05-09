@@ -1,0 +1,45 @@
+# HONK - Issue #302: phasein/phaseout effects ported from SS13's
+# icons/effects/effects.dmi. These are the canonical SS13 teleport
+# animations (used by do_teleport's phasein.ogg arrival cue).
+
+- type: entity
+  id: EffectPhaseOut
+  name: phase out
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Effects/phaseout.rsi"
+      drawdepth: Effects
+      noRot: true
+      layers:
+        - state: phaseout
+          shader: unshaded
+          map: ["enum.EffectLayers.Unshaded"]
+    - type: EffectVisuals
+    - type: AnimationPlayer
+    - type: TimedDespawn
+      lifetime: 0.6
+    - type: Tag
+      tags:
+        - HideContextMenu
+
+- type: entity
+  id: EffectPhaseIn
+  name: phase in
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Effects/phasein.rsi"
+      drawdepth: Effects
+      noRot: true
+      layers:
+        - state: phasein
+          shader: unshaded
+          map: ["enum.EffectLayers.Unshaded"]
+    - type: EffectVisuals
+    - type: AnimationPlayer
+    - type: TimedDespawn
+      lifetime: 0.6
+    - type: Tag
+      tags:
+        - HideContextMenu
