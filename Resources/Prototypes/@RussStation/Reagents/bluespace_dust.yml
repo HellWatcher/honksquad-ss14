@@ -1,0 +1,34 @@
+# HONK - Issue #302 follow-up: Bluespace Dust reagent. Mirrors SS13's
+# /datum/reagent/bluespace from russstation/code/modules/reagents/chemistry/reagents/other_reagents.dm.
+# Grindable from MaterialBluespace at 20u per crystal (SS13 attached the
+# grind_results to the raw ore form; the fork unifies ore and refined into the
+# one MaterialBluespace entity, so the grind path moves with it).
+#
+# Effects per metabolism tick:
+# - 7.5% chance to jitter (the "feel unstable" pulse from SS13's on_mob_life).
+# - 7.5% chance to blink up to 5 tiles in a random direction, reusing the same
+#   path as the crystal's UseInHand and ThrowDoHit
+#   (BluespaceBlinkSystem.TryBlink), so VFX, audio, and tile-blocked
+#   filtering match what players see on a crush.
+#
+# SS13 ties jitter and teleport to the same 7.5% roll with a 3s delay between
+# them. The fork rolls each effect independently for simplicity; the average
+# tick-to-tick experience is close enough and the implementation skips a
+# delayed-callback component.
+
+- type: reagent
+  id: BluespaceDust
+  name: reagent-name-bluespace-dust
+  group: Special
+  desc: reagent-desc-bluespace-dust
+  physicalDesc: reagent-physical-desc-fizzling-blue
+  flavor: bitter
+  color: "#0000CC"
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:Jitter
+          probability: 0.075
+        - !type:BluespaceTeleport
+          probability: 0.075
+          range: 5

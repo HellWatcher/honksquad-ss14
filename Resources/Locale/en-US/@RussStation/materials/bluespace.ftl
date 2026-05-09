@@ -5,3 +5,13 @@ stack-bluespace = bluespace crystal
 
 bluespace-crystal-crush-self = You crush the bluespace crystal!
 bluespace-crystal-crush-others = { $user } crushes a bluespace crystal!
+
+reagent-name-bluespace-dust = bluespace dust
+reagent-desc-bluespace-dust = A dust composed of microscopic bluespace crystals, with minor space-warping properties.
+reagent-physical-desc-fizzling-blue = fizzling blue
+
+entity-effect-guidebook-bluespace-teleport =
+    { $chance ->
+        [1] Teleports
+        *[other] teleport
+    } the drinker up to { $range } tiles in a random direction
