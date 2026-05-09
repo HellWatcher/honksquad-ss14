@@ -9,12 +9,14 @@ using Content.Shared.RussStation.Bluespace.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Throwing;
 using System;
+using System.Numerics;
 using Content.Shared.Random.Helpers;
 using Content.Shared.Timing;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
+using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Timing;
 
@@ -27,6 +29,7 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
     [Dependency] private readonly SharedJointSystem _joints = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedStackSystem _stack = default!;
+    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
     [Dependency] private readonly ThrownItemSystem _thrown = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
@@ -81,9 +84,13 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         if (!HasComp<MobStateComponent>(args.Target))
             return;
 
-        // Stop the crystal at the mob it hit. Without this it keeps flying past the
-        // target until physics damps it, which makes the teleport feel disconnected
-        // from the impact.
+        // Stop the crystal at the mob it hit. StopThrow alone strips the throwing
+        // fixture and the ThrownItemComponent but leaves the existing linear
+        // velocity intact, so the crystal keeps coasting past the target until
+        // friction damps it. Zero the velocity first so it actually parks on
+        // impact.
+        if (TryComp<PhysicsComponent>(ent.Owner, out var thrownPhysics))
+            _physics.SetLinearVelocity(ent.Owner, Vector2.Zero, body: thrownPhysics);
         _thrown.StopThrow(ent.Owner, args.Component);
 
         // Throw collisions are physics-driven and don't reconcile cleanly between
