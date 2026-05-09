@@ -25,6 +25,16 @@
               Quantity: 4
     - type: Sprite
       sprite: "@RussStation/Objects/Specific/Hydroponics/bluespace_tomato.rsi"
+    # Override the inherited blue-tomato juice (10u SpaceLube) with the
+    # bluespace-tomato identity reagent. Mirrors the SS14 produce convention
+    # where juice yields a single iconic reagent (JuiceTomato, JuiceBanana,
+    # SpaceLube on the lube tomato). Grind still pulls the full food mix.
+    - type: Extractable
+      grindableSolutionName: food
+      juiceSolution:
+        reagents:
+          - ReagentId: BluespaceDust
+            Quantity: 10
     - type: Produce
       seedId: bluespaceTomato
     - type: BluespacePlantTeleport
