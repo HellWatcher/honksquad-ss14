@@ -1,0 +1,57 @@
+# HONK - Issue #697 child: bluespace banana + bluespace banana peel.
+# Mirrors SS13's /obj/item/food/grown/banana/bluespace and
+# /obj/item/grown/bananapeel/bluespace at code/modules/hydroponics/grown/banana.dm.
+#
+# The food itself doesn't carry the teleport trait; SS13's gene set is slip + teleport
+# without squash, so the teleport rides on the dropped peel (slip-trigger) and the
+# food just delivers the reagents on consumption. Eat one, drop a teleporting peel.
+
+- type: entity
+  parent: FoodBanana
+  id: FoodBluespaceBanana
+  name: bluespace banana
+  description: A banana so saturated with bluespace that biting it threatens to slingshot the next person who slips on the peel.
+  components:
+    - type: Edible
+      trash:
+        - TrashBluespaceBananaPeel
+    - type: Butcherable
+      butcheringType: Knife
+      spawned:
+        - id: TrashBluespaceBananaPeel
+    - type: SolutionContainerManager
+      solutions:
+        food:
+          maxVol: 8
+          reagents:
+            - ReagentId: Nutriment
+              Quantity: 4
+            - ReagentId: Vitamin
+              Quantity: 2
+            - ReagentId: BluespaceDust
+              Quantity: 5
+    - type: Sprite
+      sprite: "@RussStation/Objects/Specific/Hydroponics/bluespace_banana.rsi"
+      state: produce
+    - type: Produce
+      seedId: bluespaceBanana
+    - type: Extractable
+      juiceSolution:
+        reagents:
+          - ReagentId: JuiceBanana
+            Quantity: 10
+
+- type: entity
+  parent: TrashBananaPeel
+  id: TrashBluespaceBananaPeel
+  name: bluespace banana peel
+  description: A glowing-blue banana peel. Stepping on it does not behave like a banana peel ought to.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Specific/Hydroponics/bluespace_banana.rsi"
+      state: peel
+    - type: Item
+      sprite: "@RussStation/Objects/Specific/Hydroponics/bluespace_banana.rsi"
+    - type: BluespacePlantTeleport
+      onSlip: true
+      onThrowImpact: false
