@@ -38,4 +38,5 @@
     - type: Produce
       seedId: bluespaceTomato
     - type: BluespacePlantTeleport
+      onSlip: false
     - type: BluespacePlantBackfire
