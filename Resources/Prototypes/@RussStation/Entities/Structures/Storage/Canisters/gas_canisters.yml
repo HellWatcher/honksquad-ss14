@@ -24,7 +24,7 @@
       layers:
         - state: antinoblium
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Antinoblium: 2769.36
@@ -41,7 +41,7 @@
       layers:
         - state: bz
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           BZ: 2769.36
@@ -58,7 +58,7 @@
       layers:
         - state: halon
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Halon: 2769.36
@@ -75,7 +75,7 @@
       layers:
         - state: healium
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Healium: 2769.36
@@ -92,7 +92,7 @@
       layers:
         - state: helium
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Helium: 2769.36
@@ -109,7 +109,7 @@
       layers:
         - state: hydrogen
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Hydrogen: 2769.36
@@ -126,7 +126,7 @@
       layers:
         - state: hyper_noblium
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           HyperNoblium: 2769.36
@@ -143,7 +143,7 @@
       layers:
         - state: nitrium
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Nitrium: 2769.36
@@ -160,7 +160,7 @@
       layers:
         - state: pluoxium
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Pluoxium: 2769.36
@@ -177,7 +177,7 @@
       layers:
         - state: proto_nitrate
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           ProtoNitrate: 2769.36
@@ -194,7 +194,7 @@
       layers:
         - state: zauker
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Zauker: 2769.36

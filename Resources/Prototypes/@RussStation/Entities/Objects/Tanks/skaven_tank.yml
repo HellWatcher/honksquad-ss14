@@ -11,8 +11,12 @@
   name: double emergency ammonia tank
   description: A high-grade dual-tank emergency life support container, filled with breathable miasma. It can hold 2.5 L of gas.
   components:
+    # Override inherited Sprite layers to drop the upstream MaxPressureVisuals
+    # mask/integrity layers; the fork RSI ships only an icon. Tracked in #689.
     - type: Sprite
       sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
+      layers:
+        - state: icon
     - type: Item
       sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
       storedSprite:
@@ -27,7 +31,7 @@
   suffix: Filled
   components:
     - type: GasTank
-      outputPressure: 21.3
+      releasePressure: 21.3
       air:
         # 15 minutes
         volume: 2.5
@@ -47,8 +51,12 @@
   name: ammonia tank
   description: A standard cylindrical gas tank for ammonia. It can hold 5 L of gas.
   components:
+    # Override inherited Sprite layers to drop the upstream MaxPressureVisuals
+    # mask/integrity layers; the fork RSI ships only an icon. Tracked in #689.
     - type: Sprite
       sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
+      layers:
+        - state: icon
     - type: Item
       sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
     - type: Clothing

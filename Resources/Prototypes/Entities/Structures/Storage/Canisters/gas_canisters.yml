@@ -17,6 +17,13 @@
         - state: paper
           visible: false
           map: [ "enum.PaperLabelVisuals.Layer" ]
+        - state: integrity-unshaded-0
+          map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
+          shader: unshaded
+          visible: false
+        - state: mask-grey
+          map: [ "enum.MaxPressureVisualLayers.Base" ]
+          visible: false
     - type: Appearance
     - type: GenericVisualizer
       visuals:
@@ -114,13 +121,24 @@
           rotationsEnabled: false
           volume: 1
     - type: GasPortable
+    - type: MaxPressureVisuals
+      integrityMask: mask-grey
     - type: GasCanister
+      maxIntegrity: 15 # 5 times stronger than a gas tank
+      integrity: 15
+      maxReleasePressure: 1013.25
+      safetyPressure: 10132.5 # High enough that liquid tanks don't burst immediately, with an extra 33% wiggle room to work with
+      overpressure: 20265 # Purposefully high because cans react really fucking fast, may need to redo this value if reactions change!
       gasTankSlot:
         name: comp-gas-canister-slot-name-gas-tank
         ejectOnBreak: true
         whitelist:
           components:
             - GasTank
+    - type: Explosive
+      explosionType: Minibomb # Mostly a pressure wave explosive so primarily blunt damage
+      maxIntensity: 100
+      tileBreakScale: 0.2 # Keeps the can from spacing all the hot gas it has now vented :). If this proves to be too much it can be removed.
     - type: StaticPrice
       price: 200
     - type: AccessReader
@@ -145,7 +163,7 @@
         - state: storage
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         temperature: 293.15
     - type: Destructible
@@ -187,7 +205,7 @@
       - state: air
     # HONK END
   - type: GasCanister
-    gasMixture:
+    air:
       volume: 1500
       moles:
         Oxygen: 581.56 # oxygen 21%
@@ -230,7 +248,7 @@
       - state: oxygen
     # HONK END
   - type: GasCanister
-    gasMixture:
+    air:
       volume: 1500
       moles:
         Oxygen: 2769.36 # oxygen
@@ -266,7 +284,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain liquid oxygen. It can be attached to connector ports using a wrench.
   components:
   - type: GasCanister
-    gasMixture:
+    air:
       volume: 1500
       moles:
         Oxygen: 18710.71051 # oxygen
@@ -287,7 +305,7 @@
         - state: nitrogen
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Nitrogen: 2769.36 # nitrogen
@@ -323,7 +341,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain liquid nitrogen. It can be attached to connector ports using a wrench.
   components:
   - type: GasCanister
-    gasMixture:
+    air:
       volume: 1500
       moles:
         Nitrogen: 18710.71051 # nitrogen
@@ -344,7 +362,7 @@
         - state: carbon_dioxide
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           CarbonDioxide: 2769.36 # CO2
@@ -382,7 +400,7 @@
   description: A canister that can contain any type of gas. This one is supposed to contain liquid carbon dioxide. It can be attached to connector ports using a wrench.
   components:
   - type: GasCanister
-    gasMixture:
+    air:
       volume: 1500
       moles:
         CarbonDioxide: 18710.71051 # CO2
@@ -403,7 +421,7 @@
         - state: plasma
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Plasma: 2769.36 # plasma
@@ -447,7 +465,7 @@
         - state: tritium
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Tritium: 2769.36 # Tritium
@@ -491,7 +509,7 @@
         - state: water_vapor
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           WaterVapor: 2769.36 # Water vapor
@@ -533,7 +551,7 @@
         - state: ammonia
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           Ammonia: 2769.36 # Ammonia
@@ -577,7 +595,7 @@
         - state: nitrous_oxide
       # HONK END
     - type: GasCanister
-      gasMixture:
+      air:
         volume: 1500
         moles:
           NitrousOxide: 2769.36 # N2O
@@ -621,7 +639,7 @@
     - state: frezon
     # HONK END
   - type: GasCanister
-    gasMixture:
+    air:
       volume: 1500
       moles:
         Frezon: 2769.36 # Frezon
@@ -651,6 +669,24 @@
       - !type:DumpCanisterBehavior
   - type: Lock
     locked: true
+
+
+- type: entity
+  parent: GasCanister
+  id: MaxCapCanister # As of writing canisters currently have about 9000 explosive intensity. 95% the total damage of a syndicate bomb but spread across a larger area.
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
+  name: max cap in a can
+  suffix: Max Cap
+  # HONK END
+  components:
+  - type: GasCanister
+    air:
+      volume: 1500
+      moles:
+        Oxygen: 1400
+        Tritium: 700
+      temperature: 373.149
 
 # Broke Entities
 

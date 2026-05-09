@@ -307,9 +307,7 @@
     whitelist:
       tags:
         - TrashBag
-        # HONK START - BoxTrashbag accepts fork TrashBagBlue variant
         - TrashBagBlue
-        # HONK END
   - type: Sprite
     layers:
       - state: box
