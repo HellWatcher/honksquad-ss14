@@ -15,3 +15,6 @@ entity-effect-guidebook-bluespace-teleport =
         [1] Teleports
         *[other] teleport
     } the drinker up to { $range } tiles in a random direction
+
+bluespace-plant-backfire-self = The fruit slips out of your hand!
+bluespace-plant-backfire-others = { $user } fumbles a bluespace fruit!
