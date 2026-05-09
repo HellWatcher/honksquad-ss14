@@ -29,11 +29,14 @@ public sealed class BluespaceResearchInsertSystem : EntitySystem
         if (args.Target is not { } target || !TryComp<ResearchServerComponent>(target, out var server))
             return;
 
-        // Stack-aware consumption: take one off the stack, credit one crystal's worth of
-        // points. Stacked entities without StackComponent are treated as single-use.
+        // Consume the whole stack in one interaction and credit Points per
+        // crystal. Non-stack callers fall through to a single-shot QueueDel
+        // crediting one crystal's worth.
+        var consumed = 1;
         if (TryComp<StackComponent>(ent.Owner, out var stack))
         {
-            if (!_stack.TryUse((ent.Owner, stack), 1))
+            consumed = stack.Count;
+            if (consumed <= 0 || !_stack.TryUse((ent.Owner, stack), consumed))
                 return;
         }
         else
@@ -41,9 +44,10 @@ public sealed class BluespaceResearchInsertSystem : EntitySystem
             QueueDel(ent.Owner);
         }
 
-        _research.ModifyServerPoints(target, ent.Comp.Points, server);
+        var points = ent.Comp.Points * consumed;
+        _research.ModifyServerPoints(target, points, server);
         _popup.PopupEntity(
-            Loc.GetString("research-disk-inserted", ("points", ent.Comp.Points)),
+            Loc.GetString("research-disk-inserted", ("points", points)),
             target,
             args.User);
 
