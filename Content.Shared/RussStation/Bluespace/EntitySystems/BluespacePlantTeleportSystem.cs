@@ -22,6 +22,12 @@ public sealed class BluespacePlantTeleportSystem : EntitySystem
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
+    // Plant teleports always reuse the canonical bluespace VFX so they read the
+    // same as a crystal crush. Pass these explicitly to TryBlink (its defaults
+    // are null so callers can opt out of VFX entirely).
+    private const string SourceEffect = "EffectPhaseOut";
+    private const string DestEffect = "EffectPhaseIn";
+
     public override void Initialize()
     {
         base.Initialize();
@@ -40,7 +46,7 @@ public sealed class BluespacePlantTeleportSystem : EntitySystem
         if (!HasComp<MobStateComponent>(args.Target))
             return;
 
-        _blink.TryBlink(args.Target, ent.Comp.BlinkRange);
+        _blink.TryBlink(args.Target, ent.Comp.BlinkRange, SourceEffect, DestEffect);
     }
 
     private void OnSlip(Entity<BluespacePlantTeleportComponent> ent, ref SlipEvent args)
@@ -48,7 +54,7 @@ public sealed class BluespacePlantTeleportSystem : EntitySystem
         if (!ent.Comp.OnSlip)
             return;
 
-        _blink.TryBlink(args.Slipped, ent.Comp.BlinkRange);
+        _blink.TryBlink(args.Slipped, ent.Comp.BlinkRange, SourceEffect, DestEffect);
     }
 
     private void OnUseInHand(Entity<BluespacePlantBackfireComponent> ent, ref UseInHandEvent args)
@@ -67,7 +73,7 @@ public sealed class BluespacePlantTeleportSystem : EntitySystem
             args.User,
             args.User);
 
-        _blink.TryBlink(args.User, ent.Comp.BlinkRange);
+        _blink.TryBlink(args.User, ent.Comp.BlinkRange, SourceEffect, DestEffect);
 
         // Server owns entity destruction; client just marks the use as handled.
         if (_net.IsServer)
