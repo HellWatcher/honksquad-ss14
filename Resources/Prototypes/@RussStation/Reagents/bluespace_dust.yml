@@ -4,10 +4,17 @@
 # grind_results to the raw ore form; the fork unifies ore and refined into the
 # one MaterialBluespace entity, so the grind path moves with it).
 #
-# Effects: jitter on metabolism (the "feel unstable" pulse from SS13's
-# on_mob_life). The teleport-on-tick mechanic from SS13 is deferred to a follow-up
-# because it needs a fork-side EntityEffect class. The crush/throw teleport on
-# the crystal (#694) covers the "active blink" use case.
+# Effects per metabolism tick:
+# - 7.5% chance to jitter (the "feel unstable" pulse from SS13's on_mob_life).
+# - 7.5% chance to blink up to 5 tiles in a random direction, reusing the same
+#   path as the crystal's UseInHand and ThrowDoHit
+#   (BluespaceCrushTeleportSystem.TryBlink), so VFX, audio, and tile-blocked
+#   filtering match what players see on a crush.
+#
+# SS13 ties jitter and teleport to the same 7.5% roll with a 3s delay between
+# them. The fork rolls each effect independently for simplicity; the average
+# tick-to-tick experience is close enough and the implementation skips a
+# delayed-callback component.
 
 - type: reagent
   id: BluespaceDust
@@ -21,3 +28,7 @@
     Bloodstream:
       effects:
         - !type:Jitter
+          probability: 0.075
+        - !type:BluespaceTeleport
+          probability: 0.075
+          range: 5

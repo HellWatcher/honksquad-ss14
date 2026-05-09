@@ -17,6 +17,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Components;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Timing;
 
@@ -133,6 +134,21 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
 
     private void Blink(EntityUid target, BluespaceCrushTeleportComponent comp)
     {
+        TryBlink(target, comp.BlinkRange, comp.BlinkEffectSource, comp.BlinkEffectDestination);
+    }
+
+    /// <summary>
+    /// Public blink entry point so non-component callers (reagent metabolism, gas
+    /// reactions, future fork mechanics) can fire the same teleport that the
+    /// crystal's UseInHand and ThrowDoHit use, with matching VFX, audio,
+    /// tile-blocked filter, and predicted RNG.
+    /// </summary>
+    public bool TryBlink(
+        EntityUid target,
+        float range,
+        EntProtoId? sourceEffect = null,
+        EntProtoId? destEffect = null)
+    {
         var sourceXform = Transform(target);
         var coords = sourceXform.Coordinates;
 
@@ -143,13 +159,13 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         // EntityUid.Id is local rather than network-stable.
         var rng = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(target));
 
-        if (!TryFindBlinkDestination(rng, coords, comp.BlinkRange, out var dest))
-            return;
+        if (!TryFindBlinkDestination(rng, coords, range, out var dest))
+            return false;
 
         // Spawn the departure VFX + sound at the source tile (matches SS13's
         // attack_self / throw_impact sparks + SFX_PORTAL_ENTER).
-        if (comp.BlinkEffectSource is { } sourceEffect)
-            PredictedSpawnAtPosition(sourceEffect, coords);
+        if (sourceEffect is { } src)
+            PredictedSpawnAtPosition(src, coords);
         _audio.PlayPredicted(DepartureSound, coords, target);
 
         _xform.AttachToGridOrMap(target);
@@ -158,9 +174,10 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
 
         // And again at the destination (matches do_teleport's phasein.ogg
         // arrival cue).
-        if (comp.BlinkEffectDestination is { } destEffect)
-            PredictedSpawnAtPosition(destEffect, dest);
+        if (destEffect is { } dst)
+            PredictedSpawnAtPosition(dst, dest);
         _audio.PlayPredicted(ArrivalSound, target, target);
+        return true;
     }
 
     private bool TryFindBlinkDestination(System.Random rng, EntityCoordinates source, float range, out EntityCoordinates dest)
