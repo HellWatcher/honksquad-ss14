@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest a new feature or change.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For larger design proposals with implementation details, use the Spec template instead.
+  - type: textarea
+    attributes:
+      label: What do you want?
+      description: Describe the feature or change. What would it do? What problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Why?
+      description: Motivation. Balance reason, quality-of-life, upstream gap, player feedback, etc.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Screenshots, references, related issues, prior art.
+    validations:
+      required: false

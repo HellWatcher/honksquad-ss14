@@ -18,7 +18,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Events;
-//HONK START - Escalated grab event
+//HONK START - Escalated grab
+using Content.Shared.RussStation.EscalatedGrab.Components;
 using Content.Shared.RussStation.EscalatedGrab.Events;
 //HONK END
 using Content.Shared.Movement.Systems;
@@ -302,6 +303,11 @@ public sealed class PullingSystem : EntitySystem
             args.ModifySpeed(walkMod, sprintMod);
             return;
         }
+
+        // HONK START - Escalated grab applies its own speed modifiers per stage
+        if (HasComp<GrabStateComponent>(uid))
+            return;
+        // HONK END
 
         args.ModifySpeed(component.WalkSpeedModifier, component.SprintSpeedModifier);
     }

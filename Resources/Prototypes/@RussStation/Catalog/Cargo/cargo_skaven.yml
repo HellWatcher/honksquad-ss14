@@ -1,0 +1,24 @@
+# Skaven-relevant cargo (#481). Mirrors the Vox/nitrogen cargo entries so Skaven
+# crews can resupply ammonia tanks and atmos can stock a miasma canister, at the
+# same prices as their nitrogen equivalents.
+
+- type: cargoProduct
+  id: EmergencyAmmoniaTanks
+  icon:
+    sprite: Objects/Tanks/red.rsi
+    state: icon
+  product: CrateAmmoniaInternals
+  cost: 350
+  category: cargoproduct-category-name-emergency
+  group: market
+
+- type: cargoProduct
+  id: AmmoniaCanister
+  icon:
+    sprite: "@RussStation/Structures/Storage/canister.rsi"
+    state: ammonia
+  product: AmmoniaCanister
+  # Higher than NitrogenCanister's 500: the ammonia gas mix sells for ~615 and CargoTest.NoCargoOrderArbitrage requires cost >= sell price.
+  cost: 650
+  category: cargoproduct-category-name-atmospherics
+  group: market

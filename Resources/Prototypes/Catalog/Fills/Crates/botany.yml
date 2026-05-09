@@ -48,7 +48,10 @@
   parent: CrateHydroponics
   id: CrateHydroponicsTools
   name: hydroponics equipment crate
-  description: Supplies for growing a great garden! Contains some spray bottles of plant chemicals, a hatchet, a mini-hoe, scythe, as well as a pair of leather gloves and a botanist's apron.
+# HONK START
+  # description: Supplies for growing a great garden! Contains some spray bottles of plant chemicals, a hatchet, a mini-hoe, scythe as well as a pair of leather gloves and a botanist's apron.
+  description: Supplies for growing a great garden! Contains some spray bottles of plant chemicals, a hatchet, a mini-hoe, scythe, plant analyzer as well as a pair of leather gloves and a botanist's apron.
+# HONK END
   components:
   - type: EntityTableContainerFill
     containers:
@@ -64,6 +67,9 @@
         - id: HydroponicsToolHatchet
         - id: ClothingOuterApronBotanist
         - id: ClothingHandsGlovesLeather
+# HONK START
+        - id: HandheldPlantAnalyzer
+# HONK END
         - id: ChemistryBottleEZNutrient
           amount: 2
 

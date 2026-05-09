@@ -31,4 +31,12 @@ public static class EconomyConstants
     /// new account starts empty as an intentional penalty.
     /// </summary>
     public const int NewAccountStartingBalance = 0;
+
+    /// <summary>
+    /// Wage multiplier applied to Skaven characters via <c>SkavenPaydayComponent</c>
+    /// (issue #481 P4). 0.25 mirrors the SS13 RussStation
+    /// <c>skaven_payday_multiplier</c>: lore-flavour for skaven being treated as
+    /// disposable underclass labour.
+    /// </summary>
+    public const float SkavenPaydayMultiplier = 0.25f;
 }

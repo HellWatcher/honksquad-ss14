@@ -97,13 +97,12 @@ public sealed class SurgerySystem : SharedSurgerySystem
                 _ => OnOrganSelected(target, id),
                 id)
             {
-                ToolTip = protoId != null ? $"{name} ({protoId})" : name,
+                ToolTip = name,
             };
 
             if (protoId != null)
             {
-                option.IconSpecifier = RadialMenuIconSpecifier.With(
-                    new SpriteSpecifier.EntityPrototype(protoId));
+                option.IconSpecifier = RadialMenuIconSpecifier.With(new EntProtoId(protoId));
             }
 
             buttons.Add(option);

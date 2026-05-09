@@ -4,7 +4,10 @@
   id: Pacifist
   name: trait-pacifist-name
   description: trait-pacifist-desc
-  category: Quirks
+  # HONK START - issue #655: bring free trait into the points budget
+  category: Social
+  cost: -2
+  # HONK END
   components:
   - type: Pacified
 
@@ -12,7 +15,15 @@
   id: LightweightDrunk
   name: trait-lightweight-name
   description: trait-lightweight-desc
-  category: Quirks
+  # HONK START - issue #655: bring free trait into the points budget,
+  # plus alcohol tag-exclusion so it mutexes with AlcoholTolerance.
+  category: Diet
+  cost: -1
+  tags:
+    - alcohol
+  excludedTags:
+    - alcohol
+  # HONK END
   components:
   - type: LightweightDrunk
     boozeStrengthMultiplier: 2
@@ -21,6 +32,9 @@
   id: Snoring
   name: trait-snoring-name
   description: trait-snoring-desc
-  category: Quirks
+  # HONK START - issue #655: bring free trait into the points budget
+  category: SpeechTraits
+  cost: -1
+  # HONK END
   components:
   - type: Snoring

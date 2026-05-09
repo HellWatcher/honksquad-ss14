@@ -127,6 +127,22 @@ namespace Content.Client.Changelog
                     changelogs.Add(changelog);
                 }
 
+                // HONK START - merge same-Name changelogs (e.g. fork's HonksquadChangelog with Name: Changelog)
+                // into one tab so fork entries render under the upstream tab instead of in a separate tab.
+                changelogs = changelogs
+                    .GroupBy(c => c.Name)
+                    .Select(g => g.Count() == 1
+                        ? g.First()
+                        : new Changelog
+                        {
+                            Name = g.Key,
+                            AdminOnly = g.Any(c => c.AdminOnly),
+                            Order = g.Min(c => c.Order),
+                            Entries = g.SelectMany(c => c.Entries).OrderBy(e => e.Time).ToList(),
+                        })
+                    .ToList();
+                // HONK END
+
                 changelogs.Sort((a, b) => a.Order.CompareTo(b.Order));
                 return changelogs;
             });

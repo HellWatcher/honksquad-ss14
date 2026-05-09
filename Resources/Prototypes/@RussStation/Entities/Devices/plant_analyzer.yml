@@ -1,0 +1,28 @@
+- type: entity
+  parent: BaseItem
+  id: HandheldPlantAnalyzer
+  name: plant analyzer
+  description: A hand-held scanner that reads the genetic makeup and growing conditions of plants.
+  components:
+  - type: Tag
+    tags:
+    - DiscretePlantAnalyzer
+  - type: Sprite
+    sprite: '@RussStation/Objects/Specific/Botany/plantanalyzer.rsi'
+    layers:
+    - state: icon
+    - state: analyzer
+      shader: unshaded
+      map: ["animation"]
+  - type: Item
+    heldPrefix: analyzer
+    storedRotation: -90
+  - type: ItemToggle
+    onUse: false
+  - type: ActivatableUI
+    key: enum.PlantAnalyzerUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.PlantAnalyzerUiKey.Key:
+        type: PlantAnalyzerBoundUserInterface
+  - type: PlantAnalyzer

@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Shared.Body;
+using Content.Shared.DoAfter;
 using Content.Shared.Interaction;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
@@ -27,22 +28,30 @@ public sealed partial class SurgerySystem
             return;
         }
 
-        // Block if the patient already has an organ of the same category,
-        // or the same prototype if category is null.
         var organProtoId = MetaData(organ).EntityPrototype?.ID;
+
+        // Block if the patient already has an equivalent organ.
+        // Categorized organs deduplicate by category; null-category organs deduplicate by prototype ID.
         foreach (var existing in body.Organs.ContainedEntities)
         {
             if (!TryComp<OrganComponent>(existing, out var existingOrgan))
                 continue;
 
-            if (organComp.Category != null && existingOrgan.Category == organComp.Category
-                || organComp.Category == null && MetaData(existing).EntityPrototype?.ID == organProtoId)
-            {
-                _popup.PopupEntity(
-                    Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(organ).EntityName)),
-                    patient, surgeon);
-                return;
-            }
+            bool isDuplicate;
+            if (organComp.Category != null && existingOrgan.Category != null)
+                isDuplicate = existingOrgan.Category == organComp.Category;
+            else if (organComp.Category == null && existingOrgan.Category == null)
+                isDuplicate = organProtoId != null && organProtoId == MetaData(existing).EntityPrototype?.ID;
+            else
+                isDuplicate = false;
+
+            if (!isDuplicate)
+                continue;
+
+            _popup.PopupEntity(
+                Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(existing).EntityName)),
+                patient, surgeon);
+            return;
         }
 
         _container.Insert(organ, body.Organs, force: true);
@@ -84,21 +93,18 @@ public sealed partial class SurgerySystem
 
     private void OnOrganSelected(SelectOrganEvent ev, EntitySessionEventArgs args)
     {
-        // Validate sender
         if (args.SenderSession.AttachedEntity is not { } surgeon)
             return;
 
         if (!TryGetEntity(ev.Target, out var patient) || !TryGetEntity(ev.OrganId, out var organ))
             return;
 
-        // Validate: surgeon must be in range and have active surgery on this patient
         if (!_interaction.InRangeUnobstructed(surgeon, patient.Value))
             return;
 
         if (!TryComp<ActiveSurgeryComponent>(patient.Value, out var active) || active.Surgeon != surgeon)
             return;
 
-        // Validate the procedure is at an organ removal step
         if (active.ProcedureId == null ||
             !ProtoManager.TryIndex<SurgeryProcedurePrototype>(active.ProcedureId.Value, out var proto))
             return;
@@ -107,7 +113,8 @@ public sealed partial class SurgerySystem
             return;
 
         var step = proto.Steps[active.CurrentStep];
-        if (step.Effect is not RemoveOrganEffect)
+        // step.Effect is null for preset-supplied effects; GetEffect() resolves the preset fallback
+        if (step.GetEffect() is not RemoveOrganEffect)
             return;
 
         if (!TryComp<BodyComponent>(patient.Value, out var body) || body.Organs == null)
@@ -116,17 +123,84 @@ public sealed partial class SurgerySystem
         if (!body.Organs.ContainedEntities.Contains(organ.Value))
             return;
 
-        if (!_container.Remove(organ.Value, body.Organs))
+        if (!_pendingOrganRemovalTools.TryGetValue(patient.Value, out var tool) || !Exists(tool))
         {
             _popup.PopupEntity(Loc.GetString("surgery-organ-remove-failed"), patient.Value, surgeon);
             return;
         }
 
-        _xform.DropNextTo(organ.Value, patient.Value);
+        StartOrganRemovalDoAfter(surgeon, patient.Value, tool, organ.Value, step, proto.Difficulty);
+    }
 
-        _popup.PopupEntity(
-            Loc.GetString("surgery-organ-removed", ("organ", MetaData(organ.Value).EntityName)),
-            patient.Value, surgeon);
+    private void StartOrganRemovalDoAfter(
+        EntityUid surgeon,
+        EntityUid patient,
+        EntityUid tool,
+        EntityUid organ,
+        SurgeryStep step,
+        SurgeryDifficulty difficulty)
+    {
+        var duration = TimeSpan.FromSeconds(
+            (float) GetStepDuration(step, patient, difficulty, surgeon).TotalSeconds
+            * GetToolTierModifier(tool));
+
+        var ev = new OrganRemovalDoAfterEvent { SelectedOrgan = GetNetEntity(organ) };
+        var doAfterArgs = new DoAfterArgs(
+            EntityManager, surgeon, duration, ev, patient,
+            target: patient,
+            used: tool)
+        {
+            NeedHand = true,
+            BreakOnMove = true,
+            BreakOnHandChange = true,
+        };
+
+        if (!_doAfter.TryStartDoAfter(doAfterArgs))
+            _popup.PopupEntity(Loc.GetString("surgery-busy"), patient, surgeon);
+    }
+
+    private void OnOrganRemovalDoAfter(Entity<ActiveSurgeryComponent> ent, ref OrganRemovalDoAfterEvent args)
+    {
+        if (args.Cancelled || args.Handled)
+            return;
+
+        args.Handled = true;
+        var patient = ent.Owner;
+
+        if (!TryGetEntity(args.SelectedOrgan, out var organ))
+            return;
+
+        if (!TryComp<BodyComponent>(patient, out var body) || body.Organs == null)
+            return;
+
+        if (!body.Organs.ContainedEntities.Contains(organ.Value))
+        {
+            if (args.User is { } u1)
+                _popup.PopupEntity(Loc.GetString("surgery-organ-remove-failed"), patient, u1);
+            return;
+        }
+
+        if (!_container.Remove(organ.Value, body.Organs))
+        {
+            if (args.User is { } u2)
+                _popup.PopupEntity(Loc.GetString("surgery-organ-remove-failed"), patient, u2);
+            return;
+        }
+
+        _pendingOrganRemovalTools.Remove(patient);
+
+        if (!_hands.TryPickupAnyHand(args.User, organ.Value, checkActionBlocker: false))
+            _xform.DropNextTo(organ.Value, patient);
+
+        if (args.User is { } surgeon)
+        {
+            _popup.PopupEntity(
+                Loc.GetString("surgery-step-remove-organ", ("user", surgeon), ("target", patient)),
+                patient, surgeon);
+            _popup.PopupEntity(
+                Loc.GetString("surgery-organ-removed", ("organ", MetaData(organ.Value).EntityName)),
+                patient, surgeon);
+        }
     }
 
     private static bool IsLimbCategory(ProtoId<OrganCategoryPrototype>? category)

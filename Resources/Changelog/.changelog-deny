@@ -1,0 +1,15 @@
+# PR numbers to permanently skip during changelog scans.
+# Add a PR number here if you remove its entry from HonksquadChangelog.yml
+# and don't want it re-added on the next weekly run.
+# One PR number per line. Lines starting with # are comments.
+
+# Removed during initial audit: non-player-visible changes.
+272
+420
+421
+422
+423
+468
+569
+570
+626

@@ -34,6 +34,7 @@ public sealed class FloatingChatInputControl : Control
 
     private readonly SharedTransformSystem _transform;
     private readonly StyleBoxFlat _backgroundStyle;
+    private readonly ChatUIController _chatUi;
 
     public readonly ChatInputBox InputBox;
 
@@ -59,6 +60,7 @@ public sealed class FloatingChatInputControl : Control
     {
         IoCManager.InjectDependencies(this);
         _transform = _entManager.System<SharedTransformSystem>();
+        _chatUi = _uiManager.GetUIController<ChatUIController>();
 
         // Thicker background than the anchored chat panel — the floating
         // widget overlaps the game world, so a more opaque fill keeps typed
@@ -79,6 +81,8 @@ public sealed class FloatingChatInputControl : Control
         InputBox.Input.OnTextEntered += OnTextEntered;
         InputBox.Input.OnKeyBindDown += OnInputKeyBindDown;
         InputBox.Input.OnTextChanged += OnInputTextChanged;
+        InputBox.Input.OnFocusEnter += OnInputFocusEnter;
+        InputBox.Input.OnFocusExit += OnInputFocusExit;
         InputBox.ChannelSelector.OnChannelSelect += OnChannelSelectorChanged;
 
         // Pick up the accessibility text-opacity knob too so the typed text
@@ -119,6 +123,8 @@ public sealed class FloatingChatInputControl : Control
         {
             _config.UnsubValueChanged(CCVars.SpeechBubbleBackgroundOpacity, OnBackgroundOpacityChanged);
             _config.UnsubValueChanged(CCVars.SpeechBubbleTextOpacity, OnTextOpacityChanged);
+            // Clear the typing indicator if the widget vanishes mid-message so it doesn't stick.
+            _chatUi.NotifyChatFocus(false);
         }
     }
 
@@ -156,6 +162,20 @@ public sealed class FloatingChatInputControl : Control
     private void OnInputTextChanged(LineEditEventArgs args)
     {
         RefreshChannelLabel();
+        // Mirror ChatBox: the typing-indicator system listens for these notifications, so the
+        // floating input has to call them too or bystanders never see the indicator while the
+        // local player is typing here.
+        _chatUi.NotifyChatTextChange();
+    }
+
+    private void OnInputFocusEnter(LineEditEventArgs args)
+    {
+        _chatUi.NotifyChatFocus(true);
+    }
+
+    private void OnInputFocusExit(LineEditEventArgs args)
+    {
+        _chatUi.NotifyChatFocus(false);
     }
 
     /// <summary>

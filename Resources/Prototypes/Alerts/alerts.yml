@@ -58,6 +58,18 @@
   name: alerts-low-nitrogen-name
   description: alerts-low-nitrogen-desc
 
+# HONK START - Skaven (#481): breathing alert for ammonia respiration.
+# Reuses the not_enough_oxy sprite until a dedicated state lands.
+- type: alert
+  id: LowAmmonia
+  category: Breathing
+  icons:
+  - sprite: /Textures/Interface/Alerts/breathing.rsi
+    state: not_enough_oxy
+  name: alerts-low-ammonia-name
+  description: alerts-low-ammonia-desc
+# HONK END
+
 - type: alert
   id: Toxins
   category: Toxins

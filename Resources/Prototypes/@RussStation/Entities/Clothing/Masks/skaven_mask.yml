@@ -1,0 +1,14 @@
+# Skaven gas mask (#481). Same shape as the upstream gas mask: connects to
+# internals, blocks ingestion, hides face. Just a Skaven-themed sprite ported
+# from russstation/icons/{obj/clothing/masks.dmi, mob/clothing/mask.dmi}.
+
+- type: entity
+  parent: ClothingMaskGas
+  id: ClothingMaskGasSkaven
+  name: skaven gas mask
+  description: A miasma mask Skaven use to breathe their precious atmos refuse. Smells rancid.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Clothing/Mask/skaven.rsi"
+    - type: Clothing
+      sprite: "@RussStation/Clothing/Mask/skaven.rsi"

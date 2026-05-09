@@ -160,6 +160,13 @@ public sealed class MetabolizerSystem : EntitySystem
         var isDead = _mobStateSystem.IsDead(deadCheckTarget);
         // HONK END
 
+        // HONK START - issue #679 step 5: kidney sub-tolerance filter. Once per stage tick,
+        // determine whether the body has a working kidney (any organ with the Excretion stage).
+        // If yes, reagents under their effective tolerance still drain but skip effects below.
+        // Missing kidneys -> filter fails, micro-stacking starts working again.
+        var hasKidneyFilter = BodyHasKidneyFilter(ent.Comp2?.Body);
+        // HONK END
+
         int reagents = 0;
         foreach (var (reagent, quantity) in list)
         {
@@ -170,6 +177,36 @@ public sealed class MetabolizerSystem : EntitySystem
             if (ev.Reagents.Contains(reagent))
                 continue;
 
+            // HONK START - issue #679 step 6: liver toxin scrub. Stages that opt in via
+            // ToxinScrubRate (the liver's Detoxification entry) consume toxin-class reagents
+            // at a fixed per-tick rate without firing effects. Skipped on corpses unless the
+            // reagent works on the dead, matching the dead-guard policy elsewhere.
+            if (solutionData.ToxinScrubRate > FixedPoint2.Zero
+                && proto.Group == "Toxins"
+                && (!isDead || proto.WorksOnTheDead))
+            {
+                var scrub = FixedPoint2.Clamp(solutionData.ToxinScrubRate, FixedPoint2.Zero, quantity);
+                if (scrub > FixedPoint2.Zero)
+                    solution.RemoveReagent(reagent, scrub);
+                continue;
+            }
+            // HONK END
+
+            // HONK START - issue #679 step 7: kidney slow drain. Stages that opt in via
+            // PerReagentDrain (the kidney's Excretion entry) consume every reagent at a
+            // small per-tick rate without firing effects. Same dead guard as the toxin
+            // scrub above; works in addition to whatever the heart's Bloodstream stage
+            // moves out, so missing kidneys -> reagents linger in blood for longer.
+            if (solutionData.PerReagentDrain > FixedPoint2.Zero
+                && (!isDead || proto.WorksOnTheDead))
+            {
+                var drain = FixedPoint2.Clamp(solutionData.PerReagentDrain, FixedPoint2.Zero, quantity);
+                if (drain > FixedPoint2.Zero)
+                    solution.RemoveReagent(reagent, drain);
+                continue;
+            }
+            // HONK END
+
             if (proto.Metabolisms is null || !proto.Metabolisms.Metabolisms.TryGetValue(stage, out var entry))
             {
                 // HONK START - freeze generic stomach transfer on corpses so revival chems don't drain (#491)
@@ -177,7 +214,15 @@ public sealed class MetabolizerSystem : EntitySystem
                     continue;
                 // HONK END
 
-                var mostToTransfer = FixedPoint2.Clamp(solutionData.TransferRate, 0, quantity);
+                // HONK START - issue #679 step 4: apply MinTransferPerTick + VolumeScaledTransfer
+                // to the generic-transfer branch so reagents without a Digestion entry also benefit
+                // from the SS13 stomach pipeline (floor + 5%-of-volume scaling).
+                var rawGeneric = solutionData.TransferRate > solutionData.MinTransferPerTick
+                    ? solutionData.TransferRate
+                    : solutionData.MinTransferPerTick;
+                rawGeneric += quantity * solutionData.VolumeScaledTransfer;
+                var mostToTransfer = FixedPoint2.Clamp(rawGeneric, 0, quantity);
+                // HONK END
 
                 if (transferSolution is not null)
                 {
@@ -194,12 +239,33 @@ public sealed class MetabolizerSystem : EntitySystem
 
             var rate = solutionData.MetabolizeAll ? quantity : entry.MetabolismRate;
 
+            // HONK START - issue #679 step 4: apply MinTransferPerTick + VolumeScaledTransfer to
+            // per-reagent rates too. Mirrors SS13's
+            //     amount = (0.05 * stomach_volume + max(rate, 0.25)) * dt
+            // formula on the stomach. Skipped when MetabolizeAll is on (lungs already process
+            // every reagent in full).
+            if (!solutionData.MetabolizeAll)
+            {
+                if (rate < solutionData.MinTransferPerTick)
+                    rate = solutionData.MinTransferPerTick;
+                rate += quantity * solutionData.VolumeScaledTransfer;
+            }
+            // HONK END
+
             // Remove $rate, as long as there's enough reagent there to actually remove that much
             var mostToRemove = FixedPoint2.Clamp(rate, 0, quantity);
 
-            // we're done here entirely if this is true
-            if (reagents >= ent.Comp1.MaxReagentsProcessable)
-                return;
+            // HONK START - issue #679 step 3: drop the MaxReagentsProcessable cap. Upstream
+            // uses it to gate stacked-poison cocktails, but it also silently stalls oral
+            // medication and hides which reagents got skipped on a given tick. Anti-stacking
+            // moves to ReagentPrototype.MinEffectiveDose (step 5): reagents below tolerance
+            // drain without firing effects, so micro-doses can no longer cheese OD. Every
+            // reagent now ticks every interval.
+            //
+            // Original gate, preserved as a comment for upstream-merge readability:
+            //     if (reagents >= ent.Comp1.MaxReagentsProcessable)
+            //         return;
+            // HONK END
 
             var scale = (float) mostToRemove;
             if (!solutionData.MetabolizeAll)
@@ -213,9 +279,21 @@ public sealed class MetabolizerSystem : EntitySystem
 
             var actualEntity = ent.Comp2?.Body ?? solutionOwner.Value;
 
+            // HONK START - issue #679 step 5: skip effects when below tolerance. Reagent still
+            // drains via the removal block below, mirroring SS13's "consume without firing".
+            var subTolerance = hasKidneyFilter
+                && !solutionData.MetabolizeAll
+                && IsSubTolerance(proto, quantity);
+            // HONK END
+
             // do all effects, if conditions apply
             foreach (var effect in entry.Effects)
             {
+                // HONK START - tolerance gate (#679 step 5): drop effects but keep removal.
+                if (subTolerance)
+                    break;
+                // HONK END
+
                 if (scale < effect.MinScale)
                     continue;
 
@@ -318,5 +396,57 @@ public sealed class MetabolizerSystem : EntitySystem
 
         return true;
     }
+
+    // HONK START - issue #679 step 5: kidney filter helpers.
+    // Universal tolerance floor applied to every reagent that doesn't override it via
+    // MinEffectiveDose. Mirrors SS13's liver_tolerance baseline. Reagents that need to
+    // fire at trace (medicines especially) declare MinEffectiveDose: 0 to opt out.
+    private static readonly FixedPoint2 DefaultTolerance = FixedPoint2.New(3);
+
+    private static readonly ProtoId<MetabolismStagePrototype> ExcretionStage = "Excretion";
+
+    private bool BodyHasKidneyFilter(EntityUid? body)
+    {
+        if (body is not { } bodyUid)
+            return false;
+        if (!TryComp<BodyComponent>(bodyUid, out var bodyComp) || bodyComp.Organs is not { } organs)
+            return false;
+        foreach (var organ in organs.ContainedEntities)
+        {
+            if (!TryComp<MetabolizerComponent>(organ, out var meta))
+                continue;
+            foreach (var stage in meta.Stages)
+            {
+                if (stage == ExcretionStage)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool IsSubTolerance(ReagentPrototype proto, FixedPoint2 quantity)
+    {
+        // Negative MinEffectiveDose is the "unset" sentinel - apply the group default.
+        // Explicit 0 means no floor, fire at any dose. Positive overrides up or down.
+        FixedPoint2 tolerance;
+        if (proto.MinEffectiveDose >= FixedPoint2.Zero)
+        {
+            tolerance = proto.MinEffectiveDose;
+        }
+        else
+        {
+            // Only Medicine and food/drink groups intentionally fire at trace. Everything
+            // else - toxins, heavy metals, pyrotechnics, narcotics, biologicals (cyanide is
+            // here), botanicals (weed killer), special (lube, holy water), and the catch-all
+            // Unknown bucket (mostly dangerous one-offs) - gets the anti-stack floor.
+            // Reagents in gated groups that need trace effects opt out via MinEffectiveDose: 0.
+            tolerance = proto.Group is "Medicine" or "Foods" or "Drinks"
+                ? FixedPoint2.Zero
+                : DefaultTolerance;
+        }
+
+        return tolerance > FixedPoint2.Zero && quantity < tolerance;
+    }
+    // HONK END
 }
 

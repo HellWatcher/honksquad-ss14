@@ -58,7 +58,16 @@ public sealed partial class MetabolizerComponent : Component
             SolutionName = "stomach",
             SolutionOnBody = false,
             TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
-            TransferEfficacy = 0.5
+            // HONK START - issue #679 step 4: align stomach throughput with SS13.
+            //   * TransferEfficacy 1.0 (was 0.5): SS13 transfers stomach->blood 1:1, so
+            //     a 30u oral dose actually arrives in blood as 30u, reachable for OD.
+            //   * MinTransferPerTick mirrors SS13 STOMACH_METABOLISM_CONSTANT (0.25u).
+            //   * VolumeScaledTransfer mirrors SS13 metabolism_efficiency (0.05) so a
+            //     fuller stomach pushes faster.
+            TransferEfficacy = 1,
+            MinTransferPerTick = 0.25,
+            VolumeScaledTransfer = 0.05f,
+            // HONK END
         },
         ["Bloodstream"] = new()
         {
@@ -68,7 +77,39 @@ public sealed partial class MetabolizerComponent : Component
         ["Metabolites"] = new()
         {
             SolutionName = BloodstreamComponent.DefaultMetabolitesSolutionName
+        },
+        // HONK START - issue #679 steps 1+6: Detoxification reads the bloodstream so the
+        // liver can scrub toxin-class reagents in place. Step 6 wires the actual scrub rate
+        // (LiverToxinScrubRate, see MetabolismConstants) so the liver pulls toxins out of
+        // blood at a steady pace, mirroring SS13's liver filter.
+        //
+        // Engine quirk also handled here: TryMetabolizeStage's "reagent has no entry for the
+        // stage" fallback removes TransferRate units into a transfer solution, or 1u flat if
+        // no transfer solution. Self-loop the transfer to the same blood solution with
+        // TransferRate = 0 so non-toxin reagents (Ethanol etc.) waiting for the heart's
+        // Bloodstream transfer aren't quietly siphoned before they reach metabolites.
+        ["Detoxification"] = new()
+        {
+            SolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferRate = 0,
+            ToxinScrubRate = RussStation.Metabolism.MetabolismConstants.LiverToxinScrubRate,
+        },
+        // HONK END
+        // HONK START - issue #679 steps 2+7: Excretion reads the bloodstream so the kidney
+        // hosts the sub-tolerance filter (step 5, computed inline on the heart's tick) and
+        // the slow blood drain (step 7). PerReagentDrain pulls a small amount of every
+        // bloodstream reagent each kidney tick so chems do not linger forever after their
+        // effects fire; missing kidneys -> drain stops -> reagents accumulate. Same
+        // TransferRate = 0 self-loop as Detoxification so the no-entry fallback can't
+        // drain Ethanol before the heart can transfer it.
+        ["Excretion"] = new()
+        {
+            SolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferSolutionName = BloodstreamComponent.DefaultBloodSolutionName,
+            TransferRate = 0,
         }
+        // HONK END
     };
 
     /// <summary>

@@ -44,3 +44,9 @@
 - type: metabolizerType
   id: Arachnid
   name: metabolizer-type-arachnid
+
+# HONK START - Skaven species (#481) breathes Ammonia (atmos miasma) instead of O2.
+- type: metabolizerType
+  id: Skaven
+  name: metabolizer-type-skaven
+# HONK END

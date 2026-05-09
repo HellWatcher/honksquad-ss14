@@ -223,10 +223,26 @@
             Caustic: 1
     Respiration:
       effects:
+      # HONK START - Skaven (#481): ammonia oxygenates Skaven the way nitrogen
+      # oxygenates Vox; pair this with a 1:1 Ammonia -> Nitrogen exhale so a
+      # Vox+Skaven sealed room is a mole-stable closed loop.
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Skaven ]
+      - !type:ModifyLungGas
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Skaven ]
+        ratios:
+          Ammonia: -1.0
+          Nitrogen: 1.0
+      # HONK END
+      # HONK START - Skaven (#481): ambient ammonia doesn't lung-poison Skaven.
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Rat ]
+          type: [ Rat, Skaven ]
           inverted: true
         - !type:ReagentCondition
           reagent: Ammonia
@@ -236,21 +252,29 @@
         damage:
           types:
             Poison: 1
+      # HONK END
+      # HONK START - Skaven (#481): no vomit response to ambient ammonia.
       - !type:Vomit
         probability: 0.12
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Rat, Vox ]
+          type: [ Rat, Vox, Skaven ]
           inverted: true
         - !type:ReagentCondition
           reagent: Ammonia
           min: 0.8
+      # HONK END
       - !type:PopupMessage
         type: Local
         visualType: Medium
         messages: [ "ammonia-smell" ]
         probability: 0.1
         conditions:
+        # HONK START - Skaven (#481): they breathe ammonia, no smell popup.
+        - !type:MetabolizerTypeCondition
+          type: [ Rat, Vox, Skaven ]
+          inverted: true
+        # HONK END
         - !type:ReagentCondition
           reagent: Ammonia
           min: 0.25

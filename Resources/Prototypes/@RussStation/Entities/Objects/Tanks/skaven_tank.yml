@@ -1,0 +1,69 @@
+# Skaven survival tank (#481). Skaven breathe Ammonia (atmos miasma) instead of O2,
+# so they get the same survival-kit shape Vox have for nitrogen: a double-capacity
+# emergency tank pre-filled with the species' breathing gas. Sprite is a baked copy
+# of upstream emergency_double.rsi pixel-mapped through the AmmoniaCanister palette
+# (see Resources/Textures/@RussStation/Objects/Tanks/double_emergency_ammonia.rsi)
+# so every slot reads as the canister green without losing per-pixel shading.
+
+- type: entity
+  parent: DoubleEmergencyOxygenTank
+  id: DoubleEmergencyAmmoniaTank
+  name: double emergency ammonia tank
+  description: A high-grade dual-tank emergency life support container, filled with breathable miasma. It can hold 2.5 L of gas.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
+    - type: Item
+      sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
+      storedSprite:
+        state: storage
+        sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
+    - type: Clothing
+      sprite: "@RussStation/Objects/Tanks/double_emergency_ammonia.rsi"
+
+- type: entity
+  id: DoubleEmergencyAmmoniaTankFilled
+  parent: DoubleEmergencyAmmoniaTank
+  suffix: Filled
+  components:
+    - type: GasTank
+      outputPressure: 21.3
+      air:
+        # 15 minutes
+        volume: 2.5
+        moles:
+          Ammonia: 1.025689525
+        temperature: 293.15
+
+# Full-size 5 L ammonia tank for refilling Skaven survival kits and stocking
+# atmos/medbay. Sprites in @RussStation/Objects/Tanks/ammonia_tank.rsi are
+# baked from upstream Objects/Tanks/anesthetic.rsi (NitrousOxideTank): body
+# remapped through the AmmoniaCanister secondary pink palette (#f7d5d3) and
+# the gauge stripe remapped through the primary green palette (#009823).
+
+- type: entity
+  parent: NitrogenTank
+  id: AmmoniaTank
+  name: ammonia tank
+  description: A standard cylindrical gas tank for ammonia. It can hold 5 L of gas.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
+    - type: Item
+      sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
+    - type: Clothing
+      sprite: "@RussStation/Objects/Tanks/ammonia_tank.rsi"
+
+- type: entity
+  id: AmmoniaTankFilled
+  parent: AmmoniaTank
+  suffix: Filled
+  name: ammonia tank
+  components:
+    - type: GasTank
+      air:
+        # 31 minutes
+        volume: 5
+        moles:
+          Ammonia: 2.051379050
+        temperature: 293.15

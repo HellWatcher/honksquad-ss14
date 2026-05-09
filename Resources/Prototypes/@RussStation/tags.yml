@@ -17,6 +17,10 @@
 - type: Tag
   id: Scalpel
 
+# Botany tool tags
+- type: Tag
+  id: DiscretePlantAnalyzer # Storage whitelist: ClothingBeltPlant. ItemMapper: ClothingBeltPlant
+
 # Tool tier and type tags
 - type: Tag
   id: TierStandard

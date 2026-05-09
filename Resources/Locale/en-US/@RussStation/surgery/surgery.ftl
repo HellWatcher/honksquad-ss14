@@ -35,7 +35,7 @@ surgery-step-repeat-done = The treatment has done all it can.
 ## Organ Operations
 surgery-organ-removed = {CAPITALIZE(THE($organ))} has been removed.
 surgery-organ-inserted = {CAPITALIZE(THE($organ))} has been inserted.
-surgery-organ-already-exists = The patient already has {THE($organ)}.
+surgery-organ-already-exists = { CAPITALIZE($organ) } already present.
 surgery-organ-insert-failed = The organ cannot be inserted.
 surgery-organ-remove-failed = The organ could not be removed.
 surgery-no-organs-to-remove = There are no removable organs.

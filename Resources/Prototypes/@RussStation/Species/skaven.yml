@@ -1,0 +1,17 @@
+# Ported from RussStation SS13 (AGPL-3.0)
+# See docs/specs/2026-04-15-skaven-species.md
+
+- type: species
+  id: Skaven
+  name: species-name-skaven
+  roundStart: true
+  prototype: MobSkaven
+  dollPrototype: AppearanceSkaven
+  skinColoration: Hues
+  defaultSkinTone: "#7a6a55"
+  maleFirstNames: NamesSkavenFirst
+  femaleFirstNames: NamesSkavenFirst
+  lastNames: NamesSkavenLast
+  naming: FirstLast
+  sexes:
+    - Unsexed

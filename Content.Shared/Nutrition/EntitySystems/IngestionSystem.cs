@@ -501,10 +501,13 @@ public sealed partial class IngestionSystem : EntitySystem
         }
         else
         {
-            _popup.PopupPredicted(Loc.GetString(edible.Message, ("food", entity.Owner), ("flavors", flavors), ("satiated", args.Satiated)),
-                Loc.GetString(edible.OtherMessage),
+            //HONK START - issue #658: voluntary eating popped over the eater for every nearby
+            //client, flooding busy areas (kitchen, bar). Drop the others-popup; force-feeding
+            //above still uses PopupEntity for everyone, which is the path that should be loud.
+            _popup.PopupClient(Loc.GetString(edible.Message, ("food", entity.Owner), ("flavors", flavors), ("satiated", args.Satiated)),
                 args.User,
                 args.User);
+            //HONK END
 
             // log successful voluntary eating
             // TODO: Use correct verb

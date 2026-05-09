@@ -73,6 +73,9 @@
   - EmergencyNitrogen
   - EmergencyOxygen
   - LoadoutSpeciesVoxNitrogen
+  # HONK START - Skaven (#481): species-gated entry, picked when the player is Skaven.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 # nitrogen or oxygen tank, depending on what your species needs
 - type: loadoutGroup
@@ -1381,6 +1384,9 @@
   hidden: true
   loadouts:
   - LoadoutSpeciesBreathTool
+  # HONK START - Skaven breath tool (defined in @RussStation/Loadouts/skaven.yml)
+  - LoadoutSpeciesBreathToolSkaven
+  # HONK END
 
 - type: loadoutGroup
   id: GroupSpeciesBreathToolMedical
@@ -1390,6 +1396,9 @@
   hidden: true
   loadouts:
   - LoadoutSpeciesBreathToolMedical
+  # HONK START - Skaven fallback (we only ship one species mask)
+  - LoadoutSpeciesBreathToolSkaven
+  # HONK END
 
 - type: loadoutGroup
   id: GroupSpeciesBreathToolSecurity
@@ -1399,3 +1408,6 @@
   hidden: true
   loadouts:
   - LoadoutSpeciesBreathToolSecurity
+  # HONK START - Skaven fallback (we only ship one species mask)
+  - LoadoutSpeciesBreathToolSkaven
+  # HONK END
