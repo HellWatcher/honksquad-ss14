@@ -4,7 +4,7 @@ namespace Content.Shared.RussStation.VerbBindings;
 
 /// HONK Per-emote cooldown applied to the auto-granted HonkActionEmote.
 /// Prototype id matches the EmotePrototype id whose action button gets the delay.
-[Prototype("emoteActionCooldown")]
+[Prototype]
 public sealed partial class EmoteActionCooldownPrototype : IPrototype
 {
     [IdDataField]
