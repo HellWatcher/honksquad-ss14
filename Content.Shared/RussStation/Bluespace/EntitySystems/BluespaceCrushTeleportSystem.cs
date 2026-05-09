@@ -10,6 +10,7 @@ using Content.Shared.Stacks;
 using Content.Shared.Throwing;
 using System;
 using Content.Shared.Random.Helpers;
+using Content.Shared.Timing;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
@@ -29,6 +30,7 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _xform = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly TurfSystem _turf = default!;
+    [Dependency] private readonly UseDelaySystem _useDelay = default!;
 
     private const int BlinkCandidateAttempts = 12;
 
@@ -46,6 +48,12 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
     private void OnUseInHand(Entity<BluespaceCrushTeleportComponent> ent, ref UseInHandEvent args)
     {
         if (args.Handled)
+            return;
+
+        // UseDelayComponent gates spam-pressing the use key. Bail before we
+        // consume the crystal so a press during cooldown doesn't burn a charge.
+        if (TryComp(ent.Owner, out UseDelayComponent? useDelay)
+            && !_useDelay.TryResetDelay((ent.Owner, useDelay), checkDelayed: true))
             return;
 
         if (!TryConsumeOne(ent.Owner))
