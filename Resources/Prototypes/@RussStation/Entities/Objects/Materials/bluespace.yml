@@ -33,6 +33,7 @@
           reagents:
             - ReagentId: BluespaceDust
               Quantity: 20
+    - type: BluespaceResearchInsert
 
 - type: entity
   parent: MaterialBluespace
