@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from tgstation/russstation icons/obj/service/hydroponics/harvest.dmi (state: bluespacetomato) and seeds.dmi (state: seed-bluespacetomato). Plant growth stages are inherited from upstream's blue_tomato.rsi.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "produce"
+    },
+    {
+      "name": "seed"
+    }
+  ]
+}
