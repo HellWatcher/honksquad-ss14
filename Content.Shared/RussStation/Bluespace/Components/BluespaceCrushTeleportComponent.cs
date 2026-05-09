@@ -9,6 +9,7 @@
 
 using Content.Shared.RussStation.Bluespace.EntitySystems;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 using BluespaceConstants = Content.Shared.RussStation.Bluespace.BluespaceConstants;
 
 namespace Content.Shared.RussStation.Bluespace.Components;
@@ -24,4 +25,11 @@ public sealed partial class BluespaceCrushTeleportComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public float BlinkRange = BluespaceConstants.DefaultBlinkRange;
+
+    /// <summary>
+    /// Visual effect spawned at both the source and destination tiles when a
+    /// blink fires. Set to null to suppress the effect.
+    /// </summary>
+    [DataField]
+    public EntProtoId? BlinkEffect = "EffectBluespaceBlink";
 }

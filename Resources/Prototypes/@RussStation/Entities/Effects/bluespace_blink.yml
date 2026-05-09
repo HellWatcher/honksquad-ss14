@@ -1,0 +1,21 @@
+# HONK - Issue #302: short-lived bluespace blink effect spawned at the
+# source and destination of a BluespaceCrushTeleport blink.
+
+- type: entity
+  id: EffectBluespaceBlink
+  name: bluespace blink
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: Sprite
+      sprite: Effects/portal.rsi
+      noRot: true
+      drawdepth: Effects
+      layers:
+        - state: portal-blue
+    - type: PointLight
+      color: "#2E50B7"
+      radius: 2.5
+      energy: 5
+      netsync: false
+    - type: TimedDespawn
+      lifetime: 0.6

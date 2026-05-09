@@ -65,7 +65,7 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
             args.User,
             args.User);
 
-        Blink(args.User, ent.Comp.BlinkRange);
+        Blink(args.User, ent.Comp);
         args.Handled = true;
     }
 
@@ -80,7 +80,7 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         if (!TryConsumeOne(ent.Owner))
             return;
 
-        Blink(args.Target, ent.Comp.BlinkRange);
+        Blink(args.Target, ent.Comp);
     }
 
     private bool TryConsumeOne(EntityUid uid)
@@ -105,7 +105,7 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         return true;
     }
 
-    private void Blink(EntityUid target, float range)
+    private void Blink(EntityUid target, BluespaceCrushTeleportComponent comp)
     {
         var sourceXform = Transform(target);
         var coords = sourceXform.Coordinates;
@@ -117,12 +117,18 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         // EntityUid.Id is local rather than network-stable.
         var rng = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(target));
 
-        if (!TryFindBlinkDestination(rng, coords, range, out var dest))
+        if (!TryFindBlinkDestination(rng, coords, comp.BlinkRange, out var dest))
             return;
+
+        if (comp.BlinkEffect is { } effect)
+            PredictedSpawnAtPosition(effect, coords);
 
         _xform.AttachToGridOrMap(target);
         _joints.ClearJoints(target);
         _xform.SetCoordinates(target, sourceXform, dest);
+
+        if (comp.BlinkEffect is { } effectDest)
+            PredictedSpawnAtPosition(effectDest, dest);
 
         _audio.PlayPredicted(PortalSound, target, target);
     }
