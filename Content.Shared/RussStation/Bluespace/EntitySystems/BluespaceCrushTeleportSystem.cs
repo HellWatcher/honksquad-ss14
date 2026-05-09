@@ -28,6 +28,7 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedStackSystem _stack = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private readonly ThrownItemSystem _thrown = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly TurfSystem _turf = default!;
     [Dependency] private readonly UseDelaySystem _useDelay = default!;
@@ -78,6 +79,21 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         // crystal mid-air doesn't trigger the effect; that's handled by the catch system
         // before this event fires.
         if (!HasComp<MobStateComponent>(args.Target))
+            return;
+
+        // Stop the crystal at the mob it hit. Without this it keeps flying past the
+        // target until physics damps it, which makes the teleport feel disconnected
+        // from the impact.
+        _thrown.StopThrow(ent.Owner, args.Component);
+
+        // Throw collisions are physics-driven and don't reconcile cleanly between
+        // client and server: long-range arcs in particular can have the client predict
+        // a collision the server never sees (effect plays, no teleport) or vice
+        // versa (flicker to predicted spot, then snap back). Run the consume + blink
+        // server-only so the teleport is authoritative. The client picks up the new
+        // position on the next state update; visual effects spawned inside Blink use
+        // PredictedSpawnAtPosition so they still appear without the hop.
+        if (_net.IsClient)
             return;
 
         if (!TryConsumeOne(ent.Owner))
