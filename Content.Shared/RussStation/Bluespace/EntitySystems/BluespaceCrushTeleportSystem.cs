@@ -34,7 +34,10 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
 
     private const int BlinkCandidateAttempts = 12;
 
-    private static readonly SoundSpecifier PortalSound =
+    private static readonly SoundSpecifier DepartureSound =
+        new SoundPathSpecifier("/Audio/Effects/teleport_departure.ogg");
+
+    private static readonly SoundSpecifier ArrivalSound =
         new SoundPathSpecifier("/Audio/Effects/teleport_arrival.ogg");
 
     public override void Initialize()
@@ -120,17 +123,21 @@ public sealed class BluespaceCrushTeleportSystem : EntitySystem
         if (!TryFindBlinkDestination(rng, coords, comp.BlinkRange, out var dest))
             return;
 
+        // Spawn the departure VFX + sound at the source tile (matches SS13's
+        // attack_self / throw_impact sparks + SFX_PORTAL_ENTER).
         if (comp.BlinkEffect is { } effect)
             PredictedSpawnAtPosition(effect, coords);
+        _audio.PlayPredicted(DepartureSound, coords, target);
 
         _xform.AttachToGridOrMap(target);
         _joints.ClearJoints(target);
         _xform.SetCoordinates(target, sourceXform, dest);
 
+        // And again at the destination (matches do_teleport's phasein.ogg
+        // arrival cue).
         if (comp.BlinkEffect is { } effectDest)
             PredictedSpawnAtPosition(effectDest, dest);
-
-        _audio.PlayPredicted(PortalSound, target, target);
+        _audio.PlayPredicted(ArrivalSound, target, target);
     }
 
     private bool TryFindBlinkDestination(System.Random rng, EntityCoordinates source, float range, out EntityCoordinates dest)

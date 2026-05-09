@@ -28,8 +28,9 @@ public sealed partial class BluespaceCrushTeleportComponent : Component
 
     /// <summary>
     /// Visual effect spawned at both the source and destination tiles when a
-    /// blink fires. Set to null to suppress the effect.
+    /// blink fires. Defaults to the generic sparks effect to match SS13's
+    /// /obj/item/stack/ore/bluespace_crystal. Set to null to suppress.
     /// </summary>
     [DataField]
-    public EntProtoId? BlinkEffect = "EffectBluespaceBlink";
+    public EntProtoId? BlinkEffect = "EffectSparks";
 }
