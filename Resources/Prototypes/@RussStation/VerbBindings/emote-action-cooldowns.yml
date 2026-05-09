@@ -6,8 +6,8 @@
 
 - type: emoteActionCooldown
   id: Flip
-  cooldown: 1
+  cooldown: 0.5
 
 - type: emoteActionCooldown
   id: Spin
-  cooldown: 3
+  cooldown: 0.5

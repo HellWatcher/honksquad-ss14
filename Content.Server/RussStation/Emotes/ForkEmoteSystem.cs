@@ -5,7 +5,7 @@ using Content.Shared.Chat;
 using Content.Shared.RussStation.Emotes;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
-using Robust.Shared.Timing;
+using Robust.Shared.Player;
 
 namespace Content.Server.RussStation.Emotes;
 
@@ -16,7 +16,6 @@ public sealed class ForkEmoteSystem : EntitySystem
 {
     [Dependency] private readonly AtmosphereSystem _atmos = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
 
     private const string FartEmoteId = "Fart";
     private const string FlipEmoteId = "Flip";
@@ -24,7 +23,10 @@ public sealed class ForkEmoteSystem : EntitySystem
 
     private const float MolesAmmoniaPerFart = 2.5f;
     private static readonly TimeSpan FlipDuration = TimeSpan.FromSeconds(0.5);
-    private static readonly TimeSpan SpinDuration = TimeSpan.FromSeconds(2);
+    private const float FlipTurns = 1f;
+    private static readonly TimeSpan SpinDuration = TimeSpan.FromSeconds(0.5);
+    /// One full S→E→N→W cycle in SpinDuration. Bump if you want it spinnier.
+    private const float SpinSteps = 4f;
 
     private static readonly SoundSpecifier FartSound =
         new SoundCollectionSpecifier("Farts", AudioParams.Default.WithVariation(0.125f).WithVolume(-2f));
@@ -49,38 +51,21 @@ public sealed class ForkEmoteSystem : EntitySystem
                 break;
 
             case FlipEmoteId:
-                StartRotationAnim(ent.Owner, FlipDuration, 1f);
+                BroadcastSpriteEmote(ent.Owner, SpriteEmoteKind.Flip, FlipDuration, FlipTurns);
                 args.Handled = true;
                 break;
 
             case SpinEmoteId:
-                StartRotationAnim(ent.Owner, SpinDuration, 2f);
+                BroadcastSpriteEmote(ent.Owner, SpriteEmoteKind.Spin, SpinDuration, SpinSteps);
                 args.Handled = true;
                 break;
         }
     }
 
-    private void StartRotationAnim(EntityUid uid, TimeSpan duration, float turns)
+    private void BroadcastSpriteEmote(EntityUid uid, SpriteEmoteKind kind, TimeSpan duration, float amount)
     {
-        // Replace any prior animation cleanly so back-to-back emotes restart the spin
-        // instead of letting the old End fire mid-animation and yanking the component.
-        var anim = EnsureComp<SpriteRotationAnimComponent>(uid);
-        anim.Duration = duration;
-        anim.Turns = turns;
-        anim.EndTime = _timing.CurTime + duration;
-        Dirty(uid, anim);
-    }
-
-    public override void Update(float frameTime)
-    {
-        base.Update(frameTime);
-
-        var now = _timing.CurTime;
-        var query = EntityQueryEnumerator<SpriteRotationAnimComponent>();
-        while (query.MoveNext(out var uid, out var anim))
-        {
-            if (anim.EndTime <= now)
-                RemComp<SpriteRotationAnimComponent>(uid);
-        }
+        var ev = new SpriteEmoteAnimEvent(GetNetEntity(uid), kind, duration, amount);
+        // PVS-scoped: only sessions that can see the mob get the animation.
+        RaiseNetworkEvent(ev, Filter.Pvs(uid));
     }
 }

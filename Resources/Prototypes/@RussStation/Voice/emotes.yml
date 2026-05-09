@@ -4,7 +4,7 @@
   category: General
   whitelist:
     components:
-      - Stomach
+      - Body
   blacklist:
     tags:
       - SiliconEmotes
