@@ -674,8 +674,11 @@
 - type: entity
   parent: GasCanister
   id: MaxCapCanister # As of writing canisters currently have about 9000 explosive intensity. 95% the total damage of a syndicate bomb but spread across a larger area.
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
   name: max cap in a can
-  suffix: DEBUG, Max Cap
+  suffix: Max Cap
+  # HONK END
   components:
   - type: GasCanister
     air:

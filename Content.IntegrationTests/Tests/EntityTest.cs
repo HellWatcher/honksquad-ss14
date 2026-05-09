@@ -20,7 +20,9 @@ namespace Content.IntegrationTests.Tests
     [TestOf(typeof(EntityUid))]
     public sealed class EntityTest : GameTest
     {
-        private static readonly ProtoId<EntityCategoryPrototype> SpawnerCategory = "Spawner";
+        //HONK START - backport of upstream #43704 (Fix Max Cap Heisentest), still in master
+        private static readonly HashSet<ProtoId<EntityCategoryPrototype>> IgnoredCategories = ["Spawner", "Debug"];
+        //HONK END
 
         public override PoolSettings PoolSettings => new()
         {
@@ -255,7 +257,9 @@ namespace Content.IntegrationTests.Tests
                 .Where(p => !p.Abstract)
                 .Where(p => !pair.IsTestPrototype(p))
                 .Where(p => !excluded.Any(p.Components.ContainsKey))
-                .Where(p => p.Categories.All(x => x.ID != SpawnerCategory))
+                //HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+                .Where(p => p.Categories.All(x => !IgnoredCategories.Contains(x.ID)))
+                //HONK END
                 .Select(p => p.ID)
                 .ToList();
 

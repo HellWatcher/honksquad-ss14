@@ -206,7 +206,10 @@
 - type: entity
   parent: AirTank
   id: MaxCap # As of currently writing, tanks have an explosion intensity of about 125, which is about as powerful as an explosive grenade.
-  suffix: DEBUG, Max Cap
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
+  suffix: Max Cap
+  # HONK END
   components:
   - type: GasTank
     air:
@@ -219,7 +222,10 @@
 - type: entity
   parent: EmergencyOxygenTank
   id: MaxCapSmall # As of currently writing, mini tanks have an explosion intensity of about 40.
-  suffix: DEBUG, Max Cap
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
+  suffix: Max Cap
+  # HONK END
   components:
   - type: GasTank
     air:
@@ -233,7 +239,10 @@
 - type: entity
   parent: ExtendedEmergencyOxygenTank
   id: MaxCapSmallEx # As of currently writing, extended tanks currently have an explosive intensity of about 65
-  suffix: DEBUG, Max Cap
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
+  suffix: Max Cap
+  # HONK END
   components:
   - type: GasTank
     air:
@@ -246,7 +255,10 @@
 - type: entity
   parent: DoubleEmergencyOxygenTank
   id: MaxCapSmallDouble # As of currently writing, extended tanks currently have an explosive intensity of about 85
-  suffix: DEBUG, Max Cap
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
+  suffix: Max Cap
+  # HONK END
   components:
   - type: GasTank
     air:
@@ -259,8 +271,11 @@
 - type: entity
   parent: AirTank
   id: MaxCapSilly
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
   name: max cap
-  suffix: DEBUG, Max Cap, Impossible
+  suffix: Max Cap, Impossible
+  # HONK END
   components:
   - type: GasTank
     air:
@@ -273,8 +288,11 @@
 - type: entity
   parent: AirTank
   id: MaxCapBluespace
+  # HONK START - backport of upstream #43704 (Fix Max Cap Heisentest)
+  categories: [ Debug ]
   name: max cap
-  suffix: DEBUG, Max Cap, Canister
+  suffix: Max Cap, Canister
+  # HONK END
   components:
   - type: Explosive
     maxIntensity: 200
