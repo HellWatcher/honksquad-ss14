@@ -1,0 +1,49 @@
+# ammonia canister: layered Sprite parents and abstract Sprite parents inherited by the upstream entities (issue #689).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: AmmoniaCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#009823"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#4cff75"
+        - state: double_stripe
+          color: "#f7d5d3"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#80383a"
+        - state: outline
+          color: "#009823"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: AmmoniaCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#009823"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#4cff75"
+        - state: double_stripe
+          color: "#f7d5d3"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#80383a"
+        - state: outline
+          color: "#009823"
+        - state: lights
+        - state: broken

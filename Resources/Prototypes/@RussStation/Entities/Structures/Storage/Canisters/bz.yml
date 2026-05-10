@@ -1,0 +1,90 @@
+# bz canister: layered Sprite parents and concrete entities (upright + broken).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: BZCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ffb7de"
+        - state: double_stripe
+          color: "#d0d2a0"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#686950"
+        - state: outline
+          color: "#9b5d7f"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: BZCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ffb7de"
+        - state: double_stripe
+          color: "#d0d2a0"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#686950"
+        - state: outline
+          color: "#9b5d7f"
+        - state: lights
+        - state: broken
+
+- type: entity
+  parent: BZCanisterBase
+  id: BZCanister
+  name: BZ canister
+  description: A canister that can contain any type of gas. This one is supposed to contain BZ. It can be attached to connector ports using a wrench.
+  components:
+    - type: GasCanister
+      air:
+        volume: 1500
+        moles:
+          BZ: 2769.36
+        temperature: 293.15
+    - type: Destructible
+      thresholds:
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            BZCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
+
+- type: entity
+  parent: BZCanisterBrokenBase
+  id: BZCanisterBroken
+  categories: [ HideSpawnMenu ]

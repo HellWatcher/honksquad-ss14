@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Greyscale body layers, connector, tank-slot, pressure-light gauges, and the lock LED (locked/unlocked split from the cell_hatch state) extracted from tgstation/russtation canisters.dmi. Label states (paper/bounty/captains_paper/invoice) from Structures/Storage/canister.rsi (tgstation, paper sprites by Vermidia).",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "base"
+    },
+    {
+      "name": "add_shader"
+    },
+    {
+      "name": "multi_shader"
+    },
+    {
+      "name": "outline"
+    },
+    {
+      "name": "lights"
+    },
+    {
+      "name": "stripe"
+    },
+    {
+      "name": "double_stripe"
+    },
+    {
+      "name": "double_stripe_shader"
+    },
+    {
+      "name": "hazard_stripes"
+    },
+    {
+      "name": "broken"
+    },
+    {
+      "name": "can-connector"
+    },
+    {
+      "name": "can-open"
+    },
+    {
+      "name": "unlocked"
+    },
+    {
+      "name": "locked"
+    },
+    {
+      "name": "can-o0",
+      "delays": [
+        [
+          0.2,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "can-o1"
+    },
+    {
+      "name": "can-o2"
+    },
+    {
+      "name": "can-o3"
+    },
+    {
+      "name": "paper"
+    },
+    {
+      "name": "bounty"
+    },
+    {
+      "name": "captains_paper"
+    },
+    {
+      "name": "invoice"
+    }
+  ]
+}

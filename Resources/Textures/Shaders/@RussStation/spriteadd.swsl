@@ -1,0 +1,22 @@
+// Aseprite/BYOND ICON_ADD approximation as a semi-transparent overlay using
+// the layer's color: field as the brightening tint. World-background-
+// independent, so it does not bleed onto the floor under the canister the
+// way a canvas-kind add blend would.
+//
+// True additive blending (dst += src) cannot be expressed in straight alpha-
+// over compositing without canvas blend modes. The alpha-overlay
+// approximation uses VtxModulate.rgb as the overlay color (a brighter
+// version of the gas's c1, picked per gas in canister_layered_preview.yml)
+// so the body keeps its hue while lifting brightness, instead of going
+// pastel toward white.
+//
+// alpha = clamp(luma * 5.0, 0, 1) brightens proportional to the mask's
+// luma — dim mask pixels add a subtle lift to the whole body, bright mask
+// pixels saturate to a full overlay of the per-gas tint.
+
+void fragment() {
+    highp vec4 mask = zTexture(UV);
+    highp float luma = dot(mask.rgb, vec3(0.299, 0.587, 0.114));
+    highp float alpha = clamp(luma * 5.0, 0.0, 1.0) * mask.a * VtxModulate.a;
+    COLOR = vec4(VtxModulate.rgb, alpha);
+}

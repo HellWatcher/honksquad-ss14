@@ -1,0 +1,80 @@
+# nitrium canister: layered Sprite parents and concrete entities (upright + broken).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: NitriumCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#7b4732"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ffb395"
+        - state: outline
+          color: "#7b4732"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: NitriumCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#7b4732"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#ffb395"
+        - state: outline
+          color: "#7b4732"
+        - state: lights
+        - state: broken
+
+- type: entity
+  parent: NitriumCanisterBase
+  id: NitriumCanister
+  name: nitrium canister
+  description: A canister that can contain any type of gas. This one is supposed to contain nitrium. It can be attached to connector ports using a wrench.
+  components:
+    - type: GasCanister
+      air:
+        volume: 1500
+        moles:
+          Nitrium: 2769.36
+        temperature: 293.15
+    - type: Destructible
+      thresholds:
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            NitriumCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
+
+- type: entity
+  parent: NitriumCanisterBrokenBase
+  id: NitriumCanisterBroken
+  categories: [ HideSpawnMenu ]

@@ -1,0 +1,90 @@
+# zauker canister: layered Sprite parents and concrete entities (upright + broken).
+- type: entity
+  abstract: true
+  parent: GasCanister
+  id: ZaukerCanisterBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#009a00"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#4cff4c"
+        - state: double_stripe
+          color: "#006600"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#003300"
+        - state: outline
+          color: "#009a00"
+        - state: lights
+
+- type: entity
+  abstract: true
+  parent: GasCanisterBrokenBase
+  id: ZaukerCanisterBrokenBase
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Structures/Storage/canister_layered.rsi"
+      layers:
+        - state: base
+          color: "#009a00"
+        - state: multi_shader
+          shader: SpriteMultiply
+        - state: add_shader
+          shader: SpriteAdd
+          color: "#4cff4c"
+        - state: double_stripe
+          color: "#006600"
+        - state: double_stripe_shader
+          shader: SpriteSubtract
+          color: "#003300"
+        - state: outline
+          color: "#009a00"
+        - state: lights
+        - state: broken
+
+- type: entity
+  parent: ZaukerCanisterBase
+  id: ZaukerCanister
+  name: zauker canister
+  description: A canister that can contain any type of gas. This one is supposed to contain zauker. It can be attached to connector ports using a wrench.
+  components:
+    - type: GasCanister
+      air:
+        volume: 1500
+        moles:
+          Zauker: 2769.36
+        temperature: 293.15
+    - type: Destructible
+      thresholds:
+      - trigger:
+          !type:DamageTrigger
+          damage: 600
+        behaviors:
+          - !type:DoActsBehavior
+            acts: [ "Destruction" ]
+      - trigger:
+          !type:DamageTrigger
+          damage: 300
+        behaviors:
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+        - !type:SpawnEntitiesBehavior
+          spawn:
+            ZaukerCanisterBroken:
+              min: 1
+              max: 1
+        - !type:DoActsBehavior
+          acts: [ "Destruction" ]
+        - !type:DumpCanisterBehavior
+
+- type: entity
+  parent: ZaukerCanisterBrokenBase
+  id: ZaukerCanisterBroken
+  categories: [ HideSpawnMenu ]

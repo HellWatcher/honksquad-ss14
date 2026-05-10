@@ -316,6 +316,15 @@ def main(argv=None) -> int:
         action="store_true",
         help="regenerate meta.json with every configured gas as a state",
     )
+    parser.add_argument(
+        "--extract-layers",
+        action="store_true",
+        help=(
+            "instead of baking per-gas composites, dump each named greyscale layer "
+            "from the DMI as a flat PNG so the runtime layered-composition path "
+            "(see issue #689) can use them. Skips the gas table entirely."
+        ),
+    )
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
@@ -336,6 +345,88 @@ def main(argv=None) -> int:
 
     args.out.mkdir(parents=True, exist_ok=True)
     extract = parse_dmi(args.dmi)
+
+    if args.extract_layers:
+        # The runtime composition path (issue #689) needs each layer as a separate state in
+        # the live RSI. The body-composition set mirrors what the bake templates consume
+        # in-script. The overlay set covers the GenericVisualizer states (connector, tank
+        # slot, pressure lights) that the parent GasCanister entity overlays at runtime;
+        # the russtation DMI ships these positioned for the russtation body, so extracting
+        # them keeps everything aligned to the same source.
+        body_states = [
+            "base",
+            "add_shader",
+            "multi_shader",
+            "outline",
+            "lights",
+            "stripe",
+            "double_stripe",
+            "double_stripe_shader",
+            "hazard_stripes",
+            "broken",
+        ]
+        # SS14 GenericVisualizer expects pressure states named can-o0..3. The
+        # russtation DMI splits the pressure gauge into two states per level:
+        # can-N (colored base — red/yellow/green) and can-N-light (white
+        # highlight overlay). Composite them into one state per level so the
+        # SS14 visualizer can render the full lit gauge from a single state.
+        overlay_states = {
+            "can-connector": "can-connector",
+            "can-open": "can-open",
+        }
+        for state in body_states:
+            try:
+                extract(state).save(args.out / f"{state}.png")
+                print(f"  extracted {state}.png")
+            except KeyError as exc:
+                print(f"  warn: missing DMI state {exc} (skipped)")
+        for dmi_state, png_name in overlay_states.items():
+            try:
+                extract(dmi_state).save(args.out / f"{png_name}.png")
+                print(f"  extracted {png_name}.png (from DMI '{dmi_state}')")
+            except KeyError as exc:
+                print(f"  warn: missing DMI state {exc} (skipped)")
+        for level in range(4):
+            try:
+                base_state = f"can-{level}"
+                gauge = extract(base_state)
+                if level == 0:
+                    # can-o0 blinks (low-pressure warning) — emit as a 64x32
+                    # 2-frame sheet (lit + transparent) and pair with delays
+                    # in meta.json. Mirrors upstream Structures/Storage/
+                    # canister.rsi which animates can-o0 the same way.
+                    sheet = Image.new("RGBA", (64, 32), (0, 0, 0, 0))
+                    sheet.paste(gauge, (0, 0))
+                    sheet.save(args.out / "can-o0.png")
+                    print("  extracted can-o0.png (2-frame blink from DMI 'can-0')")
+                else:
+                    gauge.save(args.out / f"can-o{level}.png")
+                    print(f"  extracted can-o{level}.png (from DMI '{base_state}')")
+            except KeyError as exc:
+                print(f"  warn: missing DMI state {exc} (skipped)")
+        # SS14 GenericVisualizer swaps `locked`/`unlocked` states based on lock
+        # state, but the russtation DMI ships a single combined `cell_hatch`
+        # state with both red and green LED pixels visible. Split it: the
+        # locked PNG keeps the red LEDs and darkens the greens, the unlocked
+        # PNG does the inverse, so each only shows the LED that matches its
+        # state.
+        try:
+            hatch = extract("cell_hatch")
+            dark = (50, 50, 50, 255)
+            red_pixels = [(14, 16), (15, 16)]
+            green_pixels = [(16, 16), (17, 16)]
+            locked = hatch.copy()
+            for x, y in green_pixels:
+                locked.putpixel((x, y), dark)
+            locked.save(args.out / "locked.png")
+            unlocked = hatch.copy()
+            for x, y in red_pixels:
+                unlocked.putpixel((x, y), dark)
+            unlocked.save(args.out / "unlocked.png")
+            print("  extracted locked.png and unlocked.png (split from DMI 'cell_hatch')")
+        except KeyError as exc:
+            print(f"  warn: missing DMI state {exc} (skipped)")
+        return 0
 
     targets = args.gas if args.gas else sorted(gases.keys())
     for name in targets:
