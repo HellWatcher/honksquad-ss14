@@ -1,5 +1,4 @@
 using Content.Shared.Actions;
-using Content.Shared.Body.Components;
 using Content.Shared.Body;
 using Robust.Shared.Prototypes;
 
@@ -47,11 +46,13 @@ public abstract class SharedSkillchipSystem : EntitySystem
         if (UsedCapacity(brain.Comp) + prototype.CapacityCost > brain.Comp.MaxCapacity)
             return false;
 
-        brain.Comp.ImplantedChips.Add(chipProto);
-        Dirty(brain);
-
+        // Apply grants first so a thrown grant leaves the holder untouched. Recording the chip
+        // last keeps capacity accounting consistent with what is actually active on the mob.
         if (GetBody(brain) is { } body)
             ApplyChipGrants(brain, body, prototype);
+
+        brain.Comp.ImplantedChips.Add(chipProto);
+        Dirty(brain);
 
         return true;
     }
@@ -183,7 +184,6 @@ public abstract class SharedSkillchipSystem : EntitySystem
 
     private EntityUid? GetBody(Entity<SkillchipHolderComponent> brain)
     {
-        var parent = Transform(brain).ParentUid;
-        return parent.IsValid() && HasComp<BodyComponent>(parent) ? parent : null;
+        return TryComp<OrganComponent>(brain, out var organ) ? organ.Body : null;
     }
 }

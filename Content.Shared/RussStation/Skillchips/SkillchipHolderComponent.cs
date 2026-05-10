@@ -20,9 +20,8 @@ public sealed partial class SkillchipHolderComponent : Component
 
     /// <summary>
     /// Action entity UIDs spawned by chip grants, keyed by chip proto + action proto.
-    /// Populated at runtime; not serialized.
+    /// Runtime-only; EntityUid has no stable YAML representation.
     /// </summary>
-    [DataField]
     public Dictionary<string, EntityUid> ActionEntities = new();
 
     /// <summary>

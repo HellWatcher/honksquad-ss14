@@ -1,6 +1,5 @@
 using Content.Shared.RussStation.Skillchips.Systems;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization;
 
 namespace Content.Shared.RussStation.Skillchips;
 
@@ -8,7 +7,7 @@ namespace Content.Shared.RussStation.Skillchips;
 /// Base class for all grants a skillchip can apply to the mob it is implanted in.
 /// Subclass and implement Apply/Revert to add new grant types.
 /// </summary>
-[ImplicitDataDefinitionForInheritors, Serializable, NetSerializable]
+[ImplicitDataDefinitionForInheritors]
 public abstract partial class SkillchipGrant
 {
     public abstract void Apply(EntityUid mob, EntityUid brain, SharedSkillchipSystem system);
@@ -18,7 +17,6 @@ public abstract partial class SkillchipGrant
 /// <summary>
 /// Adds a prototyped action to the mob's action bar.
 /// </summary>
-[Serializable, NetSerializable]
 public sealed partial class ActionGrant : SkillchipGrant
 {
     [DataField(required: true)]
@@ -35,7 +33,6 @@ public sealed partial class ActionGrant : SkillchipGrant
 /// Registers a capability tag on the holder's SkillchipHolderComponent.
 /// Other systems query it via SkillchipSystem.HasCapability(mob, tag).
 /// </summary>
-[Serializable, NetSerializable]
 public sealed partial class CapabilityTagGrant : SkillchipGrant
 {
     [DataField(required: true)]

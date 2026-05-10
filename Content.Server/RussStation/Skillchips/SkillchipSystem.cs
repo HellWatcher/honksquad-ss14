@@ -1,3 +1,4 @@
+using Content.Shared.Body;
 using Content.Shared.Emp;
 using Content.Shared.RussStation.Skillchips;
 using Content.Shared.RussStation.Skillchips.Systems;
@@ -10,12 +11,13 @@ public sealed class SkillchipSystem : SharedSkillchipSystem
     {
         base.Initialize();
 
-        // EmpDisabledComponent is added to the mob entity when hit by an EMP pulse.
-        // Walk the mob's direct children to find any implanted brain and revert/restore grants.
-        // Use EmpDisabledRemovedEvent instead of ComponentRemove: SharedEmpSystem already owns
-        // that subscription and the engine forbids duplicate (component, event) subscriptions.
+        // EmpDisabledComponent is added to the mob when hit by an EMP, so the disable side can
+        // filter on it (ComponentInit fires before the component is fully attached, but the
+        // entity uid is available). For the remove side, the directed EmpDisabledRemovedEvent
+        // fires after the engine has torn the component back off, so we filter on BodyComponent
+        // (always present on the mob) to receive the directed dispatch.
         SubscribeLocalEvent<EmpDisabledComponent, ComponentInit>(OnEmpInit);
-        SubscribeLocalEvent<EmpDisabledRemovedEvent>(OnEmpRemove);
+        SubscribeLocalEvent<BodyComponent, EmpDisabledRemovedEvent>(OnEmpRemove);
     }
 
     private void OnEmpInit(Entity<EmpDisabledComponent> mob, ref ComponentInit args)
@@ -23,7 +25,7 @@ public sealed class SkillchipSystem : SharedSkillchipSystem
         ForEachImplantedBrain(mob, (brain, holder) => RevertAllGrants((brain, holder), mob));
     }
 
-    private void OnEmpRemove(EntityUid mob, ref EmpDisabledRemovedEvent args)
+    private void OnEmpRemove(Entity<BodyComponent> mob, ref EmpDisabledRemovedEvent args)
     {
         if (LifeStage(mob) >= EntityLifeStage.Terminating)
             return;
