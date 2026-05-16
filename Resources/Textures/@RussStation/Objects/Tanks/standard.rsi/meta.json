@@ -48,6 +48,10 @@
       "directions": 4
     },
     {
+      "name": "add-band-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
       "name": "add-band-inhand-left",
       "directions": 4
     },
@@ -96,6 +100,10 @@
     },
     {
       "name": "add-base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE",
       "directions": 4
     },
     {
@@ -150,6 +158,10 @@
       "directions": 4
     },
     {
+      "name": "band-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
       "name": "band-inhand-left",
       "directions": 4
     },
@@ -198,6 +210,10 @@
     },
     {
       "name": "base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE",
       "directions": 4
     },
     {
@@ -252,6 +268,10 @@
       "directions": 4
     },
     {
+      "name": "detail-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
       "name": "detail-inhand-left",
       "directions": 4
     },
@@ -303,6 +323,10 @@
       "directions": 4
     },
     {
+      "name": "multi-band-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
       "name": "multi-band-inhand-left",
       "directions": 4
     },
@@ -351,6 +375,10 @@
     },
     {
       "name": "multi-base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE",
       "directions": 4
     },
     {

@@ -48,6 +48,10 @@
       "directions": 4
     },
     {
+      "name": "add-base-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
       "name": "add-base-inhand-left",
       "directions": 4
     },
@@ -99,6 +103,10 @@
     },
     {
       "name": "base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE",
       "directions": 4
     },
     {
@@ -156,6 +164,10 @@
       "directions": 4
     },
     {
+      "name": "detail-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
       "name": "detail-inhand-left",
       "directions": 4
     },
@@ -207,6 +219,10 @@
     },
     {
       "name": "multi-base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE",
       "directions": 4
     },
     {

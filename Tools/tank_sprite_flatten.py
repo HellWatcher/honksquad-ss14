@@ -21,6 +21,18 @@ from pathlib import Path
 
 SHAPE_RSI = {"Tank": "standard.rsi", "Emergency": "emergency.rsi", "Double": "double.rsi"}
 
+# Upstream tank RSIs ship no separate human/default equipped-SUITSTORAGE: it is
+# byte-identical to the shape's carried pose (BACKPACK for generic/oxygen-shaped
+# tanks, BELT for the emergency/double). Mirror that — alias the carried-pose
+# layer set as the generic equipped-SUITSTORAGE so unlisted species (human, ...)
+# still render. Verified identical via md5 against generic/oxygen/emergency/
+# emergency_double .rsi.
+GENERIC_FALLBACK_SRC = {
+    "Tank": "-equipped-BACKPACK",
+    "Emergency": "-equipped-BELT",
+    "Double": "-equipped-BELT",
+}
+
 LAYER_RENAME = {
     "silhouette-base": "base",
     "silhouette-band": "band",
@@ -95,6 +107,15 @@ def main() -> None:
                 if layer is None:
                     raise SystemExit(f"unmapped layer file: {png}")
                 shutil.copy2(png, out / f"{layer}{suffix}.png")
+
+        src_suffix = GENERIC_FALLBACK_SRC[shape]
+        carried = sorted(out.glob(f"*{src_suffix}.png"))
+        if not carried:
+            raise SystemExit(f"{rsi}: no {src_suffix} pose to alias as generic")
+        for png in carried:
+            dst = png.name.replace(src_suffix, "-equipped-SUITSTORAGE")
+            shutil.copy2(png, out / dst)
+
         write_meta(out)
         print(f"{shape} -> {rsi}: {len(list(out.glob('*.png')))} png")
 
