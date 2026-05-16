@@ -1,0 +1,189 @@
+using Content.Shared.Actions;
+using Content.Shared.Body;
+using Robust.Shared.Prototypes;
+
+namespace Content.Shared.RussStation.Skillchips.Systems;
+
+public abstract class SharedSkillchipSystem : EntitySystem
+{
+    [Dependency] private readonly SharedActionsSystem _actions = default!;
+    [Dependency] private readonly IPrototypeManager _proto = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent<SkillchipHolderComponent, OrganGotInsertedEvent>(OnBrainInserted);
+        SubscribeLocalEvent<SkillchipHolderComponent, OrganGotRemovedEvent>(OnBrainRemoved);
+    }
+
+    // ── Brain lifecycle ──────────────────────────────────────────────────────
+
+    private void OnBrainInserted(Entity<SkillchipHolderComponent> brain, ref OrganGotInsertedEvent args)
+    {
+        ApplyAllGrants(brain, args.Target);
+    }
+
+    private void OnBrainRemoved(Entity<SkillchipHolderComponent> brain, ref OrganGotRemovedEvent args)
+    {
+        if (LifeStage(args.Target) >= EntityLifeStage.Terminating)
+            return;
+
+        RevertAllGrants(brain, args.Target);
+    }
+
+    // ── Install / Remove ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Installs a chip into the brain. Returns false if over capacity or already installed.
+    /// </summary>
+    public bool TryInstall(Entity<SkillchipHolderComponent> brain, ProtoId<SkillchipPrototype> chipProto)
+    {
+        if (brain.Comp.ImplantedChips.Contains(chipProto))
+            return false;
+
+        var prototype = _proto.Index(chipProto);
+        if (UsedCapacity(brain.Comp) + prototype.CapacityCost > brain.Comp.MaxCapacity)
+            return false;
+
+        // Apply grants first so a thrown grant leaves the holder untouched. Recording the chip
+        // last keeps capacity accounting consistent with what is actually active on the mob.
+        if (GetBody(brain) is { } body)
+            ApplyChipGrants(brain, body, prototype);
+
+        brain.Comp.ImplantedChips.Add(chipProto);
+        Dirty(brain);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Removes a chip from the brain. Returns false if the chip is not installed.
+    /// </summary>
+    public bool TryRemove(Entity<SkillchipHolderComponent> brain, ProtoId<SkillchipPrototype> chipProto)
+    {
+        if (!brain.Comp.ImplantedChips.Remove(chipProto))
+            return false;
+
+        Dirty(brain);
+
+        if (GetBody(brain) is { } body)
+            RevertChipGrants(brain, body, _proto.Index(chipProto));
+
+        return true;
+    }
+
+    // ── Capability query ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Returns true if the brain entity has the given capability tag active.
+    /// </summary>
+    public bool BrainHasCapability(EntityUid brain, string tag)
+    {
+        return TryComp<SkillchipHolderComponent>(brain, out var holder)
+               && holder.CapabilityTags.Contains(tag);
+    }
+
+    /// <summary>
+    /// Returns true if any SkillchipHolderComponent child of the mob has the given capability tag.
+    /// </summary>
+    public bool HasCapability(EntityUid mob, string tag)
+    {
+        var enumerator = Transform(mob).ChildEnumerator;
+        while (enumerator.MoveNext(out var child))
+        {
+            if (BrainHasCapability(child, tag))
+                return true;
+        }
+
+        return false;
+    }
+
+    // ── Grant application helpers (called by SkillchipGrant subclasses) ──────
+
+    public void ApplyActionGrant(EntityUid mob, EntityUid brain, EntProtoId actionProto)
+    {
+        if (!TryComp<SkillchipHolderComponent>(brain, out var holder))
+            return;
+
+        var key = $"{brain}:{actionProto}";
+        if (holder.ActionEntities.ContainsKey(key))
+            return;
+
+        EntityUid? actionEnt = null;
+        _actions.AddAction(mob, ref actionEnt, actionProto);
+
+        if (actionEnt != null)
+            holder.ActionEntities[key] = actionEnt.Value;
+    }
+
+    public void RevertActionGrant(EntityUid mob, EntityUid brain, EntProtoId actionProto)
+    {
+        if (!TryComp<SkillchipHolderComponent>(brain, out var holder))
+            return;
+
+        var key = $"{brain}:{actionProto}";
+        if (!holder.ActionEntities.TryGetValue(key, out var actionEnt))
+            return;
+
+        _actions.RemoveAction(mob, actionEnt);
+        holder.ActionEntities.Remove(key);
+    }
+
+    public void ApplyCapabilityTag(EntityUid brain, string tag)
+    {
+        if (!TryComp<SkillchipHolderComponent>(brain, out var holder))
+            return;
+
+        holder.CapabilityTags.Add(tag);
+        Dirty(brain, holder);
+    }
+
+    public void RevertCapabilityTag(EntityUid brain, string tag)
+    {
+        if (!TryComp<SkillchipHolderComponent>(brain, out var holder))
+            return;
+
+        holder.CapabilityTags.Remove(tag);
+        Dirty(brain, holder);
+    }
+
+    // ── Internals ────────────────────────────────────────────────────────────
+
+    protected void ApplyAllGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob)
+    {
+        foreach (var chipProto in brain.Comp.ImplantedChips)
+            ApplyChipGrants(brain, mob, _proto.Index(chipProto));
+    }
+
+    protected void RevertAllGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob)
+    {
+        foreach (var chipProto in brain.Comp.ImplantedChips)
+            RevertChipGrants(brain, mob, _proto.Index(chipProto));
+    }
+
+    private void ApplyChipGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob, SkillchipPrototype prototype)
+    {
+        foreach (var grant in prototype.Grants)
+            grant.Apply(mob, brain, this);
+    }
+
+    private void RevertChipGrants(Entity<SkillchipHolderComponent> brain, EntityUid mob, SkillchipPrototype prototype)
+    {
+        foreach (var grant in prototype.Grants)
+            grant.Revert(mob, brain, this);
+    }
+
+    private int UsedCapacity(SkillchipHolderComponent holder)
+    {
+        var total = 0;
+        foreach (var chipProto in holder.ImplantedChips)
+            total += _proto.Index(chipProto).CapacityCost;
+        return total;
+    }
+
+    private EntityUid? GetBody(Entity<SkillchipHolderComponent> brain)
+    {
+        return TryComp<OrganComponent>(brain, out var organ) ? organ.Body : null;
+    }
+}
