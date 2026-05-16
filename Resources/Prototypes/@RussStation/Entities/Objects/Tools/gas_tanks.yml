@@ -511,3 +511,843 @@
         - state: add-band
           shader: TankBlendAdd
         - state: detail
+
+# --- Emergency shape (single-color, no band) ---
+- type: entity
+  parent: GasTankRoundBase
+  id: AirEmergencyTankLayered
+  name: air tank tank (layered, emergency)
+  description: Test entity (emergency shape, air tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#c6c0b5"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: OxygenEmergencyTankLayered
+  name: oxygen tank tank (layered, emergency)
+  description: Test entity (emergency shape, oxygen tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#2786e5"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: NitrogenEmergencyTankLayered
+  name: nitrogen tank tank (layered, emergency)
+  description: Test entity (emergency shape, nitrogen tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#e9ff5c"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: CarbonDioxideEmergencyTankLayered
+  name: carbon dioxide tank tank (layered, emergency)
+  description: Test entity (emergency shape, carbon dioxide tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#4e4c48"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: PlasmaEmergencyTankLayered
+  name: plasma tank tank (layered, emergency)
+  description: Test entity (emergency shape, plasma tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#f62800"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: TritiumEmergencyTankLayered
+  name: tritium tank tank (layered, emergency)
+  description: Test entity (emergency shape, tritium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#3fcd40"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: NitrousOxideEmergencyTankLayered
+  name: nitrous oxide tank tank (layered, emergency)
+  description: Test entity (emergency shape, nitrous oxide tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#c63e3b"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: FrezonEmergencyTankLayered
+  name: frezon tank tank (layered, emergency)
+  description: Test entity (emergency shape, frezon tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#6696ee"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: WaterVaporEmergencyTankLayered
+  name: water vapor tank tank (layered, emergency)
+  description: Test entity (emergency shape, water vapor tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#4c4e4d"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: AmmoniaEmergencyTankLayered
+  name: ammonia tank tank (layered, emergency)
+  description: Test entity (emergency shape, ammonia tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#009823"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: StorageEmergencyTankLayered
+  name: storage tank tank (layered, emergency)
+  description: Test entity (emergency shape, storage tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#6b6b80"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: AntinobliumEmergencyTankLayered
+  name: antinoblium tank tank (layered, emergency)
+  description: Test entity (emergency shape, antinoblium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#333333"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: BzEmergencyTankLayered
+  name: BZ tank tank (layered, emergency)
+  description: Test entity (emergency shape, BZ tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HalonEmergencyTankLayered
+  name: halon tank tank (layered, emergency)
+  description: Test entity (emergency shape, halon tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HealiumEmergencyTankLayered
+  name: healium tank tank (layered, emergency)
+  description: Test entity (emergency shape, healium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#009823"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HeliumEmergencyTankLayered
+  name: helium tank tank (layered, emergency)
+  description: Test entity (emergency shape, helium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HydrogenEmergencyTankLayered
+  name: hydrogen tank tank (layered, emergency)
+  description: Test entity (emergency shape, hydrogen tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#eaeaea"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HyperNobliumEmergencyTankLayered
+  name: hyper-noblium tank tank (layered, emergency)
+  description: Test entity (emergency shape, hyper-noblium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#6399fc"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: NitriumEmergencyTankLayered
+  name: nitrium tank tank (layered, emergency)
+  description: Test entity (emergency shape, nitrium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#7b4732"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: PluoxiumEmergencyTankLayered
+  name: pluoxium tank tank (layered, emergency)
+  description: Test entity (emergency shape, pluoxium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#2786e5"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: ProtoNitrateEmergencyTankLayered
+  name: proto-nitrate tank tank (layered, emergency)
+  description: Test entity (emergency shape, proto-nitrate tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#008200"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: ZaukerEmergencyTankLayered
+  name: zauker tank tank (layered, emergency)
+  description: Test entity (emergency shape, zauker tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/emergency.rsi"
+      layers:
+        - state: base
+          color: "#009a00"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: detail
+
+# --- Double shape (base + band) ---
+- type: entity
+  parent: GasTankRoundBase
+  id: AirDoubleTankLayered
+  name: air tank tank (layered, double)
+  description: Test entity (double shape, air tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#c6c0b5"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#c6c0b5"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: OxygenDoubleTankLayered
+  name: oxygen tank tank (layered, double)
+  description: Test entity (double shape, oxygen tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#2786e5"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#e8fefe"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: NitrogenDoubleTankLayered
+  name: nitrogen tank tank (layered, double)
+  description: Test entity (double shape, nitrogen tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#e9ff5c"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#f4fce8"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: CarbonDioxideDoubleTankLayered
+  name: carbon dioxide tank tank (layered, double)
+  description: Test entity (double shape, carbon dioxide tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#4e4c48"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#eaeaea"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: PlasmaDoubleTankLayered
+  name: plasma tank tank (layered, double)
+  description: Test entity (double shape, plasma tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#f62800"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#ffee00"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: TritiumDoubleTankLayered
+  name: tritium tank tank (layered, double)
+  description: Test entity (double shape, tritium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#3fcd40"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#ffee00"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: NitrousOxideDoubleTankLayered
+  name: nitrous oxide tank tank (layered, double)
+  description: Test entity (double shape, nitrous oxide tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#c63e3b"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#f7d5d3"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: FrezonDoubleTankLayered
+  name: frezon tank tank (layered, double)
+  description: Test entity (double shape, frezon tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#6696ee"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#fefb30"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: WaterVaporDoubleTankLayered
+  name: water vapor tank tank (layered, double)
+  description: Test entity (double shape, water vapor tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#4c4e4d"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#f7d5d3"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: AmmoniaDoubleTankLayered
+  name: ammonia tank tank (layered, double)
+  description: Test entity (double shape, ammonia tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#009823"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#f7d5d3"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: StorageDoubleTankLayered
+  name: storage tank tank (layered, double)
+  description: Test entity (double shape, storage tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#6b6b80"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#6b6b80"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: AntinobliumDoubleTankLayered
+  name: antinoblium tank tank (layered, double)
+  description: Test entity (double shape, antinoblium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#333333"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#fefb30"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: BzDoubleTankLayered
+  name: BZ tank tank (layered, double)
+  description: Test entity (double shape, BZ tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#d0d2a0"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HalonDoubleTankLayered
+  name: halon tank tank (layered, double)
+  description: Test entity (double shape, halon tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#368bff"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HealiumDoubleTankLayered
+  name: healium tank tank (layered, double)
+  description: Test entity (double shape, healium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#009823"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#ff0e00"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HeliumDoubleTankLayered
+  name: helium tank tank (layered, double)
+  description: Test entity (double shape, helium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#9b5d7f"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#368bff"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HydrogenDoubleTankLayered
+  name: hydrogen tank tank (layered, double)
+  description: Test entity (double shape, hydrogen tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#eaeaea"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#be3455"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: HyperNobliumDoubleTankLayered
+  name: hyper-noblium tank tank (layered, double)
+  description: Test entity (double shape, hyper-noblium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#6399fc"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#b2b2b2"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: NitriumDoubleTankLayered
+  name: nitrium tank tank (layered, double)
+  description: Test entity (double shape, nitrium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#7b4732"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#7b4732"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: PluoxiumDoubleTankLayered
+  name: pluoxium tank tank (layered, double)
+  description: Test entity (double shape, pluoxium tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#2786e5"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#2786e5"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: ProtoNitrateDoubleTankLayered
+  name: proto-nitrate tank tank (layered, double)
+  description: Test entity (double shape, proto-nitrate tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#008200"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#33cc33"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
+- type: entity
+  parent: GasTankRoundBase
+  id: ZaukerDoubleTankLayered
+  name: zauker tank tank (layered, double)
+  description: Test entity (double shape, zauker tank colors).
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Tanks/double.rsi"
+      layers:
+        - state: base
+          color: "#009a00"
+        - state: multi-base
+          shader: SpriteMultiply
+        - state: band
+          color: "#006600"
+        - state: multi-band
+          shader: SpriteMultiply
+        - state: add-base
+          shader: TankBlendAdd
+        - state: add-band
+          shader: TankBlendAdd
+        - state: detail
