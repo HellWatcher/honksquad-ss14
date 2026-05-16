@@ -3,11 +3,9 @@
   kind: source
   path: "/Textures/@RussStation/Shaders/colorize.swsl"
 
-- type: shader
-  id: SpriteMultiply
-  kind: source
-  path: "/Textures/@RussStation/Shaders/spritemultiply.swsl"
-
+# SpriteMultiply is defined in @RussStation/Shaders/canister_blend.yml (issue
+# #689, now on release). Issue #692 shares that single definition rather than
+# redeclaring it here.
 - type: shader
   id: TankBlendNone
   kind: canvas
