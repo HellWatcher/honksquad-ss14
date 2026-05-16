@@ -8,33 +8,145 @@
   },
   "states": [
     {
-      "name": "base"
-    },
-    {
-      "name": "base-equipped-BACKPACK",
+      "name": "add-band-equipped-BACKPACK",
       "directions": 4
     },
     {
-      "name": "base-equipped-SUITSTORAGE",
+      "name": "add-band-equipped-SUITSTORAGE-cat",
       "directions": 4
     },
     {
-      "name": "base-inhand-left",
+      "name": "add-band-equipped-SUITSTORAGE-dog",
       "directions": 4
     },
     {
-      "name": "base-inhand-right",
+      "name": "add-band-equipped-SUITSTORAGE-fox",
       "directions": 4
     },
     {
-      "name": "band"
+      "name": "add-band-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "add-band-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "add-band-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "add-band-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "add-band-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "add-band-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "add-band-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "add-band-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "add-band"
+    },
+    {
+      "name": "add-base-equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "add-base-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "add-base-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "add-base"
     },
     {
       "name": "band-equipped-BACKPACK",
       "directions": 4
     },
     {
-      "name": "band-equipped-SUITSTORAGE",
+      "name": "band-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "band-equipped-SUITSTORAGE-sloth",
       "directions": 4
     },
     {
@@ -46,26 +158,97 @@
       "directions": 4
     },
     {
-      "name": "multi-base"
+      "name": "band"
     },
     {
-      "name": "multi-band"
+      "name": "base-equipped-BACKPACK",
+      "directions": 4
     },
     {
-      "name": "add-base"
+      "name": "base-equipped-SUITSTORAGE-cat",
+      "directions": 4
     },
     {
-      "name": "add-band"
+      "name": "base-equipped-SUITSTORAGE-dog",
+      "directions": 4
     },
     {
-      "name": "detail"
+      "name": "base-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "base-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "base-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "base"
     },
     {
       "name": "detail-equipped-BACKPACK",
       "directions": 4
     },
     {
-      "name": "detail-equipped-SUITSTORAGE",
+      "name": "detail-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-sloth",
       "directions": 4
     },
     {
@@ -75,6 +258,111 @@
     {
       "name": "detail-inhand-right",
       "directions": 4
+    },
+    {
+      "name": "detail"
+    },
+    {
+      "name": "multi-band-equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "multi-band-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "multi-band"
+    },
+    {
+      "name": "multi-base-equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "multi-base"
     }
   ]
 }
