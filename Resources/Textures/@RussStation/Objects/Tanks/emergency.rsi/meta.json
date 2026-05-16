@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Drawn by Katyes for honksquad-ss14.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "add-base-equipped-BELT",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "add-base-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "add-base-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "add-base-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "add-base-storage"
+    },
+    {
+      "name": "add-base"
+    },
+    {
+      "name": "base-equipped-BELT",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "base-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "base-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "base-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "base-storage"
+    },
+    {
+      "name": "base"
+    },
+    {
+      "name": "detail-equipped-BELT",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "detail-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "detail-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "detail-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "detail-storage"
+    },
+    {
+      "name": "detail"
+    },
+    {
+      "name": "multi-base-equipped-BELT",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-cat",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-dog",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-fox",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-hamster",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-kangaroo",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-pig",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-possum",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-puppy",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE-sloth",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "multi-base-storage"
+    },
+    {
+      "name": "multi-base"
+    }
+  ]
+}
