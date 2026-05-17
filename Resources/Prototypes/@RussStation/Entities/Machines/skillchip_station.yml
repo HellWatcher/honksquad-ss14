@@ -1,5 +1,6 @@
 - type: entity
   id: SkillchipStation
+  parent: BaseStructure
   name: skillchip station
   description: A neural interface chair that reads and writes skill implants. Sit still.
   components:
