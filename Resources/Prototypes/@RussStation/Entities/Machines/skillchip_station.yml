@@ -6,8 +6,19 @@
   components:
   - type: Sprite
     sprite: "@RussStation/Machines/skillchip_station.rsi"
-    state: icon
+    layers:
+    - state: implantchair_open
+      map: ["skillchip_station_layer"]
     noRot: true
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.StrapVisuals.State:
+        skillchip_station_layer:
+          True: { state: implantchair_occupied }
+          False: { state: implantchair_open }
+  - type: Strap
+    position: Down
   - type: Physics
     bodyType: Static
   - type: Fixtures

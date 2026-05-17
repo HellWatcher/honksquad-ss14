@@ -1,6 +1,7 @@
 skillchip-station-tray-full = The tray already has a chip in it.
 skillchip-station-no-chip = No chip in the tray.
-skillchip-station-no-brain = Your brain doesn't support skill implants.
+skillchip-station-no-occupant = Nobody is seated in the station.
+skillchip-station-no-brain = Their brain doesn't support skill implants.
 skillchip-station-install-failed = Installation failed. The chip may exceed your capacity.
 skillchip-station-installed = Chip installed successfully.
 skillchip-station-removed = Chip removed.

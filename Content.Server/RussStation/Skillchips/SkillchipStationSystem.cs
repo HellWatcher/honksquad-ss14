@@ -1,3 +1,4 @@
+using Content.Shared.Buckle.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -149,6 +150,25 @@ public sealed class SkillchipStationSystem : EntitySystem
         PushStateWorking(uid, comp, user, working: true);
     }
 
+    /// <summary>
+    /// The patient is whoever is strapped into the station, not the operator
+    /// running the console.
+    /// </summary>
+    private bool TryGetOccupant(EntityUid uid, out EntityUid occupant)
+    {
+        occupant = default;
+        if (!TryComp<StrapComponent>(uid, out var strap))
+            return false;
+
+        foreach (var buckled in strap.BuckledEntities)
+        {
+            occupant = buckled;
+            return true;
+        }
+
+        return false;
+    }
+
     private void OnImplantDoAfter(EntityUid uid, SkillchipStationComponent comp, SkillchipImplantDoAfterEvent args)
     {
         var user = args.User;
@@ -164,7 +184,13 @@ public sealed class SkillchipStationSystem : EntitySystem
         if (!TryComp<SkillchipComponent>(chipEnt, out var chipComp))
             return;
 
-        if (!_skillchips.TryGetBrain(user, out var brain))
+        if (!TryGetOccupant(uid, out var patient))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-occupant"), uid, user);
+            return;
+        }
+
+        if (!_skillchips.TryGetBrain(patient, out var brain))
         {
             _popup.PopupEntity(Loc.GetString("skillchip-station-no-brain"), uid, user);
             return;
@@ -190,7 +216,7 @@ public sealed class SkillchipStationSystem : EntitySystem
         if (args.Cancelled)
             return;
 
-        if (!_skillchips.TryGetBrain(user, out var brain))
+        if (!TryGetOccupant(uid, out var patient) || !_skillchips.TryGetBrain(patient, out var brain))
             return;
 
         if (!_skillchips.TryRemove(brain, args.ChipProto))
