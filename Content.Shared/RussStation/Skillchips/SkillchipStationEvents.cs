@@ -10,6 +10,23 @@ public enum SkillchipStationUiKey : byte
     Key,
 }
 
+/// <summary>Appearance key for the open/occupied sprite swap.</summary>
+[Serializable, NetSerializable]
+public enum SkillchipStationVisuals : byte
+{
+    Status,
+}
+
+/// <summary>
+/// Appearance values matched by name in the prototype's GenericVisualizer.
+/// </summary>
+[Serializable, NetSerializable]
+public enum SkillchipStationStatus : byte
+{
+    Open,
+    Occupied,
+}
+
 // ── BUI state ──────────────────────────────────────────────────────────────
 
 [Serializable, NetSerializable]

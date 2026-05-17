@@ -13,12 +13,11 @@
   - type: Appearance
   - type: GenericVisualizer
     visuals:
-      enum.StrapVisuals.State:
+      enum.SkillchipStationVisuals.Status:
         skillchip_station_layer:
-          True: { state: implantchair_occupied }
-          False: { state: implantchair_open }
-  - type: Strap
-    position: Down
+          Occupied: { state: implantchair_occupied }
+          Open: { state: implantchair_open }
+  - type: Climbable
   - type: Physics
     bodyType: Static
   - type: Fixtures
@@ -44,3 +43,4 @@
   - type: ContainerContainer
     containers:
       skillchip_slot: !type:ContainerSlot {}
+      scanner-body: !type:ContainerSlot {}

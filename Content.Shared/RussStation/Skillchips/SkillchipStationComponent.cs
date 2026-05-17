@@ -11,6 +11,13 @@ public sealed partial class SkillchipStationComponent : Component
     public const string ChipSlotId = "skillchip_slot";
 
     /// <summary>
+    /// Container ID for the occupant standing inside the chair. Mirrors the
+    /// medical scanner / cryo pod body-container pattern: the patient is hidden
+    /// by containment, not seated via Strap.
+    /// </summary>
+    public const string BodyContainerId = "scanner-body";
+
+    /// <summary>
     /// How long the implant or removal operation takes.
     /// </summary>
     [DataField]

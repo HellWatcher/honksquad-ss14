@@ -1,7 +1,11 @@
-using Content.Shared.Buckle.Components;
+using Content.Shared.Body;
+using Content.Shared.Climbing.Systems;
+using Content.Shared.Destructible;
 using Content.Shared.DoAfter;
+using Content.Shared.DragDrop;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Movement.Events;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Skillchips;
 using Content.Shared.RussStation.Skillchips.Systems;
@@ -22,6 +26,8 @@ public sealed class SkillchipStationSystem : EntitySystem
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private readonly ClimbSystem _climb = default!;
+    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
 
     public override void Initialize()
     {
@@ -29,6 +35,10 @@ public sealed class SkillchipStationSystem : EntitySystem
 
         SubscribeLocalEvent<SkillchipStationComponent, ComponentInit>(OnInit);
         SubscribeLocalEvent<SkillchipStationComponent, InteractUsingEvent>(OnInteractUsing);
+        SubscribeLocalEvent<SkillchipStationComponent, CanDropTargetEvent>(OnCanDragDropOn);
+        SubscribeLocalEvent<SkillchipStationComponent, DragDropTargetEvent>(OnDragDropOn);
+        SubscribeLocalEvent<SkillchipStationComponent, ContainerRelayMovementEntityEvent>(OnRelayMovement);
+        SubscribeLocalEvent<SkillchipStationComponent, DestructionEventArgs>(OnDestroyed);
         SubscribeLocalEvent<SkillchipStationComponent, BoundUIOpenedEvent>(OnUIOpened);
         SubscribeLocalEvent<SkillchipStationComponent, EntInsertedIntoContainerMessage>(OnContainerChanged);
         SubscribeLocalEvent<SkillchipStationComponent, EntRemovedFromContainerMessage>(OnContainerChanged);
@@ -42,6 +52,64 @@ public sealed class SkillchipStationSystem : EntitySystem
     private void OnInit(EntityUid uid, SkillchipStationComponent comp, ComponentInit args)
     {
         _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+        _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        UpdateAppearance(uid);
+    }
+
+    // ── Occupant insert / eject (medical scanner body-container pattern) ───────
+
+    private void OnCanDragDropOn(EntityUid uid, SkillchipStationComponent comp, ref CanDropTargetEvent args)
+    {
+        args.Handled = true;
+        args.CanDrop |= HasComp<BodyComponent>(args.Dragged) && !IsOccupied(uid);
+    }
+
+    private void OnDragDropOn(EntityUid uid, SkillchipStationComponent comp, ref DragDropTargetEvent args)
+    {
+        InsertBody(uid, args.Dragged);
+    }
+
+    private void OnRelayMovement(EntityUid uid, SkillchipStationComponent comp, ref ContainerRelayMovementEntityEvent args)
+    {
+        EjectBody(uid);
+    }
+
+    private void OnDestroyed(EntityUid uid, SkillchipStationComponent comp, DestructionEventArgs args)
+    {
+        EjectBody(uid);
+    }
+
+    private bool IsOccupied(EntityUid uid)
+    {
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        return body.ContainedEntity != null;
+    }
+
+    private void InsertBody(EntityUid uid, EntityUid toInsert)
+    {
+        if (!HasComp<BodyComponent>(toInsert) || IsOccupied(uid))
+            return;
+
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        _containers.Insert(toInsert, body);
+        UpdateAppearance(uid);
+    }
+
+    private void EjectBody(EntityUid uid)
+    {
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        if (body.ContainedEntity is not { } occupant)
+            return;
+
+        _containers.Remove(occupant, body);
+        _climb.ForciblySetClimbing(occupant, uid);
+        UpdateAppearance(uid);
+    }
+
+    private void UpdateAppearance(EntityUid uid)
+    {
+        var status = IsOccupied(uid) ? SkillchipStationStatus.Occupied : SkillchipStationStatus.Open;
+        _appearance.SetData(uid, SkillchipStationVisuals.Status, status);
     }
 
     private void OnInteractUsing(EntityUid uid, SkillchipStationComponent comp, InteractUsingEvent args)
@@ -151,22 +219,18 @@ public sealed class SkillchipStationSystem : EntitySystem
     }
 
     /// <summary>
-    /// The patient is whoever is strapped into the station, not the operator
+    /// The patient is whoever is inside the body container, not the operator
     /// running the console.
     /// </summary>
     private bool TryGetOccupant(EntityUid uid, out EntityUid occupant)
     {
         occupant = default;
-        if (!TryComp<StrapComponent>(uid, out var strap))
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        if (body.ContainedEntity is not { } contained)
             return false;
 
-        foreach (var buckled in strap.BuckledEntities)
-        {
-            occupant = buckled;
-            return true;
-        }
-
-        return false;
+        occupant = contained;
+        return true;
     }
 
     private void OnImplantDoAfter(EntityUid uid, SkillchipStationComponent comp, SkillchipImplantDoAfterEvent args)
