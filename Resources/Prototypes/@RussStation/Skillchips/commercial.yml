@@ -7,3 +7,19 @@
   grants:
   - !type:CapabilityTagGrant
     tag: bureaucratic_filing
+
+- type: skillchip
+  id: SkillchipBasketweavingData
+  name: Underwater Basketweaving
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: underwater_basketweaving
+
+- type: skillchip
+  id: SkillchipWineTastingData
+  name: Wine Tasting
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: wine_tasting

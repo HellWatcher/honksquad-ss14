@@ -11,3 +11,27 @@
     state: paper
   - type: Skillchip
     chipProto: SkillchipBureaucraticFilingData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipBasketweaving
+  name: Basketsoft 3000 skillchip
+  description: A small neural interface chip. Underwater edition.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/bureaucracy.rsi
+    state: paper
+  - type: Skillchip
+    chipProto: SkillchipBasketweavingData
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipWineTasting
+  name: WINE skillchip
+  description: A small neural interface chip. Wine.Is.Not.Equal version 5.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Drinks/winebottle.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipWineTastingData
