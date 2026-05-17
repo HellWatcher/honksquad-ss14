@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from tgstation, originally added by AnturK in https://github.com/tgstation/tgstation/pull/52314 (commit e5cf3c05b82, 2020-07-29) as the underwater basketweaving demo item; later split into icons/obj/storage/basket.dmi",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "basket"
+    }
+  ]
+}
