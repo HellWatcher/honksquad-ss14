@@ -66,3 +66,6 @@
   - ReagentGrinderIndustrialMachineCircuitboard
   - JukeboxCircuitBoard
   - DawInstrumentMachineCircuitboard
+  # HONK START - skillchip station (curator-domain machine, #729)
+  - SkillchipStationMachineCircuitboard
+  # HONK END

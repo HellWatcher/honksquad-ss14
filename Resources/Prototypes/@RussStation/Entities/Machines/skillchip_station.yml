@@ -1,6 +1,6 @@
 - type: entity
   id: SkillchipStation
-  parent: BaseStructure
+  parent: [BaseStructure, ConstructibleMachine]
   name: skillchip station
   description: A neural interface chair that reads and writes skill implants. Sit still.
   components:
@@ -10,6 +10,7 @@
     - state: implantchair_open
       map: ["skillchip_station_layer"]
     noRot: true
+  - type: InteractionOutline
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -43,4 +44,31 @@
   - type: ContainerContainer
     containers:
       skillchip_slot: !type:ContainerSlot {}
-      scanner-body: !type:ContainerSlot {}
+      scanner-body:
+        !type:ContainerSlot
+        showEnts: true
+      machine_board: !type:Container
+      machine_parts: !type:Container
+  - type: Machine
+    board: SkillchipStationMachineCircuitboard
+  - type: WiresPanel
+  - type: ApcPowerReceiver
+    powerLoad: 200
+  - type: ExtensionCableReceiver
+  - type: Damageable
+    damageContainer: StructuralInorganic
+    damageModifierSet: StrongMetallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalGlassBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]

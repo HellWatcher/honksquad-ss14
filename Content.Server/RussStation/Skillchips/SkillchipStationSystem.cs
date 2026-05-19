@@ -7,6 +7,7 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Movement.Events;
 using Content.Shared.Popups;
+using Content.Server.Power.EntitySystems;
 using Content.Shared.RussStation.Skillchips;
 using Content.Shared.RussStation.Skillchips.Systems;
 using Robust.Server.GameObjects;
@@ -137,7 +138,7 @@ public sealed class SkillchipStationSystem : EntitySystem
 
     private void OnUIOpened(EntityUid uid, SkillchipStationComponent comp, BoundUIOpenedEvent args)
     {
-        PushState(uid, comp, args.Actor);
+        PushState(uid, comp);
     }
 
     private void OnContainerChanged(EntityUid uid, SkillchipStationComponent comp, ContainerModifiedMessage args)
@@ -145,13 +146,19 @@ public sealed class SkillchipStationSystem : EntitySystem
         if (args.Container.ID != SkillchipStationComponent.ChipSlotId)
             return;
 
-        foreach (var session in _ui.GetActors(uid, SkillchipStationUiKey.Key))
-            PushState(uid, comp, session);
+        PushState(uid, comp);
     }
 
     private void OnImplantMessage(EntityUid uid, SkillchipStationComponent comp, SkillchipStationImplantMessage args)
     {
         var user = args.Actor;
+
+        if (!this.IsPowered(uid, EntityManager))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-power"), uid, user);
+            return;
+        }
+
         var slot = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
 
         if (slot.ContainedEntity is not { } chipEnt)
@@ -175,7 +182,7 @@ public sealed class SkillchipStationSystem : EntitySystem
             return;
 
         _audio.PlayPvs(comp.OperationStartSound, uid);
-        PushStateWorking(uid, comp, user, working: true);
+        PushStateWorking(uid, comp, working: true);
     }
 
     private void OnEjectMessage(EntityUid uid, SkillchipStationComponent comp, SkillchipStationEjectMessage args)
@@ -194,10 +201,22 @@ public sealed class SkillchipStationSystem : EntitySystem
     {
         var user = args.Actor;
 
-        if (!_skillchips.HasChipInstalled(user, args.ChipProto))
+        if (!this.IsPowered(uid, EntityManager))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-power"), uid, user);
+            return;
+        }
+
+        if (!TryGetOccupant(uid, out var patient))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-occupant"), uid, user);
+            return;
+        }
+
+        if (!_skillchips.HasChipInstalled(patient, args.ChipProto))
             return;
 
-        if (!_skillchips.TryGetBrain(user, out _))
+        if (!_skillchips.TryGetBrain(patient, out _))
         {
             _popup.PopupEntity(Loc.GetString("skillchip-station-no-brain"), uid, user);
             return;
@@ -215,7 +234,7 @@ public sealed class SkillchipStationSystem : EntitySystem
             return;
 
         _audio.PlayPvs(comp.OperationStartSound, uid);
-        PushStateWorking(uid, comp, user, working: true);
+        PushStateWorking(uid, comp, working: true);
     }
 
     /// <summary>
@@ -236,7 +255,7 @@ public sealed class SkillchipStationSystem : EntitySystem
     private void OnImplantDoAfter(EntityUid uid, SkillchipStationComponent comp, SkillchipImplantDoAfterEvent args)
     {
         var user = args.User;
-        PushStateWorking(uid, comp, user, working: false);
+        PushStateWorking(uid, comp, working: false);
 
         if (args.Cancelled)
             return;
@@ -275,7 +294,7 @@ public sealed class SkillchipStationSystem : EntitySystem
     private void OnRemoveDoAfter(EntityUid uid, SkillchipStationComponent comp, SkillchipRemoveDoAfterEvent args)
     {
         var user = args.User;
-        PushStateWorking(uid, comp, user, working: false);
+        PushStateWorking(uid, comp, working: false);
 
         if (args.Cancelled)
             return;
@@ -292,12 +311,12 @@ public sealed class SkillchipStationSystem : EntitySystem
 
     // ── State helpers ─────────────────────────────────────────────────────────
 
-    private void PushState(EntityUid uid, SkillchipStationComponent comp, EntityUid actor)
+    private void PushState(EntityUid uid, SkillchipStationComponent comp)
     {
-        PushStateWorking(uid, comp, actor, false);
+        PushStateWorking(uid, comp, false);
     }
 
-    private void PushStateWorking(EntityUid uid, SkillchipStationComponent comp, EntityUid actor, bool working)
+    private void PushStateWorking(EntityUid uid, SkillchipStationComponent comp, bool working)
     {
         if (!_ui.IsUiOpen(uid, SkillchipStationUiKey.Key))
             return;
@@ -308,11 +327,19 @@ public sealed class SkillchipStationSystem : EntitySystem
         if (slot.ContainedEntity is { } chipEnt && TryComp<SkillchipComponent>(chipEnt, out var chipComp))
             insertedInfo = BuildChipInfo(chipComp.ChipProto);
 
-        var (usedCapacity, maxCapacity) = _skillchips.GetCapacity(actor);
-
+        // Installed chips and capacity belong to the occupant being operated
+        // on, not whoever opened the console. With no occupant the lists are
+        // empty so the UI shows nothing to remove.
         var implanted = new List<SkillchipStationChipInfo>();
-        foreach (var protoId in _skillchips.GetInstalledChips(actor))
-            implanted.Add(BuildChipInfo(protoId));
+        var usedCapacity = 0;
+        var maxCapacity = 0;
+
+        if (TryGetOccupant(uid, out var patient))
+        {
+            (usedCapacity, maxCapacity) = _skillchips.GetCapacity(patient);
+            foreach (var protoId in _skillchips.GetInstalledChips(patient))
+                implanted.Add(BuildChipInfo(protoId));
+        }
 
         var state = new SkillchipStationBoundUserInterfaceState(
             working, insertedInfo, implanted, usedCapacity, maxCapacity);
