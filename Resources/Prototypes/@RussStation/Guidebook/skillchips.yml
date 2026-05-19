@@ -2,3 +2,10 @@
   id: Skillchips
   name: guide-entry-skillchips
   text: "/ServerInfo/Guidebook/Service/Skillchips.xml"
+  children:
+  - SkillchipStation
+
+- type: guideEntry
+  id: SkillchipStation
+  name: guide-entry-skillchip-station
+  text: "/ServerInfo/Guidebook/Service/SkillchipStation.xml"
