@@ -18,6 +18,13 @@ public sealed partial class SkillchipStationComponent : Component
     public const string BodyContainerId = "scanner-body";
 
     /// <summary>
+    /// How long it takes to drag a patient into the chair, matching the cryo
+    /// pod's EntryDelay pattern.
+    /// </summary>
+    [DataField]
+    public TimeSpan EntryDelay = TimeSpan.FromSeconds(2);
+
+    /// <summary>
     /// How long the implant or removal operation takes.
     /// </summary>
     [DataField]

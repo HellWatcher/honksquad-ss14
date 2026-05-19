@@ -38,6 +38,7 @@ public sealed class SkillchipStationSystem : EntitySystem
         SubscribeLocalEvent<SkillchipStationComponent, InteractUsingEvent>(OnInteractUsing);
         SubscribeLocalEvent<SkillchipStationComponent, CanDropTargetEvent>(OnCanDragDropOn);
         SubscribeLocalEvent<SkillchipStationComponent, DragDropTargetEvent>(OnDragDropOn);
+        SubscribeLocalEvent<SkillchipStationComponent, SkillchipStationEnterDoAfterEvent>(OnEnterDoAfter);
         SubscribeLocalEvent<SkillchipStationComponent, ContainerRelayMovementEntityEvent>(OnRelayMovement);
         SubscribeLocalEvent<SkillchipStationComponent, DestructionEventArgs>(OnDestroyed);
         SubscribeLocalEvent<SkillchipStationComponent, BoundUIOpenedEvent>(OnUIOpened);
@@ -67,7 +68,32 @@ public sealed class SkillchipStationSystem : EntitySystem
 
     private void OnDragDropOn(EntityUid uid, SkillchipStationComponent comp, ref DragDropTargetEvent args)
     {
-        InsertBody(uid, args.Dragged);
+        // Mirrors CryoPod.HandleDragDropOn: our own EntryDelay DoAfter, then
+        // insert on completion. Mark handled so the climb system skips its
+        // parallel DoAfter.
+        args.Handled = true;
+
+        if (IsOccupied(uid) || !HasComp<BodyComponent>(args.Dragged))
+            return;
+
+        var doAfterArgs = new DoAfterArgs(EntityManager, args.User, comp.EntryDelay,
+            new SkillchipStationEnterDoAfterEvent(), uid, target: args.Dragged, used: uid)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            NeedHand = false,
+        };
+
+        _doAfter.TryStartDoAfter(doAfterArgs);
+    }
+
+    private void OnEnterDoAfter(EntityUid uid, SkillchipStationComponent comp, ref SkillchipStationEnterDoAfterEvent args)
+    {
+        if (args.Cancelled || args.Handled || args.Args.Target is not { } dragged)
+            return;
+
+        InsertBody(uid, dragged);
+        args.Handled = true;
     }
 
     private void OnRelayMovement(EntityUid uid, SkillchipStationComponent comp, ref ContainerRelayMovementEntityEvent args)
@@ -143,7 +169,10 @@ public sealed class SkillchipStationSystem : EntitySystem
 
     private void OnContainerChanged(EntityUid uid, SkillchipStationComponent comp, ContainerModifiedMessage args)
     {
-        if (args.Container.ID != SkillchipStationComponent.ChipSlotId)
+        // Tray changes alter the inserted-chip panel; occupant changes alter
+        // the installed-chip list and capacity bar. Both need a refresh.
+        if (args.Container.ID != SkillchipStationComponent.ChipSlotId &&
+            args.Container.ID != SkillchipStationComponent.BodyContainerId)
             return;
 
         PushState(uid, comp);
@@ -167,8 +196,15 @@ public sealed class SkillchipStationSystem : EntitySystem
             return;
         }
 
-        if (!TryComp<SkillchipComponent>(chipEnt, out _))
+        if (!TryComp<SkillchipComponent>(chipEnt, out var chipComp))
             return;
+
+        if (TryGetOccupant(uid, out var patient) &&
+            _skillchips.HasChipInstalled(patient, chipComp.ChipProto))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-duplicate"), uid, user);
+            return;
+        }
 
         var doAfterArgs = new DoAfterArgs(EntityManager, user, comp.OperationDuration,
             new SkillchipImplantDoAfterEvent(), uid, target: uid)

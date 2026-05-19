@@ -44,9 +44,7 @@
   - type: ContainerContainer
     containers:
       skillchip_slot: !type:ContainerSlot {}
-      scanner-body:
-        !type:ContainerSlot
-        showEnts: true
+      scanner-body: !type:ContainerSlot {}
       machine_board: !type:Container
       machine_parts: !type:Container
   - type: Machine

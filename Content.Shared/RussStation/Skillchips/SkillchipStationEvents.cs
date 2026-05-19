@@ -91,6 +91,9 @@ public sealed class SkillchipStationRemoveMessage(ProtoId<SkillchipPrototype> ch
 // ── DoAfter events ─────────────────────────────────────────────────────────
 
 [Serializable, NetSerializable]
+public sealed partial class SkillchipStationEnterDoAfterEvent : SimpleDoAfterEvent;
+
+[Serializable, NetSerializable]
 public sealed partial class SkillchipImplantDoAfterEvent : SimpleDoAfterEvent;
 
 [Serializable, NetSerializable]

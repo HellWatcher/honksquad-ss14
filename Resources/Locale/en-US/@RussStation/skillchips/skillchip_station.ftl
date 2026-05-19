@@ -4,6 +4,7 @@ skillchip-station-no-power = The station has no power.
 skillchip-station-no-occupant = Nobody is seated in the station.
 skillchip-station-no-brain = Their brain doesn't support skill implants.
 skillchip-station-install-failed = Installation failed. The chip may exceed your capacity.
+skillchip-station-duplicate = That chip is already installed.
 skillchip-station-installed = Chip installed successfully.
 skillchip-station-removed = Chip removed.
 
