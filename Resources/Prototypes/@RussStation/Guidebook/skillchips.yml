@@ -1,0 +1,4 @@
+- type: guideEntry
+  id: Skillchips
+  name: guide-entry-skillchips
+  text: "/ServerInfo/Guidebook/Service/Skillchips.xml"

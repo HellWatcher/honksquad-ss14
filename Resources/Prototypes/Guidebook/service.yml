@@ -8,6 +8,9 @@
   - Botany
   - Chef
   - Janitorial
+  # HONK START - Skillchips guidebook entry (#788), curator-domain
+  - Skillchips
+  # HONK END
   
 - type: guideEntry
   id: Bartender
