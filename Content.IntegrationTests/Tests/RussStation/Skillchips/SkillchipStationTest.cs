@@ -46,6 +46,7 @@ public sealed class SkillchipStationTest
   id: StationTestOperator
   components:
   - type: Transform
+  - type: DoAfter
 
 - type: entity
   id: StationTestChipItem

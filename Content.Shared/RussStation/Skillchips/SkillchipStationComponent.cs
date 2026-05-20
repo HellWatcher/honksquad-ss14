@@ -22,7 +22,7 @@ public sealed partial class SkillchipStationComponent : Component
     /// pod's EntryDelay pattern.
     /// </summary>
     [DataField]
-    public TimeSpan EntryDelay = TimeSpan.FromSeconds(2);
+    public TimeSpan EntryDelay = TimeSpan.FromSeconds(SkillchipsConstants.StationEntryDelaySeconds);
 
     /// <summary>
     /// How long the implant or removal operation takes.
