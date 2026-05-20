@@ -205,7 +205,8 @@ public sealed class SkillchipStationTest
                 "Tray chip should be consumed once the implant DoAfter completes");
             Assert.That(em.EntityExists(chip), Is.False,
                 "Consumed chip item should be queued for deletion");
-            Assert.That(skillchips.HasChipInstalled(brain, "StationTestChip"), Is.True,
+            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
+            Assert.That(holder.ImplantedChips, Does.Contain(new ProtoId<SkillchipPrototype>("StationTestChip")),
                 "Brain should record the implanted chip after the DoAfter completes");
         });
 
@@ -248,7 +249,8 @@ public sealed class SkillchipStationTest
 
         await server.WaitAssertion(() =>
         {
-            Assert.That(skillchips.HasChipInstalled(brain, "StationTestChip"), Is.False,
+            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
+            Assert.That(holder.ImplantedChips, Does.Not.Contain(new ProtoId<SkillchipPrototype>("StationTestChip")),
                 "Chip should be gone from the brain after the remove DoAfter completes");
         });
 
