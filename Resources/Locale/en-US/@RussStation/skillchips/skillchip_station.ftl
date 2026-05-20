@@ -1,0 +1,20 @@
+skillchip-station-tray-full = The tray already has a chip in it.
+skillchip-station-no-chip = No chip in the tray.
+skillchip-station-no-power = The station has no power.
+skillchip-station-no-occupant = Nobody is seated in the station.
+skillchip-station-no-brain = Their brain doesn't support skill implants.
+skillchip-station-install-failed = Installation failed. The chip may exceed your capacity.
+skillchip-station-duplicate = That chip is already installed.
+skillchip-station-installed = Chip installed successfully.
+skillchip-station-removed = Chip removed.
+
+skillchip-station-window-title = Skillchip Station
+skillchip-station-window-capacity-label = Capacity:
+skillchip-station-window-capacity-value = {$used} / {$max}
+skillchip-station-window-tray-header = Tray
+skillchip-station-window-tray-empty = No chip inserted.
+skillchip-station-window-implanted-header = Installed chips
+skillchip-station-window-implanted-empty = No chips installed.
+skillchip-station-window-implant = Implant
+skillchip-station-window-eject = Eject
+skillchip-station-window-remove = Remove

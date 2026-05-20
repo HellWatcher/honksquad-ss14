@@ -11,6 +11,9 @@ public sealed partial class SkillchipPrototype : IPrototype
     [DataField]
     public string Name = string.Empty;
 
+    [DataField]
+    public string Description = string.Empty;
+
     /// <summary>
     /// How many brain capacity slots this chip occupies.
     /// </summary>

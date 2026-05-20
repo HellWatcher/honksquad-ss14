@@ -1,0 +1,14 @@
+- type: entity
+  id: SkillchipStationMachineCircuitboard
+  parent: BaseMachineCircuitboard
+  name: skillchip station machine board
+  description: A machine printed circuit board for a skillchip station.
+  components:
+  - type: Sprite
+    state: service
+  - type: MachineBoard
+    prototype: SkillchipStation
+    stackRequirements:
+      Manipulator: 2
+      Glass: 2
+      Cable: 2

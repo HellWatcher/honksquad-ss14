@@ -1,0 +1,41 @@
+<DefaultWindow xmlns="https://spacestation14.io"
+               MinSize="340 0" Title="{Loc skillchip-station-window-title}">
+    <BoxContainer Orientation="Vertical" Margin="8 8 8 8" SeparationOverride="8">
+
+        <!-- Capacity bar -->
+        <BoxContainer Orientation="Horizontal" SeparationOverride="4">
+            <Label Text="{Loc skillchip-station-window-capacity-label}" />
+            <Label Name="CapacityLabel"
+                   HorizontalExpand="True"
+                   HorizontalAlignment="Right" />
+        </BoxContainer>
+
+        <!-- Tray chip section -->
+        <Label Text="{Loc skillchip-station-window-tray-header}"
+               StyleClasses="LabelSubText" />
+        <BoxContainer Name="TrayContainer"
+                      Access="Public"
+                      Orientation="Vertical"
+                      SeparationOverride="4" />
+        <Label Name="TrayEmptyLabel"
+               Text="{Loc skillchip-station-window-tray-empty}"
+               HorizontalAlignment="Center"
+               Visible="False" />
+
+        <!-- Implanted chips section -->
+        <Label Text="{Loc skillchip-station-window-implanted-header}"
+               StyleClasses="LabelSubText" />
+        <ScrollContainer HorizontalExpand="True"
+                         MaxHeight="200">
+            <BoxContainer Name="ImplantedContainer"
+                          Access="Public"
+                          Orientation="Vertical"
+                          SeparationOverride="4" />
+        </ScrollContainer>
+        <Label Name="ImplantedEmptyLabel"
+               Text="{Loc skillchip-station-window-implanted-empty}"
+               HorizontalAlignment="Center"
+               Visible="False" />
+
+    </BoxContainer>
+</DefaultWindow>

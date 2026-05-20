@@ -1,0 +1,11 @@
+- type: technology
+  id: SkillImplantation
+  name: research-technology-skill-implantation
+  icon:
+    sprite: "@RussStation/Machines/skillchip_station.rsi"
+    state: icon
+  discipline: CivilianServices
+  tier: 1
+  cost: 5000
+  recipeUnlocks:
+  - SkillchipStationMachineCircuitboard

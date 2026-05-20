@@ -1,0 +1,397 @@
+using Content.Shared.Body;
+using Content.Shared.Climbing.Systems;
+using Content.Shared.Destructible;
+using Content.Shared.DoAfter;
+using Content.Shared.DragDrop;
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Interaction;
+using Content.Shared.Movement.Events;
+using Content.Shared.Popups;
+using Content.Server.Power.EntitySystems;
+using Content.Shared.RussStation.Skillchips;
+using Content.Shared.RussStation.Skillchips.Systems;
+using Robust.Server.GameObjects;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.Containers;
+using Robust.Shared.Prototypes;
+
+namespace Content.Server.RussStation.Skillchips;
+
+public sealed class SkillchipStationSystem : EntitySystem
+{
+    [Dependency] private readonly SharedSkillchipSystem _skillchips = default!;
+    [Dependency] private readonly SharedContainerSystem _containers = default!;
+    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private readonly ClimbSystem _climb = default!;
+    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent<SkillchipStationComponent, ComponentInit>(OnInit);
+        SubscribeLocalEvent<SkillchipStationComponent, InteractUsingEvent>(OnInteractUsing);
+        SubscribeLocalEvent<SkillchipStationComponent, CanDropTargetEvent>(OnCanDragDropOn);
+        SubscribeLocalEvent<SkillchipStationComponent, DragDropTargetEvent>(OnDragDropOn);
+        SubscribeLocalEvent<SkillchipStationComponent, SkillchipStationEnterDoAfterEvent>(OnEnterDoAfter);
+        SubscribeLocalEvent<SkillchipStationComponent, ContainerRelayMovementEntityEvent>(OnRelayMovement);
+        SubscribeLocalEvent<SkillchipStationComponent, DestructionEventArgs>(OnDestroyed);
+        SubscribeLocalEvent<SkillchipStationComponent, BoundUIOpenedEvent>(OnUIOpened);
+        SubscribeLocalEvent<SkillchipStationComponent, EntInsertedIntoContainerMessage>(OnContainerChanged);
+        SubscribeLocalEvent<SkillchipStationComponent, EntRemovedFromContainerMessage>(OnContainerChanged);
+        SubscribeLocalEvent<SkillchipStationComponent, SkillchipStationImplantMessage>(OnImplantMessage);
+        SubscribeLocalEvent<SkillchipStationComponent, SkillchipStationEjectMessage>(OnEjectMessage);
+        SubscribeLocalEvent<SkillchipStationComponent, SkillchipStationRemoveMessage>(OnRemoveMessage);
+        SubscribeLocalEvent<SkillchipStationComponent, SkillchipImplantDoAfterEvent>(OnImplantDoAfter);
+        SubscribeLocalEvent<SkillchipStationComponent, SkillchipRemoveDoAfterEvent>(OnRemoveDoAfter);
+    }
+
+    private void OnInit(EntityUid uid, SkillchipStationComponent comp, ComponentInit args)
+    {
+        _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+        _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        UpdateAppearance(uid);
+    }
+
+    // ── Occupant insert / eject (medical scanner body-container pattern) ───────
+
+    private void OnCanDragDropOn(EntityUid uid, SkillchipStationComponent comp, ref CanDropTargetEvent args)
+    {
+        args.Handled = true;
+        args.CanDrop |= HasComp<BodyComponent>(args.Dragged) && !IsOccupied(uid);
+    }
+
+    private void OnDragDropOn(EntityUid uid, SkillchipStationComponent comp, ref DragDropTargetEvent args)
+    {
+        // Mirrors CryoPod.HandleDragDropOn: our own EntryDelay DoAfter, then
+        // insert on completion. Mark handled so the climb system skips its
+        // parallel DoAfter.
+        args.Handled = true;
+
+        if (IsOccupied(uid) || !HasComp<BodyComponent>(args.Dragged))
+            return;
+
+        var doAfterArgs = new DoAfterArgs(EntityManager, args.User, comp.EntryDelay,
+            new SkillchipStationEnterDoAfterEvent(), uid, target: args.Dragged, used: uid)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            NeedHand = false,
+        };
+
+        _doAfter.TryStartDoAfter(doAfterArgs);
+    }
+
+    private void OnEnterDoAfter(EntityUid uid, SkillchipStationComponent comp, ref SkillchipStationEnterDoAfterEvent args)
+    {
+        if (args.Cancelled || args.Handled || args.Args.Target is not { } dragged)
+            return;
+
+        InsertBody(uid, dragged);
+        args.Handled = true;
+    }
+
+    private void OnRelayMovement(EntityUid uid, SkillchipStationComponent comp, ref ContainerRelayMovementEntityEvent args)
+    {
+        EjectBody(uid);
+    }
+
+    private void OnDestroyed(EntityUid uid, SkillchipStationComponent comp, DestructionEventArgs args)
+    {
+        EjectBody(uid);
+    }
+
+    private bool IsOccupied(EntityUid uid)
+    {
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        return body.ContainedEntity != null;
+    }
+
+    private void InsertBody(EntityUid uid, EntityUid toInsert)
+    {
+        if (!HasComp<BodyComponent>(toInsert) || IsOccupied(uid))
+            return;
+
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        _containers.Insert(toInsert, body);
+        UpdateAppearance(uid);
+    }
+
+    private void EjectBody(EntityUid uid)
+    {
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        if (body.ContainedEntity is not { } occupant)
+            return;
+
+        _containers.Remove(occupant, body);
+        _climb.ForciblySetClimbing(occupant, uid);
+        UpdateAppearance(uid);
+    }
+
+    private void UpdateAppearance(EntityUid uid)
+    {
+        var status = IsOccupied(uid) ? SkillchipStationStatus.Occupied : SkillchipStationStatus.Open;
+        _appearance.SetData(uid, SkillchipStationVisuals.Status, status);
+    }
+
+    private void OnInteractUsing(EntityUid uid, SkillchipStationComponent comp, InteractUsingEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        if (!TryComp<SkillchipComponent>(args.Used, out _))
+            return;
+
+        var slot = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+        if (slot.ContainedEntity != null)
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-tray-full"), uid, args.User);
+            args.Handled = true;
+            return;
+        }
+
+        if (!_hands.TryDrop(args.User, args.Used, null, checkActionBlocker: false))
+            return;
+
+        _containers.Insert(args.Used, slot);
+        args.Handled = true;
+    }
+
+    private void OnUIOpened(EntityUid uid, SkillchipStationComponent comp, BoundUIOpenedEvent args)
+    {
+        PushState(uid, comp);
+    }
+
+    private void OnContainerChanged(EntityUid uid, SkillchipStationComponent comp, ContainerModifiedMessage args)
+    {
+        // Tray changes alter the inserted-chip panel; occupant changes alter
+        // the installed-chip list and capacity bar. Both need a refresh.
+        if (args.Container.ID != SkillchipStationComponent.ChipSlotId &&
+            args.Container.ID != SkillchipStationComponent.BodyContainerId)
+            return;
+
+        PushState(uid, comp);
+    }
+
+    private void OnImplantMessage(EntityUid uid, SkillchipStationComponent comp, SkillchipStationImplantMessage args)
+    {
+        var user = args.Actor;
+
+        if (!this.IsPowered(uid, EntityManager))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-power"), uid, user);
+            return;
+        }
+
+        var slot = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+
+        if (slot.ContainedEntity is not { } chipEnt)
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-chip"), uid, user);
+            return;
+        }
+
+        if (!TryComp<SkillchipComponent>(chipEnt, out var chipComp))
+            return;
+
+        if (TryGetOccupant(uid, out var patient) &&
+            _skillchips.HasChipInstalled(patient, chipComp.ChipProto))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-duplicate"), uid, user);
+            return;
+        }
+
+        var doAfterArgs = new DoAfterArgs(EntityManager, user, comp.OperationDuration,
+            new SkillchipImplantDoAfterEvent(), uid, target: uid)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            NeedHand = false,
+        };
+
+        if (!_doAfter.TryStartDoAfter(doAfterArgs))
+            return;
+
+        _audio.PlayPvs(comp.OperationStartSound, uid);
+        PushStateWorking(uid, comp, working: true);
+    }
+
+    private void OnEjectMessage(EntityUid uid, SkillchipStationComponent comp, SkillchipStationEjectMessage args)
+    {
+        var user = args.Actor;
+        var slot = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+
+        if (slot.ContainedEntity is not { } chipEnt)
+            return;
+
+        _containers.Remove(chipEnt, slot);
+        _hands.PickupOrDrop(user, chipEnt);
+    }
+
+    private void OnRemoveMessage(EntityUid uid, SkillchipStationComponent comp, SkillchipStationRemoveMessage args)
+    {
+        var user = args.Actor;
+
+        if (!this.IsPowered(uid, EntityManager))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-power"), uid, user);
+            return;
+        }
+
+        if (!TryGetOccupant(uid, out var patient))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-occupant"), uid, user);
+            return;
+        }
+
+        if (!_skillchips.HasChipInstalled(patient, args.ChipProto))
+            return;
+
+        if (!_skillchips.TryGetBrain(patient, out _))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-brain"), uid, user);
+            return;
+        }
+
+        var doAfterArgs = new DoAfterArgs(EntityManager, user, comp.OperationDuration,
+            new SkillchipRemoveDoAfterEvent(args.ChipProto), uid, target: uid)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            NeedHand = false,
+        };
+
+        if (!_doAfter.TryStartDoAfter(doAfterArgs))
+            return;
+
+        _audio.PlayPvs(comp.OperationStartSound, uid);
+        PushStateWorking(uid, comp, working: true);
+    }
+
+    /// <summary>
+    /// The patient is whoever is inside the body container, not the operator
+    /// running the console.
+    /// </summary>
+    private bool TryGetOccupant(EntityUid uid, out EntityUid occupant)
+    {
+        occupant = default;
+        var body = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
+        if (body.ContainedEntity is not { } contained)
+            return false;
+
+        occupant = contained;
+        return true;
+    }
+
+    private void OnImplantDoAfter(EntityUid uid, SkillchipStationComponent comp, SkillchipImplantDoAfterEvent args)
+    {
+        var user = args.User;
+        PushStateWorking(uid, comp, working: false);
+
+        if (args.Cancelled)
+            return;
+
+        var slot = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+        if (slot.ContainedEntity is not { } chipEnt)
+            return;
+
+        if (!TryComp<SkillchipComponent>(chipEnt, out var chipComp))
+            return;
+
+        if (!TryGetOccupant(uid, out var patient))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-occupant"), uid, user);
+            return;
+        }
+
+        if (!_skillchips.TryGetBrain(patient, out var brain))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-no-brain"), uid, user);
+            return;
+        }
+
+        if (!_skillchips.TryInstall(brain, chipComp.ChipProto))
+        {
+            _popup.PopupEntity(Loc.GetString("skillchip-station-install-failed"), uid, user);
+            return;
+        }
+
+        _containers.Remove(chipEnt, slot);
+        QueueDel(chipEnt);
+        _audio.PlayPvs(comp.OperationCompleteSound, uid);
+        _popup.PopupEntity(Loc.GetString("skillchip-station-installed"), uid, user);
+    }
+
+    private void OnRemoveDoAfter(EntityUid uid, SkillchipStationComponent comp, SkillchipRemoveDoAfterEvent args)
+    {
+        var user = args.User;
+        PushStateWorking(uid, comp, working: false);
+
+        if (args.Cancelled)
+            return;
+
+        if (!TryGetOccupant(uid, out var patient) || !_skillchips.TryGetBrain(patient, out var brain))
+            return;
+
+        if (!_skillchips.TryRemove(brain, args.ChipProto))
+            return;
+
+        _audio.PlayPvs(comp.OperationCompleteSound, uid);
+        _popup.PopupEntity(Loc.GetString("skillchip-station-removed"), uid, user);
+    }
+
+    // ── State helpers ─────────────────────────────────────────────────────────
+
+    private void PushState(EntityUid uid, SkillchipStationComponent comp)
+    {
+        PushStateWorking(uid, comp, false);
+    }
+
+    private void PushStateWorking(EntityUid uid, SkillchipStationComponent comp, bool working)
+    {
+        if (!_ui.IsUiOpen(uid, SkillchipStationUiKey.Key))
+            return;
+
+        var slot = _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+        SkillchipStationChipInfo? insertedInfo = null;
+
+        if (slot.ContainedEntity is { } chipEnt && TryComp<SkillchipComponent>(chipEnt, out var chipComp))
+            insertedInfo = BuildChipInfo(chipComp.ChipProto);
+
+        // Installed chips and capacity belong to the occupant being operated
+        // on, not whoever opened the console. With no occupant the lists are
+        // empty so the UI shows nothing to remove.
+        var implanted = new List<SkillchipStationChipInfo>();
+        var usedCapacity = 0;
+        var maxCapacity = 0;
+
+        if (TryGetOccupant(uid, out var patient))
+        {
+            (usedCapacity, maxCapacity) = _skillchips.GetCapacity(patient);
+            foreach (var protoId in _skillchips.GetInstalledChips(patient))
+                implanted.Add(BuildChipInfo(protoId));
+        }
+
+        var state = new SkillchipStationBoundUserInterfaceState(
+            working, insertedInfo, implanted, usedCapacity, maxCapacity);
+
+        _ui.SetUiState(uid, SkillchipStationUiKey.Key, state);
+    }
+
+    private SkillchipStationChipInfo BuildChipInfo(ProtoId<SkillchipPrototype> protoId)
+    {
+        var proto = _proto.Index(protoId);
+        return new SkillchipStationChipInfo
+        {
+            ChipProto = protoId,
+            Name = proto.Name,
+            Description = proto.Description,
+            CapacityCost = proto.CapacityCost,
+        };
+    }
+}
