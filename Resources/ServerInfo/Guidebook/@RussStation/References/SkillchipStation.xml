@@ -17,9 +17,9 @@ It is a standard machine: build a machine frame, drop in the circuit board, and 
 The board is printed at a circuit imprinter once the [color=#a4885c]Skill Implantation[/color] node has been researched, which lives in the service side of the research tree.
 
 ## Using it
-1. Drag the patient onto the chair to seat them. They stay put until the work is done.
-2. Put a skillchip in the tray by clicking the chip on the station with it in hand.
-3. Open the station's interface and press [color=#a4885c]Implant[/color]. The procedure takes 15 seconds and the chip is used up.
+- Drag the patient onto the chair to seat them. They stay put until the work is done.
+- Put a skillchip in the tray by clicking the chip on the station with it in hand.
+- Open the station's interface and press [color=#a4885c]Implant[/color]. The procedure takes 15 seconds and the chip is used up.
 
 To pull a chip, open the interface with the patient seated and press [color=#a4885c]Remove[/color] next to the chip you want out. Removal also takes 15 seconds, and the chip is [color=#993333]destroyed in the process[/color], you do not get it back.
 
