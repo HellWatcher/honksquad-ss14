@@ -1,18 +1,14 @@
 <Document>
 # N16H7M4R3
 
-Stop failing to take out lightbulbs today, no gloves needed. With the chip installed, hot lightbulbs come out clean instead of burning your hand.
+Stop failing to take out lightbulbs today, no gloves needed!
 
 <Box>
 <GuideEntityEmbed Entity="SkillchipLightbulbRemoving"/>
 </Box>
 
 ## Using it
-- Click a [color=#a4885c]lit or recently-lit bulb[/color] with an empty hand.
-- The bulb comes out into your hand without a burn.
+1. Click a [color=#a4885c]lit bulb[/color] with an empty hand.\n2. The bulb comes out without burning you.
 
-[color=#a4885c]Quality of life.[/color] Without the chip the same grab on a hot bulb [color=#a4885c]burns[/color] you unless you are wearing insulated gloves.
-
-## Notes
-The bulb itself is unchanged. Cold bulbs were always safe to remove bare-handed.
+[color=#a4885c]Quality of life.[/color] Without the chip the same grab [color=#a4885c]burns[/color] you unless you are wearing gloves.
 </Document>
