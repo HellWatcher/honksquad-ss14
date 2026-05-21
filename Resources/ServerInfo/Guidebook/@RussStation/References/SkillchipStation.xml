@@ -17,7 +17,7 @@ It is a standard machine: build a machine frame, drop in the circuit board, and 
 The board is printed at a circuit imprinter once the [color=#a4885c]Skill Implantation[/color] node has been researched, which lives in the service side of the research tree.
 
 ## Interface
-Shows the chip in the tray (name, effect, capacity cost), every chip already in the seated patient's brain, and a capacity bar for that patient. With nobody seated there is nothing to act on.
+Shows the chip in the tray (name, effect, capacity cost), every chip already in the seated patient's brain, and a capacity bar for that patient.
 
 ## Implanting
 Drag the patient onto the chair to seat them, put a skillchip in the tray by clicking the chip on the station with it in hand, then open the interface and press [color=#a4885c]Implant[/color]. The procedure takes 15 seconds and the chip is used up.
