@@ -26,6 +26,10 @@
     - GhostOnlyWarp
   - type: StealTarget
     stealGroup: NukeDisk
+  # HONK START - K33P-TH4T-D15K skillchip examine hook
+  - type: NukeDiskVerifiable
+    isForgery: false
+  # HONK END
 
 - type: entity
   name: nuclear authentication disk
@@ -42,3 +46,7 @@
   - type: Tag
     tags:
     - FakeNukeDisk
+  # HONK START - K33P-TH4T-D15K skillchip examine hook
+  - type: NukeDiskVerifiable
+    isForgery: true
+  # HONK END
