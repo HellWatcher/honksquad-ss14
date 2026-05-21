@@ -1,7 +1,7 @@
 <Document>
 # Hedge 3
 
-Lets a chip holder reshape potted plants.
+Trim hedges and potted plants into marvelous new shapes with any old knife. Not applicable to plastic plants.
 
 <Box>
 <GuideEntityEmbed Entity="SkillchipHedgetrimming"/>
