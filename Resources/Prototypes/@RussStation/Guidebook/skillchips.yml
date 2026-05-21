@@ -1,23 +1,16 @@
 - type: guideEntry
   id: Skillchips
   name: guide-entry-skillchips
-  text: "/ServerInfo/Guidebook/Service/Skillchips.xml"
+  text: "/ServerInfo/Guidebook/@RussStation/References/Skillchips.xml"
+  filterEnabled: True
   children:
   - SkillchipStation
+  - SkillchipHedge3
 
 - type: guideEntry
   id: SkillchipStation
   name: guide-entry-skillchip-station
-  text: "/ServerInfo/Guidebook/Service/SkillchipStation.xml"
-
-# Per-chip catalog lives under References (lookup), not Service.
-- type: guideEntry
-  id: SkillchipsCatalog
-  name: guide-entry-skillchips-catalog
-  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipsCatalog.xml"
-  filterEnabled: True
-  children:
-  - SkillchipHedge3
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipStation.xml"
 
 - type: guideEntry
   id: SkillchipHedge3

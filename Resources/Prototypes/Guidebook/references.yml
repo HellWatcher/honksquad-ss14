@@ -9,8 +9,8 @@
   - FoodRecipes
   - Writing
   - Lawsets
-  # HONK START - Per-chip skillchip catalog (#706, #703)
-  - SkillchipsCatalog
+  # HONK START - Skillchips (catalog + station guide) lives under References (#706, #788)
+  - Skillchips
   # HONK END
 
 - type: guideEntry
