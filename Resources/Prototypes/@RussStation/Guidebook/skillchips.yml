@@ -6,6 +6,7 @@
   children:
   - SkillchipStation
   - SkillchipHedge3
+  - SkillchipLightbulb
 
 - type: guideEntry
   id: SkillchipStation
@@ -16,3 +17,8 @@
   id: SkillchipHedge3
   name: guide-entry-skillchip-hedge3
   text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipHedge3.xml"
+
+- type: guideEntry
+  id: SkillchipLightbulb
+  name: guide-entry-skillchip-lightbulb
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipLightbulb.xml"
