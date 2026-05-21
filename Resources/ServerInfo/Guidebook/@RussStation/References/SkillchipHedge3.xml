@@ -5,5 +5,7 @@
 <GuideEntityEmbed Entity="SkillchipHedgetrimming"/>
 </Box>
 
-Cosmetic. With the chip installed, click a potted plant with a sharp item to reshape it after a short trim.
+Lets a chip holder reshape potted plants. With the chip installed, click a plant with a sharp item, stand still for three seconds, and the plant rerolls into one of the other potted-plant variants.
+
+Cosmetic. Without the chip the same click stashes the item inside the plant as usual.
 </Document>
