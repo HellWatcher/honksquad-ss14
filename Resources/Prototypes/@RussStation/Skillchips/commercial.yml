@@ -39,3 +39,11 @@
   grants:
   - !type:CapabilityTagGrant
     tag: lightbulb_removing
+
+- type: skillchip
+  id: SkillchipDiskVerifierData
+  name: Nuclear Disk Verification
+  capacityCost: 1
+  grants:
+  - !type:CapabilityTagGrant
+    tag: disk_verifier
