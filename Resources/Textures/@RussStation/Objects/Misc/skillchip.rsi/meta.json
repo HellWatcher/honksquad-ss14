@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Taken from tgstation at commit e5cf3c05b8 (PR tgstation/tgstation#52314)",
+  "copyright": "Taken from tgstation at commit 9ae549e096 (PR tgstation/tgstation#75183 by Thunder12345; framework PR #52314)",
   "size": {
     "x": 32,
     "y": 32
