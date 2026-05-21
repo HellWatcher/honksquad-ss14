@@ -2,21 +2,21 @@ using Content.Shared.DoAfter;
 using Content.Shared.Interaction;
 using Content.Shared.Kitchen.Components;
 using Content.Shared.Popups;
-using Content.Shared.RussStation.Skillchips.Consumers;
 using Content.Shared.RussStation.Skillchips.Systems;
+using Content.Shared.Storage.EntitySystems;
+using Robust.Shared.Network;
 using Robust.Shared.Random;
 
-namespace Content.Server.RussStation.Skillchips.Consumers;
+namespace Content.Shared.RussStation.Skillchips.Consumers;
 
 /// <summary>
-/// Server consumer for the <c>hedgetrimming</c> capability (Hedge 3 chip).
-/// SS13's TRAIT_BONSAI lets a holder reshape a potted plant with any sharp
-/// item over a short do-after (<c>kirbyplants.dm</c> attackby). Here: sharp
-/// item plus the capability, three second trim, then the plant's sprite
-/// re-rolls (networked via <see cref="HedgeTrimmableComponent"/>, applied
-/// client-side).
+/// Shared trim handler for the Hedge 3 skillchip (<c>hedgetrimming</c> capability).
+/// Lives in shared so the client also claims <see cref="InteractUsingEvent.Handled"/>
+/// before <c>SecretStashSystem</c> runs; otherwise the client predicts the knife
+/// being stashed and pops "You hide the knife..." even though the server later
+/// rejects it. SS13 parallel: TRAIT_BONSAI on <c>/obj/item/kirbyplants</c>.
 /// </summary>
-public sealed class HedgeTrimmingSystem : EntitySystem
+public sealed class SharedHedgeTrimmingSystem : EntitySystem
 {
     public const string HedgetrimmingTag = "hedgetrimming";
 
@@ -24,11 +24,15 @@ public sealed class HedgeTrimmingSystem : EntitySystem
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly INetManager _net = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<HedgeTrimmableComponent, InteractUsingEvent>(OnInteractUsing);
+        // Run before SecretStashSystem (also shared) so a sharp item from a chip
+        // holder trims the plant instead of being stashed inside it.
+        SubscribeLocalEvent<HedgeTrimmableComponent, InteractUsingEvent>(OnInteractUsing,
+            before: new[] { typeof(SecretStashSystem) });
         SubscribeLocalEvent<HedgeTrimmableComponent, HedgeTrimDoAfterEvent>(OnTrimmed);
     }
 
@@ -42,6 +46,10 @@ public sealed class HedgeTrimmingSystem : EntitySystem
 
         if (!_skillchip.HasCapability(args.User, HedgetrimmingTag))
             return;
+
+        // Claim the interaction so SecretStash bails on both client (prediction)
+        // and server (reality), regardless of whether the do-after starts.
+        args.Handled = true;
 
         var doAfter = new DoAfterArgs(
             EntityManager,
@@ -57,10 +65,7 @@ public sealed class HedgeTrimmingSystem : EntitySystem
         };
 
         if (_doAfter.TryStartDoAfter(doAfter))
-        {
-            _popup.PopupEntity(Loc.GetString("skillchip-hedgetrimming-start"), ent.Owner, args.User);
-            args.Handled = true;
-        }
+            _popup.PopupClient(Loc.GetString("skillchip-hedgetrimming-start"), ent.Owner, args.User);
     }
 
     private void OnTrimmed(Entity<HedgeTrimmableComponent> ent, ref HedgeTrimDoAfterEvent args)
@@ -68,10 +73,16 @@ public sealed class HedgeTrimmingSystem : EntitySystem
         if (args.Cancelled || args.Handled || ent.Comp.States.Count == 0)
             return;
 
-        ent.Comp.CurrentState = _random.Pick(ent.Comp.States);
-        Dirty(ent);
+        // State mutation only on the server: client prediction would pick a
+        // different sprite and snap on the next server state.
+        if (_net.IsServer)
+        {
+            ent.Comp.CurrentState = _random.Pick(ent.Comp.States);
+            Dirty(ent);
+        }
 
-        _popup.PopupEntity(Loc.GetString("skillchip-hedgetrimming-finish"), ent.Owner, args.User);
+        _popup.PopupPredicted(Loc.GetString("skillchip-hedgetrimming-finish"), ent.Owner, args.User);
         args.Handled = true;
     }
+
 }
