@@ -9,6 +9,9 @@
   - FoodRecipes
   - Writing
   - Lawsets
+  # HONK START - Skillchips (catalog + station guide) lives under References (#706, #788)
+  - Skillchips
+  # HONK END
 
 - type: guideEntry
   id: Drinks

@@ -9,6 +9,9 @@
   - type: Transform
     noRot: true
   - type: InteractionOutline
+  # HONK START - hedgetrimming skillchip (#706): lets a chip holder reshape with a sharp item
+  - type: HedgeTrimmable
+  # HONK END
   - type: Physics
     bodyType: Dynamic
   - type: Fixtures
