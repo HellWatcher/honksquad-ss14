@@ -1,20 +1,9 @@
 <Document>
 # Hedge 3
 
-The Hedge 3 chip lets you reshape potted plants. With it installed, hit a potted plant with any sharp item and the plant rerolls into a new shape after a short trim.
-
 <Box>
 <GuideEntityEmbed Entity="SkillchipHedgetrimming"/>
 </Box>
 
-## Using it
-1. Have the chip implanted at a [color=#a4885c]skillchip station[/color].
-2. Hold a sharp item (a knife, a scalpel, anything with a Sharp tag).
-3. Click a potted plant. After three seconds the plant takes on a different shape.
-
-The chip is cosmetic. It does not damage the plant, it does not consume the chip, and it does not grant any mechanical advantage. Without the chip the same click stashes the item inside the plant as normal.
-
-## Notes
-- The plant's new shape is picked at random from the potted-plant variants.
-- Moving cancels the trim. Stand still until the popup says you are done.
+Cosmetic. With the chip installed, click a potted plant with a sharp item to reshape it after a short trim.
 </Document>
