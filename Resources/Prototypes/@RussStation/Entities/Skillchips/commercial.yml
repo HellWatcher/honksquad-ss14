@@ -43,7 +43,7 @@
   description: A small neural interface chip. Trim hedges and potted plants into marvelous new shapes with any old knife.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/potted_plants.rsi
-    state: plant-01
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
   - type: Skillchip
     chipProto: SkillchipHedgetrimmingData
