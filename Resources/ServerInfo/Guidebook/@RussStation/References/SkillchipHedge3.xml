@@ -1,11 +1,20 @@
 <Document>
 # Hedge 3
 
+Lets a chip holder reshape potted plants.
+
 <Box>
 <GuideEntityEmbed Entity="SkillchipHedgetrimming"/>
 </Box>
 
-Lets a chip holder reshape potted plants. With the chip installed, click a plant with a sharp item, stand still for three seconds, and the plant rerolls into one of the other potted-plant variants.
+## Using it
+1. Get the chip implanted at a [color=#a4885c]skillchip station[/color].
+2. Hold a sharp item.
+3. Click a potted plant and stand still for a moment while you trim it.
 
 Cosmetic. Without the chip the same click stashes the item inside the plant as usual.
+
+## Notes
+- The new shape is random.
+- Moving cancels the trim.
 </Document>
