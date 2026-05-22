@@ -1,0 +1,3 @@
+skillchip-sabrage-start = You wind up to slice the cork off...
+skillchip-sabrage-success = {CAPITALIZE(THE($user))} cleanly slices the cork off {THE($bottle)}, sending it flying.
+skillchip-sabrage-fail = {CAPITALIZE(THE($user))} fumbles the sabrage and cuts {THE($bottle)} in half all over themselves.

@@ -150,6 +150,9 @@
     closeable: false # Champagne corks are fat. Not worth the effort.
   - type: Sealable
     examineTextUnsealed: "sealable-component-on-examine-is-unsealed-no-cork" # tell the player why it can't close
+  # HONK START - Le S48R4G3 skillchip consumer (sabrage_proficiency)
+  - type: Sabrageable
+  # HONK END
 
 - type: entity
   parent: [DrinkVisualsAllFilled, DrinkBottleGlassBaseFull]
