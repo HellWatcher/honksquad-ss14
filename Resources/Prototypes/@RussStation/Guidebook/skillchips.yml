@@ -4,12 +4,12 @@
   text: "/ServerInfo/Guidebook/@RussStation/References/Skillchips.xml"
   filterEnabled: True
   children:
-  - SkillchipStation
-  - SkillchipDiskVerifier
-  - SkillchipEntrailsReader
-  - SkillchipHedge3
-  - SkillchipIdAppraisal
-  - SkillchipLightbulb
+    - SkillchipStation
+    - SkillchipDiskVerifier
+    - SkillchipEntrailsReader
+    - SkillchipHedge3
+    - SkillchipIdAppraisal
+    - SkillchipLightbulb
 
 - type: guideEntry
   id: SkillchipStation
