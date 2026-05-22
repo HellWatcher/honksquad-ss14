@@ -17,6 +17,9 @@
     storedRotation: -90
   - type: Access
   - type: IdCard
+  # HONK START - GENUINE ID Appraisal Now! skillchip examine hook
+  - type: IdAppraisable
+  # HONK END
   - type: StationRecordKeyStorage
   - type: Tag
     tags:
@@ -928,6 +931,9 @@
     - Maintenance
     - SyndicateAgent
   - type: AgentIDCard
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as Syndicate-issued
+  - type: SyndicateIssued
+  # HONK END
   - type: UIRequiresLock
   - type: ActivatableUI
     key: enum.AgentIDCardUiKey.Key
@@ -980,6 +986,9 @@
     tags:
     - NuclearOperative
     - SyndicateAgent
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as Syndicate-issued
+  - type: SyndicateIssued
+  # HONK END
 
 - type: entity
   parent: [ SyndicateIDCard, BaseSyndicateContraband ]
@@ -1131,6 +1140,9 @@
     heldPrefix: blue
   - type: PresetIdCard
     job: CentralCommandOfficial
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1151,6 +1163,9 @@
     heldPrefix: gold
   - type: PresetIdCard
     job: ERTLeader
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1171,6 +1186,9 @@
     heldPrefix: blue
   - type: PresetIdCard
     job: ERTChaplain
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1191,6 +1209,9 @@
     heldPrefix: blue
   - type: PresetIdCard
     job: ERTEngineer
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1211,6 +1232,9 @@
     heldPrefix: blue
   - type: PresetIdCard
     job: ERTJanitor
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1231,6 +1255,9 @@
     heldPrefix: blue
   - type: PresetIdCard
     job: ERTMedical
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1251,6 +1278,9 @@
     heldPrefix: blue
   - type: PresetIdCard
     job: ERTSecurity
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1269,6 +1299,9 @@
       state: DeathSquad
   - type: PresetIdCard
     job: DeathSquad
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
@@ -1290,6 +1323,9 @@
     heldPrefix: blue
   - type: PresetIdCard
     job: CBURN
+  # HONK START - GENUINE ID Appraisal Now! skillchip flags this as CentCom-issued
+  - type: CentcomIssued
+  # HONK END
 
 - type: entity
   parent: IDCardStandard
