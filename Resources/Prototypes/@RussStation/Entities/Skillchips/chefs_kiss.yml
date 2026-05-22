@@ -1,0 +1,13 @@
+# K1SS skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipChefKiss
+  name: K1SS skillchip
+  description: A small neural interface chip. Recall your grandmother's secret for baking with love.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipChefKissData
