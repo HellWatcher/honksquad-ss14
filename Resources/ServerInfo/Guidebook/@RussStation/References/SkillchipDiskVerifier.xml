@@ -1,0 +1,11 @@
+<Document>
+# K33P-TH4T-D15K
+
+Nuclear authentication disks have an extremely long serial number for verification. This skillchip stores that number, which allows the user to automatically spot forgeries.
+
+<Box>
+<GuideEntityEmbed Entity="SkillchipDiskVerifier"/>
+</Box>
+
+Examine a [color=#a4885c]nuclear authentication disk[/color]. If the serial numbers are wrong, the chip flags it as a [color=red]forgery[/color]. Genuine disks examine as normal.
+</Document>
