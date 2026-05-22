@@ -115,6 +115,10 @@ public sealed class SharedSabrageSystem : EntitySystem
         var baseChance = Math.Max(0f, ent.Comp.SuccessSqrtFactor * MathF.Sqrt(damage) + ent.Comp.BaseOffset);
         if (_skillchip.HasCapability(args.User, SabrageTag))
             baseChance *= ent.Comp.SkillchipMultiplier;
+        // TODO: command bonus. SS13 grants captains TRAIT_ROYAL_METABOLISM via
+        // their liver and adds it on top of the chip bonus. Once SS14 has a
+        // captain-specific trait or role check, apply a 1.5x multiplier here
+        // (lands a sabre swing at 75% without the chip, ~100% with both).
         var chance = Math.Clamp(baseChance, 0f, 100f);
 
         if (_random.NextFloat() * 100f < chance)
