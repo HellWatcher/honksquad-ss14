@@ -17,19 +17,30 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 public sealed partial class SabrageableComponent : Component
 {
     /// <summary>
-    /// Per-point-of-weapon-damage success chance, in percent. SS13 default is 5.
-    /// A 15-damage saber against a default bottle yields a 75% base chance, plus
-    /// any chip bonus.
+    /// Multiplier on the square root of weapon damage. Diminishing returns:
+    /// a saber (17 damage) earns ~82 raw points, an energy sword (20) ~89.
+    /// Combined with <see cref="BaseOffset"/> the bare-knuckle ceiling lands
+    /// around the mid-50s.
     /// </summary>
     [DataField]
-    public float SuccessPerDamage = 5f;
+    public float SuccessSqrtFactor = 20f;
 
     /// <summary>
-    /// Flat bonus added when the user has the <c>sabrage_proficiency</c>
-    /// capability. SS13 uses 35.
+    /// Flat offset on the no-chip term. Intentionally negative so a low-damage
+    /// shard doesn't earn a free coin-flip. The pre-multiplier value is
+    /// clamped to 0 before the chip multiplier runs, so this only shaves the
+    /// low end.
     /// </summary>
     [DataField]
-    public float SkillchipBonus = 35f;
+    public float BaseOffset = -33f;
+
+    /// <summary>
+    /// Multiplier applied to the success chance when the user has the
+    /// <c>sabrage_proficiency</c> capability. The chip roughly doubles the
+    /// odds at every weapon tier, with the final value clamped to 100.
+    /// </summary>
+    [DataField]
+    public float SkillchipMultiplier = 2f;
 
     /// <summary>
     /// Minimum weapon damage required to attempt sabrage at all. SS13 gates on

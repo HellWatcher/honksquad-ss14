@@ -68,9 +68,8 @@ public sealed class SharedSabrageSystem : EntitySystem
         if (damage < ent.Comp.MinimumDamage)
             return;
 
-        if (!_skillchip.HasCapability(args.User, SabrageTag))
-            return;
-
+        // Chip-as-bonus: anyone with a sharp can try; the chip just dramatically
+        // improves the odds. The capability check moves to the resolution step.
         args.Handled = true;
 
         _audio.PlayPredicted(new SoundPathSpecifier(ent.Comp.SwingSound), ent.Owner, args.User);
@@ -109,8 +108,14 @@ public sealed class SharedSabrageSystem : EntitySystem
             return;
 
         var damage = (float) melee.Damage.GetTotal();
-        var chance = damage * ent.Comp.SuccessPerDamage + ent.Comp.SkillchipBonus;
-        chance = Math.Clamp(chance, 0f, 100f);
+
+        // Base curve: 20·sqrt(d) - 33, clamped to >= 0. Hits ~12% at d=5,
+        // ~30% at a knife, ~50% at a saber. The chip doubles whatever the
+        // base lands on, clamped to 100.
+        var baseChance = Math.Max(0f, ent.Comp.SuccessSqrtFactor * MathF.Sqrt(damage) + ent.Comp.BaseOffset);
+        if (_skillchip.HasCapability(args.User, SabrageTag))
+            baseChance *= ent.Comp.SkillchipMultiplier;
+        var chance = Math.Clamp(baseChance, 0f, 100f);
 
         if (_random.NextFloat() * 100f < chance)
             Succeed(ent, args.User);
