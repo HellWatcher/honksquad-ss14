@@ -1,0 +1,13 @@
+# GENUINE ID Appraisal Now! skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipIdAppraisal
+  name: GENUINE ID Appraisal Now! skillchip
+  description: A small neural interface chip. Appraise an ID and see if it's issued from CentCom, or just a cruddy station-printed one.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipIdAppraisalData
