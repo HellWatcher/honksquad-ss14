@@ -1,0 +1,13 @@
+# Le S48R4G3 skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipSabrage
+  name: Le S48R4G3 skillchip
+  description: A small neural interface chip. Lop the neck off a champagne bottle with a single deft strike, no broken glass, no spilled bubbles. The bar will love you.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipSabrageData
