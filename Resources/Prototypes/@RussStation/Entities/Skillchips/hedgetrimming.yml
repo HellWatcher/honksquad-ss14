@@ -1,0 +1,13 @@
+# Hedge 3 skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipHedgetrimming
+  name: Hedge 3 skillchip
+  description: A small neural interface chip. Trim hedges and potted plants into marvelous new shapes with any old knife. Not applicable to plastic plants.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipHedgetrimmingData

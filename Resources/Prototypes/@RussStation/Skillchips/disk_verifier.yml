@@ -1,0 +1,9 @@
+# K33P-TH4T-D15K skillchip data prototype
+
+- type: skillchip
+  id: SkillchipDiskVerifierData
+  name: Nuclear Disk Verification
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: disk_verifier

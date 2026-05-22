@@ -1,0 +1,13 @@
+# WINE skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipWineTasting
+  name: WINE skillchip
+  description: A small neural interface chip. Wine.Is.Not.Equal version 5.
+  components:
+    - type: Sprite
+      sprite: Objects/Consumable/Drinks/winebottle.rsi
+      state: icon
+    - type: Skillchip
+      chipProto: SkillchipWineTastingData

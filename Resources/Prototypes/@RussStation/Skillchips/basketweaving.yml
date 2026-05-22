@@ -1,0 +1,9 @@
+# Basketsoft 3000 skillchip data prototype
+
+- type: skillchip
+  id: SkillchipBasketweavingData
+  name: Underwater Basketweaving
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: underwater_basketweaving
