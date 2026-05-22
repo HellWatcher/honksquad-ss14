@@ -1,0 +1,9 @@
+# GENUINE ID Appraisal Now! skillchip data prototype
+
+- type: skillchip
+  id: SkillchipIdAppraisalData
+  name: ID Appraisal
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: id_appraisal
