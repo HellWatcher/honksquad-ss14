@@ -1,0 +1,13 @@
+# K33P-TH4T-D15K skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipDiskVerifier
+  name: K33P-TH4T-D15K skillchip
+  description: A small neural interface chip. Nuclear authentication disks have an extremely long serial number for verification. This skillchip stores that number, which allows the user to automatically spot forgeries.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipDiskVerifierData

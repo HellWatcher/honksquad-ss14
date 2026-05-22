@@ -1,0 +1,9 @@
+# Hedge 3 skillchip data prototype
+
+- type: skillchip
+  id: SkillchipHedgetrimmingData
+  name: Hedgetrimming
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: hedgetrimming

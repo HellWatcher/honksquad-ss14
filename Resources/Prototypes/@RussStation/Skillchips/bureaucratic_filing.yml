@@ -1,0 +1,9 @@
+# Bureaucratic filing skillchip data prototype
+
+- type: skillchip
+  id: SkillchipBureaucraticFilingData
+  name: Bureaucratic Filing
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: bureaucratic_filing

@@ -1,0 +1,9 @@
+# N16H7M4R3 skillchip data prototype
+
+- type: skillchip
+  id: SkillchipLightbulbRemovingData
+  name: Lightbulb Removing
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: lightbulb_removing

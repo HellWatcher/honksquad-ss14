@@ -1,0 +1,13 @@
+# Basketsoft 3000 skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipBasketweaving
+  name: Basketsoft 3000 skillchip
+  description: A small neural interface chip. Underwater edition.
+  components:
+    - type: Sprite
+      sprite: Objects/Misc/bureaucracy.rsi
+      state: paper
+    - type: Skillchip
+      chipProto: SkillchipBasketweavingData

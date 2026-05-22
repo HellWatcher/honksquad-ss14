@@ -1,0 +1,9 @@
+# 3NTR41LS skillchip data prototype
+
+- type: skillchip
+  id: SkillchipEntrailsReaderData
+  name: Entrails Reading
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: entrails_reader

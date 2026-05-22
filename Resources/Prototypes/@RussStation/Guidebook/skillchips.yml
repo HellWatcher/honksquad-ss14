@@ -8,6 +8,7 @@
   - SkillchipHedge3
   - SkillchipLightbulb
   - SkillchipDiskVerifier
+  - SkillchipEntrailsReader
 
 - type: guideEntry
   id: SkillchipStation
@@ -28,3 +29,8 @@
   id: SkillchipDiskVerifier
   name: guide-entry-skillchip-disk-verifier
   text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipDiskVerifier.xml"
+
+- type: guideEntry
+  id: SkillchipEntrailsReader
+  name: guide-entry-skillchip-entrails-reader
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipEntrailsReader.xml"
