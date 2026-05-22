@@ -21,6 +21,9 @@
   parent: BaseItem
   components:
   - type: Organ
+  # HONK START - 3NTR41LS skillchip examine hook
+  - type: EntrailsReadable
+  # HONK END
 
 - type: entity
   parent: OrganBase
