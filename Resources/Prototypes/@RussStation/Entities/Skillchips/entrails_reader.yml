@@ -1,0 +1,13 @@
+# 3NTR41LS skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipEntrailsReader
+  name: 3NTR41LS skillchip
+  description: A small neural interface chip. Read a patient's internals at a glance, like any seasoned surgeon or coroner would.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipEntrailsReaderData
