@@ -49,13 +49,10 @@ public sealed partial class SabrageableComponent : Component
         DamageDict = new() { { "Slash", 8 } },
     };
 
-    /// <summary>Glass shard prototype to spawn on a failed swing.</summary>
+    /// <summary>What to leave behind on a failed swing. Matches the destructible
+    /// drop on a bottle thrown hard enough to break.</summary>
     [DataField]
-    public EntProtoId ShardPrototype = "ShardGlass";
-
-    /// <summary>How many shards to spawn on a failed swing.</summary>
-    [DataField]
-    public int ShardCount = 2;
+    public EntProtoId BrokenPrototype = "BrokenBottle";
 
     /// <summary>Sound that plays on the wind-up.</summary>
     [DataField]

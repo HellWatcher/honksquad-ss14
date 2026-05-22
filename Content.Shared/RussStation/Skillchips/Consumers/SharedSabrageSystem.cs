@@ -145,9 +145,7 @@ public sealed class SharedSabrageSystem : EntitySystem
             _puddle.TrySpillAt(coords, drained, out _);
         }
 
-        for (var i = 0; i < ent.Comp.ShardCount; i++)
-            Spawn(ent.Comp.ShardPrototype, coords);
-
+        Spawn(ent.Comp.BrokenPrototype, coords);
         Del(ent.Owner);
     }
 }
