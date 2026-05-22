@@ -1,0 +1,9 @@
+# Le S48R4G3 skillchip data prototype
+
+- type: skillchip
+  id: SkillchipSabrageData
+  name: Sabrage
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: sabrage_proficiency
