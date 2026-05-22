@@ -1,0 +1,9 @@
+# INTJ skillchip data prototype
+
+- type: skillchip
+  id: SkillchipFlavourCalculusData
+  name: Mental Flavour Calculus
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: flavour_calculus
