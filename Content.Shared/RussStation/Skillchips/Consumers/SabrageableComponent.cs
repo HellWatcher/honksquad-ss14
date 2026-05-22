@@ -13,7 +13,7 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// <c>/obj/item/reagent_containers/cup/glass/bottle/champagne</c> with its
 /// <c>sabrage_success_percentile</c> field and <c>TRAIT_SABRAGE_PRO</c> check.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class SabrageableComponent : Component
 {
     /// <summary>
@@ -22,8 +22,8 @@ public sealed partial class SabrageableComponent : Component
     /// Combined with <see cref="BaseOffset"/> the bare-knuckle ceiling lands
     /// around the mid-50s.
     /// </summary>
-    [DataField]
-    public float SuccessSqrtFactor = 20f;
+    [DataField, AutoNetworkedField]
+    public float SuccessSqrtFactor = SabrageConstants.SuccessSqrtFactor;
 
     /// <summary>
     /// Flat offset on the no-chip term. Intentionally negative so a low-damage
@@ -31,27 +31,27 @@ public sealed partial class SabrageableComponent : Component
     /// clamped to 0 before the chip multiplier runs, so this only shaves the
     /// low end.
     /// </summary>
-    [DataField]
-    public float BaseOffset = -33f;
+    [DataField, AutoNetworkedField]
+    public float BaseOffset = SabrageConstants.BaseOffset;
 
     /// <summary>
     /// Multiplier applied to the success chance when the user has the
     /// <c>sabrage_proficiency</c> capability. The chip roughly doubles the
     /// odds at every weapon tier, with the final value clamped to 100.
     /// </summary>
-    [DataField]
-    public float SkillchipMultiplier = 2f;
+    [DataField, AutoNetworkedField]
+    public float SkillchipMultiplier = SabrageConstants.SkillchipMultiplier;
 
     /// <summary>
     /// Minimum weapon damage required to attempt sabrage at all. SS13 gates on
     /// item force >= 5; matched here against <see cref="DamageSpecifier.GetTotal"/>.
     /// </summary>
-    [DataField]
-    public float MinimumDamage = 5f;
+    [DataField, AutoNetworkedField]
+    public float MinimumDamage = SabrageConstants.MinimumDamage;
 
     /// <summary>How long the wind-up swing takes.</summary>
-    [DataField]
-    public TimeSpan SwingDuration = TimeSpan.FromSeconds(2);
+    [DataField, AutoNetworkedField]
+    public TimeSpan SwingDuration = TimeSpan.FromSeconds(SabrageConstants.SwingSeconds);
 
     /// <summary>Damage dealt to the user on a failed swing (cut yourself on the bottle).</summary>
     [DataField]
