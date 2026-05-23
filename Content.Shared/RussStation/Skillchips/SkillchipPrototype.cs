@@ -25,4 +25,12 @@ public sealed partial class SkillchipPrototype : IPrototype
     /// </summary>
     [DataField]
     public List<SkillchipGrant> Grants = new();
+
+    /// <summary>
+    /// Optional mutual-exclusion key. A brain can hold at most one chip per non-null
+    /// category, so SS13-style job chips (chef, janitor, etc.) sharing a category
+    /// reject install attempts past the first. Null means no restriction.
+    /// </summary>
+    [DataField]
+    public string? Category;
 }

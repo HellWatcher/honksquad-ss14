@@ -35,6 +35,24 @@ public sealed class SkillchipGrantTest
   - !type:CapabilityTagGrant
     tag: test_capability_2
 
+- type: skillchip
+  id: TestChipCatA1
+  name: Test Chip Cat A 1
+  capacityCost: 1
+  category: test_cat_a
+
+- type: skillchip
+  id: TestChipCatA2
+  name: Test Chip Cat A 2
+  capacityCost: 1
+  category: test_cat_a
+
+- type: skillchip
+  id: TestChipCatB
+  name: Test Chip Cat B
+  capacityCost: 1
+  category: test_cat_b
+
 - type: entity
   id: TestBrain
   components:
@@ -321,6 +339,38 @@ public sealed class SkillchipGrantTest
                 "First chip should install within capacity");
             Assert.That(skillchips.TryInstall((brain, holder), "TestChipData2"), Is.False,
                 "Second chip should be rejected when at capacity");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Installing two chips that share a non-null category should reject the second.
+    /// A chip in a different category still installs. A chip with no category coexists
+    /// with anything.
+    /// </summary>
+    [Test]
+    public async Task Install_SameCategory_ReturnsFalse()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var em = server.ResolveDependency<IEntityManager>();
+        var skillchips = server.System<SharedSkillchipSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var brain = em.SpawnEntity("TestBrain", mapData.GridCoords);
+            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
+
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipCatA1"), Is.True,
+                "First chip in category A should install");
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipCatA2"), Is.False,
+                "Second chip in category A should be rejected");
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipCatB"), Is.True,
+                "Chip in a different category should still install");
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData"), Is.True,
+                "Chip with no category should coexist freely");
         });
 
         await pair.CleanReturnAsync();
