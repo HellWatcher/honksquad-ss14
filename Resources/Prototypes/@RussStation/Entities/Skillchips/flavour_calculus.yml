@@ -7,7 +7,7 @@
   description: A small neural interface chip. When examining food, you can experience the flavours just as well as if you were eating it.
   components:
     - type: Sprite
-      sprite: Objects/Consumable/Food/meat.rsi
-      state: bacon-cooked
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
     - type: Skillchip
       chipProto: SkillchipFlavourCalculusData
