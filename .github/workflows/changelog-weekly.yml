@@ -51,10 +51,29 @@ jobs:
             echo "is_new=true" >> "$GITHUB_OUTPUT"
           fi
 
-          # Fetch merged PRs using the current branch's watermark.
+          # Fetch merged PRs newer than the watermark (mergedAt timestamp).
+          # Falls back to a fixed lookback if the watermark is missing or
+          # in the legacy numeric format (which the Python script rewrites
+          # on its next successful run).
+          WATERMARK_FILE=Resources/Changelog/.changelog-watermark
+          WATERMARK=""
+          if [ -f "$WATERMARK_FILE" ]; then
+            RAW=$(tr -d '[:space:]' < "$WATERMARK_FILE")
+            if echo "$RAW" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$'; then
+              WATERMARK="$RAW"
+            else
+              echo "Watermark in legacy/invalid form ('$RAW'); falling back to lookback."
+            fi
+          fi
+          if [ -z "$WATERMARK" ]; then
+            # 30-day lookback; URL dedupe in the script handles any overlap.
+            WATERMARK=$(date -u -d '30 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          fi
+          echo "Fetching merged PRs with mergedAt > $WATERMARK"
           gh pr list \
             --repo HellWatcher/honksquad-ss14 \
             --state merged \
+            --search "merged:>$WATERMARK" \
             --limit 500 \
             --json number,mergedAt,author,body \
             > /tmp/prs.json

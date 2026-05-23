@@ -14,11 +14,22 @@ Arguments:
     repo                GitHub repo slug, e.g. HellWatcher/honksquad-ss14
 
 Options:
-    --watermark-file    Path to .changelog-watermark (last processed PR number).
-                        Only PRs with number > watermark are processed.
-                        Updated to the new highest PR number after each run.
+    --watermark-file    Path to .changelog-watermark holding an ISO 8601
+                        UTC timestamp (e.g. 2026-05-02T22:57:17Z). Only PRs
+                        with mergedAt > watermark are processed. Updated to
+                        the highest mergedAt seen after each run.
+
+                        Legacy numeric watermarks (a bare PR number) are
+                        detected and ignored — the script falls back to the
+                        URL-dedupe set in changelog.yml for that run, then
+                        rewrites the file in timestamp form.
     --deny-file         Path to .changelog-deny (one PR number per line).
                         Matching PRs are skipped even if they have :cl: blocks.
+
+Why mergedAt and not PR number: PRs don't merge in number order. A merge
+order watermark advances monotonically (GitHub stamps mergedAt at merge);
+a PR-number watermark can leap past PRs that are still open and
+permanently skip them once they later merge.
 """
 
 import json
@@ -26,6 +37,7 @@ import re
 import sys
 
 TYPE_MAP = {"add": "Add", "tweak": "Tweak", "fix": "Fix", "remove": "Remove"}
+ISO_TS_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 
 def parse_cl_block(body):
@@ -75,11 +87,23 @@ def gh_time(ts):
 
 
 def read_watermark(path):
+    """Return ISO timestamp string, or '' if missing/legacy/invalid.
+
+    Legacy numeric watermarks (a bare PR number from the pre-fix script) are
+    treated as empty so the URL-dedupe in changelog.yml carries the run, and
+    the file gets rewritten in timestamp form on the next successful update.
+    """
     try:
         with open(path) as f:
-            return int(f.read().strip())
-    except (FileNotFoundError, ValueError):
-        return 0
+            raw = f.read().strip()
+    except FileNotFoundError:
+        return ""
+    if ISO_TS_RE.match(raw):
+        return raw
+    if raw.isdigit():
+        print(f"  Note: legacy numeric watermark ({raw}) ignored; using URL dedupe.")
+        return ""
+    return ""
 
 
 def write_watermark(path, value):
@@ -121,7 +145,7 @@ def main():
         else:
             i += 1
 
-    watermark = read_watermark(watermark_file) if watermark_file else 0
+    watermark = read_watermark(watermark_file) if watermark_file else ""
     denied = read_deny(deny_file) if deny_file else set()
 
     with open(changelog_path, encoding="utf-8") as f:
@@ -138,13 +162,15 @@ def main():
     skipped_deny = 0
     skipped_existing = 0
     new_entries = []
-    max_pr = watermark
+    max_merged = watermark
 
     for pr in prs:
         num = pr["number"]
-        max_pr = max(max_pr, num)
+        merged_at = pr["mergedAt"]
+        if merged_at > max_merged:
+            max_merged = merged_at
 
-        if num <= watermark:
+        if watermark and merged_at <= watermark:
             skipped_watermark += 1
             continue
 
@@ -164,28 +190,28 @@ def main():
         new_entries.append({
             "author": pr["author"]["login"],
             "changes": changes,
-            "time": gh_time(pr["mergedAt"]),
+            "time": gh_time(merged_at),
             "url": url,
         })
 
     print(f"Scanned: {len(prs)} PRs total")
-    print(f"  Skipped by watermark (PR <= {watermark}): {skipped_watermark}")
+    print(f"  Skipped by watermark (mergedAt <= {watermark or 'n/a'}): {skipped_watermark}")
     print(f"  Skipped by denylist: {skipped_deny}")
     print(f"  Skipped (already in changelog): {skipped_existing}")
     print(f"  New entries: {len(new_entries)}")
 
     if not new_entries:
-        if watermark_file:
-            write_watermark(watermark_file, max_pr)
+        if watermark_file and max_merged:
+            write_watermark(watermark_file, max_merged)
         return
 
     with open(changelog_path, "a", encoding="utf-8") as f:
         for entry in new_entries:
             f.write(format_entry(entry) + "\n")
 
-    if watermark_file:
-        write_watermark(watermark_file, max_pr)
-        print(f"Watermark updated: {watermark} -> {max_pr}")
+    if watermark_file and max_merged:
+        write_watermark(watermark_file, max_merged)
+        print(f"Watermark updated: {watermark or '(empty)'} -> {max_merged}")
 
     print("Added:")
     for e in new_entries:
