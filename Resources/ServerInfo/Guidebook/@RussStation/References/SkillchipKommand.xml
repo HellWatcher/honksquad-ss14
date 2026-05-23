@@ -1,0 +1,11 @@
+<Document>
+# Kommand
+
+A chip drilled with the hand-and-arm vocabulary of the great pointers. Once installed, every point you make leaves a fatter, brighter arrow behind, in whatever colour you set.
+
+<Box>
+<GuideEntityEmbed Entity="SkillchipKommand"/>
+</Box>
+
+Use the [color=#a4885c]Kommand[/color] action to pick a colour, then point as normal. The enhanced arrow shows up for any target the regular pointer reaches: a person, an item, or just an empty stretch of floor.
+</Document>
