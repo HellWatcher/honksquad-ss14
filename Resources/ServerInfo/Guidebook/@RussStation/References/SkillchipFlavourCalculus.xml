@@ -1,7 +1,7 @@
 <Document>
 # INTJ
 
-Taste any meal or drink without taking a bite. Useful for catching a poisoner's handiwork before you swallow it, or for second-guessing your own seasoning while the dish is still on the counter.
+When examining food, you can experience the flavours just as well as if you were eating it.
 
 <Box>
 <GuideEntityEmbed Entity="SkillchipFlavourCalculus"/>
