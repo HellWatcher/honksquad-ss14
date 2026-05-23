@@ -1,0 +1,10 @@
+# Skillchip data prototypes -- job tier (one per category)
+
+- type: skillchip
+  id: SkillchipBalloonSutraData
+  name: Balloon Sutra
+  capacityCost: 2
+  category: job
+  grants:
+  - !type:CapabilityTagGrant
+    tag: balloon_sutra

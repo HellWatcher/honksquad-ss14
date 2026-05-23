@@ -1,0 +1,13 @@
+# Skillchip entity items -- job tier (powerful, restricted to one per category)
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipBalloonSutra
+  name: B@L00NY skillchip
+  description: A small neural interface chip. Contains several terabytes of uncannily religious, Honkmother-praising guides on how to reshape balloons into silly animals.
+  components:
+  - type: Sprite
+    sprite: Objects/Fun/Balloons/nanotrasen.rsi
+    state: icon
+  - type: Skillchip
+    chipProto: SkillchipBalloonSutraData
