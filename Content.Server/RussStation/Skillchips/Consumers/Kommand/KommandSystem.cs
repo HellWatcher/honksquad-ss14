@@ -39,11 +39,13 @@ public sealed class KommandSystem : SharedKommandSystem
 
     private void OnAfterPointed(Entity<MobStateComponent> mob, ref AfterPointedAtEvent args)
     {
-        if (!TryComp<KommandColorPreferenceComponent>(mob.Owner, out var pref))
-            return;
-
+        // Capability gate first: cheap rejection for the 99.9% of pointers who don't have the chip.
         if (!Skillchip.HasCapability(mob.Owner, EnhancedPointingTag))
             return;
+
+        // EnsureComp the preference here too, not just on first picker open. A chip holder who
+        // points before ever opening the picker should still get the default-red enhanced arrow.
+        var pref = EnsureComp<KommandColorPreferenceComponent>(mob.Owner);
 
         var pointedCoords = _transform.GetMapCoordinates(args.Pointed);
 

@@ -1,18 +1,22 @@
-using Content.Shared.Body;
-using Content.Shared.RussStation.Skillchips;
+using Content.Shared.Actions.Components;
 using Content.Shared.RussStation.Skillchips.Systems;
+using Content.Shared.UserInterface;
 
 namespace Content.Shared.RussStation.Skillchips.Consumers.Kommand;
 
 /// <summary>
 /// Kommand chip lifecycle + color-picker BUI bookkeeping. Two responsibilities:
 ///
-/// 1. When a brain with the <c>enhanced_pointing</c> capability is inserted
-///    into a body, attach <see cref="KommandColorPreferenceComponent"/> to
-///    the body and register the color-picker BUI on a runtime
-///    <see cref="UserInterfaceComponent"/>. ActivatableUISystem then handles
-///    the chip's action click via the stock <c>OpenUiActionEvent</c> path,
-///    so this chip doesn't need its own action handler.
+/// 1. Catch the first click of the chip's color-picker action via the stock
+///    <c>OpenUiActionEvent</c>, lazily EnsureComp
+///    <see cref="KommandColorPreferenceComponent"/> on the mob plus a runtime
+///    <see cref="UserInterfaceComponent"/> with the picker BUI key, then open
+///    the UI ourselves and mark the event handled. (We can't hook
+///    chip-install directly without modifying the chip system: the
+///    OrganGotInsertedEvent the chip system uses for grant application only
+///    fires on brain transplants, not on chip-into-existing-brain installs,
+///    and the engine forbids two systems subscribing to the same
+///    component+event pair anyway.)
 ///
 /// 2. Persist the chosen color from <see cref="KommandSetColorBuiMessage"/>.
 ///
@@ -34,41 +38,30 @@ public abstract class SharedKommandSystem : EntitySystem
     {
         base.Initialize();
 
-        // Body-side events: SharedSkillchipSystem hooks the organ-side OrganGotInsertedEvent
-        // pair, and the engine forbids two systems subscribing to the same (component, event).
-        // We hang off the body's OrganInsertedIntoEvent / OrganRemovedFromEvent instead, which
-        // arrive on BodyComponent right after the chip system's organ-side handlers run.
-        SubscribeLocalEvent<BodyComponent, OrganInsertedIntoEvent>(OnOrganInserted);
-        SubscribeLocalEvent<BodyComponent, OrganRemovedFromEvent>(OnOrganRemoved);
-
+        // ActionsComponent rides every mob that has actions, including this chip's action.
+        // The event is dispatched broadcast on the performer with target=performer, so
+        // anchoring on ActionsComponent catches it. We mark args.Handled ourselves and open
+        // the UI directly, which keeps ActivatableUISystem's UserInterfaceComponent handler
+        // out of the picture (the mob may not have UserInterfaceComponent until we add it).
+        SubscribeLocalEvent<ActionsComponent, OpenUiActionEvent>(OnOpenPickerAction);
         SubscribeLocalEvent<KommandColorPreferenceComponent, KommandSetColorBuiMessage>(OnSetColor);
     }
 
-    private void OnOrganInserted(Entity<BodyComponent> body, ref OrganInsertedIntoEvent args)
+    private void OnOpenPickerAction(Entity<ActionsComponent> mob, ref OpenUiActionEvent args)
     {
-        // The inserted organ may be a brain (the only thing that carries skillchips); other
-        // organs are noise and bail cheap on the HasComp check.
-        if (!HasComp<SkillchipHolderComponent>(args.Organ))
+        if (args.Handled)
             return;
 
-        if (!Skillchip.BrainHasCapability(args.Organ, EnhancedPointingTag))
+        if (args.Key is not KommandUiKey.ColorPicker)
             return;
 
-        AttachPreference(body.Owner);
-    }
-
-    private void OnOrganRemoved(Entity<BodyComponent> body, ref OrganRemovedFromEvent args)
-    {
-        if (!HasComp<SkillchipHolderComponent>(args.Organ))
+        // Only chip holders should react to this key, even though the action grant should
+        // already gate that. Belt-and-suspenders against a stray action proto reuse.
+        if (!Skillchip.HasCapability(mob.Owner, EnhancedPointingTag))
             return;
 
-        // Other organs in the same body could in theory carry the capability; keep the
-        // preference if any holder still does, otherwise clean it off the body.
-        if (Skillchip.HasCapability(body.Owner, EnhancedPointingTag))
-            return;
-
-        if (HasComp<KommandColorPreferenceComponent>(body.Owner))
-            RemComp<KommandColorPreferenceComponent>(body.Owner);
+        AttachPreference(mob.Owner);
+        args.Handled = Ui.TryOpenUi(mob.Owner, KommandUiKey.ColorPicker, mob.Owner);
     }
 
     /// <summary>
