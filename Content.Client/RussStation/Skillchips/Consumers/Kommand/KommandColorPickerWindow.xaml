@@ -1,0 +1,9 @@
+<DefaultWindow xmlns="https://spacestation14.io"
+               Title="{Loc kommand-color-picker-title}"
+               MinWidth="320">
+    <BoxContainer Orientation="Vertical" Margin="8">
+        <Label Text="{Loc kommand-color-picker-help}" />
+        <Control MinHeight="6" />
+        <ColorSelectorSliders Name="ColorSelector" />
+    </BoxContainer>
+</DefaultWindow>

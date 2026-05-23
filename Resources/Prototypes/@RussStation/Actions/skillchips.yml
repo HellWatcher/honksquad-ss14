@@ -1,0 +1,15 @@
+# Actions granted by RussStation skillchips.
+
+- type: entity
+  parent: BaseAction
+  id: ActionKommandColorPicker
+  name: Set Pointer Color
+  description: Picks the color of your enhanced pointer arrow.
+  components:
+    - type: Action
+      icon: { sprite: "@RussStation/Interface/Misc/kommand_pointer.rsi", state: arrow_large_static }
+      itemIconStyle: NoItem
+      checkCanInteract: false
+    - type: InstantAction
+      event: !type:OpenUiActionEvent
+        key: enum.KommandUiKey.ColorPicker

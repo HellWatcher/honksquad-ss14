@@ -11,6 +11,7 @@
     - SkillchipFlavourCalculus
     - SkillchipHedge3
     - SkillchipIdAppraisal
+    - SkillchipKommand
     - SkillchipLightbulb
 
 - type: guideEntry
@@ -42,6 +43,11 @@
   id: SkillchipIdAppraisal
   name: guide-entry-skillchip-id-appraisal
   text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipIdAppraisal.xml"
+
+- type: guideEntry
+  id: SkillchipKommand
+  name: guide-entry-skillchip-kommand
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipKommand.xml"
 
 - type: guideEntry
   id: SkillchipLightbulb

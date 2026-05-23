@@ -35,6 +35,24 @@ public sealed class SkillchipGrantTest
   - !type:CapabilityTagGrant
     tag: test_capability_2
 
+- type: skillchip
+  id: TestChipCategoryA1
+  name: Category A Chip 1
+  capacityCost: 1
+  category: test_category_a
+  grants:
+  - !type:CapabilityTagGrant
+    tag: test_cat_a1
+
+- type: skillchip
+  id: TestChipCategoryA2
+  name: Category A Chip 2
+  capacityCost: 1
+  category: test_category_a
+  grants:
+  - !type:CapabilityTagGrant
+    tag: test_cat_a2
+
 - type: entity
   id: TestBrain
   components:
@@ -321,6 +339,36 @@ public sealed class SkillchipGrantTest
                 "First chip should install within capacity");
             Assert.That(skillchips.TryInstall((brain, holder), "TestChipData2"), Is.False,
                 "Second chip should be rejected when at capacity");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Installing two chips of the same category should be rejected.
+    /// Installing a chip of a different category should succeed.
+    /// </summary>
+    [Test]
+    public async Task Install_SameCategory_ReturnsFalse()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var em = server.ResolveDependency<IEntityManager>();
+        var skillchips = server.System<SharedSkillchipSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var brain = em.SpawnEntity("TestBrain", mapData.GridCoords);
+            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
+
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipCategoryA1"), Is.True,
+                "First chip in category should install");
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipCategoryA2"), Is.False,
+                "Second chip in same category should be rejected");
+            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData"), Is.True,
+                "Chip with no category should still install alongside a categorized chip");
+            Assert.That(holder.ImplantedChips.Count, Is.EqualTo(2));
         });
 
         await pair.CleanReturnAsync();
