@@ -1,0 +1,8 @@
+- type: skillchip
+  id: SkillchipBattlebotEnthusiastData
+  name: Battlebot Enthusiast
+  capacityCost: 2
+  category: job
+  grants:
+  - !type:CapabilityTagGrant
+    tag: rock_stoner

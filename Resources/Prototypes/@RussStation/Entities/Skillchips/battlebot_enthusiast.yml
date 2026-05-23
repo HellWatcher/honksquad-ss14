@@ -1,0 +1,11 @@
+- type: entity
+  parent: BaseItem
+  id: SkillchipBattlebotEnthusiast
+  name: TUNN3L_R4T skillchip
+  description: A small neural interface chip. Lead minebots into war.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
+  - type: Skillchip
+    chipProto: SkillchipBattlebotEnthusiastData
