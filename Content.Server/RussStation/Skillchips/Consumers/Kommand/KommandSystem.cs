@@ -1,7 +1,6 @@
 using System.Numerics;
 using Content.Server.Pointing.Components;
 using Content.Shared.Mobs.Components;
-using Content.Shared.Pointing;
 using Content.Shared.RussStation.Skillchips.Consumers.Kommand;
 using Robust.Shared.Map;
 
@@ -9,71 +8,81 @@ namespace Content.Server.RussStation.Skillchips.Consumers.Kommand;
 
 /// <summary>
 /// Server-side Kommand. Inherits the shared lifecycle + BUI bookkeeping and
-/// adds the actual point-time hook: when a Kommand chip holder points at
-/// something, stamp the freshly spawned PointingArrow with
-/// <see cref="KommandEnhancedArrowComponent"/> carrying the holder's chosen
+/// stamps every freshly spawned <see cref="PointingArrowComponent"/> with
+/// <see cref="KommandEnhancedArrowComponent"/> carrying the pointer's chosen
 /// color. The client visualizer reads that and tints + scales the arrow
 /// sprite. SS13 parallel: <c>fancier_pointer</c> in
 /// <c>code/modules/library/skill_learning/generic_skillchips/point.dm</c>.
+///
+/// We scan in <see cref="Update"/> rather than hooking
+/// <c>AfterPointedAtEvent</c> because upstream <c>PointingSystem.TryPoint</c>
+/// only raises that event in its entity-pointed branch; pointing at a bare
+/// tile spawns the arrow but skips the event. Polling unstamped arrows
+/// handles tile and entity points the same way without touching upstream.
 /// </summary>
 public sealed class KommandSystem : SharedKommandSystem
 {
     /// <summary>
-    /// Radius (in map units) around the pointed entity to look for an unstamped PointingArrow.
-    /// PointingSystem spawns the arrow on the pointed-at tile, so anything within a tile is
-    /// safely "this point's arrow"; concurrent pointers at the same target will share the
-    /// bonus, which mirrors how the upstream arrow itself is non-attributable.
+    /// Radius (in map units) around the recovered pointer position to look for
+    /// a chip-holding mob. PointingSystem records the pointer's world position
+    /// into the arrow at spawn; a mob moves well under a tile per tick, so half
+    /// a tile is comfortably larger than any frame-of-flight skew.
     /// </summary>
-    private const float ArrowMatchRadiusSquared = 1.0f;
+    private const float PointerMatchRadiusSquared = 0.5f;
 
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
-    public override void Initialize()
+    public override void Update(float frameTime)
     {
-        base.Initialize();
-        // Hook every mob. AfterPointedAtEvent is only raised on pointers, so the
-        // overhead of subscribing on a universal mob component is one dispatch per
-        // actual point.
-        SubscribeLocalEvent<MobStateComponent, AfterPointedAtEvent>(OnAfterPointed);
-    }
+        base.Update(frameTime);
 
-    private void OnAfterPointed(Entity<MobStateComponent> mob, ref AfterPointedAtEvent args)
-    {
-        // Capability gate first: cheap rejection for the 99.9% of pointers who don't have the chip.
-        if (!Skillchip.HasCapability(mob.Owner, EnhancedPointingTag))
-            return;
-
-        // EnsureComp the preference here too, not just on first picker open. A chip holder who
-        // points before ever opening the picker should still get the default-red enhanced arrow.
-        var pref = EnsureComp<KommandColorPreferenceComponent>(mob.Owner);
-
-        var pointedCoords = _transform.GetMapCoordinates(args.Pointed);
-
-        EntityUid? best = null;
-        var bestDistSq = ArrowMatchRadiusSquared;
-        var query = EntityQueryEnumerator<PointingArrowComponent, TransformComponent>();
-        while (query.MoveNext(out var arrowUid, out _, out var xform))
+        var arrowQuery = EntityQueryEnumerator<PointingArrowComponent>();
+        while (arrowQuery.MoveNext(out var arrowUid, out var arrow))
         {
             if (HasComp<KommandEnhancedArrowComponent>(arrowUid))
                 continue;
 
-            var arrowCoords = _transform.GetMapCoordinates(arrowUid, xform);
-            if (arrowCoords.MapId != pointedCoords.MapId)
+            // PointingSystem sets StartPosition and EndTime together after Spawn returns.
+            // Until EndTime is non-zero the arrow is mid-init and StartPosition would
+            // resolve to the arrow itself, which would erroneously match any chip holder
+            // standing on the pointed tile.
+            if (arrow.EndTime == TimeSpan.Zero)
                 continue;
 
-            var dSq = Vector2.DistanceSquared(arrowCoords.Position, pointedCoords.Position);
-            if (dSq < bestDistSq)
+            // StartPosition is stored relative to the arrow itself (see PointingSystem.TryPoint:
+            // _transform.ToCoordinates((arrow, Transform(arrow)), playerMapCoords).Position), so
+            // the inverse rebuilds EntityCoordinates against the arrow uid, not its parent.
+            var pointerCoords = _transform.ToMapCoordinates(new EntityCoordinates(arrowUid, arrow.StartPosition));
+
+            EntityUid? best = null;
+            var bestDistSq = PointerMatchRadiusSquared;
+            var mobQuery = EntityQueryEnumerator<MobStateComponent, TransformComponent>();
+            while (mobQuery.MoveNext(out var mobUid, out _, out var mobXform))
             {
-                best = arrowUid;
-                bestDistSq = dSq;
+                if (!Skillchip.HasCapability(mobUid, EnhancedPointingTag))
+                    continue;
+
+                var mobCoords = _transform.GetMapCoordinates(mobUid, mobXform);
+                if (mobCoords.MapId != pointerCoords.MapId)
+                    continue;
+
+                var dSq = Vector2.DistanceSquared(mobCoords.Position, pointerCoords.Position);
+                if (dSq < bestDistSq)
+                {
+                    best = mobUid;
+                    bestDistSq = dSq;
+                }
             }
+
+            if (best is not { } pointer)
+                continue;
+
+            // EnsureComp the preference here as well as on first picker open. A chip holder
+            // who points before ever opening the picker should still get the default-red arrow.
+            var pref = EnsureComp<KommandColorPreferenceComponent>(pointer);
+            var enhanced = EnsureComp<KommandEnhancedArrowComponent>(arrowUid);
+            enhanced.Color = pref.Color;
+            Dirty(arrowUid, enhanced);
         }
-
-        if (best is not { } arrow)
-            return;
-
-        var enhanced = EnsureComp<KommandEnhancedArrowComponent>(arrow);
-        enhanced.Color = pref.Color;
-        Dirty(arrow, enhanced);
     }
 }

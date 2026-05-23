@@ -21,8 +21,8 @@ namespace Content.Shared.RussStation.Skillchips.Consumers.Kommand;
 /// 2. Persist the chosen color from <see cref="KommandSetColorBuiMessage"/>.
 ///
 /// The actual point-time arrow stamping lives in the server-only subclass
-/// (Content.Server) because <c>AfterPointedAtEvent</c> is server-raised and
-/// the live <c>PointingArrowComponent</c> is server-only.
+/// (Content.Server) because the live <c>PointingArrowComponent</c> is
+/// server-only.
 /// </summary>
 public abstract class SharedKommandSystem : EntitySystem
 {
