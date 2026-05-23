@@ -1280,3 +1280,117 @@ Entries:
     type: Fix
   time: '2026-05-02T22:11:18.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/673
+- author: HellWatcher
+  changes:
+  - message: Biogenerators now extract about three times as much biomass per produce. One harvest covers one print of the typical recipe.
+    type: Tweak
+  time: '2026-05-02T23:14:50.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/674
+- author: HellWatcher
+  changes:
+  - message: Chemistry can synthesise blood for any station species from a `BloodPlasma` base plus a defining element. Plasma itself is brewed on a hotplate.
+    type: Add
+  - message: Blood tomatoes now contain blood plasma instead of human blood. Non-humans can eat them without a poison tick, and grinding a tomato yields plasma directly.
+    type: Tweak
+  - message: Slime and Sap centrifuge breakdowns now use the 20u species-blood template, matching the other bloods.
+    type: Tweak
+  time: '2026-05-02T23:30:12.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/675
+- author: HellWatcher
+  changes:
+  - message: Auto-fill `@PlayerName` chat highlights work on radio again, alongside dead chat, emotes, and popups.
+    type: Fix
+  time: '2026-05-03T14:38:01.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/677
+- author: HellWatcher
+  changes:
+  - message: A healthy liver now scrubs toxins from the bloodstream at a steady rate, so poisons take longer to deal their full damage. A patient with a damaged or missing liver feels poisons closer to full strength.
+    type: Tweak
+  time: '2026-05-03T16:11:39.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/685
+- author: HellWatcher
+  changes:
+  - message: Skaven characters now earn 25% of the standard wage on every job, reflecting their underclass standing.
+    type: Tweak
+  time: '2026-05-03T16:49:04.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/688
+- author: HellWatcher
+  changes:
+  - message: 'Toxin cocktails of trace doses (under 3u each) no longer deal damage to a healthy patient. The body''s kidneys filter sub-effective doses; full doses still tick normally.'
+    type: Tweak
+  time: '2026-05-03T17:34:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/684
+- author: HellWatcher
+  changes:
+  - message: Skaven on Command roles (Captain, HoP, HoS, CE, CMO, RD, QM) now refer to themselves in third person.
+    type: Add
+  time: '2026-05-05T12:17:17.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/687
+- author: HellWatcher
+  changes:
+  - message: 'Kidneys now slowly drain reagents from the bloodstream on top of the body''s existing clearance. Patients with damaged or missing kidneys hold onto chems (and poisons) for longer.'
+    type: Tweak
+  time: '2026-05-05T17:10:11.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/686
+- author: HellWatcher
+  changes:
+  - message: Fork-specific gas canisters keep their gas fills after the upstream canister rewrite.
+    type: Fix
+  - message: 'Upstream''s new damage cracking visuals for gas canisters are not wired up on the fork''s per-gas canister sprites yet, tracked in #689.'
+    type: Tweak
+  time: '2026-05-09T17:26:31.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/690
+- author: HellWatcher
+  changes:
+  - message: 'Crushing a bluespace crystal in your hand teleports you up to 8 tiles in a random direction. Throw one at a mob to teleport the mob instead. Both endpoints flash with a short bluespace effect, and there''s a one-second cooldown between in-hand crushes.'
+    type: Add
+  time: '2026-05-09T20:04:09.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/694
+- author: HellWatcher
+  changes:
+  - message: 'Bluespace crystals can now spawn as a rare salvage ore. They share Diamond''s tier and rarity; expect them about as often.'
+    type: Add
+  time: '2026-05-09T20:27:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/693
+- author: HellWatcher
+  changes:
+  - message: Bluespace crystals can now be ground in a reagent grinder, yielding 20u of bluespace dust per crystal. Drinking the dust makes you jittery and occasionally teleports you a few tiles in a random direction.
+    type: Add
+  time: '2026-05-09T21:20:25.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/695
+- author: HellWatcher
+  changes:
+  - message: 'Bluespace plants now share a teleport behaviour: slipping on one, getting hit by a thrown one, or fumbling one in your hand can blink you a few tiles in a random direction with the same flash and sound as a crushed bluespace crystal. The bluespace tomato and bluespace banana PRs will plug into this.'
+    type: Add
+  time: '2026-05-09T22:11:23.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/698
+- author: HellWatcher
+  changes:
+  - message: Bluespace crystals can now be handed in at a research server. Each crystal in the stack credits 50 research points, and the whole stack is consumed in a single click.
+    type: Add
+  time: '2026-05-09T22:41:55.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/696
+- author: HellWatcher
+  changes:
+  - message: Blue tomato seeds can now mutate into bluespace tomato seeds. Throwing a bluespace tomato at someone teleports them. Holding one without protection has a 50% chance per use to fumble and teleport you. Eating one feeds you bluespace dust, which has its own occasional teleport on metabolism. Juicing one yields bluespace dust directly.
+    type: Add
+  time: '2026-05-09T22:56:13.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/699
+- author: HellWatcher
+  changes:
+  - message: Banana seeds can now mutate into bluespace banana seeds. Eating a bluespace banana drops a glowing-blue peel; anyone who slips on it teleports a few tiles in a random direction. Eating one also feeds you bluespace dust, which has its own occasional teleport on metabolism.
+    type: Add
+  time: '2026-05-09T23:13:01.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/700
+- author: HellWatcher
+  changes:
+  - message: Three new emotes. Fart releases a puff of ammonia, Flip tumbles your sprite, Spin whirls it through the cardinal directions.
+    type: Add
+  time: '2026-05-09T23:55:26.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/701
+- author: HellWatcher
+  changes:
+  - message: Gas canister sprites are now composed at render time from a shared greyscale layer set plus per-gas color tints, matching the previous baked look. The 11 fork-added gases (Antinoblium, BZ, Halon, Healium, Helium, Hydrogen, HyperNoblium, Nitrium, Pluoxium, ProtoNitrate, Zauker) now also produce per-gas colored broken canisters when destroyed instead of generic grey ones.
+    type: Tweak
+  time: '2026-05-10T20:38:12.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/691
