@@ -1,0 +1,10 @@
+- type: skillchip
+  id: SkillchipSupermatterCognitionData
+  name: Supermatter Cognition Theory
+  capacityCost: 2
+  category: job
+  grants:
+  - !type:CapabilityTagGrant
+    tag: supermatter_soother
+  - !type:CapabilityTagGrant
+    tag: supermatter_madness_immune
