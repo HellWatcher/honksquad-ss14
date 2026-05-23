@@ -1,0 +1,13 @@
+# INTJ skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipFlavourCalculus
+  name: Integrated Intuitive Thinking and Judging skillchip
+  description: A small neural interface chip. When examining food, you can experience the flavours just as well as if you were eating it.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipFlavourCalculusData

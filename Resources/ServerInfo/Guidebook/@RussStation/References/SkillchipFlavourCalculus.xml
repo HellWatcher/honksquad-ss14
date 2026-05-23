@@ -1,0 +1,11 @@
+<Document>
+# INTJ
+
+When examining food, you can experience the flavours just as well as if you were eating it.
+
+<Box>
+<GuideEntityEmbed Entity="SkillchipFlavourCalculus"/>
+</Box>
+
+Examine any [color=#a4885c]food or drink[/color] up close. The chip lists the flavors you would have tasted on a bite, and nudges you when the dish could use more salt.
+</Document>
