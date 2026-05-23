@@ -1,0 +1,13 @@
+# Mast-Angl-Er skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipFishingDiscernment
+  name: Mast-Angl-Er skillchip
+  description: A small neural interface chip. Lists fishes when examining a fishing spot, gives a hint of whatever thing's biting the hook and more.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipFishingDiscernmentData
