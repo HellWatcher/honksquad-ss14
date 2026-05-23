@@ -1,0 +1,9 @@
+# Mast-Angl-Er skillchip data prototype
+
+- type: skillchip
+  id: SkillchipFishingDiscernmentData
+  name: Fisherman's Discernment
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: fishing_discernment
