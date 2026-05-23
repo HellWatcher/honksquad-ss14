@@ -8,3 +8,4 @@ guide-entry-skillchip-flavour-calculus = INTJ
 guide-entry-skillchip-id-appraisal = GENUINE ID Appraisal Now!
 guide-entry-skillchip-drunken-brawler = F0RC3 4DD1CT10N
 guide-entry-skillchip-kommand = Kommand
+guide-entry-skillchip-detective-taste = DET.ekt

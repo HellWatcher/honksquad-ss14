@@ -5,6 +5,7 @@
   filterEnabled: True
   children:
     - SkillchipStation
+    - SkillchipDetectiveTaste
     - SkillchipDiskVerifier
     - SkillchipDrunkenBrawler
     - SkillchipEntrailsReader
@@ -58,3 +59,8 @@
   id: SkillchipDrunkenBrawler
   name: guide-entry-skillchip-drunken-brawler
   text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipDrunkenBrawler.xml"
+
+- type: guideEntry
+  id: SkillchipDetectiveTaste
+  name: guide-entry-skillchip-detective-taste
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipDetectiveTaste.xml"
