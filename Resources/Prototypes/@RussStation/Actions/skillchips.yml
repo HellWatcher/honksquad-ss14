@@ -3,8 +3,8 @@
 - type: entity
   parent: BaseAction
   id: ActionKommandColorPicker
-  name: kommand-action-pick-color
-  description: kommand-action-pick-color-desc
+  name: Set Pointer Color
+  description: Picks the color of your enhanced pointer arrow.
   components:
     - type: Action
       icon: { sprite: "@RussStation/Interface/Misc/kommand_pointer.rsi", state: arrow_large_static }
