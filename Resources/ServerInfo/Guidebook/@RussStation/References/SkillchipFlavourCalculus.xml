@@ -1,0 +1,11 @@
+<Document>
+# INTJ
+
+Taste any meal or drink without taking a bite. Useful for catching a poisoner's handiwork before you swallow it, or for second-guessing your own seasoning while the dish is still on the counter.
+
+<Box>
+<GuideEntityEmbed Entity="SkillchipFlavourCalculus"/>
+</Box>
+
+Examine any [color=#a4885c]food or drink[/color] up close. The chip lists the flavors you would have tasted on a bite, and nudges you when the dish could use more salt.
+</Document>
