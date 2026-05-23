@@ -7,7 +7,7 @@
   description: kommand-action-pick-color-desc
   components:
     - type: Action
-      icon: { sprite: "@RussStation/Interface/Misc/kommand_pointer.rsi", state: arrow_large }
+      icon: { sprite: "@RussStation/Interface/Misc/kommand_pointer.rsi", state: arrow_large_static }
       itemIconStyle: NoItem
       checkCanInteract: false
     - type: InstantAction
