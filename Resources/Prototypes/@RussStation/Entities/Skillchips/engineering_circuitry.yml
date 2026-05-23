@@ -1,0 +1,11 @@
+- type: entity
+  parent: BaseItem
+  id: SkillchipEngineeringCircuitry
+  name: Engineering C1-RCU-1T skillchip
+  description: A small neural interface chip. Endorsed by Poly. Recognise airlock and APC wire layouts and understand their functionality at a glance.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
+  - type: Skillchip
+    chipProto: SkillchipEngineeringCircuitryData
