@@ -1,0 +1,11 @@
+- type: entity
+  parent: BaseItem
+  id: SkillchipBorkX3
+  name: B0RK-X3 skillchip
+  description: A small neural interface chip. This biochip faintly smells of garlic, which is odd for something normally wedged inside a user's brain. Consult a dietician before use.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
+  - type: Skillchip
+    chipProto: SkillchipBorkX3Data
