@@ -1,0 +1,11 @@
+- type: entity
+  parent: BaseItem
+  id: SkillchipSupermatterCognition
+  name: HYPERG1G4 skillchip
+  description: A small neural interface chip. Learn to bend the abyss to your will. Understand the correct mental patterns to keep in mind around matter in a hyperfractal state, causing immunity to visions and making the matter in question "calmer".
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
+  - type: Skillchip
+    chipProto: SkillchipSupermatterCognitionData
