@@ -7,3 +7,4 @@ guide-entry-skillchip-entrails-reader = 3NTR41LS
 guide-entry-skillchip-flavour-calculus = INTJ
 guide-entry-skillchip-id-appraisal = GENUINE ID Appraisal Now!
 guide-entry-skillchip-drunken-brawler = F0RC3 4DD1CT10N
+guide-entry-skillchip-kommand = Kommand
