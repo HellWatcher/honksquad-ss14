@@ -18,6 +18,9 @@ using Content.Shared.Inventory;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Popups;
+//HONK START - issue #719: fork hook namespace for IngestionFlavorRewriteEvent
+using Content.Shared.RussStation.Nutrition;
+//HONK END
 using Content.Shared.Tools.EntitySystems;
 using Content.Shared.UserInterface;
 using Content.Shared.Verbs;
@@ -486,6 +489,14 @@ public sealed partial class IngestionSystem : EntitySystem
         _audio.PlayPredicted(entity.Comp.UseSound ?? edible.UseSound, args.Target, args.User);
 
         var flavors = _flavorProfile.GetLocalizedFlavorsMessage(entity.Owner, args.Target, args.Split);
+
+        //HONK START - issue #719: fork hook for chips/traits that want to rewrite the eat
+        //popup's taste portion. Raised on the eater (args.Target); subscribers mutate
+        //ev.Flavors. First consumer is the DET.ekt skillchip's reagent readout.
+        var flavorRewrite = new IngestionFlavorRewriteEvent(args.Target, args.Split, flavors);
+        RaiseLocalEvent(args.Target, ref flavorRewrite);
+        flavors = flavorRewrite.Flavors;
+        //HONK END
 
         if (args.ForceFed)
         {
