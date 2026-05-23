@@ -1394,3 +1394,129 @@ Entries:
     type: Tweak
   time: '2026-05-10T20:38:12.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/691
+- author: HellWatcher
+  changes:
+  - message: WINE skillchip grants wine tasting knowledge when implanted.
+    type: Add
+  time: '2026-05-16T23:50:42.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/705
+- author: HellWatcher
+  changes:
+  - message: Basketsoft 3000 skillchip grants underwater basketweaving knowledge when implanted.
+    type: Add
+  time: '2026-05-17T01:51:55.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/704
+- author: HellWatcher
+  changes:
+  - message: Guidebook entry explaining what skillchips are.
+    type: Add
+  time: '2026-05-19T12:20:30.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/793
+- author: HellWatcher
+  changes:
+  - message: Skillchip Station chair lets you implant and remove skillchips, built from a machine frame and unlocked through service research.
+    type: Add
+  time: '2026-05-20T18:49:59.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/729
+- author: HellWatcher
+  changes:
+  - message: Hedge 3 skillchip. With it implanted, a sharp item trims potted plants into a new shape.
+    type: Add
+  time: '2026-05-21T07:25:08.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/706
+- author: HellWatcher
+  changes:
+  - message: N16H7M4R3 skillchip. With it implanted, hot lightbulbs come out without burning you.
+    type: Add
+  time: '2026-05-21T09:16:32.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/707
+- author: HellWatcher
+  changes:
+  - message: K33P-TH4T-D15K skillchip. Holders see a warning on examine when a nuclear authentication disk is a forgery.
+    type: Add
+  time: '2026-05-22T02:00:27.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/708
+- author: HellWatcher
+  changes:
+  - message: 3NTR41LS skillchip lets surgeons and coroners spot organ details on examine.
+    type: Add
+  time: '2026-05-22T04:43:20.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/709
+- author: HellWatcher
+  changes:
+  - message: GENUINE ID Appraisal Now! skillchip. Implanted users can tell a Central Command ID, a station-printed one, and a syndicate or agent ID apart on examine.
+    type: Add
+  time: '2026-05-22T07:45:57.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/710
+- author: HellWatcher
+  changes:
+  - message: K1SS skillchip is in the world as flavor; its mechanical effect lands once cooking and kiss systems catch up.
+    type: Add
+  time: '2026-05-22T18:23:29.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/712
+- author: HellWatcher
+  changes:
+  - message: Le S48R4G3 skillchip grants sabrage proficiency, lets a holder pop the cork off a sealed champagne bottle with a sharp swing. Anyone can attempt without the chip, but the odds are bad.
+    type: Add
+  time: '2026-05-22T18:53:37.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/711
+- author: HellWatcher
+  changes:
+  - message: INTJ skillchip lets holders taste food and drinks on examine without eating them.
+    type: Add
+  time: '2026-05-23T00:37:23.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/713
+- author: HellWatcher
+  changes:
+  - message: F0RC3 4DD1CT10N skillchip. While drunk it boosts your unarmed damage and reduces incoming unarmed damage.
+    type: Add
+  time: '2026-05-23T01:50:49.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/714
+- author: HellWatcher
+  changes:
+  - message: Skillchips can declare a category; only one chip per category can be implanted at a time.
+    type: Add
+  time: '2026-05-23T04:07:42.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/717
+- author: HellWatcher
+  changes:
+  - message: Kommand skillchip ships with an enhanced, colour-pickable pointer arrow.
+    type: Add
+  time: '2026-05-23T05:07:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/716
+- author: HellWatcher
+  changes:
+  - message: TUNN3L_R4T skillchip. Implant to register as a minebot enthusiast.
+    type: Add
+  time: '2026-05-23T20:22:31.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/721
+- author: HellWatcher
+  changes:
+  - message: DET.ekt skillchip lists reagent names of anything you eat or drink.
+    type: Add
+  time: '2026-05-23T20:38:46.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/719
+- author: HellWatcher
+  changes:
+  - message: Engineering C1-RCU-1T skillchip. Implant to register as a station engineer endorsed by Poly.
+    type: Add
+  time: '2026-05-23T22:00:22.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/724
+- author: HellWatcher
+  changes:
+  - message: CL34NM4ST.R skillchip. Cleanbots quietly acknowledge anyone running it.
+    type: Add
+  time: '2026-05-23T22:20:07.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/720
+- author: HellWatcher
+  changes:
+  - message: HYPERG1G4 skillchip. Implant to register as a supermatter cognition theorist.
+    type: Add
+  time: '2026-05-23T22:34:53.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/722
+- author: HellWatcher
+  changes:
+  - message: Cyborg C1-RCU-1T skillchip. Implant to register as a roboticist with too many opinions about wire color schemes.
+    type: Add
+  time: '2026-05-23T22:49:35.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/723
