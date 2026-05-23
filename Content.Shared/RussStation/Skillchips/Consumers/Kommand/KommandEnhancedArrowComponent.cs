@@ -12,8 +12,4 @@ public sealed partial class KommandEnhancedArrowComponent : Component
 {
     [DataField, AutoNetworkedField]
     public Color Color = Color.Red;
-
-    /// <summary>Sprite scale multiplier applied by the client visualizer.</summary>
-    [DataField, AutoNetworkedField]
-    public float Scale = KommandConstants.ArrowScale;
 }

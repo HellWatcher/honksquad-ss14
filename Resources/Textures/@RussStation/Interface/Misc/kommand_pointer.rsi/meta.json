@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Ported from tgstation icons/hud/screen_gen.dmi at https://github.com/tgstation/tgstation/tree/ce0a9c932e5284e152bf5f313443f99bff20b927, introduced by PR #85892.",
+  "states": [
+    {
+      "name": "arrow_large",
+      "delays": [
+        [
+          1,
+          1,
+          1,
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "arrow_large_white",
+      "delays": [
+        [
+          1,
+          1,
+          1,
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "arrow_large_white_highlights",
+      "delays": [
+        [
+          1,
+          1,
+          1,
+          1,
+          2
+        ]
+      ]
+    }
+  ]
+}
