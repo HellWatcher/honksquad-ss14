@@ -15,6 +15,7 @@
     - SkillchipIdAppraisal
     - SkillchipKommand
     - SkillchipLightbulb
+    - SkillchipMusical
 
 - type: guideEntry
   id: SkillchipStation
@@ -70,3 +71,8 @@
   id: SkillchipCleanbotWhisperer
   name: guide-entry-skillchip-cleanbot-whisperer
   text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipCleanbotWhisperer.xml"
+
+- type: guideEntry
+  id: SkillchipMusical
+  name: guide-entry-skillchip-musical
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipMusical.xml"

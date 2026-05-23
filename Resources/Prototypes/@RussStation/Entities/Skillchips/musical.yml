@@ -1,0 +1,11 @@
+- type: entity
+  parent: BaseItem
+  id: SkillchipMusical
+  name: MUSS13CAL skillchip
+  description: An old copy of "Space Station 13, The Musical", ran on the station's 200th anniversary, or maybe it was the 400th. Allows you to hit that high note, like those that came a century before us.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
+  - type: Skillchip
+    chipProto: SkillchipMusicalData

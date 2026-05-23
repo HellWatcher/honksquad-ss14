@@ -1,0 +1,11 @@
+<Document>
+# MUSS13CAL
+
+An old copy of "Space Station 13, The Musical", ran on the station's 200th anniversary, or maybe it was the 400th. Allows you to hit that high note, like those that came a century before us.
+
+<Box>
+<GuideEntityEmbed Entity="SkillchipMusical"/>
+</Box>
+
+Speak normally and the chip will stretch the last [color=#a4885c]vowel[/color] of every line for you, then stamp an exclamation mark on the end. There is no opt-out short of removing the chip.
+</Document>
