@@ -1,7 +1,7 @@
 <Document>
 # F0RC3 4DD1CT10N
 
-Turns sobriety into a liability. Throw a few drinks down before a bar fight and your fists hit harder, and the other guy's fists land softer.
+When intoxicated, you gain increased unarmed effectiveness.
 
 <Box>
 <GuideEntityEmbed Entity="SkillchipDrunkenBrawler"/>
