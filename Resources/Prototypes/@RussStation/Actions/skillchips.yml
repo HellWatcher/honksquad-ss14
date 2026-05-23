@@ -1,0 +1,15 @@
+# Actions granted by RussStation skillchips.
+
+- type: entity
+  parent: BaseAction
+  id: ActionKommandColorPicker
+  name: kommand-action-pick-color
+  description: kommand-action-pick-color-desc
+  components:
+    - type: Action
+      icon: { sprite: "@RussStation/Objects/Misc/skillchip.rsi", state: skillchip }
+      itemIconStyle: NoItem
+      checkCanInteract: false
+    - type: InstantAction
+      event: !type:OpenUiActionEvent
+        key: enum.KommandUiKey.ColorPicker
