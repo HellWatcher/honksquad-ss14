@@ -1404,8 +1404,6 @@ Entries:
   changes:
   - message: Basketsoft 3000 skillchip grants underwater basketweaving knowledge when implanted.
     type: Add
-  - message: WINE skillchip grants wine tasting knowledge when implanted.
-    type: Add
   time: '2026-05-17T01:51:55.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/704
 - author: HellWatcher
