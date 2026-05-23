@@ -1,0 +1,13 @@
+# F0RC3 4DD1CT10N skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipDrunkenBrawler
+  name: F0RC3 4DD1CT10N skillchip
+  description: A small neural interface chip. When intoxicated, you gain increased unarmed effectiveness.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipDrunkenBrawlerData

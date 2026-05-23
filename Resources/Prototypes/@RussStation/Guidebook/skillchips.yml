@@ -6,6 +6,7 @@
   children:
     - SkillchipStation
     - SkillchipDiskVerifier
+    - SkillchipDrunkenBrawler
     - SkillchipEntrailsReader
     - SkillchipFlavourCalculus
     - SkillchipHedge3
@@ -46,3 +47,8 @@
   id: SkillchipLightbulb
   name: guide-entry-skillchip-lightbulb
   text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipLightbulb.xml"
+
+- type: guideEntry
+  id: SkillchipDrunkenBrawler
+  name: guide-entry-skillchip-drunken-brawler
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipDrunkenBrawler.xml"

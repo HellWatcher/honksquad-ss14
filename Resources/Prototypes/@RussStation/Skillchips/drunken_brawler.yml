@@ -1,0 +1,9 @@
+# F0RC3 4DD1CT10N skillchip data prototype
+
+- type: skillchip
+  id: SkillchipDrunkenBrawlerData
+  name: Drunken Unarmed Proficiency
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: drunken_brawler
