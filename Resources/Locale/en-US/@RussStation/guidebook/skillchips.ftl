@@ -6,3 +6,4 @@ guide-entry-skillchip-disk-verifier = K33P-TH4T-D15K
 guide-entry-skillchip-entrails-reader = 3NTR41LS
 guide-entry-skillchip-flavour-calculus = INTJ
 guide-entry-skillchip-id-appraisal = GENUINE ID Appraisal Now!
+guide-entry-skillchip-drunken-brawler = F0RC3 4DD1CT10N

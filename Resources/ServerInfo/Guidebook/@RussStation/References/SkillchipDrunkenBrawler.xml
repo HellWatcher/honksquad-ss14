@@ -1,0 +1,14 @@
+<Document>
+# F0RC3 4DD1CT10N
+
+Turns sobriety into a liability. Throw a few drinks down before a bar fight and your fists hit harder, and the other guy's fists land softer.
+
+<Box>
+<GuideEntityEmbed Entity="SkillchipDrunkenBrawler"/>
+</Box>
+
+## Using it
+1. Get [color=#a4885c]drunk[/color].\n2. Punch people for a flat damage bonus.\n3. Take reduced damage from anyone trying to put you down with their fists.
+
+[color=#a4885c]Combat.[/color] No effect while sober. Held weapons swing the same as ever, this is fists only.
+</Document>
