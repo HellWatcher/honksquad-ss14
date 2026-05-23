@@ -1,0 +1,9 @@
+# Kommand skillchip data prototype
+
+- type: skillchip
+  id: SkillchipKommandData
+  name: Enhanced pointing
+  capacityCost: 1
+  grants:
+    - !type:CapabilityTagGrant
+      tag: enhanced_pointing

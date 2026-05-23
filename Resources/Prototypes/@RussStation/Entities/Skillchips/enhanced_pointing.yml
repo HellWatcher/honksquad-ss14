@@ -1,0 +1,13 @@
+# Kommand skillchip entity
+
+- type: entity
+  parent: BaseItem
+  id: SkillchipKommand
+  name: Kommand skillchip
+  description: A biochip detailing various techniques employed by historical leaders to point at things like a true boss.
+  components:
+    - type: Sprite
+      sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+      state: skillchip
+    - type: Skillchip
+      chipProto: SkillchipKommandData
