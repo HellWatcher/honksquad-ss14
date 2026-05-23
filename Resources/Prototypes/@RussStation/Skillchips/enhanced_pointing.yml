@@ -7,3 +7,5 @@
   grants:
     - !type:CapabilityTagGrant
       tag: enhanced_pointing
+    - !type:ActionGrant
+      actionProto: ActionKommandColorPicker
