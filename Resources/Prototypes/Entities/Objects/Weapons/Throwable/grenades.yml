@@ -33,6 +33,12 @@
     keysIn:
     - timer
     range: 7
+  # HONK START - flashbangs also temporarily deafen targets in range
+  - type: DeafenOnTrigger
+    keysIn:
+    - timer
+    range: 7
+  # HONK END
   - type: EmitSoundOnTrigger
     keysIn:
     - timer
