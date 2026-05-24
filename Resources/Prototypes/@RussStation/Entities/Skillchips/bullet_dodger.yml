@@ -1,0 +1,11 @@
+- type: entity
+  parent: BaseItem
+  id: SkillchipBulletDodger
+  name: BULLET_DODGER skillchip
+  description: A small neural interface chip. At the cost of stamina, your taunts can also be used to dodge incoming projectiles.
+  components:
+  - type: Sprite
+    sprite: "@RussStation/Objects/Misc/skillchip.rsi"
+    state: skillchip
+  - type: Skillchip
+    chipProto: SkillchipBulletDodgerData

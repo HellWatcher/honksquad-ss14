@@ -11,3 +11,4 @@ guide-entry-skillchip-kommand = Kommand
 guide-entry-skillchip-detective-taste = DET.ekt
 guide-entry-skillchip-cleanbot-whisperer = CL34NM4ST.R
 guide-entry-skillchip-musical = MUSS13CAL
+guide-entry-skillchip-bullet-dodger = BULLET_DODGER

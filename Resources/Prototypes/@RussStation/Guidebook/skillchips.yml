@@ -5,6 +5,7 @@
   filterEnabled: True
   children:
     - SkillchipStation
+    - SkillchipBulletDodger
     - SkillchipCleanbotWhisperer
     - SkillchipDetectiveTaste
     - SkillchipDiskVerifier
@@ -76,3 +77,8 @@
   id: SkillchipMusical
   name: guide-entry-skillchip-musical
   text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipMusical.xml"
+
+- type: guideEntry
+  id: SkillchipBulletDodger
+  name: guide-entry-skillchip-bullet-dodger
+  text: "/ServerInfo/Guidebook/@RussStation/References/SkillchipBulletDodger.xml"

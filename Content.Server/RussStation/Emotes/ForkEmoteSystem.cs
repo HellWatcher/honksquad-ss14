@@ -22,9 +22,7 @@ public sealed class ForkEmoteSystem : EntitySystem
     private const string SpinEmoteId = "Spin";
 
     private const float MolesAmmoniaPerFart = 2.5f;
-    private static readonly TimeSpan FlipDuration = TimeSpan.FromSeconds(0.5);
     private const float FlipTurns = 1f;
-    private static readonly TimeSpan SpinDuration = TimeSpan.FromSeconds(0.5);
     /// One full S→E→N→W cycle in SpinDuration. Bump if you want it spinnier.
     private const float SpinSteps = 4f;
 
@@ -51,12 +49,12 @@ public sealed class ForkEmoteSystem : EntitySystem
                 break;
 
             case FlipEmoteId:
-                BroadcastSpriteEmote(ent.Owner, SpriteEmoteKind.Flip, FlipDuration, FlipTurns);
+                BroadcastSpriteEmote(ent.Owner, SpriteEmoteKind.Flip, ForkEmoteDurations.Flip, FlipTurns);
                 args.Handled = true;
                 break;
 
             case SpinEmoteId:
-                BroadcastSpriteEmote(ent.Owner, SpriteEmoteKind.Spin, SpinDuration, SpinSteps);
+                BroadcastSpriteEmote(ent.Owner, SpriteEmoteKind.Spin, ForkEmoteDurations.Spin, SpinSteps);
                 args.Handled = true;
                 break;
         }
