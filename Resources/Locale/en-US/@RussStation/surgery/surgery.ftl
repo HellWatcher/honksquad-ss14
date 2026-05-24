@@ -16,7 +16,6 @@ surgery-step-saw = {CAPITALIZE(THE($user))} saws through dense tissue on {THE($t
 surgery-step-cauterize = {CAPITALIZE(THE($user))} sears the wound on {THE($target)} shut with a sizzle.
 surgery-step-treat-brute = {CAPITALIZE(THE($user))} stitches torn muscle on {THE($target)} back together.
 surgery-step-treat-burn = {CAPITALIZE(THE($user))} scrapes away charred flesh on {THE($target)} and dresses what's left.
-surgery-step-remove-organ = {CAPITALIZE(THE($user))} plunges a hand into {THE($target)} and pulls out an organ.
 surgery-step-set-bones = {CAPITALIZE(THE($user))} wrenches {POSS-ADJ($target)} shattered bones back into line.
 surgery-step-treat-burn-wounds = {CAPITALIZE(THE($user))} cauterizes and dresses {POSS-ADJ($target)} weeping burns.
 
