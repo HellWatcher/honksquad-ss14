@@ -48,7 +48,7 @@ public sealed class CardiacArrestSystem : EntitySystem
         _alerts.ShowAlert(args.Target, CardiacArrestAlert);
 
         if (TryComp<StatusEffectComponent>(ent, out var effect))
-            _stun.TryAddStunDuration(args.Target, effect.Duration);
+            _stun.TryAddParalyzeDuration(args.Target, effect.Duration);
     }
 
     private void OnRemoved(Entity<CardiacArrestComponent> ent, ref StatusEffectRemovedEvent args)
