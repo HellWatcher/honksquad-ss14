@@ -1,0 +1,14 @@
+# Suppresses breathing - lungs cannot process inhaled gas, causing suffocation.
+# Used by cybernetic lungs EMP effect (BreathingFailure).
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectBreathingSuppressed
+  name: breathing suppressed
+  components:
+    - type: StatusEffect
+      whitelist:
+        components:
+          - MobState
+          - Body
+        requireAll: true
+    - type: BreathingSuppressed
