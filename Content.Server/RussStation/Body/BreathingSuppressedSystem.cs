@@ -2,6 +2,7 @@ using Content.Server.Body.Systems;
 using Content.Shared.Body.Components;
 using Content.Shared.RussStation.Body;
 using Content.Shared.StatusEffectNew;
+using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Body;
 
@@ -12,6 +13,8 @@ namespace Content.Server.RussStation.Body;
 /// </summary>
 public sealed class BreathingSuppressedSystem : EntitySystem
 {
+    [Dependency] private readonly IGameTiming _timing = default!;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -24,6 +27,9 @@ public sealed class BreathingSuppressedSystem : EntitySystem
 
     private void OnApplied(Entity<BreathingSuppressedComponent> ent, ref StatusEffectAppliedEvent args)
     {
+        if (_timing.ApplyingState)
+            return;
+
         EnsureComp<ActiveBreathingSuppressedComponent>(args.Target);
     }
 
