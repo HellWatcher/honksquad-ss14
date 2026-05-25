@@ -1,0 +1,110 @@
+using Content.Server.RussStation.Body;
+using Content.Shared.Eye.Blinding.Components;
+using Content.Shared.StatusEffectNew;
+using Robust.Shared.GameObjects;
+
+namespace Content.IntegrationTests.Tests.RussStation.Body;
+
+[TestFixture]
+[TestOf(typeof(EmpBlindnessSystem))]
+public sealed class EmpBlindnessTest
+{
+    [TestPrototypes]
+    private const string Prototypes = @"
+- type: entity
+  id: EmpBlindTestBody
+  components:
+  - type: Body
+  - type: MobState
+    allowedStates:
+    - Alive
+    - Critical
+    - Dead
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      100: Critical
+      200: Dead
+  - type: Damageable
+  - type: Blindable
+";
+
+    private const string EffectProto = "StatusEffectTemporaryBlindness";
+
+    [Test]
+    public async Task ApplyingEffectAddsTemporaryBlindnessTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var statusSys = entMan.System<StatusEffectsSystem>();
+            var body = entMan.SpawnEntity("EmpBlindTestBody", mapData.GridCoords);
+
+            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.False,
+                "Should not have TemporaryBlindnessComponent before effect");
+
+            var added = statusSys.TryAddStatusEffectDuration(body, EffectProto, TimeSpan.FromSeconds(10));
+            Assert.That(added, Is.True, "Should successfully apply EMP blindness effect");
+            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.True,
+                "Should have TemporaryBlindnessComponent after effect applied");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task RemovingEffectRemovesTemporaryBlindnessTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapData = await pair.CreateTestMap();
+
+        EntityUid body = default;
+
+        await server.WaitAssertion(() =>
+        {
+            var statusSys = entMan.System<StatusEffectsSystem>();
+            body = entMan.SpawnEntity("EmpBlindTestBody", mapData.GridCoords);
+
+            statusSys.TryAddStatusEffectDuration(body, EffectProto, TimeSpan.FromSeconds(10));
+            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.True);
+
+            statusSys.TryRemoveStatusEffect(body, EffectProto);
+        });
+
+        // PredictedQueueDel is deferred
+        await server.WaitRunTicks(2);
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.False,
+                "TemporaryBlindnessComponent should be removed when effect is removed");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task NoBlindnessWithoutEffectTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var body = entMan.SpawnEntity("EmpBlindTestBody", mapData.GridCoords);
+
+            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.False,
+                "Body without EMP blindness effect should not have TemporaryBlindnessComponent");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+}
