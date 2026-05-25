@@ -571,6 +571,9 @@
   - EmergencyNitrogenClown
   - EmergencyOxygenClown
   - LoadoutSpeciesVoxNitrogen
+  # HONK START - Skaven (#787): species-gated entry so Skaven clowns get an ammonia kit.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 - type: loadoutGroup
   id: ClownJobTrinkets
@@ -635,6 +638,9 @@
   - EmergencyOxygenMime
   - EmergencySpeciesMothMime
   - LoadoutSpeciesVoxNitrogen
+  # HONK START - Skaven (#787): species-gated entry so Skaven mimes get an ammonia kit.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 #- type: loadoutGroup
 #  id: MimeJobTrinkets
@@ -981,6 +987,9 @@
   - EmergencyNitrogenExtended
   - EmergencyOxygenExtended
   - LoadoutSpeciesVoxNitrogen
+  # HONK START - Skaven (#787): species-gated entry so Skaven engineers/atmos get an ammonia kit.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 # Science
 - type: loadoutGroup
@@ -1314,6 +1323,9 @@
   - EmergencyNitrogenSecurity
   - EmergencyOxygenSecurity
   - LoadoutSpeciesVoxNitrogen
+  # HONK START - Skaven (#787): species-gated entry so Skaven sec gets an ammonia kit.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 # Wildcards
 - type: loadoutGroup
@@ -1366,6 +1378,9 @@
   - EmergencyNitrogenSyndicate
   - EmergencyOxygenSyndicate
   - LoadoutSpeciesVoxNitrogen
+  # HONK START - Skaven (#787): species-gated entry so Skaven syndies get an ammonia kit.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 - type: loadoutGroup
   id: SurvivalMilitaryDouble
@@ -1375,6 +1390,9 @@
   loadouts:
   - EmergencyNitrogenMilitaryDouble
   - EmergencyOxygenMilitaryDouble
+  # HONK START - Skaven (#787): species-gated entry so Skaven ERT/military get an ammonia kit.
+  - EmergencySkavenAmmonia
+  # HONK END
 
 - type: loadoutGroup
   id: GroupSpeciesBreathTool
