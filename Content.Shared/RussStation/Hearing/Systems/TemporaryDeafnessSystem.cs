@@ -1,4 +1,5 @@
 using Content.Shared.StatusEffectNew;
+using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.Hearing.Systems;
 
@@ -18,6 +19,7 @@ namespace Content.Shared.RussStation.Hearing.Systems;
 public sealed class TemporaryDeafnessSystem : EntitySystem
 {
     [Dependency] private readonly DeafableSystem _deafable = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -52,6 +54,9 @@ public sealed class TemporaryDeafnessSystem : EntitySystem
 
     private void OnApplied(Entity<TemporaryDeafnessComponent> ent, ref StatusEffectAppliedEvent args)
     {
+        if (_timing.ApplyingState)
+            return;
+
         EnsureComp<ActiveTemporaryDeafnessComponent>(args.Target);
         _deafable.UpdateIsDeaf(args.Target);
     }
