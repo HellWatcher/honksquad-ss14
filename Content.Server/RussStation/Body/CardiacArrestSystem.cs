@@ -7,6 +7,7 @@ using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
 using Content.Shared.Stunnable;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 
 namespace Content.Server.RussStation.Body;
 
@@ -22,6 +23,7 @@ public sealed class CardiacArrestSystem : EntitySystem
     [Dependency] private readonly RespiratorSystem _respirator = default!;
     [Dependency] private readonly SharedStunSystem _stun = default!;
     [Dependency] private readonly StatusEffectsSystem _statusEffects = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
     private static readonly EntProtoId EffectProto = "StatusEffectCardiacArrest";
     private static readonly ProtoId<AlertPrototype> CardiacArrestAlert = "CardiacArrest";
@@ -44,6 +46,9 @@ public sealed class CardiacArrestSystem : EntitySystem
 
     private void OnApplied(Entity<CardiacArrestComponent> ent, ref StatusEffectAppliedEvent args)
     {
+        if (_timing.ApplyingState)
+            return;
+
         EnsureComp<ActiveCardiacArrestComponent>(args.Target);
         _alerts.ShowAlert(args.Target, CardiacArrestAlert);
 
