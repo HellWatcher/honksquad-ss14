@@ -10,7 +10,7 @@ namespace Content.Server.RussStation.Botany.Systems;
 
 /// <summary>
 ///     Full replacement for the vanilla mutation algorithm, gated behind
-///     <c>botany.mutation_overhaul_enabled</c>. When the CVar is on, the stock
+///     <c>botany.overhaul_enabled</c>. When the CVar is on, the stock
 ///     <see cref="MutationSystem"/> delegates <c>MutateSeed</c> and <c>Cross</c> to the methods
 ///     here; when off, vanilla runs unchanged.
 ///

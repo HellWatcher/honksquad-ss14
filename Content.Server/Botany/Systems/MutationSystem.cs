@@ -55,7 +55,7 @@ public sealed class MutationSystem : EntitySystem
     public void MutateSeed(EntityUid plantHolder, ref SeedData seed, float severity)
     {
         //HONK START - mutation overhaul: hand off to the replacement algorithm when enabled.
-        if (_cfg.GetCVar(CCVars.BotanyMutationOverhaulEnabled))
+        if (_cfg.GetCVar(CCVars.BotanyOverhaulEnabled))
         {
             _overhaul.MutateSeed(plantHolder, ref seed, severity);
             return;
@@ -74,7 +74,7 @@ public sealed class MutationSystem : EntitySystem
     public SeedData Cross(SeedData a, SeedData b)
     {
         //HONK START - mutation overhaul: hand off to the replacement algorithm when enabled.
-        if (_cfg.GetCVar(CCVars.BotanyMutationOverhaulEnabled))
+        if (_cfg.GetCVar(CCVars.BotanyOverhaulEnabled))
             return _overhaul.Cross(a, b);
         //HONK END
 
