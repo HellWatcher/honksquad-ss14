@@ -40,13 +40,16 @@ public sealed class BotanyMutationOverhaulSystem : EntitySystem
     ///     Overhauled random mutation: rolls prototype effects with a severity-curved probability
     ///     and additionally drifts a couple of numeric stats so every mutation tick nudges the genome.
     /// </summary>
-    public void MutateSeed(EntityUid plantHolder, ref SeedData seed, float severity)
+    public void MutateSeed(EntityUid plantHolder, ref SeedData seed, float severity, float plantyness)
     {
         if (!seed.Unique)
         {
             Log.Error("Attempted to mutate a shared seed");
             return;
         }
+
+        // Threaded in from the delegation guard; wired up but not yet driving behavior.
+        _ = plantyness;
 
         // Severity curve: low severity barely mutates, high severity ramps up fast.
         var chanceScale = MathF.Pow(Math.Clamp(severity / 25f, 0f, 1f), 0.5f);

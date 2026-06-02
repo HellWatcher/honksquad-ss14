@@ -59,7 +59,7 @@ public sealed class MutationSystem : EntitySystem
         //HONK START - mutation overhaul: hand off to the replacement algorithm when enabled.
         if (_cfg.GetCVar(CCVars.BotanyOverhaulEnabled))
         {
-            _overhaul.MutateSeed(plantHolder, ref seed, severity);
+            _overhaul.MutateSeed(plantHolder, ref seed, severity, seed.Potency);
             return;
         }
         //HONK END
