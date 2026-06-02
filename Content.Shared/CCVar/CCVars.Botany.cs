@@ -12,4 +12,14 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<bool> BotanyOverhaulEnabled =
         CVarDef.Create("botany.overhaul_enabled", false, CVar.SERVERONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    ///     Fully replaces the vanilla mutation algorithm (random mutation rolls and crossbreeding)
+    ///     with <c>BotanyMutationOverhaulSystem</c> when enabled. The stock <c>MutationSystem</c>
+    ///     delegates to the overhaul behind this flag; off (the default) runs vanilla unchanged.
+    ///     Independent from <see cref="BotanyOverhaulEnabled"/> so the growth and genetics overhauls
+    ///     can be toggled separately.
+    /// </summary>
+    public static readonly CVarDef<bool> BotanyMutationOverhaulEnabled =
+        CVarDef.Create("botany.mutation_overhaul_enabled", false, CVar.SERVERONLY | CVar.ARCHIVE);
 }

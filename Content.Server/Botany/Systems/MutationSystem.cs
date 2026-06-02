@@ -1,6 +1,9 @@
+using Content.Server.RussStation.Botany.Systems;
 using Content.Shared.Atmos;
+using Content.Shared.CCVar;
 using Content.Shared.EntityEffects;
 using Content.Shared.Random;
+using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using System.Linq;
@@ -14,6 +17,10 @@ public sealed class MutationSystem : EntitySystem
     [Dependency] private readonly IRobustRandom _robustRandom = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly SharedEntityEffectsSystem _entityEffects = default!;
+    //HONK START - mutation overhaul: replacement algorithm + toggle.
+    [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private readonly BotanyMutationOverhaulSystem _overhaul = default!;
+    //HONK END
     private RandomPlantMutationListPrototype _randomMutations = default!;
 
     public override void Initialize()
@@ -47,6 +54,14 @@ public sealed class MutationSystem : EntitySystem
     /// </summary>
     public void MutateSeed(EntityUid plantHolder, ref SeedData seed, float severity)
     {
+        //HONK START - mutation overhaul: hand off to the replacement algorithm when enabled.
+        if (_cfg.GetCVar(CCVars.BotanyMutationOverhaulEnabled))
+        {
+            _overhaul.MutateSeed(plantHolder, ref seed, severity);
+            return;
+        }
+        //HONK END
+
         if (!seed.Unique)
         {
             Log.Error($"Attempted to mutate a shared seed");
@@ -58,6 +73,11 @@ public sealed class MutationSystem : EntitySystem
 
     public SeedData Cross(SeedData a, SeedData b)
     {
+        //HONK START - mutation overhaul: hand off to the replacement algorithm when enabled.
+        if (_cfg.GetCVar(CCVars.BotanyMutationOverhaulEnabled))
+            return _overhaul.Cross(a, b);
+        //HONK END
+
         SeedData result = b.Clone();
 
         CrossChemicals(ref result.Chemicals, a.Chemicals);
