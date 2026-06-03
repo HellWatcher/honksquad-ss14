@@ -19,6 +19,13 @@
   id: Botany
   name: guide-entry-botany
   text: "/ServerInfo/Guidebook/Service/Botany.xml"
+  children:
+  - BotanyCropTree
+
+- type: guideEntry
+  id: BotanyCropTree
+  name: guide-entry-botany-crop-tree
+  text: "/ServerInfo/Guidebook/Service/BotanyCropTree.xml"
 
 - type: guideEntry
   id: Chef

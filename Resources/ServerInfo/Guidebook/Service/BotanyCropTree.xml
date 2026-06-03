@@ -1,0 +1,246 @@
+<Document>
+# Crop Mutation Tree
+This chart shows how crops relate to one another. Higher tiers are reached by treating
+a plant with [color=cyan]unstable mutagen[/color] (or, in a few cases, by cross-pollination)
+until it mutates into the next variety. Mutations flow from [bold]left to right[/bold]:
+a crop in an earlier tier can mutate into the crops to its right on the same line.
+
+Use this as a roadmap for what to grow once you have the basics covered. See the
+[textlink="Botany" link="Botany"] page for how mutation and cross-pollination actually work.
+
+## Legend
+<Table Columns="5">
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Tier 1 — Basic</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Tier 2 — Variant</Box></ColorBox>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Tier 3 — Utility</Box></ColorBox>
+  <ColorBox Color="#f1cba8" Margin="1"><Box Margin="3">Tier 4 — Impactful</Box></ColorBox>
+  <ColorBox Color="#f6c3d6" Margin="1"><Box Margin="3">Tier 5 — Highly Impactful</Box></ColorBox>
+</Table>
+- [color=#c9caec]Lavender[/color] basics have no known mutation.
+- [color=#57c84d]Bright green[/color] crops are gimmick plants that grow from special seeds.
+- [color=#f5a623]Orange[/color] crops are illegal or highly dangerous.
+
+# Food
+<Table Columns="5">
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Wheat</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Meatwheat</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Oat</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Banana</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Mimana</Box></ColorBox>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Bluespace Banana</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Lemon</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Lemoon</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Lime</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Orange</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">White Orange</Box></ColorBox>
+  <ColorBox Color="#f1cba8" Margin="1"><Box Margin="3">Gnorange</Box></ColorBox>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Extradimensional Orange</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Sugarcane</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Papercane</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Tomato</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Blue Tomato</Box></ColorBox>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Bluespace Tomato</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Blood Tomato</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f1cba8" Margin="1"><Box Margin="3">Killer Tomato</Box></ColorBox>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Eggplant</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Eggyplant</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Apple</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Golden Apple</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Onion</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Red Onion</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Bloonion</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Chili</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Chilly</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Soybean</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Koibean</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Watermelon</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Holymelon</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Pea</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Laughing Pea</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f1cba8" Margin="1"><Box Margin="3">World Pea</Box></ColorBox>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Pumpkin</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Blue Pumpkin</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Cherry</Box></ColorBox>
+  <ColorBox Color="#57c84d" Margin="1"><Box Margin="3">Bungo</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+</Table>
+
+## Food — basics with no known mutation
+<Table Columns="5">
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Cocoa</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Berries</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Grape</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Rice</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Chanterelle</Box></ColorBox>
+
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Corn</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Garlic</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Cabbage</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Tea</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Potato</Box></ColorBox>
+
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Pineapple</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Carrot</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+</Table>
+
+# Medicine
+<Table Columns="5">
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Ambrosia Vulgaris</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Ambrosia Deus</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <ColorBox Color="#57c84d" Margin="1"><Box Margin="3">Cannabis</Box></ColorBox>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Rainbow Cannabis</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Poppy</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Lily</Box></ColorBox>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Spaceman's Trumpet</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <ColorBox Color="#57c84d" Margin="1"><Box Margin="3">Galaxythistle</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f1cba8" Margin="1"><Box Margin="3">Glasstle</Box></ColorBox>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Tobacco</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Aloe</Box></ColorBox>
+  <ColorBox Color="#c9caec" Margin="1"><Box Margin="3">Lingzhi</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+</Table>
+
+# Utility
+<Table Columns="5">
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Towercap</Box></ColorBox>
+  <ColorBox Color="#aee5bd" Margin="1"><Box Margin="3">Steelcap</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+
+  <ColorBox Color="#6f9fd6" Margin="1"><Box Margin="3">Cotton</Box></ColorBox>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <ColorBox Color="#f1cba8" Margin="1"><Box Margin="3">Pyrocotton</Box></ColorBox>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <ColorBox Color="#f5a623" Margin="1"><Box Margin="3">Anomaly Berry</Box></ColorBox>
+  <Box Margin="1"/>
+</Table>
+
+# Weed
+<Table Columns="5">
+  <Box Margin="1"/>
+  <ColorBox Color="#57c84d" Margin="1"><Box Margin="3">Nettle</Box></ColorBox>
+  <Box Margin="1"/>
+  <ColorBox Color="#f1cba8" Margin="1"><Box Margin="3">Death Nettle</Box></ColorBox>
+  <Box Margin="1"/>
+
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <ColorBox Color="#f5a623" Margin="1"><Box Margin="3">Fly Amanita</Box></ColorBox>
+  <Box Margin="1"/>
+</Table>
+
+# Contraband
+<Table Columns="5">
+  <Box Margin="1"/>
+  <Box Margin="1"/>
+  <ColorBox Color="#f6ee9c" Margin="1"><Box Margin="3">Capfruit</Box></ColorBox>
+  <ColorBox Color="#f5a623" Margin="1"><Box Margin="3">Gatfruit</Box></ColorBox>
+  <ColorBox Color="#f6c3d6" Margin="1"><Box Margin="3">Fake Capfruit</Box></ColorBox>
+</Table>
+Gatfruit sits in the middle of this chain: it mutates "down" into harmless Capfruit
+and "up" into the more dangerous Fake Capfruit.
+</Document>

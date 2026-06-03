@@ -42,6 +42,7 @@ guide-entry-deltapressure = Delta Pressure
 guide-entry-atmostools = Atmos Tools
 guide-entry-gasses = Gasses
 guide-entry-botany = Botany
+guide-entry-botany-crop-tree = Crop Mutation Tree
 guide-entry-shuttle-craft = Shuttle-craft
 guide-entry-networking = Networking
 guide-entry-access-configurator = Access Configurator
