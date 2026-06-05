@@ -1,12 +1,8 @@
 using Content.Server.Botany;
 using Content.Server.Botany.Components;
 using Content.Server.Botany.Systems;
-using Content.Server.Ghost.Roles.Components;
-using Content.Shared.Atmos;
 using Content.Shared.Atmos.EntitySystems;
-using Content.Shared.Chemistry.Reagent;
 using Content.Shared.DoAfter;
-using Content.Shared.FixedPoint;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Item.ItemToggle;
@@ -14,7 +10,6 @@ using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Botany;
 using Content.Shared.RussStation.Botany.Components;
-using Content.Shared.Slippery;
 using Content.Shared.Sprite;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
@@ -205,105 +200,6 @@ public sealed class PlantAnalyzerSystem : EntitySystem
 
     private PlantAnalyzerUiState BuildState(EntityUid target, SeedData seed)
     {
-        var traits = new List<string>();
-
-        if (seed.Seedless)
-            traits.Add(Loc.GetString("plant-analyzer-trait-seedless"));
-        if (!seed.Viable)
-            traits.Add(Loc.GetString("plant-analyzer-trait-unviable"));
-        if (seed.Ligneous)
-            traits.Add(Loc.GetString("plant-analyzer-trait-ligneous"));
-        if (seed.TurnIntoKudzu)
-            traits.Add(Loc.GetString("plant-analyzer-trait-kudzufication"));
-        if (seed.CanScream)
-            traits.Add(Loc.GetString("plant-analyzer-trait-screaming"));
-        if (HasComp<GhostTakeoverAvailableComponent>(target))
-            traits.Add(Loc.GetString("plant-analyzer-trait-sentient"));
-        if (HasComp<SlipperyComponent>(target))
-            traits.Add(Loc.GetString("plant-analyzer-trait-slippery"));
-        if (seed.SplatPrototype != null)
-            traits.Add(Loc.GetString("plant-analyzer-trait-splatter"));
-
-        var chemicals = new Dictionary<string, FixedPoint2>();
-        foreach (var (reagentId, q) in seed.Chemicals)
-        {
-            var amount = q.Min;
-            if (q.PotencyDivisor > 0 && seed.Potency > 0)
-                amount += seed.Potency / q.PotencyDivisor;
-            amount = FixedPoint2.Clamp(amount, q.Min, q.Max);
-
-            if (!_prototypeManager.TryIndex<ReagentPrototype>(reagentId, out var reagent))
-            {
-                Log.Warning($"PlantAnalyzer: reagent '{reagentId}' not found for seed '{seed.Name}'.");
-                continue;
-            }
-
-            chemicals[reagent.LocalizedName] = amount;
-        }
-
-        var consumeGases = BuildGasDict(seed.ConsumeGasses);
-        var exudeGases = BuildGasDict(seed.ExudeGasses);
-
-        string harvestRepeatKey;
-        switch (seed.HarvestRepeat)
-        {
-            case HarvestType.NoRepeat:
-                harvestRepeatKey = "plant-analyzer-harvest-no-repeat";
-                break;
-            case HarvestType.Repeat:
-                harvestRepeatKey = "plant-analyzer-harvest-repeat";
-                break;
-            case HarvestType.SelfHarvest:
-                harvestRepeatKey = "plant-analyzer-harvest-self-harvest";
-                break;
-            default:
-                Log.Warning($"PlantAnalyzer: unrecognized HarvestType {seed.HarvestRepeat}.");
-                harvestRepeatKey = "plant-analyzer-harvest-no-repeat";
-                break;
-        }
-
-        return new PlantAnalyzerUiState
-        {
-            SeedName = Loc.GetString(seed.DisplayName),
-            Lifespan = seed.Lifespan,
-            Maturation = seed.Maturation,
-            Production = seed.Production,
-            Yield = seed.Yield,
-            Potency = seed.Potency,
-            GrowthStages = seed.GrowthStages,
-            HarvestRepeat = Loc.GetString(harvestRepeatKey),
-            Endurance = seed.Endurance,
-            IdealLight = seed.IdealLight,
-            WaterConsumption = seed.WaterConsumption,
-            NutrientConsumption = seed.NutrientConsumption,
-            IdealHeat = seed.IdealHeat,
-            HeatTolerance = seed.HeatTolerance,
-            LightTolerance = seed.LightTolerance,
-            ToxinsTolerance = seed.ToxinsTolerance,
-            LowPressureTolerance = seed.LowPressureTolerance,
-            HighPressureTolerance = seed.HighPressureTolerance,
-            PestTolerance = seed.PestTolerance,
-            WeedTolerance = seed.WeedTolerance,
-            Traits = traits,
-            Chemicals = chemicals,
-            ConsumeGases = consumeGases,
-            ExudeGases = exudeGases,
-        };
-    }
-
-    private Dictionary<string, float> BuildGasDict(Dictionary<Gas, float> gases)
-    {
-        var result = new Dictionary<string, float>();
-        foreach (var (gas, rate) in gases)
-        {
-            var proto = _atmosphere.GetGas(gas);
-            if (proto == null)
-            {
-                Log.Warning($"PlantAnalyzer: unknown gas ID {(int)gas}, skipping.");
-                continue;
-            }
-            result[Loc.GetString(proto.Name)] = rate;
-        }
-        return result;
+        return SeedDataFormatter.FormatSeedData(seed, target, EntityManager, _prototypeManager, _atmosphere, Log);
     }
 }
