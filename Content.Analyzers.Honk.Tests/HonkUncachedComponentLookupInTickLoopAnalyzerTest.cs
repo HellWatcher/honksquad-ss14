@@ -65,7 +65,7 @@ public sealed class HonkUncachedComponentLookupInTickLoopAnalyzerTest
             """;
 
         await Verify(code, ForkPath,
-            new DiagnosticResult("HONK0032", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0032", DiagnosticSeverity.Warning)
                 .WithSpan(ForkPath, 10, 13, 10, 50)
                 .WithArguments("TryComp", "FooComponent"));
     }
@@ -153,7 +153,7 @@ public sealed class HonkUncachedComponentLookupInTickLoopAnalyzerTest
             """;
 
         await Verify(code, "Content.Shared/Foo/ForkSystem.Honk.cs",
-            new DiagnosticResult("HONK0032", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0032", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Shared/Foo/ForkSystem.Honk.cs", 10, 13, 10, 50)
                 .WithArguments("TryComp", "FooComponent"));
     }

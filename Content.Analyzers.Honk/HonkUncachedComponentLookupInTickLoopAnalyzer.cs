@@ -24,7 +24,7 @@ public sealed class HonkUncachedComponentLookupInTickLoopAnalyzer : DiagnosticAn
         title: "Per-tick component lookup could use a cached EntityQuery",
         messageFormat: "{0}<{1}> runs a dictionary lookup every tick inside an Update query loop; cache a GetEntityQuery<{1}>() resolver in a field and use it here",
         category: "Honk.Perf",
-        defaultSeverity: DiagnosticSeverity.Info,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "A per-tick TryComp/HasComp/Comp in an Update enumerator loop does a hashtable lookup per entity per tick; a cached EntityQuery<T> resolver is the SS14-idiomatic faster path.");
 
