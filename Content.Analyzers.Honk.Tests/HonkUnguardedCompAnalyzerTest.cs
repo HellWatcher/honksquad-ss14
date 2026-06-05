@@ -16,9 +16,19 @@ public sealed class HonkUnguardedCompAnalyzerTest
             public interface IComponent { }
             public readonly struct EntityUid { }
 
+            public sealed class MetaDataComponent : IComponent { }
+            public sealed class TransformComponent : IComponent { }
+
+            public interface IEntityManager
+            {
+                T GetComponent<T>(EntityUid uid) where T : IComponent;
+            }
+
             public abstract class EntitySystem
             {
+                protected IEntityManager EntityManager => default!;
                 protected T Comp<T>(EntityUid uid) where T : IComponent => default!;
+                protected T GetComponent<T>(EntityUid uid) where T : IComponent => default!;
                 protected bool HasComp<T>(EntityUid uid) where T : IComponent => false;
                 protected bool TryComp<T>(EntityUid uid, out T? comp) where T : IComponent
                 { comp = default; return false; }
@@ -29,6 +39,7 @@ public sealed class HonkUnguardedCompAnalyzerTest
             using Robust.Shared.GameObjects;
             public sealed class TargetComp : IComponent { }
             public sealed class OtherComp : IComponent { }
+            public sealed class FooComponent : IComponent { }
             public sealed class SomeEvent
             {
                 public EntityUid Target;
@@ -114,7 +125,7 @@ public sealed class HonkUnguardedCompAnalyzerTest
     }
 
     [Test]
-    public async Task CompOnLocalUid_DoesNotReport()
+    public async Task CompOnLocalUid_Reports()
     {
         const string code = """
             using Robust.Shared.GameObjects;
@@ -125,7 +136,76 @@ public sealed class HonkUnguardedCompAnalyzerTest
                 public void OnIt(SomeEvent args)
                 {
                     var local = args.Target;
-                    var c = Comp<TargetComp>(local);
+                    var c = Comp<FooComponent>(local);
+                }
+            }
+            """;
+
+        await Verify(code, ForkPath,
+            new DiagnosticResult("HONK0011", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
+                .WithSpan(ForkPath, 9, 17, 9, 42)
+                .WithArguments("FooComponent", "local"));
+    }
+
+    [Test]
+    public async Task CompOnGuardedLocalUid_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Fork.Stubs;
+
+            public sealed class Sys : EntitySystem
+            {
+                public void OnIt(SomeEvent args)
+                {
+                    var local = args.Target;
+                    if (!HasComp<FooComponent>(local))
+                        return;
+                    var c = Comp<FooComponent>(local);
+                }
+            }
+            """;
+
+        await Verify(code, ForkPath);
+    }
+
+    [Test]
+    public async Task GetComponentOnLocalUid_Reports()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Fork.Stubs;
+
+            public sealed class Sys : EntitySystem
+            {
+                public void OnIt(SomeEvent args)
+                {
+                    var local = args.Target;
+                    var c = EntityManager.GetComponent<FooComponent>(local);
+                }
+            }
+            """;
+
+        await Verify(code, ForkPath,
+            new DiagnosticResult("HONK0011", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
+                .WithSpan(ForkPath, 9, 17, 9, 64)
+                .WithArguments("FooComponent", "local"));
+    }
+
+    [Test]
+    public async Task CompOnWhitelistedType_DoesNotReport()
+    {
+        const string code = """
+            using Robust.Shared.GameObjects;
+            using Fork.Stubs;
+
+            public sealed class Sys : EntitySystem
+            {
+                public void OnIt(SomeEvent args)
+                {
+                    var local = args.Target;
+                    var meta = Comp<MetaDataComponent>(local);
+                    var xform = Comp<TransformComponent>(local);
                 }
             }
             """;

@@ -9,11 +9,13 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Content.Analyzers.Honk;
 
 /// <summary>
-/// HONK0011: <c>Comp&lt;T&gt;(args.Target)</c> / <c>Comp&lt;T&gt;(args.User)</c>
-/// / <c>Comp&lt;T&gt;(args.OtherEntity)</c> in an <see cref="EntitySystem"/>
-/// handler with no preceding <c>HasComp&lt;T&gt;</c> / <c>TryComp&lt;T&gt;</c>
-/// guard in the same method body. <c>Comp&lt;T&gt;</c> throws on miss;
-/// server-side that kills the handler for the rest of the tick.
+/// HONK0011: <c>Comp&lt;T&gt;(receiver)</c> / <c>GetComponent&lt;T&gt;(receiver)</c>
+/// for any receiver expression in an <see cref="EntitySystem"/> handler with no
+/// preceding <c>HasComp&lt;T&gt;</c> / <c>TryComp&lt;T&gt;</c> guard in the same
+/// method body. <c>Comp&lt;T&gt;</c> / <c>GetComponent&lt;T&gt;</c> throws on
+/// miss; server-side that kills the handler for the rest of the tick.
+/// Type arguments that always exist (<c>MetaDataComponent</c>,
+/// <c>TransformComponent</c>) are whitelisted and never reported.
 /// Scoped to fork files (path contains <c>/RussStation/</c> or ends in
 /// <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
@@ -22,12 +24,12 @@ public sealed class HonkUnguardedCompAnalyzer : DiagnosticAnalyzer
 {
     private static readonly DiagnosticDescriptor Descriptor = new(
         id: "HONK0011",
-        title: "Unguarded Comp<T>() on args.*",
+        title: "Unguarded Comp<T>()/GetComponent<T>()",
         messageFormat: "Comp<{0}>({1}) has no HasComp<{0}>/TryComp<{0}> guard in the enclosing method; a missing component throws mid-tick",
         category: "Honk.EntitySystem",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "Comp<T> throws when the component is absent. On args.Target / args.User / args.OtherEntity the absence is routine, and the throw wipes out the rest of the handler. Pair with HasComp<T> or TryComp<T> first.");
+        description: "Comp<T> / GetComponent<T> throw when the component is absent, and the throw wipes out the rest of the handler. For any receiver whose component is not guaranteed present, pair with HasComp<T> or TryComp<T> first. MetaDataComponent and TransformComponent always exist and are whitelisted.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(Descriptor);
@@ -47,15 +49,21 @@ public sealed class HonkUnguardedCompAnalyzer : DiagnosticAnalyzer
             return;
 
         var invokedName = GetGenericName(invocation);
-        if (invokedName is null || invokedName.Identifier.ValueText != "Comp")
+        if (invokedName is null)
+            return;
+
+        var name = invokedName.Identifier.ValueText;
+        if (name != "Comp" && name != "GetComponent")
             return;
 
         if (invocation.ArgumentList.Arguments.Count < 1)
             return;
 
-        var uidArg = invocation.ArgumentList.Arguments[0].Expression;
-        if (!IsArgsMemberAccess(uidArg, out var uidText))
+        if (invokedName.TypeArgumentList.Arguments.Count == 0)
             return;
+
+        var uidArg = invocation.ArgumentList.Arguments[0].Expression;
+        var uidText = GetReceiverText(uidArg);
 
         var containingType = context.ContainingSymbol?.ContainingType;
         if (containingType is null || !InheritsEntitySystem(containingType))
@@ -66,6 +74,9 @@ public sealed class HonkUnguardedCompAnalyzer : DiagnosticAnalyzer
             return;
 
         var typeArgText = invokedName.TypeArgumentList.Arguments[0].ToString();
+        if (typeArgText is "MetaDataComponent" or "TransformComponent")
+            return;
+
         if (HasGuardCall(methodBody, typeArgText))
             return;
 
@@ -91,21 +102,21 @@ public sealed class HonkUnguardedCompAnalyzer : DiagnosticAnalyzer
         };
     }
 
-    private static bool IsArgsMemberAccess(ExpressionSyntax expr, out string text)
+    private static string GetReceiverText(ExpressionSyntax expr)
     {
-        text = string.Empty;
-        if (expr is not MemberAccessExpressionSyntax member)
-            return false;
+        // Keep the args.Target / args.User / args.OtherEntity wording verbatim so
+        // existing messages still read naturally; otherwise fall back to a short
+        // textual form of whatever the receiver expression is.
+        if (expr is MemberAccessExpressionSyntax member &&
+            member.Expression is IdentifierNameSyntax root &&
+            root.Identifier.ValueText == "args")
+        {
+            var memberName = member.Name.Identifier.ValueText;
+            if (memberName is "Target" or "User" or "OtherEntity")
+                return $"args.{memberName}";
+        }
 
-        if (member.Expression is not IdentifierNameSyntax root || root.Identifier.ValueText != "args")
-            return false;
-
-        var name = member.Name.Identifier.ValueText;
-        if (name != "Target" && name != "User" && name != "OtherEntity")
-            return false;
-
-        text = $"args.{name}";
-        return true;
+        return expr.ToString().Trim();
     }
 
     private static bool InheritsEntitySystem(INamedTypeSymbol type)
