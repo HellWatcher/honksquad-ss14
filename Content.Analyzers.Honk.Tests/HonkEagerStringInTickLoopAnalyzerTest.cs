@@ -61,7 +61,7 @@ public sealed class HonkEagerStringInTickLoopAnalyzerTest
             """;
 
         await Verify(code, "Content.Server/RussStation/Foo/FooSystem.cs",
-            new DiagnosticResult("HONK0027", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0027", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Server/RussStation/Foo/FooSystem.cs", 11, 13, 11, 31)
                 .WithArguments("Loc.GetString"));
     }
@@ -156,7 +156,7 @@ public sealed class HonkEagerStringInTickLoopAnalyzerTest
             """;
 
         await Verify(code, "Content.Server/Foo/FooSystem.Honk.cs",
-            new DiagnosticResult("HONK0027", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0027", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Server/Foo/FooSystem.Honk.cs", 11, 13, 11, 31)
                 .WithArguments("Loc.GetString"));
     }

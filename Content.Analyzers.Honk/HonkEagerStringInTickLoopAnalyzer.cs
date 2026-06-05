@@ -26,7 +26,7 @@ public sealed class HonkEagerStringInTickLoopAnalyzer : DiagnosticAnalyzer
         title: "Eager string/popup inside a per-tick query loop",
         messageFormat: "{0} runs every tick for every matched entity inside an Update query loop; hoist it out or guard it",
         category: "Honk.Perf",
-        defaultSeverity: DiagnosticSeverity.Info,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "Loc.GetString and popup calls inside a while (query.MoveNext()) loop in an Update override allocate (string formatting plus boxed tuple args) per entity per tick, producing steady GC pressure. Hoist the call out of the loop or guard it behind a condition that is rarely true.");
 
