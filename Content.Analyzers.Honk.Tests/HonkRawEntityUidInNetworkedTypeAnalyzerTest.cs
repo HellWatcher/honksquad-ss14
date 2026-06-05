@@ -25,6 +25,9 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
         }
         namespace Robust.Shared.GameObjects
         {
+            // EntityEventArgs is itself [NetSerializable] in Robust, so a local
+            // event whose own type is NOT marked must still go unflagged.
+            [Robust.Shared.Serialization.NetSerializable]
             public abstract class EntityEventArgs { }
             public abstract class BoundUserInterfaceState { }
         }

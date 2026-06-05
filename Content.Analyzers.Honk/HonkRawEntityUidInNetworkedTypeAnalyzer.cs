@@ -77,19 +77,22 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzer : DiagnosticAnalyzer
         if (type is null)
             return false;
 
+        // [NetSerializable] must be declared on the type ITSELF; it is not
+        // inherited for serialization. Walking base types for the attribute
+        // would wrongly flag every local event, because Robust's EntityEventArgs
+        // base is itself [NetSerializable] — yet a raw EntityUid in a local
+        // (RaiseLocalEvent) event is correct and must not be reported.
+        foreach (var attr in type.GetAttributes())
+        {
+            if (attr.AttributeClass?.Name == "NetSerializableAttribute")
+                return true;
+        }
+
+        // Otherwise it only counts if it derives a base that is inherently
+        // networked (BUI messages/states and DoAfter events always cross the
+        // wire). A bare EntityEventArgs does not qualify.
         for (var current = type; current is not null; current = current.BaseType)
         {
-            foreach (var attr in current.GetAttributes())
-            {
-                if (attr.AttributeClass?.Name == "NetSerializableAttribute")
-                    return true;
-            }
-
-            // Note: a bare EntityEventArgs base is deliberately NOT treated as
-            // network-serialized. Most events are local (RaiseLocalEvent) and an
-            // EntityUid in those is correct. Only events explicitly marked
-            // [NetSerializable] (handled above), BUI messages/states, and DoAfter
-            // events actually cross the wire.
             switch (current.Name)
             {
                 case "BoundUserInterfaceMessage":
