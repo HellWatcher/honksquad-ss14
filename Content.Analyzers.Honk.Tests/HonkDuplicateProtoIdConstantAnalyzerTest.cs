@@ -71,10 +71,10 @@ public sealed class HonkDuplicateProtoIdConstantAnalyzerTest
 
         await Verify(
             new[] { (pathA, fileA), (pathB, fileB) },
-            new DiagnosticResult("HONK0026", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0026", DiagnosticSeverity.Warning)
                 .WithSpan(pathA, 6, 52, 6, 58)
                 .WithArguments("StackPrototype", "Credit", "2"),
-            new DiagnosticResult("HONK0026", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0026", DiagnosticSeverity.Warning)
                 .WithSpan(pathB, 6, 52, 6, 58)
                 .WithArguments("StackPrototype", "Credit", "2"));
     }
@@ -183,10 +183,10 @@ public sealed class HonkDuplicateProtoIdConstantAnalyzerTest
 
         await Verify(
             new[] { (pathA, fileA), (pathB, fileB) },
-            new DiagnosticResult("HONK0026", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0026", DiagnosticSeverity.Warning)
                 .WithSpan(pathA, 6, 52, 6, 63)
                 .WithArguments("StackPrototype", "Credit", "2"),
-            new DiagnosticResult("HONK0026", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0026", DiagnosticSeverity.Warning)
                 .WithSpan(pathB, 6, 52, 6, 63)
                 .WithArguments("StackPrototype", "Credit", "2"));
     }

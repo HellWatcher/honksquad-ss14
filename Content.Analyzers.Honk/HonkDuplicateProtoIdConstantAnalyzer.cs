@@ -26,7 +26,7 @@ public sealed class HonkDuplicateProtoIdConstantAnalyzer : DiagnosticAnalyzer
         title: "Duplicated ProtoId<T> constant across fork files",
         messageFormat: "ProtoId<{0}> = \"{1}\" is declared in {2} fork files; extract one shared constant to avoid drift",
         category: "Honk.Drift",
-        defaultSeverity: DiagnosticSeverity.Info,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "When the same typed prototype id literal is redeclared in multiple fork files, an upstream id change updates only some copies and the rest drift to a dangling reference. Extract a single shared constant.",
         customTags: new[] { WellKnownDiagnosticTags.CompilationEnd });
