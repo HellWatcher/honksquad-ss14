@@ -27,7 +27,6 @@ public sealed class SkillchipStationOccupantManager : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<SkillchipStationComponent, ComponentInit>(OnInit);
         SubscribeLocalEvent<SkillchipStationComponent, CanDropTargetEvent>(OnCanDragDropOn);
         SubscribeLocalEvent<SkillchipStationComponent, DragDropTargetEvent>(OnDragDropOn);
         SubscribeLocalEvent<SkillchipStationComponent, SkillchipStationEnterDoAfterEvent>(OnEnterDoAfter);
@@ -35,7 +34,13 @@ public sealed class SkillchipStationOccupantManager : EntitySystem
         SubscribeLocalEvent<SkillchipStationComponent, DestructionEventArgs>(OnDestroyed);
     }
 
-    private void OnInit(EntityUid uid, SkillchipStationComponent comp, ComponentInit args)
+    /// <summary>
+    /// Ensures the body container exists and seeds the occupied/open appearance.
+    /// Driven from <see cref="SkillchipStationSystem"/>'s ComponentInit, which
+    /// holds the component's single subscription to that event (Robust rejects a
+    /// second subscriber for the same component/event pair).
+    /// </summary>
+    public void SetupOccupantContainer(EntityUid uid)
     {
         _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.BodyContainerId);
         UpdateAppearance(uid);

@@ -43,6 +43,7 @@ public sealed class SkillchipStationSystem : EntitySystem
     private void OnInit(EntityUid uid, SkillchipStationComponent comp, ComponentInit args)
     {
         _containers.EnsureContainer<ContainerSlot>(uid, SkillchipStationComponent.ChipSlotId);
+        _occupant.SetupOccupantContainer(uid);
     }
 
     // ── Chip-tray interaction ─────────────────────────────────────────────────
