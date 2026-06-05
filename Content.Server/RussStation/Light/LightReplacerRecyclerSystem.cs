@@ -30,6 +30,29 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
     // deliberately excluded because they're rarer or have higher-value refine paths elsewhere.
     private static readonly ProtoId<TagPrototype> GlassShardTag = "GlassShard";
 
+    // How the recycler intends to source a replacement bulb for a fixture, in preference order.
+    private enum BulbReplacementStrategy
+    {
+        // Nothing available: no stored bulb and not enough points to print.
+        None,
+
+        // A stored bulb whose prototype exactly matches the bulb being replaced.
+        Exact,
+
+        // A stored bulb of the right BulbType but a different prototype.
+        TypeFallback,
+
+        // A freshly printed bulb funded by accumulated recycle points.
+        Print,
+    }
+
+    // The concrete replacement chosen by SelectReplacement. Exactly one payload is populated:
+    // StorageBulb for Exact/TypeFallback, PrintProto for Print, neither for None.
+    private readonly record struct BulbReplacementPlan(
+        BulbReplacementStrategy Strategy,
+        EntityUid? StorageBulb,
+        string? PrintProto);
+
     public override void Initialize()
     {
         base.Initialize();
@@ -69,9 +92,9 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
         args.Success = RunRecycleReplace(uid, recycler, replacer, args.FixtureUid, fixture, args.FixtureBulbUid, args.UserUid);
     }
 
-    // Flow: eat the broken bulb for a point, then pick a replacement, preferring an exact prototype
-    // match from storage, then any stored bulb of the same BulbType, then a printed copy funded by
-    // accumulated points (including the point just earned).
+    // Flow: eat the broken bulb for a point, pick a replacement strategy (storage exact-match, then
+    // same-type fallback, then a printed copy funded by the points including the one just earned),
+    // then execute it. Strategy selection lives in SelectReplacement; this method just runs it.
     private bool RunRecycleReplace(
         EntityUid replacerUid,
         LightReplacerRecyclerComponent recycler,
@@ -84,14 +107,11 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
         var brokenProto = brokenBulbUid is { } bUid
             ? MetaData(bUid).EntityPrototype?.ID
             : null;
-
-        var storageBulb = FindStorageBulb(replacer, fixture.BulbType, brokenProto);
         var projectedPoints = recycler.RecyclePoints + (brokenBulbUid != null ? recycler.PointsPerRecycle : 0);
-        string? printProto = null;
-        if (storageBulb == null && projectedPoints >= recycler.PrintCost)
-            printProto = PickPrintPrototype(recycler, brokenProto, fixture.BulbType);
 
-        if (storageBulb == null && printProto == null)
+        var plan = SelectReplacement(recycler, replacer, fixture, brokenProto, projectedPoints);
+
+        if (plan.Strategy == BulbReplacementStrategy.None)
         {
             if (userUid != null)
             {
@@ -105,19 +125,18 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
             RecycleBulb(replacerUid, recycler, broken, userUid);
 
         EntityUid replacement;
-        var printed = false;
-        if (storageBulb is { } stored)
-        {
-            if (!_container.Remove(stored, replacer.InsertedBulbs))
-                return false;
-            replacement = stored;
-        }
-        else
+        var printed = plan.Strategy == BulbReplacementStrategy.Print;
+        if (printed)
         {
             recycler.RecyclePoints -= recycler.PrintCost;
             Dirty(replacerUid, recycler);
-            replacement = Spawn(printProto!, Transform(replacerUid).Coordinates);
-            printed = true;
+            replacement = Spawn(plan.PrintProto!, Transform(replacerUid).Coordinates);
+        }
+        else
+        {
+            if (!_container.Remove(plan.StorageBulb!.Value, replacer.InsertedBulbs))
+                return false;
+            replacement = plan.StorageBulb.Value;
         }
 
         var replaced = _poweredLight.ReplaceBulb(fixtureUid, replacement, fixture);
@@ -131,7 +150,31 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
         return replaced;
     }
 
-    private EntityUid? FindStorageBulb(LightReplacerComponent replacer, LightBulbType bulbType, string? preferredProto)
+    // Picks the replacement source without mutating anything: storage first (exact prototype match
+    // beats same-type fallback), then a fundable print, otherwise None.
+    private BulbReplacementPlan SelectReplacement(
+        LightReplacerRecyclerComponent recycler,
+        LightReplacerComponent replacer,
+        PoweredLightComponent fixture,
+        string? brokenProto,
+        int projectedPoints)
+    {
+        if (FindStorageBulb(replacer, fixture.BulbType, brokenProto) is { } storage)
+        {
+            var strategy = storage.Exact ? BulbReplacementStrategy.Exact : BulbReplacementStrategy.TypeFallback;
+            return new BulbReplacementPlan(strategy, storage.Bulb, null);
+        }
+
+        if (projectedPoints >= recycler.PrintCost
+            && PickPrintPrototype(recycler, brokenProto, fixture.BulbType) is { } printProto)
+        {
+            return new BulbReplacementPlan(BulbReplacementStrategy.Print, null, printProto);
+        }
+
+        return new BulbReplacementPlan(BulbReplacementStrategy.None, null, null);
+    }
+
+    private (EntityUid Bulb, bool Exact)? FindStorageBulb(LightReplacerComponent replacer, LightBulbType bulbType, string? preferredProto)
     {
         EntityUid? sameTypeFallback = null;
         foreach (var ent in replacer.InsertedBulbs.ContainedEntities)
@@ -139,15 +182,15 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
             if (!TryComp<LightBulbComponent>(ent, out var bulb) || bulb.Type != bulbType)
                 continue;
             if (preferredProto != null && MetaData(ent).EntityPrototype?.ID == preferredProto)
-                return ent;
+                return (ent, true);
             sameTypeFallback ??= ent;
         }
-        return sameTypeFallback;
+        return sameTypeFallback is { } fb ? (fb, false) : null;
     }
 
     private string? PickPrintPrototype(LightReplacerRecyclerComponent recycler, string? preferredProto, LightBulbType bulbType)
     {
-        if (preferredProto != null && recycler.PrintablePrototypes.Any(p => p.Id == preferredProto))
+        if (preferredProto != null && IsPrintable(recycler, preferredProto))
             return preferredProto;
 
         foreach (var protoId in recycler.PrintablePrototypes)
@@ -205,10 +248,7 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
     {
         var user = args.Actor;
 
-        if (!recycler.PrintablePrototypes.Contains(args.PrototypeId))
-            return;
-
-        if (!_protoManager.HasIndex<EntityPrototype>(args.PrototypeId))
+        if (!IsPrintable(recycler, args.PrototypeId))
             return;
 
         if (recycler.RecyclePoints < recycler.PrintCost)
@@ -255,24 +295,35 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
         if (!TryComp<LightReplacerComponent>(uid, out var replacer))
             return;
 
-        EntityUid? target = null;
+        // Extract pulls any stored bulb matching the requested prototype. Unlike printing, it is
+        // intentionally not gated on PrintablePrototypes: players can manually insert bulbs the
+        // recycler can't print, and must still be able to take those back out.
+        if (FindStoredBulb(replacer, args.PrototypeId) is not { } target)
+            return;
+
+        if (!_container.Remove(target, replacer.InsertedBulbs, destination: Transform(user).Coordinates))
+            return;
+
+        _hands.PickupOrDrop(user, target);
+        PushState(uid, recycler);
+    }
+
+    // Shared validator for the print paths (radial print + exact-match print fallback): the id must
+    // be one the recycler advertises and must resolve to a real entity prototype.
+    private bool IsPrintable(LightReplacerRecyclerComponent recycler, EntProtoId protoId)
+    {
+        return recycler.PrintablePrototypes.Contains(protoId)
+            && _protoManager.HasIndex<EntityPrototype>(protoId);
+    }
+
+    private EntityUid? FindStoredBulb(LightReplacerComponent replacer, EntProtoId protoId)
+    {
         foreach (var ent in replacer.InsertedBulbs.ContainedEntities)
         {
-            if (MetaData(ent).EntityPrototype is { } proto && proto.ID == args.PrototypeId)
-            {
-                target = ent;
-                break;
-            }
+            if (MetaData(ent).EntityPrototype is { } proto && proto.ID == protoId)
+                return ent;
         }
-
-        if (target == null)
-            return;
-
-        if (!_container.Remove(target.Value, replacer.InsertedBulbs, destination: Transform(user).Coordinates))
-            return;
-
-        _hands.PickupOrDrop(user, target.Value);
-        PushState(uid, recycler);
+        return null;
     }
 
     private void OnUIOpened(EntityUid uid, LightReplacerRecyclerComponent recycler, BoundUIOpenedEvent args)
@@ -288,6 +339,7 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
         if (args.Container.Owner != uid)
             return;
 
+        recycler.CachedInventory = null;
         PushState(uid, recycler);
     }
 
@@ -310,6 +362,23 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
         if (!TryComp<LightReplacerComponent>(uid, out var replacer))
             return;
 
+        var state = new LightReplacerRecyclerBoundUserInterfaceState(
+            recycler.RecyclePoints,
+            recycler.PrintCost,
+            recycler.PointsPerRecycle,
+            GetStoredInventory(recycler, replacer),
+            recycler.PrintablePrototypes.ToList());
+
+        _ui.SetUiState(uid, LightReplacerRecyclerUiKey.Key, state);
+    }
+
+    // Returns the per-prototype stored-bulb summary, rebuilding it only when the cache has been
+    // invalidated by a storage container change (see OnContainerChanged).
+    private List<LightReplacerStoredBulb> GetStoredInventory(LightReplacerRecyclerComponent recycler, LightReplacerComponent replacer)
+    {
+        if (recycler.CachedInventory is { } cached)
+            return cached;
+
         var counts = new Dictionary<string, int>();
         foreach (var ent in replacer.InsertedBulbs.ContainedEntities)
         {
@@ -324,14 +393,8 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
             .OrderBy(e => e.ProtoId.Id)
             .ToList();
 
-        var state = new LightReplacerRecyclerBoundUserInterfaceState(
-            recycler.RecyclePoints,
-            recycler.PrintCost,
-            recycler.PointsPerRecycle,
-            stored,
-            recycler.PrintablePrototypes.ToList());
-
-        _ui.SetUiState(uid, LightReplacerRecyclerUiKey.Key, state);
+        recycler.CachedInventory = stored;
+        return stored;
     }
 
     private void OnExamined(EntityUid uid, LightReplacerRecyclerComponent recycler, ExaminedEvent args)
