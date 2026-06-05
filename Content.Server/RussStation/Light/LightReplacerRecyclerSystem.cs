@@ -339,7 +339,8 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
         if (args.Container.Owner != uid)
             return;
 
-        recycler.CachedInventory = null;
+        if (TryComp<LightReplacerRecyclerCacheComponent>(uid, out var cache))
+            cache.StoredBulbs = null;
         PushState(uid, recycler);
     }
 
@@ -366,17 +367,19 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
             recycler.RecyclePoints,
             recycler.PrintCost,
             recycler.PointsPerRecycle,
-            GetStoredInventory(recycler, replacer),
+            GetStoredInventory(uid, replacer),
             recycler.PrintablePrototypes.ToList());
 
         _ui.SetUiState(uid, LightReplacerRecyclerUiKey.Key, state);
     }
 
     // Returns the per-prototype stored-bulb summary, rebuilding it only when the cache has been
-    // invalidated by a storage container change (see OnContainerChanged).
-    private List<LightReplacerStoredBulb> GetStoredInventory(LightReplacerRecyclerComponent recycler, LightReplacerComponent replacer)
+    // invalidated by a storage container change (see OnContainerChanged). The cache lives on a
+    // server-only component so it never has to be networked.
+    private List<LightReplacerStoredBulb> GetStoredInventory(EntityUid uid, LightReplacerComponent replacer)
     {
-        if (recycler.CachedInventory is { } cached)
+        var cache = EnsureComp<LightReplacerRecyclerCacheComponent>(uid);
+        if (cache.StoredBulbs is { } cached)
             return cached;
 
         var counts = new Dictionary<string, int>();
@@ -393,7 +396,7 @@ public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSys
             .OrderBy(e => e.ProtoId.Id)
             .ToList();
 
-        recycler.CachedInventory = stored;
+        cache.StoredBulbs = stored;
         return stored;
     }
 

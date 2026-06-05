@@ -69,12 +69,4 @@ public sealed partial class LightReplacerRecyclerComponent : Component
         "ExteriorLightTube",
         "SodiumLightTube",
     };
-
-    /// <summary>
-    ///     Server-side cache of the per-prototype stored-bulb counts shown in the UI. Rebuilt
-    ///     lazily on the next state push after the storage container changes, so repeated pushes
-    ///     (e.g. UI re-opens) don't re-walk the whole inventory. Never networked or serialized.
-    /// </summary>
-    [ViewVariables]
-    public List<LightReplacerStoredBulb>? CachedInventory;
 }
