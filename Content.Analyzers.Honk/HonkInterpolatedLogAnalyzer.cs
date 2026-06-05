@@ -25,7 +25,7 @@ public sealed class HonkInterpolatedLogAnalyzer : DiagnosticAnalyzer
         title: "Interpolated string in a log call",
         messageFormat: "Log.{0} builds an interpolated/concatenated string before the level check; it allocates even when the level is disabled",
         category: "Honk.Logging",
-        defaultSeverity: DiagnosticSeverity.Info,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "ISawmill/Log levels are filtered at call time; building the message string eagerly wastes allocations on disabled levels.");
 

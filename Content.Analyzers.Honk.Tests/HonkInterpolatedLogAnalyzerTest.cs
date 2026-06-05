@@ -68,7 +68,7 @@ public sealed class HonkInterpolatedLogAnalyzerTest
             """;
 
         await Verify(code, "Content.Server/RussStation/Foo/Bar.cs",
-            new DiagnosticResult("HONK0028", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0028", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Server/RussStation/Foo/Bar.cs", 7, 9, 7, 29)
                 .WithArguments("Warning"));
     }
@@ -109,7 +109,7 @@ public sealed class HonkInterpolatedLogAnalyzerTest
             """;
 
         await Verify(code, "Content.Server/RussStation/Foo/Bar.cs",
-            new DiagnosticResult("HONK0028", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0028", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Server/RussStation/Foo/Bar.cs", 9, 9, 9, 32)
                 .WithArguments("Debug"));
     }
@@ -130,7 +130,7 @@ public sealed class HonkInterpolatedLogAnalyzerTest
             """;
 
         await Verify(code, "Content.Server/RussStation/Foo/Bar.cs",
-            new DiagnosticResult("HONK0028", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0028", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Server/RussStation/Foo/Bar.cs", 7, 9, 7, 27)
                 .WithArguments("Error"));
     }
@@ -187,7 +187,7 @@ public sealed class HonkInterpolatedLogAnalyzerTest
             """;
 
         await Verify(code, "Content.Server/Foo/Bar.Honk.cs",
-            new DiagnosticResult("HONK0028", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0028", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Server/Foo/Bar.Honk.cs", 7, 9, 7, 29)
                 .WithArguments("Warning"));
     }
