@@ -55,7 +55,7 @@ public sealed class HonkTimerSpawnWithoutTokenAnalyzerTest
             """;
 
         await Verify(code, "Content.Client/RussStation/Foo/FooSystem.cs",
-            new DiagnosticResult("HONK0031", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0031", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Client/RussStation/Foo/FooSystem.cs", 7, 9, 7, 36));
     }
 
@@ -133,7 +133,7 @@ public sealed class HonkTimerSpawnWithoutTokenAnalyzerTest
             """;
 
         await Verify(code, "Content.Client/Foo/FooSystem.Honk.cs",
-            new DiagnosticResult("HONK0031", DiagnosticSeverity.Info)
+            new DiagnosticResult("HONK0031", DiagnosticSeverity.Warning)
                 .WithSpan("Content.Client/Foo/FooSystem.Honk.cs", 7, 9, 7, 36));
     }
 }

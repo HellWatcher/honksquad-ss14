@@ -24,7 +24,7 @@ public sealed class HonkTimerSpawnWithoutTokenAnalyzer : DiagnosticAnalyzer
         title: "Timer.Spawn without a CancellationToken",
         messageFormat: "Timer.Spawn has no CancellationToken; a stale or overlapping callback can fire after the entity/state has changed",
         category: "Honk.Lifecycle",
-        defaultSeverity: DiagnosticSeverity.Info,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "Fire-and-forget Timer.Spawn callbacks capturing an entity run after the delay regardless of intervening state changes; passing a CancellationToken lets the system cancel them.");
 
