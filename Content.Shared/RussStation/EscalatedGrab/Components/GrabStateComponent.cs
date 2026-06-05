@@ -115,4 +115,17 @@ public sealed partial class GrabStateComponent : Component
         0.5f, // Aggressive
         0.3f, // Choke
     ];
+
+    /// <summary>
+    /// Fluent locale-key prefixes for the escalation popup at each stage, or <c>null</c> for
+    /// stages with no escalation popup. The puller sees <c>"{key}-puller"</c> and everyone else
+    /// (including the target) sees <c>"{key}-others"</c>.
+    /// </summary>
+    public static readonly string?[] StagePopupKeys =
+    [
+        null,                        // Pull (no escalation popup)
+        "escalated-grab-grab",       // Grab
+        "escalated-grab-aggressive", // Aggressive
+        "escalated-grab-choke",      // Choke
+    ];
 }
