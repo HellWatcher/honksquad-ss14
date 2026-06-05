@@ -1,3 +1,7 @@
+# Despite the name, this validates BOTH:
+#   - YAML prototypes (/Prototypes, /EnginePrototypes)
+#   - C# static prototype-ID fields (EntProtoId/ProtoId) via ValidateStaticFields
+# So C# changes to prototype-ID constants ARE gated by this check.
 name: YAML Linter
 
 on:
@@ -31,5 +35,5 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-      - name: Run Linter
+      - name: Validate YAML prototypes + C# static prototype-ID fields
         run: dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
