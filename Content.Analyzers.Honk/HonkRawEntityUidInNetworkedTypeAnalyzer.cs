@@ -9,7 +9,7 @@ namespace Content.Analyzers.Honk;
 
 /// <summary>
 /// HONK0025: A raw <c>EntityUid</c> stored in a network-serialized type (a
-/// <c>[NetSerializable]</c> type, or an event/BUI message/DoAfter event) is the
+/// <c>[NetSerializable]</c> type, a BUI message/state, or a DoAfter event) is the
 /// sender's local entity id. It does not survive the client/server boundary and
 /// resolves to the wrong or an invalid entity on the receiving side; the portable
 /// form is <c>NetEntity</c>. Component-state auto-networking is exempt because the
@@ -85,9 +85,13 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzer : DiagnosticAnalyzer
                     return true;
             }
 
+            // Note: a bare EntityEventArgs base is deliberately NOT treated as
+            // network-serialized. Most events are local (RaiseLocalEvent) and an
+            // EntityUid in those is correct. Only events explicitly marked
+            // [NetSerializable] (handled above), BUI messages/states, and DoAfter
+            // events actually cross the wire.
             switch (current.Name)
             {
-                case "EntityEventArgs":
                 case "BoundUserInterfaceMessage":
                 case "BoundUserInterfaceState":
                 case "DoAfterEvent":

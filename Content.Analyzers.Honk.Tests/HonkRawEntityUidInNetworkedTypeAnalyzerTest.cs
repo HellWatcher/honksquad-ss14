@@ -26,6 +26,7 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
         namespace Robust.Shared.GameObjects
         {
             public abstract class EntityEventArgs { }
+            public abstract class BoundUserInterfaceState { }
         }
         namespace Robust.Shared.Analyzers
         {
@@ -68,8 +69,10 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
     }
 
     [Test]
-    public async Task EntityEventArgs_EntityUidField_ForkFile_Reports()
+    public async Task LocalEntityEventArgs_DoesNotReport()
     {
+        // A bare EntityEventArgs is a local event (RaiseLocalEvent); a raw
+        // EntityUid is correct there and must NOT be flagged.
         const string code = """
             using Robust.Shared.GameObjects;
 
@@ -79,10 +82,7 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
             }
             """;
 
-        await Verify(code, "Content.Shared/RussStation/Foo/FooEvent.cs",
-            new DiagnosticResult("HONK0025", DiagnosticSeverity.Warning)
-                .WithSpan("Content.Shared/RussStation/Foo/FooEvent.cs", 5, 22, 5, 28)
-                .WithArguments("Target"));
+        await Verify(code, "Content.Shared/RussStation/Foo/FooEvent.cs");
     }
 
     [Test]
@@ -91,15 +91,15 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
         const string code = """
             using Robust.Shared.GameObjects;
 
-            public sealed class FooEvent : EntityEventArgs
+            public sealed class FooState : BoundUserInterfaceState
             {
                 public EntityUid? Target;
             }
             """;
 
-        await Verify(code, "Content.Shared/RussStation/Foo/FooEvent.cs",
+        await Verify(code, "Content.Shared/RussStation/Foo/FooState.cs",
             new DiagnosticResult("HONK0025", DiagnosticSeverity.Warning)
-                .WithSpan("Content.Shared/RussStation/Foo/FooEvent.cs", 5, 23, 5, 29)
+                .WithSpan("Content.Shared/RussStation/Foo/FooState.cs", 5, 23, 5, 29)
                 .WithArguments("Target"));
     }
 
@@ -110,15 +110,15 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
             using System.Collections.Generic;
             using Robust.Shared.GameObjects;
 
-            public sealed class FooEvent : EntityEventArgs
+            public sealed class FooState : BoundUserInterfaceState
             {
                 public List<EntityUid> Targets;
             }
             """;
 
-        await Verify(code, "Content.Shared/RussStation/Foo/FooEvent.cs",
+        await Verify(code, "Content.Shared/RussStation/Foo/FooState.cs",
             new DiagnosticResult("HONK0025", DiagnosticSeverity.Warning)
-                .WithSpan("Content.Shared/RussStation/Foo/FooEvent.cs", 6, 28, 6, 35)
+                .WithSpan("Content.Shared/RussStation/Foo/FooState.cs", 6, 28, 6, 35)
                 .WithArguments("Targets"));
     }
 
@@ -128,15 +128,15 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
         const string code = """
             using Robust.Shared.GameObjects;
 
-            public sealed class FooEvent : EntityEventArgs
+            public sealed class FooState : BoundUserInterfaceState
             {
                 public EntityUid[] Targets;
             }
             """;
 
-        await Verify(code, "Content.Shared/RussStation/Foo/FooEvent.cs",
+        await Verify(code, "Content.Shared/RussStation/Foo/FooState.cs",
             new DiagnosticResult("HONK0025", DiagnosticSeverity.Warning)
-                .WithSpan("Content.Shared/RussStation/Foo/FooEvent.cs", 5, 24, 5, 31)
+                .WithSpan("Content.Shared/RussStation/Foo/FooState.cs", 5, 24, 5, 31)
                 .WithArguments("Targets"));
     }
 
@@ -146,15 +146,15 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
         const string code = """
             using Robust.Shared.GameObjects;
 
-            public sealed class FooEvent : EntityEventArgs
+            public sealed class FooState : BoundUserInterfaceState
             {
                 public EntityUid Target { get; set; }
             }
             """;
 
-        await Verify(code, "Content.Shared/RussStation/Foo/FooEvent.cs",
+        await Verify(code, "Content.Shared/RussStation/Foo/FooState.cs",
             new DiagnosticResult("HONK0025", DiagnosticSeverity.Warning)
-                .WithSpan("Content.Shared/RussStation/Foo/FooEvent.cs", 5, 22, 5, 28)
+                .WithSpan("Content.Shared/RussStation/Foo/FooState.cs", 5, 22, 5, 28)
                 .WithArguments("Target"));
     }
 
@@ -214,13 +214,13 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
         const string code = """
             using Robust.Shared.GameObjects;
 
-            public sealed class FooEvent : EntityEventArgs
+            public sealed class FooState : BoundUserInterfaceState
             {
                 public EntityUid Target;
             }
             """;
 
-        await Verify(code, "Content.Shared/Foo/FooEvent.cs");
+        await Verify(code, "Content.Shared/Foo/FooState.cs");
     }
 
     [Test]
@@ -229,15 +229,15 @@ public sealed class HonkRawEntityUidInNetworkedTypeAnalyzerTest
         const string code = """
             using Robust.Shared.GameObjects;
 
-            public sealed class FooEvent : EntityEventArgs
+            public sealed class FooState : BoundUserInterfaceState
             {
                 public EntityUid Target;
             }
             """;
 
-        await Verify(code, "Content.Shared/Foo/FooEvent.Honk.cs",
+        await Verify(code, "Content.Shared/Foo/FooState.Honk.cs",
             new DiagnosticResult("HONK0025", DiagnosticSeverity.Warning)
-                .WithSpan("Content.Shared/Foo/FooEvent.Honk.cs", 5, 22, 5, 28)
+                .WithSpan("Content.Shared/Foo/FooState.Honk.cs", 5, 22, 5, 28)
                 .WithArguments("Target"));
     }
 }
