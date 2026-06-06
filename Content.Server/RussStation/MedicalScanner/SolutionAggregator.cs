@@ -1,7 +1,7 @@
 using System.Linq;
-using Content.Server.Body.Components;
-using Content.Server.Body.Systems;
+using Content.Shared.Body;
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Chemistry.Reagent;

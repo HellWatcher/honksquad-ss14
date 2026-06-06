@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Server.RussStation.MedicalScanner;
+using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
@@ -120,6 +121,28 @@ public sealed class HealthAnalyzerReagentSystemTest
         - !type:ReagentCondition
           reagent: TestSelfDecayReagent
           min: 1
+
+# Mob dummy carrying a real stomach organ so the organ-aggregation path
+# (AddOrganSolutions) has something to walk. Bloodstream is required for
+# SolutionAggregator's mob branch to run at all; the stomach is filled into the
+# body_organs container so BuildState surfaces a stomach group.
+- type: entity
+  id: HealthAnalyzerReagentStomachDummy
+  components:
+  - type: SolutionContainerManager
+  - type: Body
+  - type: Bloodstream
+    bloodlossDamage:
+      types:
+        Bloodloss: 1
+    bloodlossHealDamage:
+      types:
+        Bloodloss: -1
+  - type: EntityTableContainerFill
+    containers:
+      body_organs: !type:AllSelector
+        children:
+        - id: OrganHumanStomach
 ";
 
     private static readonly ProtoId<ReagentPrototype> Bicaridine = "Bicaridine";
@@ -355,6 +378,46 @@ public sealed class HealthAnalyzerReagentSystemTest
 
             var state = system.BuildState(notAMob);
             Assert.That(state.Groups, Is.Empty, "Entities without a bloodstream expose no reagent groups.");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task StomachOrganSurfacesAsGroupWithoutDoseFlags()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var mob = entityManager.SpawnEntity("HealthAnalyzerReagentStomachDummy", mapData.GridCoords);
+
+            var bodyComp = entityManager.GetComponent<BodyComponent>(mob);
+            Assert.That(bodyComp.Organs, Is.Not.Null, "Body container should be initialized.");
+
+            var stomach = bodyComp.Organs!.ContainedEntities
+                .Single(organ => entityManager.HasComponent<StomachComponent>(organ));
+
+            Assert.That(containerSystem.TryGetSolution(stomach, "stomach", out var stomachHandle, out _),
+                "Stomach organ should have its 'stomach' solution from OrganBaseStomach.");
+
+            // 20u Bicaridine would overdose in BLOOD (15u threshold); organ solutions pass
+            // showDoseFlags: false, so the stomach group surfaces it with no OD/UD chrome.
+            containerSystem.TryAddSolution(stomachHandle!.Value, new Solution("Bicaridine", FixedPoint2.New(20)));
+
+            var state = system.BuildState(mob);
+            // A single organ uses the bare label (indexed labels only kick in with 2+ organs).
+            var stomachGroup = state.Groups.Single(g => g.Label == Loc.GetString("health-analyzer-reagent-group-stomach"));
+            var bicaridine = stomachGroup.Reagents.Single(r => r.ReagentId == "Bicaridine");
+
+            Assert.That(bicaridine.Quantity, Is.EqualTo(FixedPoint2.New(20)));
+            Assert.That(bicaridine.Overdose, Is.False, "Organ groups never carry dose flags.");
+            Assert.That(bicaridine.Underdose, Is.False);
         });
 
         await pair.CleanReturnAsync();
