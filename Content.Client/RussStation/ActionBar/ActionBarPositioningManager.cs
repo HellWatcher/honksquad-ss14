@@ -85,8 +85,8 @@ public sealed class ActionBarPositioningManager
         }
         var size = bar.Size;
         var bounds = _floatParent.Size;
-        _positionX = Math.Clamp(_positionX + delta.X, ActionBarConstants.PositionEdgeMargin, MathF.Max(ActionBarConstants.PositionEdgeMargin, bounds.X - size.X - ActionBarConstants.PositionEdgeMargin));
-        _positionY = Math.Clamp(_positionY + delta.Y, ActionBarConstants.PositionEdgeMargin, MathF.Max(ActionBarConstants.PositionEdgeMargin, bounds.Y - size.Y - ActionBarConstants.PositionEdgeMargin));
+        _positionX = ActionBarPositioningMath.ClampAxis(_positionX, delta.X, size.X, bounds.X, ActionBarConstants.PositionEdgeMargin);
+        _positionY = ActionBarPositioningMath.ClampAxis(_positionY, delta.Y, size.Y, bounds.Y, ActionBarConstants.PositionEdgeMargin);
         LayoutContainer.SetPosition(bar, new Vector2(_positionX, _positionY));
     }
 

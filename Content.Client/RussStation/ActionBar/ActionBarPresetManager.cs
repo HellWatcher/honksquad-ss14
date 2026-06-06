@@ -67,25 +67,7 @@ public sealed class ActionBarPresetManager
     /// <summary>Picks the first saved preset whose <c>CharacterName</c> matches the active
     /// character, falling back to the first character-agnostic preset.</summary>
     public ActionBarPreset? FindActivePresetForCharacter()
-    {
-        var presets = Store.Presets;
-        if (presets.Count == 0)
-            return null;
-        var character = GetActiveCharacterName();
-        foreach (var preset in presets)
-        {
-            if (string.Equals(preset.CharacterName, character, StringComparison.Ordinal))
-                return preset;
-        }
-        // No exact match: fall through to a character-agnostic preset (CharacterName empty)
-        // so old presets and "global" ones still work.
-        foreach (var preset in presets)
-        {
-            if (string.IsNullOrEmpty(preset.CharacterName))
-                return preset;
-        }
-        return null;
-    }
+        => ActionBarPresetLogic.SelectForCharacter(Store.Presets, GetActiveCharacterName());
 
     /// <summary>Read the active character's preset and seed <see cref="_emoteSlots"/> from it.
     /// Called during controller Initialize so emote actions granted before HonkOnContainerReady
@@ -108,15 +90,8 @@ public sealed class ActionBarPresetManager
     private void RefreshEmoteSlots(List<string?> emoteIds)
     {
         _emoteSlots.Clear();
-        for (var i = 0; i < emoteIds.Count; i++)
-        {
-            var id = emoteIds[i];
-            if (string.IsNullOrEmpty(id))
-                continue;
-            if (!_proto.HasIndex<EmotePrototype>(id))
-                continue;
-            _emoteSlots[id] = i;
-        }
+        foreach (var (id, slot) in ActionBarPresetLogic.BuildEmoteSlotMap(emoteIds, id => _proto.HasIndex<EmotePrototype>(id)))
+            _emoteSlots[id] = slot;
     }
 
     public ActionBarPreset CapturePreset()
