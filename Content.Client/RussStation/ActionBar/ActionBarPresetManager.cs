@@ -15,8 +15,6 @@ public sealed class ActionBarPresetManager
 {
     private readonly IClientPreferencesManager _prefs;
     private readonly IUserInterfaceManager _ui;
-    private readonly IPrototypeManager _proto;
-    private readonly IResourceManager _resources;
     private readonly ActionBarCVarManager _cvars;
     private readonly ActionBarPositioningManager _positioning;
 
@@ -31,22 +29,19 @@ public sealed class ActionBarPresetManager
     public ActionBarPresetManager(
         IClientPreferencesManager prefs,
         IUserInterfaceManager ui,
-        IPrototypeManager proto,
-        IResourceManager resources,
         ActionBarCVarManager cvars,
         ActionBarPositioningManager positioning)
     {
         _prefs = prefs;
         _ui = ui;
-        _proto = proto;
-        _resources = resources;
         _cvars = cvars;
         _positioning = positioning;
     }
 
-    // Lazily allocated so the store doesn't read its file until the player actually has a use
-    // for presets; keeps client startup unaffected.
-    public ActionBarPresetStore Store => _store ??= new ActionBarPresetStore(_resources);
+    // Lazily allocated so the store doesn't pull in IResourceManager until the player actually
+    // has a use for presets; keeps client startup unaffected. Resolved through IoC (rather than a
+    // constructor dependency) to match the original controller's footprint.
+    public ActionBarPresetStore Store => _store ??= new ActionBarPresetStore(IoCManager.Resolve<IResourceManager>());
 
     private ActionUIController Actions => _ui.GetUIController<ActionUIController>();
 
@@ -90,7 +85,8 @@ public sealed class ActionBarPresetManager
     private void RefreshEmoteSlots(List<string?> emoteIds)
     {
         _emoteSlots.Clear();
-        foreach (var (id, slot) in ActionBarPresetLogic.BuildEmoteSlotMap(emoteIds, id => _proto.HasIndex<EmotePrototype>(id)))
+        var proto = IoCManager.Resolve<IPrototypeManager>();
+        foreach (var (id, slot) in ActionBarPresetLogic.BuildEmoteSlotMap(emoteIds, id => proto.HasIndex<EmotePrototype>(id)))
             _emoteSlots[id] = slot;
     }
 

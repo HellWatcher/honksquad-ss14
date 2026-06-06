@@ -7,8 +7,6 @@ using Content.Client.UserInterface.Systems.Actions.Windows;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Shared.Configuration;
-using Robust.Shared.ContentPack;
-using Robust.Shared.Prototypes;
 
 namespace Content.Client.RussStation.ActionBar;
 
@@ -21,8 +19,6 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
 {
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IClientPreferencesManager _prefs = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly IResourceManager _resources = default!;
 
     private ActionBarCVarManager _cvars = default!;
     private ActionBarPositioningManager _positioning = default!;
@@ -43,16 +39,21 @@ public sealed class ActionBarCustomizationController : UIController, IOnStateEnt
         base.Initialize();
 
         _cvars = new ActionBarCVarManager(_cfg);
-        _positioning = new ActionBarPositioningManager(UIManager, _cvars);
-        _presets = new ActionBarPresetManager(_prefs, UIManager, _proto, _resources, _cvars, _positioning);
 
-        // React to CVar changes exactly the way the original per-CVar handlers did.
+        // Layout/label reactions are wired before reading the CVars so the invokeImmediately
+        // seeding reaches them (they no-op until the bar widget exists).
         _cvars.LayoutAndHotbarChanged += OnLayoutAndHotbarChanged;
         _cvars.LayoutChanged += ApplyLayout;
         _cvars.LabelsChanged += ApplyLabels;
+        _cvars.Initialize();
+
+        // Positioning is built after Initialize so it reads the now-loaded position CVars; its
+        // lock/position reactions are non-immediate, matching the original subscriptions.
+        _positioning = new ActionBarPositioningManager(UIManager, _cvars);
         _cvars.LockChanged += _positioning.RefreshDragHandleVisibility;
         _cvars.PositionChanged += _positioning.OnPositionChanged;
-        _cvars.Initialize();
+
+        _presets = new ActionBarPresetManager(_prefs, UIManager, _cvars, _positioning);
 
         // Seed the emote slots from the active preset before the actions system dispatches its
         // initial OnActionAdded burst, so emote actions can land on their saved slots even though
