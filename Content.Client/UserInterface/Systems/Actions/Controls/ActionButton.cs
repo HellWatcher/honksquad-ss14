@@ -399,10 +399,10 @@ public sealed class ActionButton : Control, IEntityControl
         // when the user has the persistent empty-slot toggle off, and the slot background
         // texture draws in that case so the preview has something to render.
         var honkShowEmpty = Action == null
-            && (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.ShowEmptySlots
-                || Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AssignHotkeyMode
+            && (Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.Current.ShowEmptySlots
+                || Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.Current.AssignHotkeyMode
                 || _controller.IsDragging);
-        var honkAlpha = Content.Client.RussStation.ActionBar.ActionBarCustomizationController.ButtonBackgroundAlpha;
+        var honkAlpha = Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.Current.ButtonBackgroundAlpha;
         const float honkEmptyFadeRatio = 0.4f;
         var honkAlphaByte = (byte) Math.Clamp(honkAlpha * 255f, 0, 255);
         var honkEmptyAlphaByte = (byte) Math.Clamp(honkAlpha * honkEmptyFadeRatio * 255f, 0, 255);
