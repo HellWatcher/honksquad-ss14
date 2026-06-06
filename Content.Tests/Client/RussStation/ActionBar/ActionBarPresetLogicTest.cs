@@ -106,7 +106,7 @@ public sealed class ActionBarPresetLogicTest
     [Test]
     public void BuildEmoteSlotMap_SkipsNullAndEmptyEntries()
     {
-        var emotes = new List<string?> { null, "Wave", string.Empty, "Salute" };
+        var emotes = new List<string> { null, "Wave", string.Empty, "Salute" };
 
         var map = ActionBarPresetLogic.BuildEmoteSlotMap(emotes, _ => true);
 
@@ -118,7 +118,7 @@ public sealed class ActionBarPresetLogicTest
     [Test]
     public void BuildEmoteSlotMap_DropsInvalidEmotes()
     {
-        var emotes = new List<string?> { "Wave", "GoneEmote", "Salute" };
+        var emotes = new List<string> { "Wave", "GoneEmote", "Salute" };
         var valid = new HashSet<string> { "Wave", "Salute" };
 
         var map = ActionBarPresetLogic.BuildEmoteSlotMap(emotes, valid.Contains);
@@ -133,7 +133,7 @@ public sealed class ActionBarPresetLogicTest
     {
         // Two slots hold the same emote; the later index overwrites, matching the original
         // dictionary-assignment behaviour.
-        var emotes = new List<string?> { "Wave", "Wave" };
+        var emotes = new List<string> { "Wave", "Wave" };
 
         var map = ActionBarPresetLogic.BuildEmoteSlotMap(emotes, _ => true);
 
@@ -143,7 +143,7 @@ public sealed class ActionBarPresetLogicTest
     [Test]
     public void BuildEmoteSlotMap_Empty_ReturnsEmptyMap()
     {
-        var map = ActionBarPresetLogic.BuildEmoteSlotMap(new List<string?>(), _ => true);
+        var map = ActionBarPresetLogic.BuildEmoteSlotMap(new List<string>(), _ => true);
         Assert.That(map, Is.Empty);
     }
 }
