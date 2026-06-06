@@ -1,6 +1,15 @@
 using Content.IntegrationTests.Fixtures;
+using Content.Server.RussStation.Surgery;
+using Content.Shared.Buckle;
+using Content.Shared.Buckle.Components;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
+using Content.Shared.FixedPoint;
+using Content.Shared.Interaction;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Systems;
+using Content.Shared.Standing;
 using Content.Shared.Tools;
 using Robust.Shared.Prototypes;
 
@@ -156,6 +165,53 @@ public sealed partial class SurgerySystemTest : GameTest
   - type: Tool
     qualities:
     - Slicing
+
+# A surgeon mob with a real hand slot, so surgery DoAfters (NeedHand) can run.
+- type: entity
+  id: SurgeryTestSurgeon
+  components:
+  - type: DoAfter
+  - type: Hands
+    hands:
+      hand_right:
+        location: Right
+    sortedHands:
+    - hand_right
+  - type: ComplexInteraction
+  - type: InputMover
+  - type: Physics
+    bodyType: KinematicController
+
+# A patient that can take and store damage, for testing healing steps.
+- type: entity
+  id: SurgeryTestHealPatient
+  components:
+  - type: Buckle
+  - type: Hands
+  - type: ComplexInteraction
+  - type: InputMover
+  - type: Physics
+    bodyType: KinematicController
+  - type: Body
+    prototype: Human
+  - type: StandingState
+  - type: Damageable
+    damageContainer: Biological
+
+# Single repeatable healing step: a flat budget that auto-repeats until damage is drained.
+- type: surgeryProcedure
+  id: SurgeryTestTendProcedure
+  name: Test Tend Procedure
+  description: A repeatable healing procedure.
+  steps:
+    - quality: Retracting
+      duration: 1.0
+      repeatable: true
+      popup: surgery-step-retract
+      healing:
+        types:
+          Blunt: 1
+      healingFlat: 6
 ";
 
     /// <summary>
@@ -295,5 +351,230 @@ public sealed partial class SurgerySystemTest : GameTest
                 }
             }
         });
+    }
+
+    /// <summary>
+    /// Drives a whole procedure end to end: a draping selection starts the surgery, each tool step
+    /// advances it, and a cautery closes the patient and tears the surgery state down. Exercises the
+    /// menu validator, the step handler, and the cautery-close path together.
+    /// </summary>
+    [Test]
+    public async Task FullSurgeryFlowTest()
+    {
+        var server = Server;
+        var sEntMan = server.EntMan;
+        var mapData = await Pair.CreateTestMap();
+
+        EntityUid surgeon = default;
+        EntityUid patient = default;
+        EntityUid scalpel = default;
+        EntityUid retractor = default;
+        EntityUid cautery = default;
+        NetEntity netPatient = default;
+        NetEntity netDrape = default;
+
+        await server.WaitPost(() =>
+        {
+            var standing = sEntMan.System<StandingStateSystem>();
+
+            surgeon = sEntMan.SpawnEntity("SurgeryTestSurgeon", mapData.GridCoords);
+            patient = sEntMan.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
+            scalpel = sEntMan.SpawnEntity("SurgeryTestScalpel", mapData.GridCoords);
+            retractor = sEntMan.SpawnEntity("SurgeryTestRetractor", mapData.GridCoords);
+            cautery = sEntMan.SpawnEntity("SurgeryTestCautery", mapData.GridCoords);
+            var drape = sEntMan.SpawnEntity("SurgeryTestSurgicalDrape", mapData.GridCoords);
+
+            // The session must drive the surgeon so the server sees them as the procedure sender.
+            server.PlayerMan.SetAttachedEntity(ServerSession, surgeon, force: true);
+            standing.Down(patient, force: true);
+
+            netPatient = sEntMan.GetNetEntity(patient);
+            netDrape = sEntMan.GetNetEntity(drape);
+        });
+
+        await Pair.RunTicksSync(5);
+
+        // Select the procedure: drapes the patient and starts the surgery.
+        await Client.WaitPost(() =>
+            Client.EntMan.EntityNetManager.SendSystemNetworkMessage(
+                new SelectSurgeryProcedureEvent(netPatient, netDrape, TestProcedureId)));
+
+        await RunUntil(() =>
+            sEntMan.HasComponent<ActiveSurgeryComponent>(patient) &&
+            sEntMan.HasComponent<SurgeryDrapedComponent>(patient));
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(sEntMan.TryGetComponent<ActiveSurgeryComponent>(patient, out var active), Is.True);
+            Assert.That(active!.CurrentStep, Is.EqualTo(0));
+        });
+
+        // Step 0 (Slicing) with the scalpel.
+        await UseToolOnPatient(sEntMan, surgeon, scalpel, patient);
+        await RunUntil(() => GetStep(sEntMan, patient) >= 1);
+
+        // Step 1 (Retracting) with the retractor: the final step.
+        await UseToolOnPatient(sEntMan, surgeon, retractor, patient);
+        await RunUntil(() => GetStep(sEntMan, patient) >= 2);
+
+        // Cautery universal close: removes the surgery and the drape.
+        await UseToolOnPatient(sEntMan, surgeon, cautery, patient);
+        await RunUntil(() => !sEntMan.HasComponent<ActiveSurgeryComponent>(patient));
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(sEntMan.HasComponent<ActiveSurgeryComponent>(patient), Is.False, "Surgery should be closed.");
+            Assert.That(sEntMan.HasComponent<SurgeryDrapedComponent>(patient), Is.False, "Drape should be removed.");
+        });
+    }
+
+    /// <summary>
+    /// The menu validator must refuse a selection when the patient is still standing: no drape,
+    /// no active surgery.
+    /// </summary>
+    [Test]
+    public async Task ProcedureSelectionRejectedWhenStandingTest()
+    {
+        var server = Server;
+        var sEntMan = server.EntMan;
+        var mapData = await Pair.CreateTestMap();
+
+        EntityUid patient = default;
+        NetEntity netPatient = default;
+        NetEntity netDrape = default;
+
+        await server.WaitPost(() =>
+        {
+            var surgeon = sEntMan.SpawnEntity("SurgeryTestSurgeon", mapData.GridCoords);
+            patient = sEntMan.SpawnEntity("SurgeryTestPatient", mapData.GridCoords);
+            var drape = sEntMan.SpawnEntity("SurgeryTestSurgicalDrape", mapData.GridCoords);
+
+            server.PlayerMan.SetAttachedEntity(ServerSession, surgeon, force: true);
+            // Patient is deliberately left standing.
+
+            netPatient = sEntMan.GetNetEntity(patient);
+            netDrape = sEntMan.GetNetEntity(drape);
+        });
+
+        await Pair.RunTicksSync(5);
+
+        await Client.WaitPost(() =>
+            Client.EntMan.EntityNetManager.SendSystemNetworkMessage(
+                new SelectSurgeryProcedureEvent(netPatient, netDrape, TestProcedureId)));
+
+        await Pair.RunTicksSync(15);
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(sEntMan.HasComponent<ActiveSurgeryComponent>(patient), Is.False,
+                "A standing patient must not be draped into surgery.");
+            Assert.That(sEntMan.HasComponent<SurgeryDrapedComponent>(patient), Is.False);
+        });
+    }
+
+    /// <summary>
+    /// A repeatable healing step auto-repeats until the patient's matching damage is drained.
+    /// Exercises the step handler's repeat branch and the healing-budget application together.
+    /// </summary>
+    [Test]
+    public async Task RepeatableHealStepDrainsDamageTest()
+    {
+        var server = Server;
+        var sEntMan = server.EntMan;
+        var mapData = await Pair.CreateTestMap();
+
+        EntityUid surgeon = default;
+        EntityUid patient = default;
+        EntityUid retractor = default;
+        NetEntity netPatient = default;
+        NetEntity netDrape = default;
+
+        await server.WaitPost(() =>
+        {
+            var standing = sEntMan.System<StandingStateSystem>();
+            var damageable = sEntMan.System<DamageableSystem>();
+
+            surgeon = sEntMan.SpawnEntity("SurgeryTestSurgeon", mapData.GridCoords);
+            patient = sEntMan.SpawnEntity("SurgeryTestHealPatient", mapData.GridCoords);
+            retractor = sEntMan.SpawnEntity("SurgeryTestRetractor", mapData.GridCoords);
+            var drape = sEntMan.SpawnEntity("SurgeryTestSurgicalDrape", mapData.GridCoords);
+
+            server.PlayerMan.SetAttachedEntity(ServerSession, surgeon, force: true);
+            standing.Down(patient, force: true);
+
+            // Give the patient more Blunt damage than one heal budget (6) can clear, forcing a repeat.
+            var blunt = new DamageSpecifier();
+            blunt.DamageDict["Blunt"] = FixedPoint2.New(10);
+            damageable.TryChangeDamage(patient, blunt, ignoreResistances: true);
+
+            netPatient = sEntMan.GetNetEntity(patient);
+            netDrape = sEntMan.GetNetEntity(drape);
+        });
+
+        await Pair.RunTicksSync(5);
+
+        await Client.WaitPost(() =>
+            Client.EntMan.EntityNetManager.SendSystemNetworkMessage(
+                new SelectSurgeryProcedureEvent(netPatient, netDrape, "SurgeryTestTendProcedure")));
+
+        await RunUntil(() => sEntMan.HasComponent<ActiveSurgeryComponent>(patient));
+
+        // One retractor use kicks off the repeatable tend step; it auto-repeats to drain the damage.
+        await UseToolOnPatient(sEntMan, surgeon, retractor, patient);
+        await RunUntil(() => GetBlunt(sEntMan, patient) <= 0f);
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(GetBlunt(sEntMan, patient), Is.EqualTo(0f).Within(0.01f),
+                "The repeatable tend step should drain Blunt damage to zero.");
+        });
+    }
+
+    private static int GetStep(IEntityManager entMan, EntityUid patient)
+    {
+        return entMan.TryGetComponent<ActiveSurgeryComponent>(patient, out var active) ? active.CurrentStep : -1;
+    }
+
+    private static float GetBlunt(IEntityManager entMan, EntityUid patient)
+    {
+        if (!entMan.TryGetComponent<DamageableComponent>(patient, out var dmg))
+            return -1f;
+
+        return dmg.Damage.DamageDict.TryGetValue("Blunt", out var value) ? (float) value : 0f;
+    }
+
+    /// <summary>
+    /// Simulates the surgeon using a tool on the patient by raising the interaction the surgery
+    /// system listens for. <c>canReach</c> is forced so the handler runs without spatial setup.
+    /// </summary>
+    private async Task UseToolOnPatient(IEntityManager entMan, EntityUid surgeon, EntityUid tool, EntityUid patient)
+    {
+        await Server.WaitPost(() =>
+        {
+            var coords = entMan.GetComponent<TransformComponent>(patient).Coordinates;
+            var ev = new AfterInteractUsingEvent(surgeon, tool, patient, coords, canReach: true);
+            entMan.EventBus.RaiseLocalEvent(patient, ev, false);
+        });
+    }
+
+    /// <summary>
+    /// Runs ticks in small batches until the server-evaluated <paramref name="condition"/> holds,
+    /// failing the test if it never does within the tick budget. Robust to the server tick rate.
+    /// </summary>
+    private async Task RunUntil(Func<bool> condition, int maxTicks = 800, int chunk = 5)
+    {
+        var elapsed = 0;
+        while (elapsed <= maxTicks)
+        {
+            var done = false;
+            await Server.WaitPost(() => done = condition());
+            if (done)
+                return;
+
+            await Pair.RunTicksSync(chunk);
+            elapsed += chunk;
+        }
+
+        Assert.Fail($"Condition not satisfied within {maxTicks} ticks.");
     }
 }
