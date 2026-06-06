@@ -8,9 +8,11 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Interaction;
 using Content.Shared.RussStation.Surgery;
+using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Systems;
 using Content.Shared.Standing;
 using Content.Shared.Tools;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests.RussStation.Surgery;
@@ -540,7 +542,9 @@ public sealed partial class SurgerySystemTest : GameTest
         if (!entMan.TryGetComponent<DamageableComponent>(patient, out var dmg))
             return -1f;
 
-        return dmg.Damage.DamageDict.TryGetValue("Blunt", out var value) ? (float) value : 0f;
+        // Read damage through the system accessor; DamageableComponent.Damage is access-restricted.
+        var positive = entMan.System<DamageableSystem>().GetPositiveDamage((patient, dmg));
+        return positive.DamageDict.TryGetValue("Blunt", out var value) ? (float) value : 0f;
     }
 
     /// <summary>
