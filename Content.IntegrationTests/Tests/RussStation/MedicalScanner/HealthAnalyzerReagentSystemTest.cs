@@ -271,4 +271,92 @@ public sealed class HealthAnalyzerReagentSystemTest
 
         await pair.CleanReturnAsync();
     }
+
+    [Test]
+    public async Task MetabolitesGroupNeverShowsDoseFlags()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var mob = entityManager.SpawnEntity("HealthAnalyzerReagentMobDummy", mapData.GridCoords);
+            var bloodstream = entityManager.GetComponent<BloodstreamComponent>(mob);
+            Assert.That(containerSystem.TryGetSolution(mob, bloodstream.MetabolitesSolutionName,
+                out var metaboliteHandle, out _), "BloodstreamSystem should have created the metabolites solution on init.");
+
+            // 20u Bicaridine overdoses in BLOOD (15u threshold). Metabolites pass showDoseFlags: false,
+            // so the identical quantity must render with no OD/UD chrome — metabolites are the trickle
+            // of in-progress metabolism output and never reach whole-dose thresholds.
+            containerSystem.TryAddSolution(metaboliteHandle!.Value, new Solution("Bicaridine", FixedPoint2.New(20)));
+
+            var state = system.BuildState(mob);
+            var metabolitesGroup = state.Groups.Single(g => g.Label == Loc.GetString("health-analyzer-reagent-group-metabolites"));
+            var bicaridine = metabolitesGroup.Reagents.Single(r => r.ReagentId == "Bicaridine");
+
+            Assert.That(bicaridine.Quantity, Is.EqualTo(FixedPoint2.New(20)));
+            Assert.That(bicaridine.Overdose, Is.False, "Only the Blood group carries dose flags; metabolites must never overdose.");
+            Assert.That(bicaridine.Underdose, Is.False);
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task BloodUnderdoseFlagsBelowBeneficialThreshold()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var mob = entityManager.SpawnEntity("HealthAnalyzerReagentMobDummy", mapData.GridCoords);
+            var bloodstream = entityManager.GetComponent<BloodstreamComponent>(mob);
+            Assert.That(containerSystem.TryGetSolution(mob, bloodstream.BloodSolutionName,
+                out var bloodHandle, out _), "BloodstreamSystem should have created the blood solution on init.");
+
+            // TestUnderdoseReagent's healing effect only activates at 8u (BeneficialMin). 4u sits
+            // below that, so Blood should flag it underdosed and never overdosed.
+            containerSystem.TryAddSolution(bloodHandle!.Value, new Solution(TestUnderdoseReagent, FixedPoint2.New(4)));
+
+            var state = system.BuildState(mob);
+            var bloodGroup = state.Groups.Single(g => g.Label == Loc.GetString("health-analyzer-reagent-group-blood"));
+            var reagent = bloodGroup.Reagents.Single(r => r.ReagentId == TestUnderdoseReagent);
+
+            Assert.That(reagent.Underdose, Is.True, "4u is below the 8u beneficial activation threshold.");
+            Assert.That(reagent.Overdose, Is.False);
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task MobWithoutBloodstreamYieldsNoGroups()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            // No BloodstreamComponent -> SolutionAggregator skips the mob branch entirely and
+            // BuildState returns an empty group list (just the display name).
+            var notAMob = entityManager.SpawnEntity(null, mapData.GridCoords);
+
+            var state = system.BuildState(notAMob);
+            Assert.That(state.Groups, Is.Empty, "Entities without a bloodstream expose no reagent groups.");
+        });
+
+        await pair.CleanReturnAsync();
+    }
 }
