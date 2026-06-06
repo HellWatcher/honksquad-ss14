@@ -13,16 +13,23 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
     public event Action? OnBackPressed;
     public event Action? OnMuteToggled;
 
-    private readonly BoxContainer _contactList;
+    private BoxContainer _contactList = default!;
     private readonly BoxContainer _chatView;
-    private readonly BoxContainer _messageList;
-    private readonly LineEdit _messageInput;
-    private readonly Button _sendButton;
-    private readonly Button _backButton;
+    private BoxContainer _messageList = default!;
+    private LineEdit _messageInput = default!;
+    private Button _sendButton = default!;
+    private Button _backButton = default!;
     private readonly Button _muteButton;
     private readonly Label _addressLabel;
 
     private NetEntity? _activeTarget;
+
+    // Cached lookup of the active conversation's contact, keyed by the conversation
+    // it was resolved for, so repeated renders of the same conversation skip the
+    // per-render O(n) scan of the contact list.
+    private NetEntity? _cachedContactTarget;
+    private string _cachedContactName = "";
+    private bool _cachedContactReadOnly;
 
     public MessengerCartridgeUiFragment()
     {
@@ -31,80 +38,8 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
 
         var content = (BoxContainer) GetChild(MessengerConstants.RootContentChildIndex);
 
-        // Contact list view.
-        _contactList = new BoxContainer
-        {
-            Orientation = LayoutOrientation.Vertical,
-            HorizontalExpand = true,
-            VerticalExpand = true,
-        };
-
-        var contactScroll = new ScrollContainer
-        {
-            VerticalExpand = true,
-            HorizontalExpand = true,
-        };
-        contactScroll.AddChild(_contactList);
-
-        // Chat view (hidden by default).
-        _chatView = new BoxContainer
-        {
-            Orientation = LayoutOrientation.Vertical,
-            HorizontalExpand = true,
-            VerticalExpand = true,
-            Visible = false,
-        };
-
-        _backButton = new Button
-        {
-            Text = Loc.GetString("messenger-back"),
-            StyleClasses = { "OpenBoth" },
-            HorizontalAlignment = HAlignment.Left,
-            Margin = new Thickness(MessengerConstants.BackButtonLeftMargin, MessengerConstants.BackButtonTopMargin, MessengerConstants.BackButtonRightMargin, MessengerConstants.BackButtonBottomMargin),
-        };
-        _backButton.OnPressed += _ => OnBackPressed?.Invoke();
-
-        _messageList = new BoxContainer
-        {
-            Orientation = LayoutOrientation.Vertical,
-            HorizontalExpand = true,
-        };
-
-        var messageScroll = new ScrollContainer
-        {
-            VerticalExpand = true,
-            HorizontalExpand = true,
-        };
-        messageScroll.AddChild(_messageList);
-
-        var inputRow = new BoxContainer
-        {
-            Orientation = LayoutOrientation.Horizontal,
-            HorizontalExpand = true,
-            Margin = new Thickness(MessengerConstants.InputRowLeftMargin, MessengerConstants.InputRowTopMargin, MessengerConstants.InputRowRightMargin, MessengerConstants.InputRowBottomMargin),
-        };
-
-        _messageInput = new LineEdit
-        {
-            HorizontalExpand = true,
-            PlaceHolder = Loc.GetString("messenger-placeholder"),
-        };
-        _messageInput.OnTextEntered += _ => SendCurrentMessage();
-
-        _sendButton = new Button
-        {
-            Text = Loc.GetString("messenger-send"),
-            StyleClasses = { "OpenBoth" },
-            Margin = new Thickness(MessengerConstants.SendButtonLeftMargin, MessengerConstants.SendButtonTopMargin, MessengerConstants.SendButtonRightMargin, MessengerConstants.SendButtonBottomMargin),
-        };
-        _sendButton.OnPressed += _ => SendCurrentMessage();
-
-        inputRow.AddChild(_messageInput);
-        inputRow.AddChild(_sendButton);
-
-        _chatView.AddChild(_backButton);
-        _chatView.AddChild(messageScroll);
-        _chatView.AddChild(inputRow);
+        var contactScroll = BuildContactListSection();
+        _chatView = BuildChatViewSection();
 
         _muteButton = new Button
         {
@@ -137,6 +72,105 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         content.AddChild(_addressLabel);
     }
 
+    /// <summary>
+    /// Builds the scrollable contact-list view and captures <see cref="_contactList"/>.
+    /// </summary>
+    private ScrollContainer BuildContactListSection()
+    {
+        _contactList = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Vertical,
+            HorizontalExpand = true,
+            VerticalExpand = true,
+        };
+
+        var contactScroll = new ScrollContainer
+        {
+            VerticalExpand = true,
+            HorizontalExpand = true,
+        };
+        contactScroll.AddChild(_contactList);
+
+        return contactScroll;
+    }
+
+    /// <summary>
+    /// Builds the (initially hidden) conversation view: back button, scrollable
+    /// message list and the message input row.
+    /// </summary>
+    private BoxContainer BuildChatViewSection()
+    {
+        var chatView = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Vertical,
+            HorizontalExpand = true,
+            VerticalExpand = true,
+            Visible = false,
+        };
+
+        _backButton = new Button
+        {
+            Text = Loc.GetString("messenger-back"),
+            StyleClasses = { "OpenBoth" },
+            HorizontalAlignment = HAlignment.Left,
+            Margin = new Thickness(MessengerConstants.BackButtonLeftMargin, MessengerConstants.BackButtonTopMargin, MessengerConstants.BackButtonRightMargin, MessengerConstants.BackButtonBottomMargin),
+        };
+        _backButton.OnPressed += _ => OnBackPressed?.Invoke();
+
+        _messageList = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Vertical,
+            HorizontalExpand = true,
+        };
+
+        var messageScroll = new ScrollContainer
+        {
+            VerticalExpand = true,
+            HorizontalExpand = true,
+        };
+        messageScroll.AddChild(_messageList);
+
+        chatView.AddChild(_backButton);
+        chatView.AddChild(messageScroll);
+        chatView.AddChild(BuildInputRow());
+
+        return chatView;
+    }
+
+    /// <summary>
+    /// Builds the message input row and captures <see cref="_messageInput"/> and
+    /// <see cref="_sendButton"/>.
+    /// </summary>
+    private BoxContainer BuildInputRow()
+    {
+        var inputRow = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            HorizontalExpand = true,
+            Margin = new Thickness(MessengerConstants.InputRowLeftMargin, MessengerConstants.InputRowTopMargin, MessengerConstants.InputRowRightMargin, MessengerConstants.InputRowBottomMargin),
+        };
+
+        _messageInput = new LineEdit
+        {
+            HorizontalExpand = true,
+            PlaceHolder = Loc.GetString("messenger-placeholder"),
+        };
+        _messageInput.OnTextEntered += _ => SendCurrentMessage();
+
+        _sendButton = new Button
+        {
+            Text = Loc.GetString("messenger-send"),
+            StyleClasses = { "OpenBoth" },
+            Margin = new Thickness(MessengerConstants.SendButtonLeftMargin, MessengerConstants.SendButtonTopMargin, MessengerConstants.SendButtonRightMargin, MessengerConstants.SendButtonBottomMargin),
+        };
+        _sendButton.OnPressed += _ => SendCurrentMessage();
+
+        inputRow.AddChild(_messageInput);
+        inputRow.AddChild(_sendButton);
+
+        return inputRow;
+    }
+
     public void UpdateState(MessengerUiState state)
     {
         _addressLabel.Text = state.Address;
@@ -167,12 +201,7 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
 
         if (!state.HasId)
         {
-            _contactList.AddChild(new Label
-            {
-                Text = Loc.GetString("messenger-no-id"),
-                StyleClasses = { "LabelSubText" },
-                HorizontalAlignment = HAlignment.Center,
-            });
+            _contactList.AddChild(CreateEmptyStateLabel("messenger-no-id"));
 
             if (state.Contacts.Count == 0)
                 return;
@@ -180,64 +209,12 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
 
         if (state.Contacts.Count == 0)
         {
-            _contactList.AddChild(new Label
-            {
-                Text = Loc.GetString("messenger-no-contacts"),
-                StyleClasses = { "LabelSubText" },
-                HorizontalAlignment = HAlignment.Center,
-            });
+            _contactList.AddChild(CreateEmptyStateLabel("messenger-no-contacts"));
             return;
         }
 
         foreach (var contact in state.Contacts)
-        {
-            var row = new Button
-            {
-                StyleClasses = { "OpenBoth" },
-                HorizontalExpand = true,
-                Margin = new Thickness(MessengerConstants.ContactRowLeftMargin, MessengerConstants.ContactRowTopMargin, MessengerConstants.ContactRowRightMargin, MessengerConstants.ContactRowBottomMargin),
-            };
-
-            var rowContent = new BoxContainer
-            {
-                Orientation = LayoutOrientation.Horizontal,
-                HorizontalExpand = true,
-            };
-
-            var nameLabel = new Label
-            {
-                Text = contact.Name,
-                HorizontalExpand = true,
-            };
-
-            var jobLabel = new Label
-            {
-                Text = contact.JobTitle,
-                StyleClasses = { "LabelSubText" },
-                Margin = new Thickness(MessengerConstants.JobLabelLeftMargin, MessengerConstants.JobLabelTopMargin, MessengerConstants.JobLabelRightMargin, MessengerConstants.JobLabelBottomMargin),
-            };
-
-            rowContent.AddChild(nameLabel);
-            rowContent.AddChild(jobLabel);
-
-            if (contact.HasUnread)
-            {
-                var unreadDot = new Label
-                {
-                    Text = "*",
-                    StyleClasses = { "LabelKeyValueStatValue" },
-                    Margin = new Thickness(MessengerConstants.UnreadDotLeftMargin, MessengerConstants.UnreadDotTopMargin, MessengerConstants.UnreadDotRightMargin, MessengerConstants.UnreadDotBottomMargin),
-                };
-                rowContent.AddChild(unreadDot);
-            }
-
-            row.AddChild(rowContent);
-
-            var target = contact.Cartridge;
-            row.OnPressed += _ => OnContactSelected?.Invoke(target);
-
-            _contactList.AddChild(row);
-        }
+            _contactList.AddChild(CreateContactRowButton(contact));
     }
 
     private void ShowChatView(MessengerUiState state)
@@ -247,22 +224,11 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
         _muteButton.Visible = false;
         _activeTarget = state.ActiveConversation;
 
-        // Find the active contact.
-        var contactName = "";
-        var readOnly = false;
-        foreach (var contact in state.Contacts)
-        {
-            if (contact.Cartridge == state.ActiveConversation)
-            {
-                contactName = contact.Name;
-                readOnly = contact.ReadOnly;
-                break;
-            }
-        }
+        ResolveActiveContact(state);
 
-        HeaderLabel.Text = contactName;
+        HeaderLabel.Text = _cachedContactName;
 
-        var canSend = !readOnly && state.HasId;
+        var canSend = !_cachedContactReadOnly && state.HasId;
         _messageInput.Visible = canSend;
         _sendButton.Visible = canSend;
 
@@ -270,40 +236,118 @@ public sealed partial class MessengerCartridgeUiFragment : BoxContainer
 
         if (state.Messages == null || state.Messages.Count == 0)
         {
-            _messageList.AddChild(new Label
-            {
-                Text = Loc.GetString("messenger-no-messages"),
-                StyleClasses = { "LabelSubText" },
-                HorizontalAlignment = HAlignment.Center,
-            });
+            _messageList.AddChild(CreateEmptyStateLabel("messenger-no-messages"));
             return;
         }
 
         foreach (var msg in state.Messages)
+            _messageList.AddChild(CreateMessageRow(msg));
+    }
+
+    /// <summary>
+    /// Resolves the active conversation's display name and read-only flag, caching
+    /// the result so subsequent renders of the same conversation avoid re-scanning
+    /// the contact list.
+    /// </summary>
+    private void ResolveActiveContact(MessengerUiState state)
+    {
+        if (_cachedContactTarget == state.ActiveConversation)
+            return;
+
+        _cachedContactName = "";
+        _cachedContactReadOnly = false;
+
+        foreach (var contact in state.Contacts)
         {
-            var row = new BoxContainer
+            if (contact.Cartridge == state.ActiveConversation)
             {
-                Orientation = LayoutOrientation.Vertical,
-                HorizontalExpand = true,
-                Margin = new Thickness(MessengerConstants.MessageRowLeftMargin, MessengerConstants.MessageRowTopMargin, MessengerConstants.MessageRowRightMargin, MessengerConstants.MessageRowBottomMargin),
-            };
-
-            var senderLabel = new Label
-            {
-                Text = msg.SenderName,
-                StyleClasses = { msg.FromSelf ? "LabelKeyValueStatValue" : "LabelSubText" },
-            };
-
-            var textLabel = new Label
-            {
-                Text = msg.Text,
-                HorizontalExpand = true,
-            };
-
-            row.AddChild(senderLabel);
-            row.AddChild(textLabel);
-            _messageList.AddChild(row);
+                _cachedContactName = contact.Name;
+                _cachedContactReadOnly = contact.ReadOnly;
+                break;
+            }
         }
+
+        _cachedContactTarget = state.ActiveConversation;
+    }
+
+    private static Label CreateEmptyStateLabel(string locKey)
+    {
+        return new Label
+        {
+            Text = Loc.GetString(locKey),
+            StyleClasses = { "LabelSubText" },
+            HorizontalAlignment = HAlignment.Center,
+        };
+    }
+
+    private Button CreateContactRowButton(MessengerContact contact)
+    {
+        var row = new Button
+        {
+            StyleClasses = { "OpenBoth" },
+            HorizontalExpand = true,
+            Margin = new Thickness(MessengerConstants.ContactRowLeftMargin, MessengerConstants.ContactRowTopMargin, MessengerConstants.ContactRowRightMargin, MessengerConstants.ContactRowBottomMargin),
+        };
+
+        var rowContent = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            HorizontalExpand = true,
+        };
+
+        rowContent.AddChild(new Label
+        {
+            Text = contact.Name,
+            HorizontalExpand = true,
+        });
+
+        rowContent.AddChild(new Label
+        {
+            Text = contact.JobTitle,
+            StyleClasses = { "LabelSubText" },
+            Margin = new Thickness(MessengerConstants.JobLabelLeftMargin, MessengerConstants.JobLabelTopMargin, MessengerConstants.JobLabelRightMargin, MessengerConstants.JobLabelBottomMargin),
+        });
+
+        if (contact.HasUnread)
+        {
+            rowContent.AddChild(new Label
+            {
+                Text = "*",
+                StyleClasses = { "LabelKeyValueStatValue" },
+                Margin = new Thickness(MessengerConstants.UnreadDotLeftMargin, MessengerConstants.UnreadDotTopMargin, MessengerConstants.UnreadDotRightMargin, MessengerConstants.UnreadDotBottomMargin),
+            });
+        }
+
+        row.AddChild(rowContent);
+
+        var target = contact.Cartridge;
+        row.OnPressed += _ => OnContactSelected?.Invoke(target);
+
+        return row;
+    }
+
+    private static BoxContainer CreateMessageRow(MessengerMessageEntry msg)
+    {
+        var row = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Vertical,
+            HorizontalExpand = true,
+            Margin = new Thickness(MessengerConstants.MessageRowLeftMargin, MessengerConstants.MessageRowTopMargin, MessengerConstants.MessageRowRightMargin, MessengerConstants.MessageRowBottomMargin),
+        };
+
+        row.AddChild(new Label
+        {
+            Text = msg.SenderName,
+            StyleClasses = { msg.FromSelf ? "LabelKeyValueStatValue" : "LabelSubText" },
+        });
+
+        row.AddChild(new Label
+        {
+            Text = msg.Text,
+            HorizontalExpand = true,
+        });
+
+        return row;
     }
 
     private void SendCurrentMessage()
