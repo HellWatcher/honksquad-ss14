@@ -173,11 +173,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index(Bicaridine));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index(Bicaridine));
             Assert.That(thresholds.HarmfulMin, Is.Not.Null,
                 "Bicaridine's metabolism gates harmful effects on a min threshold.");
             Assert.That(thresholds.HarmfulMin!.Value, Is.EqualTo(FixedPoint2.New(15)));
@@ -195,11 +195,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestUnderdoseReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestUnderdoseReagent));
             Assert.That(thresholds.BeneficialMin, Is.Not.Null,
                 "Healing-gated reagents should surface a beneficial activation threshold.");
             Assert.That(thresholds.BeneficialMin!.Value, Is.EqualTo(FixedPoint2.New(8)));
@@ -217,11 +217,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestNeutralFlavorReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestNeutralFlavorReagent));
             Assert.That(thresholds.HarmfulMin, Is.Null, "Emote/PopupMessage effects must not generate harmful thresholds.");
             Assert.That(thresholds.HarmfulMax, Is.Null);
             Assert.That(thresholds.BeneficialMin, Is.Null);
@@ -237,11 +237,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestRangeHarmfulReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestRangeHarmfulReagent));
             Assert.That(thresholds.HarmfulMax, Is.Not.Null, "max-gated slow effect should surface as HarmfulMax.");
             Assert.That(thresholds.HarmfulMax!.Value, Is.EqualTo(FixedPoint2.New(10)));
             Assert.That(thresholds.HarmfulMin, Is.Not.Null, "min-gated poison effect should surface as HarmfulMin.");
@@ -259,11 +259,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestSelfDecayReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestSelfDecayReagent));
             Assert.That(thresholds.HarmfulMin, Is.Null, "Self-decaying AdjustReagent (negative amount) must not be harmful.");
             Assert.That(thresholds.HarmfulMax, Is.Null);
             Assert.That(thresholds.BeneficialMin, Is.Null);
