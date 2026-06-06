@@ -34,8 +34,11 @@ public struct ActionBarRuntimeConfig
 
     // Read by the gameplay-screen resize handlers (HONK guards) to keep them from calling
     // MaxGridHeight/MaxGridWidth, which would flip the grid into size-limit mode and silently
-    // overwrite the user's explicit row count on resize.
-    public const bool OverridesRowLayout = true;
+    // overwrite the user's explicit row count on resize. Deliberately static readonly rather
+    // than const: the game-screen call sites guard with `if (OverridesRowLayout) return;`, and a
+    // compile-time const would make the following resize code unreachable (CS0162, treated as an
+    // error here). A runtime value keeps that code reachable, matching the original field.
+    public static readonly bool OverridesRowLayout = true;
 
     // The single live instance every reader and writer shares. Defaults match the original
     // static property initializers so behaviour before the first CVar load is unchanged.
