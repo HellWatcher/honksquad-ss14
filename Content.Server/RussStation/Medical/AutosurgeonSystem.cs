@@ -4,6 +4,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
+using Content.Shared.RussStation.Body;
 using Content.Shared.RussStation.Medical;
 using Robust.Shared.Containers;
 
@@ -105,23 +106,9 @@ public sealed class AutosurgeonSystem : EntitySystem
             return;
         }
 
-        // Remove existing organ of the same category if present
-        if (organComp.Category != null)
-        {
-            foreach (var existing in body.Organs.ContainedEntities)
-            {
-                if (TryComp<OrganComponent>(existing, out var existingOrgan) &&
-                    existingOrgan.Category == organComp.Category)
-                {
-                    _container.Remove(existing, body.Organs);
-                    _xform.DropNextTo(existing, target);
-                    break;
-                }
-            }
-        }
-
-        // Insert the new organ
-        _container.Insert(organ, body.Organs, force: true);
+        // Remove any same-category organ (dropping it next to the body) and install the new one.
+        OrganReplacementHelper.ReplaceOrganByCategory(
+            EntityManager, _container, _xform, target, body.Organs, organ, organComp.Category);
 
         var organName = MetaData(organ).EntityName;
         _popup.PopupEntity(

@@ -2,6 +2,7 @@ using System.Linq;
 using Content.Shared.Body;
 using Content.Shared.DoAfter;
 using Content.Shared.Interaction;
+using Content.Shared.RussStation.Body;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Effects;
@@ -28,30 +29,35 @@ public sealed partial class SurgerySystem
             return;
         }
 
-        var organProtoId = MetaData(organ).EntityPrototype?.ID;
-
         // Block if the patient already has an equivalent organ.
-        // Categorized organs deduplicate by category; null-category organs deduplicate by prototype ID.
-        foreach (var existing in body.Organs.ContainedEntities)
+        // Categorized organs deduplicate by category (shared with the autosurgeon via
+        // OrganReplacementHelper); null-category organs deduplicate by prototype ID.
+        if (organComp.Category != null)
         {
-            if (!TryComp<OrganComponent>(existing, out var existingOrgan))
-                continue;
+            if (OrganReplacementHelper.TryFindOrganByCategory(EntityManager, body.Organs, organComp.Category, out var existing))
+            {
+                _popup.PopupEntity(
+                    Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(existing).EntityName)),
+                    patient, surgeon);
+                return;
+            }
+        }
+        else
+        {
+            var organProtoId = MetaData(organ).EntityPrototype?.ID;
+            foreach (var existing in body.Organs.ContainedEntities)
+            {
+                if (!TryComp<OrganComponent>(existing, out var existingOrgan) || existingOrgan.Category != null)
+                    continue;
 
-            bool isDuplicate;
-            if (organComp.Category != null && existingOrgan.Category != null)
-                isDuplicate = existingOrgan.Category == organComp.Category;
-            else if (organComp.Category == null && existingOrgan.Category == null)
-                isDuplicate = organProtoId != null && organProtoId == MetaData(existing).EntityPrototype?.ID;
-            else
-                isDuplicate = false;
+                if (organProtoId == null || organProtoId != MetaData(existing).EntityPrototype?.ID)
+                    continue;
 
-            if (!isDuplicate)
-                continue;
-
-            _popup.PopupEntity(
-                Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(existing).EntityName)),
-                patient, surgeon);
-            return;
+                _popup.PopupEntity(
+                    Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(existing).EntityName)),
+                    patient, surgeon);
+                return;
+            }
         }
 
         _container.Insert(organ, body.Organs, force: true);
