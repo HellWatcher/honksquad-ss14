@@ -37,11 +37,30 @@ public sealed class LogWindowTest : InteractionTest
         var refresh = logWindow.Logs.RefreshButton;
         var cont = logWindow.Logs.LogsContainer;
 
+        //HONK START - deflake: log requests are serviced asynchronously (Task.Run) and replied
+        // over the network, so a fixed RunTicks(5) wasn't always enough for the reply to arrive
+        // and populate the container. Poll until the expected log shows up instead.
+        async Task<AdminLogLabel[]> WaitForLog(string expected)
+        {
+            AdminLogLabel[] result = [];
+            for (var i = 0; i < 30; i++)
+            {
+                await RunTicks(5);
+                result = cont.Children.Where(x => x.Visible && x is AdminLogLabel).Cast<AdminLogLabel>().ToArray();
+                if (result.Length == 1 && result[0].Log.Message.Contains(expected))
+                    break;
+            }
+
+            return result;
+        }
+        //HONK END
+
         // Search for the log we added earlier.
         await Client.WaitPost(() => search.Text = guid.ToString());
         await ClickControl(refresh);
-        await RunTicks(5);
-        var searchResult = cont.Children.Where(x => x.Visible && x is AdminLogLabel).Cast<AdminLogLabel>().ToArray();
+        //HONK START - deflake: poll for the async reply instead of a single fixed wait
+        var searchResult = await WaitForLog(guid.ToString());
+        //HONK END
         Assert.That(searchResult.Length, Is.EqualTo(1));
         Assert.That(searchResult[0].Log.Message, Contains.Substring($" test log 1: {guid}"));
 
@@ -52,8 +71,9 @@ public sealed class LogWindowTest : InteractionTest
         // Update the search and refresh
         await Client.WaitPost(() => search.Text = guid.ToString());
         await ClickControl(refresh);
-        await RunTicks(5);
-        searchResult = cont.Children.Where(x => x.Visible && x is AdminLogLabel).Cast<AdminLogLabel>().ToArray();
+        //HONK START - deflake: poll for the async reply instead of a single fixed wait
+        searchResult = await WaitForLog(guid.ToString());
+        //HONK END
         Assert.That(searchResult.Length, Is.EqualTo(1));
         Assert.That(searchResult[0].Log.Message, Contains.Substring($" test log 2: {guid}"));
     }
