@@ -13,9 +13,14 @@ namespace Content.IntegrationTests.Tests.RussStation.Skillchips;
 /// Tests that skillchip grants apply and revert symmetrically across install, remove,
 /// and brain-body transfer scenarios.
 /// </summary>
+/// <remarks>
+/// The grant lifecycle scenarios live here; the install-rejection constraint scenarios
+/// (capacity, duplicates, categories) live in <c>SkillchipGrantTest.Constraints.cs</c>.
+/// Both partials share the <see cref="Prototypes"/> fixture below.
+/// </remarks>
 [TestFixture]
 [TestOf(typeof(SharedSkillchipSystem))]
-public sealed class SkillchipGrantTest
+public sealed partial class SkillchipGrantTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
@@ -251,33 +256,6 @@ public sealed class SkillchipGrantTest
     }
 
     /// <summary>
-    /// Installing the same chip twice should return false and not double-apply.
-    /// </summary>
-    [Test]
-    public async Task Install_Duplicate_ReturnsFalse()
-    {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
-        var em = server.ResolveDependency<IEntityManager>();
-        var skillchips = server.System<SharedSkillchipSystem>();
-        var mapData = await pair.CreateTestMap();
-
-        await server.WaitAssertion(() =>
-        {
-            var brain = em.SpawnEntity("TestBrain", mapData.GridCoords);
-            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
-
-            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData"), Is.True);
-            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData"), Is.False,
-                "Second install of the same chip should fail");
-            Assert.That(holder.ImplantedChips.Count, Is.EqualTo(1),
-                "Only one entry should exist after duplicate install attempt");
-        });
-
-        await pair.CleanReturnAsync();
-    }
-
-    /// <summary>
     /// Adding EmpDisabledComponent to a mob that has a chipped brain should revert grants,
     /// and removing it should restore them.
     /// </summary>
@@ -313,62 +291,6 @@ public sealed class SkillchipGrantTest
 
             Assert.That(holder.CapabilityTags, Contains.Item("test_capability"),
                 "Tag should be restored after EMP clears");
-        });
-
-        await pair.CleanReturnAsync();
-    }
-
-    /// <summary>
-    /// Installing beyond max capacity should be rejected.
-    /// </summary>
-    [Test]
-    public async Task Install_OverCapacity_ReturnsFalse()
-    {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
-        var em = server.ResolveDependency<IEntityManager>();
-        var skillchips = server.System<SharedSkillchipSystem>();
-        var mapData = await pair.CreateTestMap();
-
-        await server.WaitAssertion(() =>
-        {
-            var brain = em.SpawnEntity("TestBrainSmall", mapData.GridCoords);
-            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
-
-            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData"), Is.True,
-                "First chip should install within capacity");
-            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData2"), Is.False,
-                "Second chip should be rejected when at capacity");
-        });
-
-        await pair.CleanReturnAsync();
-    }
-
-    /// <summary>
-    /// Installing two chips of the same category should be rejected.
-    /// Installing a chip of a different category should succeed.
-    /// </summary>
-    [Test]
-    public async Task Install_SameCategory_ReturnsFalse()
-    {
-        await using var pair = await PoolManager.GetServerClient();
-        var server = pair.Server;
-        var em = server.ResolveDependency<IEntityManager>();
-        var skillchips = server.System<SharedSkillchipSystem>();
-        var mapData = await pair.CreateTestMap();
-
-        await server.WaitAssertion(() =>
-        {
-            var brain = em.SpawnEntity("TestBrain", mapData.GridCoords);
-            var holder = em.GetComponent<SkillchipHolderComponent>(brain);
-
-            Assert.That(skillchips.TryInstall((brain, holder), "TestChipCategoryA1"), Is.True,
-                "First chip in category should install");
-            Assert.That(skillchips.TryInstall((brain, holder), "TestChipCategoryA2"), Is.False,
-                "Second chip in same category should be rejected");
-            Assert.That(skillchips.TryInstall((brain, holder), "TestChipData"), Is.True,
-                "Chip with no category should still install alongside a categorized chip");
-            Assert.That(holder.ImplantedChips.Count, Is.EqualTo(2));
         });
 
         await pair.CleanReturnAsync();
