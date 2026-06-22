@@ -50,3 +50,6 @@ mode = 1
 
 [database]
 engine = "sqlite"
+
+[replay]
+auto_record = true
