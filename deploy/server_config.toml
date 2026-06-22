@@ -22,7 +22,6 @@ role_timers = false
 role_whitelist = false
 round_restart_time = 300
 map = "Packed"
-# Enables the Lowpop game ruleset (added in PR #284). Default is "Secret".
 secret_weight_prototype = "LowpopSecret"
 
 [shuttle]
