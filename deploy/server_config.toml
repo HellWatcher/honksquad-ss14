@@ -1,0 +1,52 @@
+[log]
+path = "logs"
+format = "log_%(date)s-%(time)s.txt"
+level = 1
+enabled = false
+
+[net]
+tickrate = 60
+port = 1212
+bindto = "::,0.0.0.0"
+max_connections = 256
+
+[status]
+enabled = true
+
+[game]
+hostname = "Honk Squad"
+lobbyenabled = true
+maxplayers = 30
+lobbyduration = 420
+role_timers = false
+role_whitelist = false
+round_restart_time = 300
+map = "Packed"
+secret_weight_prototype = "LowpopSecret"
+
+[shuttle]
+auto_call_time = 90
+
+[server]
+lobby_name = "Honk Squad"
+uptime_restart_minutes = 1440
+rules_file = "StandardRuleset"
+
+[vote]
+restart_not_allowed_when_admin_online = false
+
+[console]
+loginlocal = true
+login_host_user = "HellWatcher"
+
+[hub]
+advertise = false
+tags = ""
+server_url = ""
+hub_urls = "https://hub.spacestation14.com/"
+
+[auth]
+mode = 1
+
+[database]
+engine = "sqlite"
