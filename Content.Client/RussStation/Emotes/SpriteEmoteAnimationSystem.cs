@@ -1,3 +1,4 @@
+using CancellationTokenSource = System.Threading.CancellationTokenSource;
 using Content.Shared.RussStation.Emotes;
 using Robust.Client.Animations;
 using Robust.Client.GameObjects;
@@ -16,6 +17,10 @@ public sealed class SpriteEmoteAnimationSystem : EntitySystem
     [Dependency] private readonly AnimationPlayerSystem _anim = default!;
 
     private const string AnimationKey = "russstation-sprite-emote";
+
+    // Per-entity cancellation for the Timer.Spawn-driven spin cycle, so a new (or spammed)
+    // spin cancels the previous one's leftover step timers instead of letting them fight.
+    private readonly Dictionary<EntityUid, CancellationTokenSource> _spinCancellers = new();
 
     // Counterclockwise as viewed on screen: S → E → N → W.
     private static readonly Direction[] SpinSequence =
@@ -100,6 +105,17 @@ public sealed class SpriteEmoteAnimationSystem : EntitySystem
         if (steps <= 0)
             return;
 
+        // Cancel any spin still cycling on this entity so its leftover timers don't fight this one.
+        if (_spinCancellers.Remove(uid, out var previous))
+        {
+            previous.Cancel();
+            previous.Dispose();
+        }
+
+        var cts = new CancellationTokenSource();
+        _spinCancellers[uid] = cts;
+        var token = cts.Token;
+
         // DirectionOverride/EnableDirectionOverride aren't [Animatable], so drive the cycle
         // off ticks via Timer.Spawn instead of an Animation track.
         var stepInterval = duration.TotalMilliseconds / steps;
@@ -112,12 +128,19 @@ public sealed class SpriteEmoteAnimationSystem : EntitySystem
             {
                 if (TryComp<SpriteComponent>(entity, out var s))
                     s.DirectionOverride = dir;
-            });
+            }, token);
         }
         Timer.Spawn(duration, () =>
         {
             if (TryComp<SpriteComponent>(uid, out var s))
                 s.EnableDirectionOverride = false;
-        });
+
+            // Only this spin's own token reaches here (a newer spin cancels it), so retire it.
+            if (_spinCancellers.TryGetValue(uid, out var current) && current == cts)
+            {
+                _spinCancellers.Remove(uid);
+                cts.Dispose();
+            }
+        }, token);
     }
 }
