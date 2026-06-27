@@ -1,3 +1,6 @@
+using Content.Shared.Stacks;
+using Robust.Shared.Prototypes;
+
 namespace Content.Shared.RussStation.Economy;
 
 /// <summary>
@@ -7,6 +10,12 @@ namespace Content.Shared.RussStation.Economy;
 /// </summary>
 public static class EconomyConstants
 {
+    /// <summary>
+    /// Stack prototype for the station currency. Shared by the payment and
+    /// account-deposit paths so a prototype rename only touches one place.
+    /// </summary>
+    public static readonly ProtoId<StackPrototype> CreditStack = "Credit";
+
     /// <summary>
     /// Number of trailing characters of an account number shown as a short suffix
     /// in the balance cartridge UI (e.g. "...ABCD").
