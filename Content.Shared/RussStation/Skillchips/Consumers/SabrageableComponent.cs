@@ -1,5 +1,6 @@
 using Content.Shared.DoAfter;
 using Content.Shared.Damage;
+using Content.Shared.RussStation.Damage;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -57,7 +58,7 @@ public sealed partial class SabrageableComponent : Component
     [DataField]
     public DamageSpecifier FailureDamage = new()
     {
-        DamageDict = new() { { "Slash", 8 } },
+        DamageDict = new() { { DamageTypeIds.Slash, 8 } },
     };
 
     /// <summary>What to leave behind on a failed swing. Matches the destructible

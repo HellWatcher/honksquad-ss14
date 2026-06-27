@@ -1,6 +1,7 @@
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Rejuvenate;
+using Content.Shared.RussStation.Damage;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Prototypes;
@@ -70,7 +71,7 @@ public abstract class SharedWoundSystem : EntitySystem
             var typeStr = damageType;
 
             // Track bleed source damage type for display
-            if (typeStr == "Slash" || typeStr == "Piercing")
+            if (typeStr == DamageTypeIds.Slash || typeStr == DamageTypeIds.Piercing)
             {
                 changed |= _display.UpdateBleedSource(comp, typeStr, amountFloat);
                 continue; // Bleeding wounds are display-only, not wound entries

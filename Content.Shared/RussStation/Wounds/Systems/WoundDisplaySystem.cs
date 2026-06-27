@@ -1,4 +1,5 @@
 using Content.Shared.Body.Components;
+using Content.Shared.RussStation.Damage;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Prototypes;
@@ -25,11 +26,11 @@ public sealed class WoundDisplaySystem : EntitySystem
         {
             comp.BleedSourceDamageType = damageType;
         }
-        else if (damageType == "Slash")
+        else if (damageType == DamageTypeIds.Slash.Id)
         {
-            comp.BleedSourceDamageType = "Slash";
+            comp.BleedSourceDamageType = DamageTypeIds.Slash.Id;
         }
-        else if (prev != "Slash")
+        else if (prev != DamageTypeIds.Slash.Id)
         {
             comp.BleedSourceDamageType = damageType;
         }
@@ -72,7 +73,7 @@ public sealed class WoundDisplaySystem : EntitySystem
             var bleedTier = GetBleedTier(woundComp, bloodComp);
             if (bleedTier > 0)
             {
-                var source = woundComp.BleedSourceDamageType ?? "Slash";
+                var source = woundComp.BleedSourceDamageType ?? DamageTypeIds.Slash.Id;
                 var locKey = $"wound-bleed-{source.ToLowerInvariant()}-{bleedTier}";
                 result.Add(new WoundDisplayInfo(locKey, bleedTier, WoundCategory.Bleeding));
             }
