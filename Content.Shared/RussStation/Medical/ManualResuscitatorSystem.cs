@@ -6,6 +6,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
+using Content.Shared.RussStation.Damage;
 using Robust.Shared.Audio.Systems;
 
 namespace Content.Shared.RussStation.Medical;
@@ -22,9 +23,6 @@ public sealed class ManualResuscitatorSystem : EntitySystem
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
-
-    private static readonly Robust.Shared.Prototypes.ProtoId<Content.Shared.Damage.Prototypes.DamageTypePrototype>
-        AsphyxiationType = "Asphyxiation";
 
     public override void Initialize()
     {
@@ -112,7 +110,7 @@ public sealed class ManualResuscitatorSystem : EntitySystem
         var damage = _damageable.GetAllDamage(target);
 #pragma warning restore CS0618
 
-        if (!damage.DamageDict.TryGetValue(AsphyxiationType, out var oxy)
+        if (!damage.DamageDict.TryGetValue(DamageTypeIds.Asphyxiation, out var oxy)
             || oxy <= ent.Comp.StopThreshold)
         {
             if (popup)
