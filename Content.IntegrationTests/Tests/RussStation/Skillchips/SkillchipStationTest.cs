@@ -2,6 +2,8 @@ using System;
 using Content.Server.Power.Components;
 using Content.Server.RussStation.Skillchips;
 using Content.Shared.Body;
+using Content.Shared.Destructible;
+using Content.Shared.DragDrop;
 using Content.Shared.Movement.Events;
 using Content.Shared.RussStation.Skillchips;
 using Content.Shared.RussStation.Skillchips.Systems;
@@ -282,6 +284,114 @@ public sealed class SkillchipStationTest
 
             Assert.That(seat.ContainedEntity, Is.Null,
                 "Relay movement should eject the occupant from the body container");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// The can-drop gate accepts a body while the seat is empty and refuses one
+    /// once it is occupied, so a second patient cannot be dropped onto the first.
+    /// </summary>
+    [Test]
+    public async Task CanDragDrop_GatesOnOccupancy()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var em = server.ResolveDependency<IEntityManager>();
+        var containers = server.System<SharedContainerSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            // Seat empty: a body should be a valid drop target.
+            var (station, op, body, _, _) = SetupSeated(em, containers, mapData.MapCoords, seatBody: false);
+
+            var open = new CanDropTargetEvent(op, body);
+            em.EventBus.RaiseLocalEvent(station, ref open);
+            Assert.That(open.Handled, Is.True, "Station should handle the can-drop query");
+            Assert.That(open.CanDrop, Is.True, "An empty station should accept a body");
+
+            // Now seat the body; a further drop must be refused.
+            var seat = containers.EnsureContainer<ContainerSlot>(station, SkillchipStationComponent.BodyContainerId);
+            containers.Insert(body, seat);
+
+            var other = em.SpawnEntity("StationTestBody", mapData.MapCoords);
+            var occupied = new CanDropTargetEvent(op, other);
+            em.EventBus.RaiseLocalEvent(station, ref occupied);
+            Assert.That(occupied.CanDrop, Is.False, "An occupied station should refuse a second body");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Dragging a body onto the station runs the entry DoAfter and, on
+    /// completion, seats the occupant in the body container.
+    /// </summary>
+    [Test]
+    public async Task DragDrop_SeatsOccupant()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var em = server.ResolveDependency<IEntityManager>();
+        var containers = server.System<SharedContainerSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        EntityUid station = default, body = default;
+
+        await server.WaitAssertion(() =>
+        {
+            var (st, op, bodyEnt, _, _) = SetupSeated(em, containers, mapData.MapCoords, seatBody: false);
+            station = st;
+            body = bodyEnt;
+
+            // Shorten the entry delay so the DoAfter completes within a few ticks.
+            em.GetComponent<SkillchipStationComponent>(station).EntryDelay = TimeSpan.FromSeconds(0.1);
+
+            var drop = new DragDropTargetEvent(op, body);
+            em.EventBus.RaiseLocalEvent(station, ref drop);
+            Assert.That(drop.Handled, Is.True, "Station should handle the drag-drop");
+        });
+
+        await server.WaitRunTicks(30);
+
+        await server.WaitAssertion(() =>
+        {
+            var seat = containers.EnsureContainer<ContainerSlot>(station, SkillchipStationComponent.BodyContainerId);
+            Assert.That(seat.ContainedEntity, Is.EqualTo(body),
+                "Entry DoAfter should seat the body in the occupant container");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Destroying the station ejects the occupant rather than deleting them
+    /// along with the machine.
+    /// </summary>
+    [Test]
+    public async Task Destroyed_EjectsOccupant()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var em = server.ResolveDependency<IEntityManager>();
+        var containers = server.System<SharedContainerSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var (station, _, body, _, _) = SetupSeated(em, containers, mapData.MapCoords);
+
+            var seat = containers.EnsureContainer<ContainerSlot>(station, SkillchipStationComponent.BodyContainerId);
+            Assert.That(seat.ContainedEntity, Is.EqualTo(body), "Setup precondition: body seated");
+
+            em.EventBus.RaiseLocalEvent(station, new DestructionEventArgs());
+
+            Assert.That(seat.ContainedEntity, Is.Null,
+                "Destruction should eject the occupant before the machine is removed");
+            Assert.That(em.EntityExists(body), Is.True,
+                "Ejected occupant should survive the station's destruction");
         });
 
         await pair.CleanReturnAsync();
