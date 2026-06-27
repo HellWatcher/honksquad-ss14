@@ -100,7 +100,7 @@ public sealed class AutosurgeonSystem : EntitySystem
 
         if (!TryComp<OrganComponent>(organ, out var organComp))
         {
-            Log.Error($"Autosurgeon organ prototype {comp.OrganPrototype} missing OrganComponent");
+            Log.Error("Autosurgeon organ prototype {OrganPrototype} missing OrganComponent", comp.OrganPrototype);
             QueueDel(organ);
             return;
         }

@@ -30,7 +30,7 @@ public sealed class SurgerySystem : SharedSurgerySystem
         {
             if (!ProtoManager.TryIndex<SurgeryProcedurePrototype>(procedureId, out var proto))
             {
-                Log.Warning($"Server sent unknown surgery procedure prototype: {procedureId}");
+                Log.Warning("Server sent unknown surgery procedure prototype: {ProcedureId}", procedureId);
                 continue;
             }
 
