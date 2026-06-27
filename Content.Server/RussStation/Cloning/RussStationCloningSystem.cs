@@ -35,7 +35,7 @@ public sealed class RussStationCloningSystem : EntitySystem
         {
             if (!Factory.TryGetRegistration(componentName, out var registration))
             {
-                Log.Error($"RussStationCloningSystem: invalid component name in {ForkExtensionsId}: {componentName}");
+                Log.Error("RussStationCloningSystem: invalid component name in {ForkExtensionsId}: {ComponentName}", ForkExtensionsId, componentName);
                 continue;
             }
 

@@ -123,7 +123,7 @@ public sealed partial class SurgerySystem
                 break;
 
             default:
-                Log.Warning($"Unhandled surgery effect type: {effect.GetType().Name} on {ToPrettyString(patient)}");
+                Log.Warning("Unhandled surgery effect type: {EffectType} on {Patient}", effect.GetType().Name, ToPrettyString(patient));
                 break;
         }
     }

@@ -230,7 +230,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         var drapeContainer = _container.EnsureContainer<Container>(target.Value, SurgeryConstants.SurgeryDrapeContainerId);
         if (!_container.Insert(bedsheet.Value, drapeContainer))
         {
-            Log.Warning($"Failed to insert bedsheet {ToPrettyString(bedsheet.Value)} into surgery drape container on {ToPrettyString(target.Value)}");
+            Log.Warning("Failed to insert bedsheet {Bedsheet} into surgery drape container on {Target}", ToPrettyString(bedsheet.Value), ToPrettyString(target.Value));
             RemComp<SurgeryDrapedComponent>(target.Value);
             return;
         }
@@ -364,7 +364,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         if (active.ProcedureId == null ||
             !ProtoManager.TryIndex<SurgeryProcedurePrototype>(active.ProcedureId.Value, out var proto))
         {
-            Log.Warning($"Surgery step DoAfter completed but procedure {active.ProcedureId} is invalid on {ToPrettyString(patient)}");
+            Log.Warning("Surgery step DoAfter completed but procedure {ProcedureId} is invalid on {Patient}", active.ProcedureId, ToPrettyString(patient));
             return;
         }
 

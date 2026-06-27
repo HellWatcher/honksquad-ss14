@@ -373,9 +373,9 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
         Dirty(target, being);
 
         if (!_virtualItem.TrySpawnVirtualItemInHand(target, carrier))
-            Log.Warning($"Failed to spawn first carry virtual item on {ToPrettyString(carrier)}");
+            Log.Warning("Failed to spawn first carry virtual item on {Carrier}", ToPrettyString(carrier));
         if (!_virtualItem.TrySpawnVirtualItemInHand(target, carrier))
-            Log.Warning($"Failed to spawn second carry virtual item on {ToPrettyString(carrier)}");
+            Log.Warning("Failed to spawn second carry virtual item on {Carrier}", ToPrettyString(carrier));
 
         // Parent target to carrier. The client's FrameUpdate handles the visual offset.
         var xform = Transform(target);
