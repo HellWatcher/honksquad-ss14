@@ -264,6 +264,85 @@ public sealed class CarryStateValidationTest
     }
 
     /// <summary>
+    /// A StoodEvent on the carried entity ends the carry. The carried-side auto-drop
+    /// handlers read the carrier off BeingCarriedComponent and drop that, so this also
+    /// guards that the teardown targets the carrier and not the carried entity itself
+    /// (the by-value carried path, which DownedEvent on the carrier doesn't exercise).
+    /// </summary>
+    [Test]
+    public async Task CarriedStoodDropsCarry()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var carrying = server.System<SharedCarryingSystem>();
+        var mobState = server.System<MobStateSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var carrier = entityManager.SpawnEntity("CarryValidationCarrier", mapData.GridCoords);
+            var target = entityManager.SpawnEntity("CarryValidationTarget", mapData.GridCoords);
+
+            mobState.ChangeMobState(target, MobState.Critical);
+            carrying.Carry(carrier, target);
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True);
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.True);
+
+            var ev = new StoodEvent();
+            Assert.DoesNotThrow(() => entityManager.EventBus.RaiseLocalEvent(target, ev),
+                "A StoodEvent on the carried entity must drop the carry without recursing");
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False,
+                "Carrier marker must be cleared when the carried entity stands");
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False,
+                "Target marker must be cleared when the carried entity stands");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// A carried entity recovering to <see cref="MobState.Alive"/> ends the carry. This
+    /// covers the conditional carried-side handler (it only drops on the Alive
+    /// transition, unlike the unconditional handlers) driven through the real mob-state
+    /// system rather than a raw event.
+    /// </summary>
+    [Test]
+    public async Task CarriedWakingDropsCarry()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var carrying = server.System<SharedCarryingSystem>();
+        var mobState = server.System<MobStateSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var carrier = entityManager.SpawnEntity("CarryValidationCarrier", mapData.GridCoords);
+            var target = entityManager.SpawnEntity("CarryValidationTarget", mapData.GridCoords);
+
+            mobState.ChangeMobState(target, MobState.Critical);
+            carrying.Carry(carrier, target);
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.True);
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.True);
+
+            Assert.DoesNotThrow(() => mobState.ChangeMobState(target, MobState.Alive),
+                "A carried entity waking up must drop the carry without recursing");
+
+            Assert.That(entityManager.HasComponent<ActiveCarrierComponent>(carrier), Is.False,
+                "Carrier marker must be cleared when the carried entity wakes");
+            Assert.That(entityManager.HasComponent<BeingCarriedComponent>(target), Is.False,
+                "Target marker must be cleared when the carried entity wakes");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
     /// Buckling an entity that isn't being carried should work normally,
     /// unaffected by the carry system's buckle handler.
     /// </summary>

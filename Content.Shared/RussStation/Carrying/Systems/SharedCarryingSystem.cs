@@ -3,15 +3,11 @@ using Content.Shared.Buckle.Components;
 using Content.Shared.RussStation.Carrying.Components;
 using Content.Shared.RussStation.Carrying.Events;
 using Content.Shared.DoAfter;
-using Content.Shared.DragDrop;
 using Content.Shared.RussStation.EscalatedGrab;
 using Content.Shared.RussStation.EscalatedGrab.Systems;
 using Content.Shared.RussStation.Shared;
-using Content.Shared.Hands;
 using Content.Shared.Hands.EntitySystems;
-using Content.Shared.Interaction;
 using Content.Shared.Inventory.VirtualItem;
-using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Pulling.Components;
@@ -20,17 +16,22 @@ using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Standing;
 using Content.Shared.Stunnable;
-using Content.Shared.Verbs;
-using Robust.Shared.Containers;
 using Robust.Shared.Map;
-using Robust.Shared.Maths;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.RussStation.Carrying.Systems;
 
-public abstract class SharedCarryingSystem : PairedMarkerSystem
+/// <summary>
+/// Core of the carry mechanic: deciding whether a carry is allowed
+/// (<see cref="CanCarry"/>), wiring one up (<see cref="Carry"/>) and tearing it
+/// down (<see cref="Drop"/>). The surrounding concerns are split across partials:
+/// <see cref="AddCarryVerb"/> and friends in <c>.Verbs.cs</c>, drag-drop in
+/// <c>.DragDrop.cs</c>, the auto-drop interruption handlers in <c>.AutoDrop.cs</c>,
+/// and the symmetric teardown in <c>.Cleanup.cs</c>.
+/// </summary>
+public abstract partial class SharedCarryingSystem : PairedMarkerSystem
 {
     [Dependency] private readonly ActionBlockerSystem _actionBlocker = default!;
     [Dependency] private readonly SharedEscalatedGrabSystem _grab = default!;
@@ -55,141 +56,16 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<CarriableComponent, GetVerbsEvent<InteractionVerb>>(AddCarryVerb);
-        SubscribeLocalEvent<BeingCarriedComponent, GetVerbsEvent<InteractionVerb>>(AddCarriedVerbs);
-
-        SubscribeLocalEvent<CarriableComponent, DragDropDraggedEvent>(OnDragDropDragged);
-        SubscribeLocalEvent<CarriableComponent, CanDropDraggedEvent>(OnCanDropDragged);
-        SubscribeLocalEvent<CarrierComponent, CanDropTargetEvent>(OnCanDropTarget);
         SubscribeLocalEvent<CarrierComponent, CarryDoAfterEvent>(OnCarryDoAfter);
-        SubscribeLocalEvent<BeingCarriedComponent, CarryInterruptDoAfterEvent>(OnCarryInterruptDoAfter);
         SubscribeLocalEvent<BeingCarriedComponent, Content.Shared.Pulling.Events.BeingPulledAttemptEvent>(OnCarriedPullAttempt);
         SubscribeLocalEvent<ActiveCarrierComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMoveSpeed);
         SubscribeLocalEvent<BeingCarriedComponent, UpdateCanMoveEvent>(OnCarriedCanMove);
 
-        // Auto-drop conditions
-        SubscribeLocalEvent<BeingCarriedComponent, MobStateChangedEvent>(OnCarriedMobStateChanged);
-        SubscribeLocalEvent<BeingCarriedComponent, StoodEvent>(OnCarriedStood);
-        SubscribeLocalEvent<BeingCarriedComponent, BuckledEvent>(OnCarriedBuckled);
-        SubscribeLocalEvent<ActiveCarrierComponent, MobStateChangedEvent>(OnCarrierMobStateChanged);
-        SubscribeLocalEvent<ActiveCarrierComponent, StunnedEvent>(OnCarrierStunned);
-        SubscribeLocalEvent<ActiveCarrierComponent, DownedEvent>(OnCarrierDowned);
-        SubscribeLocalEvent<BeingCarriedComponent, EntGotInsertedIntoContainerMessage>(OnCarriedInserted);
-        SubscribeLocalEvent<ActiveCarrierComponent, EntGotInsertedIntoContainerMessage>(OnCarrierInserted);
-
-        // Drop carry when the carried entity gets buckled
-        SubscribeLocalEvent<BeingCarriedComponent, BuckleAttemptEvent>(OnCarriedBuckleAttempt);
-
-        // Reactive escape detection: if something reparents the target away from the carrier
-        // without going through Drop(), we need to tear the carry down immediately.
-        SubscribeLocalEvent<BeingCarriedComponent, EntParentChangedMessage>(OnCarriedParentChanged);
-
-        // Cleanup
-        SubscribeLocalEvent<BeingCarriedComponent, ComponentShutdown>(OnBeingCarriedShutdown);
-        SubscribeLocalEvent<ActiveCarrierComponent, ComponentShutdown>(OnActiveCarrierShutdown);
-        SubscribeLocalEvent<ActiveCarrierComponent, DropHandItemsEvent>(OnDropHandItems);
-        SubscribeLocalEvent<CarrierComponent, VirtualItemDeletedEvent>(OnVirtualItemDeleted);
+        InitializeVerbs();
+        InitializeDragDrop();
+        InitializeAutoDrop();
+        InitializeCleanup();
     }
-
-    #region Verbs
-
-    private void AddCarryVerb(EntityUid uid, CarriableComponent component, GetVerbsEvent<InteractionVerb> args)
-    {
-        if (!args.CanAccess || !args.CanInteract)
-            return;
-
-        if (args.User == args.Target)
-            return;
-
-        if (!CanCarry(args.User, args.Target))
-            return;
-
-        args.Verbs.Add(new InteractionVerb
-        {
-            Text = Loc.GetString("carrying-verb-carry"),
-            Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/pickup.svg.192dpi.png")),
-            Act = () =>
-            {
-                if (TryComp<CarrierComponent>(args.User, out var carrier) && CanCarry(args.User, args.Target))
-                    StartCarryDoAfter(args.User, args.Target, carrier);
-            },
-        });
-    }
-
-    private void AddCarriedVerbs(EntityUid uid, BeingCarriedComponent component, GetVerbsEvent<InteractionVerb> args)
-    {
-        if (args.User == component.Carrier)
-        {
-            args.Verbs.Add(new InteractionVerb
-            {
-                Text = Loc.GetString("carrying-verb-drop"),
-                Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/drop.svg.192dpi.png")),
-                Act = () => Drop(args.User),
-            });
-            return;
-        }
-
-        if (!args.CanAccess || !args.CanInteract)
-            return;
-
-        // Carried is the target itself; only third parties get the interrupt.
-        if (args.User == uid)
-            return;
-
-        if (!TryComp<CarriableComponent>(uid, out var carriable))
-            return;
-
-        if (!CanInterruptCarry(args.User, carriable))
-            return;
-
-        args.Verbs.Add(new InteractionVerb
-        {
-            Text = Loc.GetString("carrying-verb-interrupt"),
-            Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/drop.svg.192dpi.png")),
-            Act = () => StartInterruptDoAfter(args.User, uid, carriable),
-        });
-    }
-
-    #endregion
-
-    #region Drag-Drop
-
-    private void OnCanDropDragged(EntityUid uid, CarriableComponent component, ref CanDropDraggedEvent args)
-    {
-        if (args.Target != args.User)
-            return;
-
-        if (CanCarry(args.User, uid))
-        {
-            args.CanDrop = true;
-            args.Handled = true;
-        }
-    }
-
-    private void OnCanDropTarget(EntityUid uid, CarrierComponent component, ref CanDropTargetEvent args)
-    {
-        args.CanDrop = CanCarry(uid, args.Dragged);
-        args.Handled = true;
-    }
-
-    private void OnDragDropDragged(EntityUid uid, CarriableComponent component, ref DragDropDraggedEvent args)
-    {
-        if (args.Handled || args.Target != args.User)
-            return;
-
-        if (!CanCarry(args.User, uid))
-            return;
-
-        if (!TryComp<CarrierComponent>(args.User, out var carrierComp))
-            return;
-
-        StartCarryDoAfter(args.User, uid, carrierComp);
-        args.Handled = true;
-    }
-
-    #endregion
-
-    #region Carry Logic
 
     private bool CanCarry(EntityUid carrier, EntityUid target)
     {
@@ -250,41 +126,6 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
         Carry(uid, args.Target.Value);
     }
 
-    private bool CanInterruptCarry(EntityUid user, CarriableComponent carriable)
-    {
-        if (_standing.IsDown(user) || _mobState.IsIncapacitated(user))
-            return false;
-
-        if (TryComp<BuckleComponent>(user, out var buckle) && buckle.Buckled)
-            return false;
-
-        if (carriable.InterruptRequiresFreeHand && _hands.CountFreeHands(user) < 1)
-            return false;
-
-        return true;
-    }
-
-    private void StartInterruptDoAfter(EntityUid user, EntityUid target, CarriableComponent carriable)
-    {
-        var doAfterArgs = new DoAfterArgs(EntityManager, user, carriable.InterruptDuration, new CarryInterruptDoAfterEvent(), target, target: target)
-        {
-            BreakOnMove = true,
-            BreakOnDamage = true,
-            NeedHand = carriable.InterruptRequiresFreeHand,
-        };
-
-        _doAfter.TryStartDoAfter(doAfterArgs);
-    }
-
-    private void OnCarryInterruptDoAfter(EntityUid uid, BeingCarriedComponent component, CarryInterruptDoAfterEvent args)
-    {
-        if (args.Handled || args.Cancelled || args.User == uid || args.User == component.Carrier)
-            return;
-
-        args.Handled = true;
-        InterruptCarry(args.User, uid);
-    }
-
     /// <summary>
     /// Block third-party pull attempts on a carried entity. Pull-while-carried races
     /// with the carry's reparent and drop hooks (the puller's virtual item handles
@@ -296,38 +137,6 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
     private void OnCarriedPullAttempt(EntityUid uid, BeingCarriedComponent component, Content.Shared.Pulling.Events.BeingPulledAttemptEvent args)
     {
         args.Cancel();
-    }
-
-    /// <summary>
-    /// Third-party interrupt completion path: ends the carry on
-    /// <paramref name="target"/>, stuns the carrier, and plays popups.
-    /// No-ops silently if the carry ended (or swapped carriers) between
-    /// DoAfter start and completion. Public so tests can exercise the
-    /// completion outcome without running the full DoAfter.
-    /// </summary>
-    public void InterruptCarry(EntityUid user, EntityUid target)
-    {
-        if (!TryComp<BeingCarriedComponent>(target, out var being))
-            return;
-
-        var carrier = being.Carrier;
-        if (!HasComp<ActiveCarrierComponent>(carrier))
-            return;
-
-        if (TryComp<CarriableComponent>(target, out var carriable))
-            _stun.TryUpdateStunDuration(carrier, carriable.InterruptStunDuration);
-
-        Drop(carrier);
-
-        _popup.PopupPredicted(
-            Loc.GetString("carrying-interrupt-user", ("target", target), ("carrier", carrier)),
-            Loc.GetString("carrying-interrupt-carrier", ("user", user), ("target", target)),
-            user,
-            user);
-        _popup.PopupEntity(
-            Loc.GetString("carrying-interrupt-carried", ("user", user), ("carrier", carrier)),
-            target,
-            target);
     }
 
     /// <summary>
@@ -427,10 +236,6 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
             "OnActiveCarrierShutdown should have removed the BeingCarriedComponent");
     }
 
-    #endregion
-
-    #region Speed & Movement
-
     private void OnRefreshMoveSpeed(EntityUid uid, ActiveCarrierComponent component, RefreshMovementSpeedModifiersEvent args)
     {
         if (!TryComp<CarrierComponent>(uid, out var carrier))
@@ -443,162 +248,4 @@ public abstract class SharedCarryingSystem : PairedMarkerSystem
     {
         args.Cancel();
     }
-
-    #endregion
-
-    #region Auto-Drop
-
-    private void OnCarriedMobStateChanged(EntityUid uid, BeingCarriedComponent component, MobStateChangedEvent args)
-    {
-        if (args.NewMobState == MobState.Alive)
-            Drop(component.Carrier);
-    }
-
-    private void OnCarriedStood(EntityUid uid, BeingCarriedComponent component, StoodEvent args)
-    {
-        Drop(component.Carrier);
-    }
-
-    private void OnCarriedBuckled(EntityUid uid, BeingCarriedComponent component, ref BuckledEvent args)
-    {
-        Drop(component.Carrier);
-    }
-
-    private void OnCarrierMobStateChanged(EntityUid uid, ActiveCarrierComponent component, MobStateChangedEvent args)
-    {
-        if (args.NewMobState is MobState.Critical or MobState.Dead)
-            Drop(uid);
-    }
-
-    private void OnCarrierStunned(EntityUid uid, ActiveCarrierComponent component, ref StunnedEvent args)
-    {
-        Drop(uid);
-    }
-
-    private void OnCarrierDowned(EntityUid uid, ActiveCarrierComponent component, ref DownedEvent args)
-    {
-        Drop(uid);
-    }
-
-    private void OnCarriedInserted(EntityUid uid, BeingCarriedComponent component, EntGotInsertedIntoContainerMessage args)
-    {
-        Drop(component.Carrier);
-    }
-
-    private void OnCarrierInserted(EntityUid uid, ActiveCarrierComponent component, EntGotInsertedIntoContainerMessage args)
-    {
-        Drop(uid);
-    }
-
-    private void OnCarriedBuckleAttempt(EntityUid uid, BeingCarriedComponent component, ref BuckleAttemptEvent args)
-    {
-        Drop(component.Carrier);
-    }
-
-    private void OnCarriedParentChanged(EntityUid uid, BeingCarriedComponent component, ref EntParentChangedMessage args)
-    {
-        // Ignore the reparent we trigger ourselves during Carry() setup.
-        if (_transitioning.Contains(component.Carrier))
-            return;
-
-        // Entity deletion detaches before component shutdown. Skip — the marker's
-        // own ComponentShutdown handler will run the teardown for the deletion case.
-        if (Terminating(uid))
-            return;
-
-        // PlaceNextTo inside OnBeingCarriedShutdown fires a parent change mid-teardown;
-        // bail so we don't re-enter Drop on an already-Stopping component.
-        if (IsShuttingDown(component))
-            return;
-
-        if (Transform(uid).ParentUid != component.Carrier)
-            Drop(component.Carrier);
-    }
-
-    #endregion
-
-    #region Cleanup
-
-    /// <summary>
-    /// The single teardown path for a carry. Fires when the target's marker is removed —
-    /// whether that removal came from <see cref="Drop"/>, the carrier-side shutdown handler,
-    /// or because the target entity itself is being deleted. Reads the carrier reference
-    /// off the marker so it never depends on any other component still being intact.
-    /// </summary>
-    private void OnBeingCarriedShutdown(EntityUid uid, BeingCarriedComponent component, ComponentShutdown args)
-    {
-        var carrier = component.Carrier;
-
-        // Remove the symmetric carrier-side marker. TryRemovePaired skips if the carrier
-        // is terminating or its marker is already shutting down — without that guard the
-        // two handlers recurse (HasComp stays true during ComponentShutdown).
-        TryRemovePaired<ActiveCarrierComponent>(carrier);
-
-        if (Exists(carrier) && !Terminating(carrier))
-        {
-            _transitioning.Add(carrier);
-            _virtualItem.DeleteInHandsMatching(carrier, uid);
-            _transitioning.Remove(carrier);
-            _movementSpeed.RefreshMovementSpeedModifiers(carrier);
-
-            _popup.PopupClient(Loc.GetString("carrying-drop-carrier", ("target", uid)), carrier, carrier);
-        }
-
-        if (!Terminating(uid))
-        {
-            if (Exists(carrier) && !Terminating(carrier))
-            {
-                var targetXform = Transform(uid);
-                if (targetXform.ParentUid == carrier)
-                {
-                    _transform.PlaceNextTo((uid, targetXform), (carrier, Transform(carrier)));
-                    targetXform.ActivelyLerping = false;
-                    Dirty(uid, targetXform);
-                }
-            }
-
-            _joints.RefreshRelay(uid);
-            _actionBlocker.UpdateCanMove(uid);
-
-            if (!_mobState.IsIncapacitated(uid) && !HasComp<KnockedDownComponent>(uid))
-                _standing.Stand(uid);
-
-            _popup.PopupClient(Loc.GetString("carrying-drop-carried", ("carrier", carrier)), uid, uid);
-        }
-
-        var ev = new CarryStoppedEvent(carrier, uid);
-        if (Exists(carrier))
-            RaiseLocalEvent(carrier, ref ev);
-        RaiseLocalEvent(uid, ref ev);
-    }
-
-    /// <summary>
-    /// Symmetric handler for when the carrier-side marker is removed first — typically
-    /// from <see cref="Drop"/> or the carrier entity itself being deleted. Mirrors removal
-    /// to the target marker; the rest of the teardown then runs from
-    /// <see cref="OnBeingCarriedShutdown"/>.
-    /// </summary>
-    private void OnActiveCarrierShutdown(EntityUid uid, ActiveCarrierComponent component, ComponentShutdown args)
-    {
-        // TryRemovePaired skips if the target is terminating or its marker is already
-        // shutting down — without that guard the two handlers recurse when teardown
-        // enters via BeingCarried first.
-        TryRemovePaired<BeingCarriedComponent>(component.Target);
-    }
-
-    private void OnDropHandItems(EntityUid uid, ActiveCarrierComponent component, DropHandItemsEvent args)
-    {
-        Drop(uid);
-    }
-
-    private void OnVirtualItemDeleted(EntityUid uid, CarrierComponent component, VirtualItemDeletedEvent args)
-    {
-        if (_transitioning.Contains(uid))
-            return;
-
-        if (TryComp<ActiveCarrierComponent>(uid, out var active) && active.Target == args.BlockingEntity)
-            Drop(uid);
-    }
-
-    #endregion
 }
