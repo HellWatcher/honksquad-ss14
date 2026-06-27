@@ -343,20 +343,21 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
 
         // Popup messages: puller sees recipientMessage, everyone else (including target) sees othersMessage.
         var target = state.Target;
-        var localeKey = newStage switch
+        var stage = newStage switch
         {
-            GrabStage.Grab => "escalated-grab-grab",
-            GrabStage.Aggressive => "escalated-grab-aggressive",
-            GrabStage.Choke => "escalated-grab-choke",
+            GrabStage.Grab => "grab",
+            GrabStage.Aggressive => "aggressive",
+            GrabStage.Choke => "choke",
             _ => null,
         };
 
         // Only announce the stage popup on escalation; dropping a stage has its own messaging.
-        if (localeKey != null && newStage > oldStage)
+        // Keep a literal prefix on the fluent key so it stays statically extractable (HONK0029).
+        if (stage != null && newStage > oldStage)
         {
             _popup.PopupPredicted(
-                Loc.GetString($"{localeKey}-puller", ("target", target)),
-                Loc.GetString($"{localeKey}-others", ("puller", puller), ("target", target)),
+                Loc.GetString($"escalated-grab-{stage}-puller", ("target", target)),
+                Loc.GetString($"escalated-grab-{stage}-others", ("puller", puller), ("target", target)),
                 target, puller);
         }
 
