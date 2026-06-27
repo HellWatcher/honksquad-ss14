@@ -39,7 +39,7 @@ public sealed partial class SeparatedChatGameScreen : InGameScreen
         //HONK START - fork action-bar layout controls Columns directly, and setting MaxGridWidth
         // flips the grid into width-based column mode which silently overwrites the chosen column
         // count. Skip the resize and let ActionBarCustomizationController own the layout.
-        if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.OverridesRowLayout)
+        if (Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.OverridesRowLayout)
             return;
         //HONK END
         float indent = 20;

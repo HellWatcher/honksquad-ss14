@@ -335,7 +335,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 return;
             }
         }
-        if (!Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
+        if (!Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.Current.AutoAddActions)
             return;
         //HONK END
 
@@ -765,7 +765,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (args.Function == EngineKeyFunctions.UIRightClick)
         {
             //HONK START - locked bars swallow right-click clear so a mis-click can't wipe a slot
-            if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.LockActions)
+            if (Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.Current.LockActions)
             {
                 args.Handle();
                 return;
@@ -802,7 +802,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (button.Action != null)
         {
             //HONK START - lock blocks drag-rearrange on the bar; clicking an action to fire it still works
-            if (Content.Client.RussStation.ActionBar.ActionBarCustomizationController.LockActions)
+            if (Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.Current.LockActions)
                 return;
             //HONK END
             _menuDragHelper.MouseDown(button);
@@ -1061,7 +1061,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         //HONK START - auto-add off skips the respawn / body-swap repopulate so a curated bar survives,
         // but first link per connection always loads defaults so a new connect isn't a blank bar.
         if (_honkLoadedDefaultsThisConnection
-            && !Content.Client.RussStation.ActionBar.ActionBarCustomizationController.AutoAddActions)
+            && !Content.Client.RussStation.ActionBar.ActionBarRuntimeConfig.Current.AutoAddActions)
             return;
         _honkLoadedDefaultsThisConnection = true;
         //HONK END
