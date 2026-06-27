@@ -32,6 +32,7 @@ public sealed class PullMapGuardSystem : EntitySystem
     [Dependency] private readonly SharedJointSystem _joints = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly PullingSystem _pulling = default!;
+    [Dependency] private readonly EntityQuery<PullableComponent> _pullableQuery = default!;
 
     private readonly List<Joint> _toBreak = new();
 
@@ -62,7 +63,7 @@ public sealed class PullMapGuardSystem : EntitySystem
             if (!MapsDiverged(uid, pulled))
                 continue;
 
-            if (TryComp<PullableComponent>(pulled, out var pullable))
+            if (_pullableQuery.TryGetComponent(pulled, out var pullable))
                 _pulling.TryStopPull(pulled, pullable);
 
             _joints.ClearJoints(pulled);

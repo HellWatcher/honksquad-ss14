@@ -10,6 +10,8 @@ namespace Content.Client.RussStation.Surgery;
 /// </summary>
 public sealed class SurgeryDrapeOverlayVisibilitySystem : EntitySystem
 {
+    [Dependency] private readonly EntityQuery<SpriteComponent> _spriteQuery = default!;
+
     public override void FrameUpdate(float frameTime)
     {
         base.FrameUpdate(frameTime);
@@ -18,7 +20,7 @@ public sealed class SurgeryDrapeOverlayVisibilitySystem : EntitySystem
         while (query.MoveNext(out _, out _, out var overlaySprite, out var overlayXform))
         {
             var parent = overlayXform.ParentUid;
-            if (!parent.IsValid() || !TryComp<SpriteComponent>(parent, out var parentSprite))
+            if (!parent.IsValid() || !_spriteQuery.TryGetComponent(parent, out var parentSprite))
                 continue;
 
             overlaySprite.Rotation = parentSprite.Rotation;

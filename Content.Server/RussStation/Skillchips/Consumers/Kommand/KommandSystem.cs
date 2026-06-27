@@ -31,6 +31,7 @@ public sealed class KommandSystem : SharedKommandSystem
     private const float PointerMatchRadiusSquared = 0.5f;
 
     [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private readonly EntityQuery<KommandEnhancedArrowComponent> _enhancedQuery = default!;
 
     public override void Update(float frameTime)
     {
@@ -39,7 +40,7 @@ public sealed class KommandSystem : SharedKommandSystem
         var arrowQuery = EntityQueryEnumerator<PointingArrowComponent>();
         while (arrowQuery.MoveNext(out var arrowUid, out var arrow))
         {
-            if (HasComp<KommandEnhancedArrowComponent>(arrowUid))
+            if (_enhancedQuery.HasComponent(arrowUid))
                 continue;
 
             // PointingSystem sets StartPosition and EndTime together after Spawn returns.
