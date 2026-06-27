@@ -14,6 +14,7 @@ using Content.Shared.Verbs;
 using Content.Server.RussStation.UI;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
+using SharedEconomyConstants = Content.Shared.RussStation.Economy.EconomyConstants;
 
 namespace Content.Server.RussStation.Economy;
 
@@ -30,7 +31,6 @@ public sealed class IdCardAccountSystem : EntitySystem
     [Dependency] private readonly PlayerBalanceSystem _balance = default!;
     [Dependency] private readonly StackSystem _stack = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
-    private static readonly ProtoId<StackPrototype> CreditStack = "Credit";
 
     public override void Initialize()
     {
@@ -158,7 +158,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (args.Handled)
             return;
 
-        if (!TryComp<StackComponent>(args.Used, out var stack) || stack.StackTypeId != CreditStack)
+        if (!TryComp<StackComponent>(args.Used, out var stack) || stack.StackTypeId != SharedEconomyConstants.CreditStack)
             return;
 
         var idEntity = pda.IdSlot.Item;
@@ -174,7 +174,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (string.IsNullOrEmpty(accountNumber))
             return false;
 
-        if (!TryComp<StackComponent>(cash, out var stack) || stack.StackTypeId != CreditStack)
+        if (!TryComp<StackComponent>(cash, out var stack) || stack.StackTypeId != SharedEconomyConstants.CreditStack)
             return false;
 
         if (!_balance.TryGetByAccount(accountNumber, out var owner))
@@ -278,7 +278,7 @@ public sealed class IdCardAccountSystem : EntitySystem
             return;
         }
 
-        var spawned = _stack.SpawnNextToOrDrop(amount, CreditStack, user);
+        var spawned = _stack.SpawnNextToOrDrop(amount, SharedEconomyConstants.CreditStack, user);
         _hands.TryPickupAnyHand(user, spawned, checkActionBlocker: false);
 
         _popup.PopupEntity(

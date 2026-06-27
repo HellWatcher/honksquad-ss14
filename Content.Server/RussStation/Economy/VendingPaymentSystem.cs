@@ -32,8 +32,6 @@ public sealed class VendingPaymentSystem : EntitySystem
     [Dependency] private readonly SharedStackSystem _stacks = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
-    private static readonly ProtoId<StackPrototype> CreditStack = "Credit";
-
     private float _vendCargoMarkup;
     private float _vendMaterialMarkup;
     private int _vendMinPrice;
@@ -183,7 +181,7 @@ public sealed class VendingPaymentSystem : EntitySystem
         // Cash in hand.
         foreach (var held in _hands.EnumerateHeld(buyer))
         {
-            if (TryComp<StackComponent>(held, out var stack) && stack.StackTypeId == CreditStack)
+            if (TryComp<StackComponent>(held, out var stack) && stack.StackTypeId == SharedEconomyConstants.CreditStack)
                 funds += stack.Count;
         }
 
@@ -214,7 +212,7 @@ public sealed class VendingPaymentSystem : EntitySystem
 
         foreach (var held in _hands.EnumerateHeld(buyer))
         {
-            if (!TryComp<StackComponent>(held, out var stack) || stack.StackTypeId != CreditStack)
+            if (!TryComp<StackComponent>(held, out var stack) || stack.StackTypeId != SharedEconomyConstants.CreditStack)
                 continue;
 
             var take = Math.Min(remaining, stack.Count);
