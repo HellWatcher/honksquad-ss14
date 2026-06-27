@@ -100,25 +100,34 @@ public sealed class PayrollSystem : EntitySystem
                 continue;
 
             comp.NextPayroll = now + interval;
-
-            var wage = GetWage(comp.JobId);
-            if (wage <= 0)
-                continue;
-
-            var wageEv = new GetWageEvent(wage);
-            RaiseLocalEvent(uid, ref wageEv);
-            wage = wageEv.Wage;
-
-            if (wage <= 0)
-                continue;
-
-            _balance.AddBalance(uid, wage, comp, Loc.GetString("transaction-payroll"));
-            var newBalance = _balance.GetBalance(uid, comp);
-            _popup.PopupEntity(Loc.GetString("payroll-received", ("wage", wage), ("balance", newBalance)), uid, uid);
-
-            if (!comp.PaycheckMuted)
-                PlayPdaChime(uid);
+            PayWage(uid, comp);
         }
+    }
+
+    /// <summary>
+    /// Pays one due wage to a single mob. Split out of the per-tick <see cref="Update"/> loop so the
+    /// transaction-label and paycheck-popup strings are only built when a wage actually lands, not
+    /// scanned every tick for every account.
+    /// </summary>
+    private void PayWage(EntityUid uid, PlayerBalanceComponent comp)
+    {
+        var wage = GetWage(comp.JobId);
+        if (wage <= 0)
+            return;
+
+        var wageEv = new GetWageEvent(wage);
+        RaiseLocalEvent(uid, ref wageEv);
+        wage = wageEv.Wage;
+
+        if (wage <= 0)
+            return;
+
+        _balance.AddBalance(uid, wage, comp, Loc.GetString("transaction-payroll"));
+        var newBalance = _balance.GetBalance(uid, comp);
+        _popup.PopupEntity(Loc.GetString("payroll-received", ("wage", wage), ("balance", newBalance)), uid, uid);
+
+        if (!comp.PaycheckMuted)
+            PlayPdaChime(uid);
     }
 
     private static readonly SoundSpecifier PaycheckSound =
