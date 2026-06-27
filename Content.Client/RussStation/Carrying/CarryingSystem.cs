@@ -11,6 +11,7 @@ internal sealed class CarryingSystem : SharedCarryingSystem
 {
     [Dependency] private readonly SpriteSystem _sprite = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private readonly EntityQuery<CarrierComponent> _carrierQuery = default!;
 
     public override void Initialize()
     {
@@ -28,7 +29,7 @@ internal sealed class CarryingSystem : SharedCarryingSystem
         while (query.MoveNext(out var uid, out var being, out var xform))
         {
             var carrier = being.Carrier;
-            if (!TryComp<CarrierComponent>(carrier, out var carrierComp))
+            if (!_carrierQuery.TryGetComponent(carrier, out var carrierComp))
                 continue;
 
             // Local coordinates rotate with the parent, so counter-rotate the offset
