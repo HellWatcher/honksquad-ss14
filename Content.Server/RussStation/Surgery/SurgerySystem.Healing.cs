@@ -2,6 +2,7 @@ using System.Linq;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.FixedPoint;
+using Content.Shared.RussStation.Damage;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Effects;
@@ -81,7 +82,7 @@ public sealed partial class SurgerySystem
     {
         // Cautery burn damage
         var damage = new DamageSpecifier();
-        damage.DamageDict.Add("Heat", FixedPoint2.New(SurgeryConstants.CauteryBurnDamage));
+        damage.DamageDict.Add(DamageTypeIds.Heat, FixedPoint2.New(SurgeryConstants.CauteryBurnDamage));
         _damageable.TryChangeDamage(patient, damage);
 
         // Stop all bleeding

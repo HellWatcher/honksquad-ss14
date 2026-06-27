@@ -1,5 +1,7 @@
 using Content.Shared.Damage;
+using Content.Shared.Damage.Prototypes;
 using Content.Shared.FixedPoint;
+using Content.Shared.RussStation.Damage;
 using Content.Shared.RussStation.Surgery.Effects;
 using Content.Shared.Tools;
 using Robust.Shared.Prototypes;
@@ -132,7 +134,7 @@ public static class SurgeryStepPresets
                     Duration: SurgeryConstants.TendStepDuration,
                     Popup: "surgery-step-treat-brute",
                     Damage: null,
-                    Healing: DamageTypes("Blunt", "Slash", "Piercing"),
+                    Healing: DamageTypes(DamageTypeIds.Blunt, DamageTypeIds.Slash, DamageTypeIds.Piercing),
                     HealingFlat: SurgeryConstants.TendHealingFlat,
                     HealingMultiplier: SurgeryConstants.TendHealingMultiplier,
                     BleedPreset: SurgeryBleedPreset.Manual,
@@ -146,7 +148,7 @@ public static class SurgeryStepPresets
                     Duration: SurgeryConstants.TendStepDuration,
                     Popup: "surgery-step-treat-burn",
                     Damage: null,
-                    Healing: DamageTypes("Heat", "Shock", "Cold", "Caustic"),
+                    Healing: DamageTypes(DamageTypeIds.Heat, DamageTypeIds.Shock, DamageTypeIds.Cold, DamageTypeIds.Caustic),
                     HealingFlat: SurgeryConstants.TendHealingFlat,
                     HealingMultiplier: SurgeryConstants.TendHealingMultiplier,
                     BleedPreset: SurgeryBleedPreset.Manual,
@@ -215,18 +217,18 @@ public static class SurgeryStepPresets
     private static DamageSpecifier Slash(float amount)
     {
         var spec = new DamageSpecifier();
-        spec.DamageDict["Slash"] = FixedPoint2.New(amount);
+        spec.DamageDict[DamageTypeIds.Slash] = FixedPoint2.New(amount);
         return spec;
     }
 
     private static DamageSpecifier Blunt(float amount)
     {
         var spec = new DamageSpecifier();
-        spec.DamageDict["Blunt"] = FixedPoint2.New(amount);
+        spec.DamageDict[DamageTypeIds.Blunt] = FixedPoint2.New(amount);
         return spec;
     }
 
-    private static DamageSpecifier DamageTypes(params string[] types)
+    private static DamageSpecifier DamageTypes(params ProtoId<DamageTypePrototype>[] types)
     {
         var spec = new DamageSpecifier();
         foreach (var t in types)

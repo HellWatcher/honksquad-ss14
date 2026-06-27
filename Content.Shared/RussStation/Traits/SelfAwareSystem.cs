@@ -1,13 +1,16 @@
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
 using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
 using Content.Shared.HealthExaminable;
+using Content.Shared.RussStation.Damage;
 using Content.Shared.RussStation.Wounds;
 using Content.Shared.RussStation.Wounds.Systems;
 using Content.Shared.Verbs;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.RussStation.Traits;
@@ -23,37 +26,37 @@ public sealed class SelfAwareSystem : EntitySystem
     [Dependency] private readonly SharedBloodstreamSystem _bloodstream = default!;
     [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!;
 
-    private static readonly Dictionary<string, string> DamageTypeColors = new()
+    private static readonly Dictionary<ProtoId<DamageTypePrototype>, string> DamageTypeColors = new()
     {
-        { "Slash", "#a8a8a8" },
-        { "Blunt", "#ff5555" },
-        { "Piercing", "#e8d84a" },
-        { "Asphyxiation", "#189FCC" },
-        { "Heat", "#CF5825" },
-        { "Shock", "#FFA100" },
-        { "Cold", "#7a85d6" },
-        { "Caustic", "#FF5993" },
-        { "Radiation", "#E26804" },
+        { DamageTypeIds.Slash, "#a8a8a8" },
+        { DamageTypeIds.Blunt, "#ff5555" },
+        { DamageTypeIds.Piercing, "#e8d84a" },
+        { DamageTypeIds.Asphyxiation, "#189FCC" },
+        { DamageTypeIds.Heat, "#CF5825" },
+        { DamageTypeIds.Shock, "#FFA100" },
+        { DamageTypeIds.Cold, "#7a85d6" },
+        { DamageTypeIds.Caustic, "#FF5993" },
+        { DamageTypeIds.Radiation, "#E26804" },
     };
 
     private static string GetWoundColor(string locKey)
     {
         if (locKey.Contains("bleed-slash"))
-            return DamageTypeColors["Slash"];
+            return DamageTypeColors[DamageTypeIds.Slash];
         if (locKey.Contains("bleed-piercing"))
-            return DamageTypeColors["Piercing"];
+            return DamageTypeColors[DamageTypeIds.Piercing];
         if (locKey.Contains("bluntfracture"))
-            return DamageTypeColors["Blunt"];
+            return DamageTypeColors[DamageTypeIds.Blunt];
         if (locKey.Contains("heatburn"))
-            return DamageTypeColors["Heat"];
+            return DamageTypeColors[DamageTypeIds.Heat];
         if (locKey.Contains("coldburn"))
-            return DamageTypeColors["Cold"];
+            return DamageTypeColors[DamageTypeIds.Cold];
         if (locKey.Contains("shockburn"))
-            return DamageTypeColors["Shock"];
+            return DamageTypeColors[DamageTypeIds.Shock];
         if (locKey.Contains("causticburn"))
-            return DamageTypeColors["Caustic"];
+            return DamageTypeColors[DamageTypeIds.Caustic];
         if (locKey.Contains("radiationburn"))
-            return DamageTypeColors["Radiation"];
+            return DamageTypeColors[DamageTypeIds.Radiation];
         return "#EFEFEF";
     }
 
