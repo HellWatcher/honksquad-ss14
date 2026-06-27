@@ -10,6 +10,7 @@ using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Botany;
 using Content.Shared.RussStation.Botany.Components;
+using Content.Shared.RussStation.Scanner;
 using Content.Shared.Sprite;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
@@ -57,38 +58,37 @@ public sealed class PlantAnalyzerSystem : EntitySystem
 
     public override void Update(float frameTime)
     {
+        // Shared analyzer tick (rate limit, range-check, edge-paused on range exit); see ScannerUpdateHelper.
         var query = EntityQueryEnumerator<PlantAnalyzerComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out var comp, out var transform))
         {
-            if (comp.NextUpdate > _timing.CurTime)
-                continue;
+            var target = comp.ScannedEntity;
+            var result = ScannerUpdateHelper.Evaluate(
+                _transformSystem,
+                _timing.CurTime,
+                target,
+                comp.NextUpdate,
+                comp.UpdateInterval,
+                comp.MaxScanRange,
+                transform.Coordinates,
+                isTargetGone: t => Deleted(t) || !TryGetSeed(t, out _),
+                getTargetCoords: t => Transform(t).Coordinates);
 
-            if (comp.ScannedEntity is not {} target)
-                continue;
+            comp.NextUpdate = result.NextUpdate;
 
-            if (Deleted(target))
+            switch (result.Action)
             {
-                StopAnalyzing((uid, comp), target);
-                continue;
+                case ScannerUpdateHelper.ScanAction.Drop:
+                    StopAnalyzing((uid, comp), target!.Value);
+                    break;
+                case ScannerUpdateHelper.ScanAction.Pause:
+                    PauseAnalyzing((uid, comp), target!.Value);
+                    break;
+                case ScannerUpdateHelper.ScanAction.Push:
+                    comp.IsAnalyzerActive = true;
+                    SendUiUpdate(uid, target!.Value);
+                    break;
             }
-
-            if (!TryGetSeed(target, out _))
-            {
-                StopAnalyzing((uid, comp), target);
-                continue;
-            }
-
-            comp.NextUpdate = _timing.CurTime + comp.UpdateInterval;
-
-            var targetCoords = Transform(target).Coordinates;
-            if (comp.MaxScanRange != null && !_transformSystem.InRange(targetCoords, transform.Coordinates, comp.MaxScanRange.Value))
-            {
-                PauseAnalyzing((uid, comp), target);
-                continue;
-            }
-
-            comp.IsAnalyzerActive = true;
-            SendUiUpdate(uid, target);
         }
     }
 

@@ -24,6 +24,7 @@ using Content.Shared.Interaction.Events;
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.MedicalScanner;
 using Content.Shared.RussStation.MedicalScanner;
+using Content.Shared.RussStation.Scanner;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
@@ -76,35 +77,38 @@ public sealed class HealthAnalyzerReagentSystem : SharedHealthAnalyzerReagentSys
 
     public override void Update(float frameTime)
     {
-        // Mirrors upstream HealthAnalyzerSystem.Update: rate limit, range-check, edge-paused on range exit.
+        // Shared analyzer tick (rate limit, range-check, edge-paused on range exit); see ScannerUpdateHelper.
         var query = EntityQueryEnumerator<HealthAnalyzerReagentScannerComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out var scanner, out var xform))
         {
-            if (scanner.ReagentScanTarget is not { } target)
-                continue;
+            var target = scanner.ReagentScanTarget;
+            var result = ScannerUpdateHelper.Evaluate(
+                _transform,
+                _timing.CurTime,
+                target,
+                scanner.NextReagentUpdate,
+                scanner.ReagentUpdateInterval,
+                scanner.MaxReagentScanRange,
+                xform.Coordinates,
+                isTargetGone: t => Deleted(t),
+                getTargetCoords: t => Transform(t).Coordinates);
 
-            if (scanner.NextReagentUpdate > _timing.CurTime)
-                continue;
+            scanner.NextReagentUpdate = result.NextUpdate;
 
-            if (Deleted(target))
+            switch (result.Action)
             {
-                StopReagentScan((uid, scanner));
-                continue;
+                case ScannerUpdateHelper.ScanAction.Drop:
+                    StopReagentScan((uid, scanner));
+                    break;
+                case ScannerUpdateHelper.ScanAction.Pause:
+                    PauseReagentScan((uid, scanner), target!.Value);
+                    break;
+                case ScannerUpdateHelper.ScanAction.Push:
+                    scanner.IsReagentScanActive = true;
+                    Dirty(uid, scanner);
+                    PushReagentState(uid, target!.Value, active: true);
+                    break;
             }
-
-            scanner.NextReagentUpdate = _timing.CurTime + scanner.ReagentUpdateInterval;
-
-            var targetCoords = Transform(target).Coordinates;
-            if (scanner.MaxReagentScanRange != null
-                && !_transform.InRange(targetCoords, xform.Coordinates, scanner.MaxReagentScanRange.Value))
-            {
-                PauseReagentScan((uid, scanner), target);
-                continue;
-            }
-
-            scanner.IsReagentScanActive = true;
-            Dirty(uid, scanner);
-            PushReagentState(uid, target, active: true);
         }
     }
 
