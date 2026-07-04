@@ -1556,3 +1556,9 @@ Entries:
     type: Add
   time: '2026-05-25T21:59:06.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/747
+- author: HellWatcher
+  changes:
+  - message: Dragging a grabbed target into a portal no longer crashes the client or jolts the puller.
+    type: Fix
+  time: '2026-07-04T22:10:26.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/877
