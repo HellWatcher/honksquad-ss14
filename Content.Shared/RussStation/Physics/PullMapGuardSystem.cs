@@ -16,11 +16,18 @@
 // our parent-changed handler ran before the second transform landed).
 // The sweep runs UpdatesBefore SharedJointSystem.Update so divergent
 // pulls are torn down before InitJoint trips its cross-map assert.
+//
+// Client nullspace drain: prediction resets can re-add a stale
+// JointComponent onto a PVS-detached entity (the re-add-predicted-
+// removals path in ClientGameStateManager skips the Detached check),
+// re-queueing a long-dead pull joint into AddedJoints while the pull
+// link is null on both sides. See Update for the full story.
 using System.Collections.Generic;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
+using Robust.Shared.Network;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Dynamics.Joints;
 using Robust.Shared.Physics.Systems;
@@ -29,6 +36,7 @@ namespace Content.Shared.RussStation.Physics;
 
 public sealed class PullMapGuardSystem : EntitySystem
 {
+    [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedJointSystem _joints = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly PullingSystem _pulling = default!;
@@ -69,6 +77,53 @@ public sealed class PullMapGuardSystem : EntitySystem
             _joints.ClearJoints(pulled);
             _joints.ClearJoints(uid);
         }
+
+        // Client only: drain joints the engine deferred into SharedJointSystem.AddedJoints
+        // while their owner sat detached in nullspace. Prediction resets can resurrect a stale
+        // JointComponent (last server state from before the pull broke - the pullee left PVS
+        // before the joint-removal state could arrive) onto a PVS-detached pullee via the
+        // "re-add predicted removals" path, which skips the Detached check. The client engine
+        // defers those joints into AddedJoints because the transform reads Nullspace, then
+        // inits them on the next tick with no map re-check, tripping the cross-map assert.
+        // By then the pull link is already null on BOTH sides, so the link sweep above and the
+        // parent-changed handlers below can't see it. ClearJoints is the only public API that
+        // drains AddedJoints; on a nullspace entity with an empty Joints dict it is a pure
+        // drain with no side effects. A joint on a nullspace entity can never legally init
+        // anyway (AddJoint itself refuses nullspace), and legitimately re-entering entities
+        // have left nullspace by the time this runs, so they are never touched.
+        if (_net.IsClient)
+        {
+            var jointQuery = EntityQueryEnumerator<JointComponent, TransformComponent>();
+            while (jointQuery.MoveNext(out var uid, out var joint, out var xform))
+            {
+                if (xform.MapID != MapId.Nullspace)
+                    continue;
+
+                if (!ShouldDrainDetached(uid, joint))
+                    continue;
+
+                _joints.ClearJoints(uid, joint);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Whether a nullspace entity's joints should be drained. Co-detached pairs (both
+    /// endpoints in nullspace, e.g. two jointed entities that left PVS together) keep their
+    /// stale-but-consistent data so PVS re-entry can reconcile it; anything else - an empty
+    /// dict possibly hiding a pending <c>AddedJoints</c> entry, or a dict joint whose other
+    /// endpoint is on a real map - gets cleared before it can init cross-map.
+    /// </summary>
+    private bool ShouldDrainDetached(EntityUid uid, JointComponent joint)
+    {
+        foreach (var j in joint.GetJoints.Values)
+        {
+            var other = j.BodyAUid == uid ? j.BodyBUid : j.BodyAUid;
+            if (_transform.GetMapId(other) == MapId.Nullspace)
+                return false;
+        }
+
+        return true;
     }
 
     private void OnJointParentChanged(Entity<JointComponent> ent, ref EntParentChangedMessage args)
