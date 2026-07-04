@@ -82,8 +82,18 @@ public abstract class SharedEscalatedGrabSystem : EntitySystem
         if (!HasComp<PortalComponent>(args.OtherEntity))
             return;
 
-        if (component.Puller is { } puller && HasComp<GrabStateComponent>(puller))
-            ClearEscalation(puller);
+        if (component.Puller is not { } puller || !HasComp<GrabStateComponent>(puller))
+            return;
+
+        ClearEscalation(puller);
+
+        // Force-break the pull before the portal teleports the pullee, mirroring the puller-side
+        // handler above. ClearEscalation only drops the escalation state; without also tearing the
+        // pull joint down it can survive the cross-map teleport and crash on the next physics tick
+        // (the same re-prediction race the puller side guards against, but with the pullee as the
+        // entity being SetCoordinates'd through the portal).
+        if (component.BeingPulled)
+            _pulling.TryStopPull(uid, component);
     }
 
     private void OnPullerBuckled(EntityUid uid, GrabStateComponent component, ref BuckledEvent args)

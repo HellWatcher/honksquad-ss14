@@ -16,11 +16,26 @@
 // our parent-changed handler ran before the second transform landed).
 // The sweep runs UpdatesBefore SharedJointSystem.Update so divergent
 // pulls are torn down before InitJoint trips its cross-map assert.
+//
+// Deferred-joint drain: prediction resets can re-add a stale
+// JointComponent onto a PVS-detached entity (the re-add-predicted-
+// removals path in ClientGameStateManager skips the Detached check),
+// re-queueing a long-dead pull joint into the engine-private
+// SharedJointSystem.AddedJoints while the pull link is null on both
+// sides, so no link- or event-keyed teardown can see it. That re-add
+// always creates a fresh JointComponent (subscribing to the component's
+// ComponentHandleState directly is impossible - the engine's client
+// JointSystem holds that subscription exclusively), so we arm on
+// ComponentStartup and one-shot drain armed owners that sit in
+// nullspace, via ClearJoints - the one public API that also drains
+// AddedJoints - before SharedJointSystem inits them with no map
+// re-check.
 using System.Collections.Generic;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
+using Robust.Shared.Network;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Dynamics.Joints;
 using Robust.Shared.Physics.Systems;
@@ -29,6 +44,7 @@ namespace Content.Shared.RussStation.Physics;
 
 public sealed class PullMapGuardSystem : EntitySystem
 {
+    [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedJointSystem _joints = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly PullingSystem _pulling = default!;
@@ -36,14 +52,27 @@ public sealed class PullMapGuardSystem : EntitySystem
 
     private readonly List<Joint> _toBreak = new();
 
+    // Entities that just gained a JointComponent, checked once in the next Update and then
+    // forgotten. Client-only: the crash feeder (stale state re-added onto a detached entity)
+    // is client state machinery, and a fresh server-side JointComponent in nullspace has no
+    // joints to drain anyway.
+    private readonly HashSet<EntityUid> _freshJointComps = new();
+
     public override void Initialize()
     {
         base.Initialize();
         UpdatesBefore.Add(typeof(SharedJointSystem));
         SubscribeLocalEvent<JointComponent, EntParentChangedMessage>(OnJointParentChanged);
+        SubscribeLocalEvent<JointComponent, ComponentStartup>(OnJointStartup);
         SubscribeLocalEvent<PullerComponent, EntParentChangedMessage>(OnPullerParentChanged);
         SubscribeLocalEvent<PullableComponent, EntParentChangedMessage>(OnPullableParentChanged);
 
+    }
+
+    private void OnJointStartup(Entity<JointComponent> ent, ref ComponentStartup args)
+    {
+        if (_net.IsClient)
+            _freshJointComps.Add(ent.Owner);
     }
 
     public override void Update(float frameTime)
@@ -68,6 +97,32 @@ public sealed class PullMapGuardSystem : EntitySystem
 
             _joints.ClearJoints(pulled);
             _joints.ClearJoints(uid);
+        }
+
+        // One-shot check on freshly added JointComponents. The one that matters: a stale pull
+        // joint resurrected onto a PVS-detached pullee by the prediction reset (see header) -
+        // the engine defers it into AddedJoints because the pullee's transform reads
+        // Nullspace, and the drain in SharedJointSystem.Update, which runs right after us,
+        // inits it with no map re-check, tripping the cross-map assert. A joint on a
+        // nullspace entity can never legally init this tick (AddJoint itself refuses
+        // nullspace), so drain it; owners on real maps are legitimate joint setups and pass
+        // untouched. The set is cleared every Update, so this does nothing at all on ticks
+        // without new joint components, and fires at most once per component addition -
+        // repeating it every tick would spam the engine's ClearJoints debug log.
+        if (_freshJointComps.Count > 0)
+        {
+            foreach (var uid in _freshJointComps)
+            {
+                if (TerminatingOrDeleted(uid))
+                    continue;
+
+                if (_transform.GetMapId(uid) != MapId.Nullspace)
+                    continue;
+
+                _joints.ClearJoints(uid);
+            }
+
+            _freshJointComps.Clear();
         }
     }
 
