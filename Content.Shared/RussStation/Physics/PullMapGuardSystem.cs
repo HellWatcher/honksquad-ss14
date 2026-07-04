@@ -91,9 +91,13 @@ public sealed class PullMapGuardSystem : EntitySystem
         // drain with no side effects. A joint on a nullspace entity can never legally init
         // anyway (AddJoint itself refuses nullspace), and legitimately re-entering entities
         // have left nullspace by the time this runs, so they are never touched.
+        // AllEntityQuery, not EntityQueryEnumerator: PVS-detached entities are marked paused
+        // (ClientGameStateManager.Detach does this without raising a pause event), and the
+        // plain enumerator skips paused entities - which is exactly the population this sweep
+        // exists to visit.
         if (_net.IsClient)
         {
-            var jointQuery = EntityQueryEnumerator<JointComponent, TransformComponent>();
+            var jointQuery = AllEntityQuery<JointComponent, TransformComponent>();
             while (jointQuery.MoveNext(out var uid, out var joint, out var xform))
             {
                 if (xform.MapID != MapId.Nullspace)
