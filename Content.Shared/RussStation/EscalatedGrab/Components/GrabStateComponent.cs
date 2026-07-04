@@ -115,4 +115,18 @@ public sealed partial class GrabStateComponent : Component
         0.5f, // Aggressive
         0.3f, // Choke
     ];
+
+    /// <summary>
+    /// Fluent locale-key stage segments for the escalation popup, or <c>null</c> for stages with
+    /// no escalation popup. Callers build the final key as <c>"escalated-grab-{segment}-puller"</c>
+    /// (puller) and <c>"escalated-grab-{segment}-others"</c> (everyone else, including the target).
+    /// The literal <c>escalated-grab-</c> prefix keeps the key statically extractable (HONK0029).
+    /// </summary>
+    public static readonly string?[] StagePopupSegments =
+    [
+        null,         // Pull (no escalation popup)
+        "grab",       // Grab
+        "aggressive", // Aggressive
+        "choke",      // Choke
+    ];
 }
