@@ -1,4 +1,4 @@
-namespace Content.Shared.RussStation.Shared;
+namespace Content.Shared.RussStation.Markers;
 
 /// <summary>
 /// Base class for systems that manage a pair of marker components whose shutdown
