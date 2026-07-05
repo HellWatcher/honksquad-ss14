@@ -1,12 +1,9 @@
 using Content.Server.Cargo.Systems;
-using Content.Shared.Access.Systems;
-using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Materials;
 using Content.Shared.Popups;
 using Content.Shared.Research.Prototypes;
 using Content.Shared.RussStation.Economy;
 using Content.Shared.RussStation.Economy.Components;
-using Content.Shared.Stacks;
 using SharedEconomyConstants = Content.Shared.RussStation.Economy.EconomyConstants;
 using Content.Shared.VendingMachines;
 using Robust.Shared.Configuration;
@@ -26,10 +23,7 @@ public sealed class VendingPaymentSystem : EntitySystem
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly PricingSystem _pricing = default!;
-    [Dependency] private readonly PlayerBalanceSystem _balance = default!;
-    [Dependency] private readonly SharedIdCardSystem _idCard = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedStackSystem _stacks = default!;
+    [Dependency] private readonly PaymentCollectionSystem _payment = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
     private float _vendCargoMarkup;
@@ -144,86 +138,19 @@ public sealed class VendingPaymentSystem : EntitySystem
             return;
         }
 
-        // Try ID-based account payment first.
-        if (TryPayByAccount(args.User, price))
+        // Charge the buyer's account first, then physical spesos in hand.
+        if (_payment.TryPayByAccount(args.User, price, Loc.GetString("transaction-vending"))
+            || _payment.TryPayByCash(args.User, price))
+        {
             return;
-
-        // Try paying with physical spesos in hand.
-        if (TryPayByCash(args.User, price))
-            return;
+        }
 
         // Can't pay.
-        var currentBalance = GetAvailableFunds(args.User);
         _popup.PopupEntity(
-            Loc.GetString("vending-machine-insufficient-funds", ("cost", price), ("balance", currentBalance)),
+            Loc.GetString("vending-machine-insufficient-funds", ("cost", price), ("balance", _payment.GetAvailableFunds(args.User))),
             uid,
             args.User);
         args.Cancelled = true;
-    }
-
-    private int GetAvailableFunds(EntityUid buyer)
-    {
-        var funds = 0;
-
-        // Account balance.
-        if (_idCard.TryFindIdCard(buyer, out var idCard)
-            && TryComp<BankLinkedCardComponent>(idCard, out var bankCard)
-            && !string.IsNullOrEmpty(bankCard.AccountNumber)
-            && _balance.TryGetByAccount(bankCard.AccountNumber, out var owner))
-        {
-            funds += _balance.GetBalance(owner);
-        }
-        else if (TryComp<PlayerBalanceComponent>(buyer, out var directBalance))
-        {
-            funds += directBalance.Balance;
-        }
-
-        // Cash in hand.
-        foreach (var held in _hands.EnumerateHeld(buyer))
-        {
-            if (TryComp<StackComponent>(held, out var stack) && stack.StackTypeId == SharedEconomyConstants.CreditStack)
-                funds += stack.Count;
-        }
-
-        return funds;
-    }
-
-    private bool TryPayByAccount(EntityUid buyer, int price)
-    {
-        if (_idCard.TryFindIdCard(buyer, out var idCard)
-            && TryComp<BankLinkedCardComponent>(idCard, out var bankCard)
-            && !string.IsNullOrEmpty(bankCard.AccountNumber)
-            && _balance.TryGetByAccount(bankCard.AccountNumber, out var owner)
-            && TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
-        {
-            return _balance.TryDeduct(owner, price, balanceComp, Loc.GetString("transaction-vending"));
-        }
-
-        // Fallback: direct mob lookup (mob has balance but no ID).
-        if (TryComp<PlayerBalanceComponent>(buyer, out var directBalance))
-            return _balance.TryDeduct(buyer, price, directBalance, Loc.GetString("transaction-vending"));
-
-        return false;
-    }
-
-    private bool TryPayByCash(EntityUid buyer, int price)
-    {
-        var remaining = price;
-
-        foreach (var held in _hands.EnumerateHeld(buyer))
-        {
-            if (!TryComp<StackComponent>(held, out var stack) || stack.StackTypeId != SharedEconomyConstants.CreditStack)
-                continue;
-
-            var take = Math.Min(remaining, stack.Count);
-            _stacks.TryUse((held, stack), take);
-            remaining -= take;
-
-            if (remaining <= 0)
-                return true;
-        }
-
-        return remaining <= 0;
     }
 
     /// <summary>

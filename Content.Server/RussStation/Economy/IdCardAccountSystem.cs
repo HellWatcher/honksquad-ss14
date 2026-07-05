@@ -29,6 +29,7 @@ public sealed class IdCardAccountSystem : EntitySystem
     [Dependency] private readonly TrackedDialogSystem _trackedDialog = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly PlayerBalanceSystem _balance = default!;
+    [Dependency] private readonly PaymentCollectionSystem _payment = default!;
     [Dependency] private readonly StackSystem _stack = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
 
@@ -77,7 +78,7 @@ public sealed class IdCardAccountSystem : EntitySystem
                 Impact = LogImpact.Low,
             });
         }
-        else if (_balance.TryGetByAccount(accountNumber, out _))
+        else if (_payment.TryGetAccountByCard(uid, out _, out _))
         {
             args.Verbs.Add(new AlternativeVerb
             {
@@ -128,8 +129,7 @@ public sealed class IdCardAccountSystem : EntitySystem
 
         using (args.PushGroup(nameof(IdCardAccountSystem)))
         {
-            if (!_balance.TryGetByAccount(accountNumber, out var owner)
-                || !TryComp<PlayerBalanceComponent>(owner, out var balanceComp))
+            if (!_payment.TryGetAccountByCard(uid, out _, out var balanceComp))
             {
                 args.PushMarkup(Loc.GetString("id-card-account-invalid-examine"));
                 return;
@@ -177,7 +177,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (!TryComp<StackComponent>(cash, out var stack) || stack.StackTypeId != SharedEconomyConstants.CreditStack)
             return false;
 
-        if (!_balance.TryGetByAccount(accountNumber, out var owner))
+        if (!_payment.TryGetAccountByCard(idCard, out var owner, out var balanceComp))
         {
             _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, user, PopupType.MediumCaution);
             return true;
@@ -187,7 +187,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (amount <= 0)
             return false;
 
-        _balance.AddBalance(owner, amount, description: Loc.GetString("transaction-deposit"));
+        _balance.AddBalance(owner, amount, balanceComp, Loc.GetString("transaction-deposit"));
         QueueDel(cash);
 
         _popup.PopupEntity(
@@ -259,7 +259,7 @@ public sealed class IdCardAccountSystem : EntitySystem
         if (amount <= 0)
             return;
 
-        if (!_balance.TryGetByAccount(accountNumber, out var owner))
+        if (!_payment.TryGetAccountByCard(idCard, out var owner, out var balanceComp))
         {
             _popup.PopupEntity(Loc.GetString("id-card-account-invalid"), idCard, session, PopupType.MediumCaution);
             return;
@@ -272,7 +272,7 @@ public sealed class IdCardAccountSystem : EntitySystem
             return;
         }
 
-        if (!_balance.TryDeduct(owner, amount, description: Loc.GetString("transaction-withdraw")))
+        if (!_balance.TryDeduct(owner, amount, balanceComp, Loc.GetString("transaction-withdraw")))
         {
             _popup.PopupEntity(Loc.GetString("id-card-withdraw-insufficient"), idCard, session, PopupType.MediumCaution);
             return;
