@@ -13,6 +13,20 @@ namespace Content.Server.RussStation.Surgery;
 
 public sealed partial class SurgerySystem
 {
+    // Organ category IDs that represent limbs rather than internal organs. Limbs are excluded from
+    // the organ-removal menu and from duplicate-by-category checks below.
+    private static readonly HashSet<string> LimbCategories = new()
+    {
+        "Torso", "Head",
+        "ArmLeft", "ArmRight",
+        "HandLeft", "HandRight",
+        "LegLeft", "LegRight",
+        "FootLeft", "FootRight",
+    };
+
+    // Tracks the tool held when the organ removal menu was opened, keyed by patient.
+    private readonly Dictionary<EntityUid, EntityUid> _pendingOrganRemovalTools = new();
+
     private void InitializeOrgans()
     {
         // Organ-specific subscriptions can go here if needed.
@@ -30,34 +44,13 @@ public sealed partial class SurgerySystem
         }
 
         // Block if the patient already has an equivalent organ.
-        // Categorized organs deduplicate by category (shared with the autosurgeon via
-        // OrganReplacementHelper); null-category organs deduplicate by prototype ID.
-        if (organComp.Category != null)
+        var organProtoId = MetaData(organ).EntityPrototype?.ID;
+        if (FindDuplicateOrgan(body, organComp, organProtoId) is { } existing)
         {
-            if (OrganReplacementHelper.TryFindOrganByCategory(EntityManager, body.Organs, organComp.Category, out var existing))
-            {
-                _popup.PopupEntity(
-                    Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(existing).EntityName)),
-                    patient, surgeon);
-                return;
-            }
-        }
-        else
-        {
-            var organProtoId = MetaData(organ).EntityPrototype?.ID;
-            foreach (var existing in body.Organs.ContainedEntities)
-            {
-                if (!TryComp<OrganComponent>(existing, out var existingOrgan) || existingOrgan.Category != null)
-                    continue;
-
-                if (organProtoId == null || organProtoId != MetaData(existing).EntityPrototype?.ID)
-                    continue;
-
-                _popup.PopupEntity(
-                    Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(existing).EntityName)),
-                    patient, surgeon);
-                return;
-            }
+            _popup.PopupEntity(
+                Loc.GetString("surgery-organ-already-exists", ("organ", MetaData(existing).EntityName)),
+                patient, surgeon);
+            return;
         }
 
         _container.Insert(organ, body.Organs, force: true);
@@ -208,14 +201,33 @@ public sealed partial class SurgerySystem
 
     private static bool IsLimbCategory(ProtoId<OrganCategoryPrototype>? category)
     {
-        if (category == null)
-            return false;
+        return category != null && LimbCategories.Contains(category.Value.Id);
+    }
 
-        return category.Value.Id is
-            "Torso" or "Head" or
-            "ArmLeft" or "ArmRight" or
-            "HandLeft" or "HandRight" or
-            "LegLeft" or "LegRight" or
-            "FootLeft" or "FootRight";
+    /// <summary>
+    /// Finds an organ already on the patient that the incoming organ would duplicate, or null if
+    /// there is none. Categorized organs deduplicate by category via the shared helper (also used by
+    /// the autosurgeon); null-category organs deduplicate by prototype ID.
+    /// </summary>
+    private EntityUid? FindDuplicateOrgan(BodyComponent body, OrganComponent organComp, string? organProtoId)
+    {
+        if (organComp.Category != null)
+        {
+            return OrganReplacementHelper.TryFindOrganByCategory(EntityManager, body.Organs!, organComp.Category, out var existing)
+                ? existing
+                : null;
+        }
+
+        // Null-category organs deduplicate by prototype ID.
+        foreach (var existing in body.Organs!.ContainedEntities)
+        {
+            if (!TryComp<OrganComponent>(existing, out var existingOrgan) || existingOrgan.Category != null)
+                continue;
+
+            if (organProtoId != null && organProtoId == MetaData(existing).EntityPrototype?.ID)
+                return existing;
+        }
+
+        return null;
     }
 }

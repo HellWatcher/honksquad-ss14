@@ -6,7 +6,6 @@ using Content.Shared.RussStation.Damage;
 using Content.Shared.RussStation.Surgery;
 using Content.Shared.RussStation.Surgery.Components;
 using Content.Shared.RussStation.Surgery.Effects;
-using Content.Shared.RussStation.Wounds;
 
 namespace Content.Server.RussStation.Surgery;
 
@@ -26,33 +25,13 @@ public sealed partial class SurgerySystem
             if ((healingFlat > 0 || healingMultiplier > 0) &&
                 TryComp<DamageableComponent>(patient, out var damageable))
             {
-                // Calculate healing budget: flat + (total_eligible_damage * multiplier)
+                // Healing budget: flat + (total_eligible_damage * multiplier), distributed
+                // proportionally. Shared with implants/potions via HealingBudgetCalculator.
                 var currentDamage = _damageable.GetPositiveDamage((patient, damageable));
-                var totalDamage = FixedPoint2.Zero;
+                var healSpec = HealingBudgetCalculator.Calculate(currentDamage, healing, healingFlat, healingMultiplier);
 
-                foreach (var type in healing.DamageDict.Keys)
-                {
-                    if (currentDamage.DamageDict.TryGetValue(type, out var current))
-                        totalDamage += current;
-                }
-
-                if (totalDamage > 0)
-                {
-                    var budget = FixedPoint2.New(healingFlat + (float) totalDamage * healingMultiplier);
-
-                    // Distribute proportionally across eligible damage types
-                    var healSpec = new DamageSpecifier();
-                    foreach (var type in healing.DamageDict.Keys)
-                    {
-                        if (currentDamage.DamageDict.TryGetValue(type, out var current) && current > 0)
-                        {
-                            var share = budget * current / totalDamage;
-                            healSpec.DamageDict[type] = -share;
-                        }
-                    }
-
+                if (healSpec != null)
                     _damageable.TryChangeDamage(patient, healSpec, true);
-                }
             }
             else
             {
@@ -126,70 +105,5 @@ public sealed partial class SurgerySystem
                 Log.Warning("Unhandled surgery effect type: {EffectType} on {Patient}", effect.GetType().Name, ToPrettyString(patient));
                 break;
         }
-    }
-
-    /// <summary>
-    /// True if the procedure has at least one useful step whose target condition
-    /// is present on the patient: a healing step matching current damage above a
-    /// small epsilon, or a wound-clearing step matching an active wound category.
-    /// Procedures with no healing or wound-clearing steps (e.g. organ manipulation)
-    /// always pass.
-    /// </summary>
-    private bool ProcedureHasAnythingToTend(EntityUid patient, SurgeryProcedurePrototype proto)
-    {
-        var hasUsefulStep = false;
-        DamageSpecifier? currentDamage = null;
-        if (TryComp<DamageableComponent>(patient, out var damageable))
-            currentDamage = _damageable.GetPositiveDamage((patient, damageable));
-
-        TryComp<WoundComponent>(patient, out var wounds);
-
-        foreach (var step in proto.Steps)
-        {
-            var healing = step.GetHealing();
-            if (healing != null)
-            {
-                hasUsefulStep = true;
-
-                if (currentDamage != null)
-                {
-                    foreach (var type in healing.DamageDict.Keys)
-                    {
-                        if (currentDamage.DamageDict.TryGetValue(type, out var amount) && amount > FixedPoint2.New(SurgeryConstants.HealingDamageEpsilon))
-                            return true;
-                    }
-                }
-            }
-
-            if (step.GetEffect() is ClearWoundCategoryEffect clear)
-            {
-                hasUsefulStep = true;
-
-                if (wounds != null && _wounds.GetWorstTier(wounds, clear.Category) > 0)
-                    return true;
-            }
-        }
-
-        return !hasUsefulStep;
-    }
-
-    private bool StepCanStillHeal(EntityUid patient, SurgeryStep step)
-    {
-        var healing = step.GetHealing();
-        if (healing == null || (step.GetHealingFlat() <= 0 && step.GetHealingMultiplier() <= 0))
-            return false;
-
-        if (!TryComp<DamageableComponent>(patient, out var damageable))
-            return false;
-
-        var currentDamage = _damageable.GetPositiveDamage((patient, damageable));
-
-        foreach (var type in healing.DamageDict.Keys)
-        {
-            if (currentDamage.DamageDict.TryGetValue(type, out var amount) && amount > 0)
-                return true;
-        }
-
-        return false;
     }
 }

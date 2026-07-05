@@ -52,9 +52,6 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
 
     private List<string> _cachedProcedureIds = new();
 
-    // Tracks the tool held when the organ removal menu was opened, keyed by patient.
-    private readonly Dictionary<EntityUid, EntityUid> _pendingOrganRemovalTools = new();
-
     public override void Initialize()
     {
         base.Initialize();
@@ -183,38 +180,11 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         if (!ProtoManager.TryIndex<SurgeryProcedurePrototype>(ev.ProcedureId, out var proto))
             return;
 
-        // Validate: surgeon must be in range of patient
-        if (!_interaction.InRangeUnobstructed(surgeon, target.Value))
-            return;
-
-        // No self-surgery
-        if (surgeon == target.Value)
-            return;
-
-        // Validate: patient must still be down and not already draped
-        if (_drapedQuery.HasComp(target.Value))
+        var (valid, error) = ValidateProcedureSelection(surgeon, target.Value, bedsheet.Value, proto);
+        if (!valid)
         {
-            _popup.PopupEntity(Loc.GetString("surgery-already-draped"), target.Value, surgeon);
-            return;
-        }
-
-        if (!_standing.IsDown(target.Value))
-        {
-            _popup.PopupEntity(Loc.GetString("surgery-patient-not-down"), target.Value, surgeon);
-            return;
-        }
-
-        // Validate: drape item must still exist and have Draping quality
-        if (!Exists(bedsheet.Value) || !_tool.HasQuality(bedsheet.Value, DrapingQuality))
-        {
-            _popup.PopupEntity(Loc.GetString("surgery-drape-missing"), target.Value, surgeon);
-            return;
-        }
-
-        // Validate: if the procedure only heals and the patient has no matching damage, refuse.
-        if (!ProcedureHasAnythingToTend(target.Value, proto))
-        {
-            _popup.PopupEntity(Loc.GetString("surgery-nothing-to-tend", ("target", target.Value)), target.Value, surgeon);
+            if (error != null)
+                _popup.PopupEntity(error, target.Value, surgeon);
             return;
         }
 
@@ -358,20 +328,27 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             return;
 
         args.Handled = true;
-        var patient = ent.Owner;
-        var active = ent.Comp;
+        args.Repeat = ProcessStepDoAfter(ent.Owner, ent.Comp, args.User);
+    }
 
+    /// <summary>
+    /// Runs a completed surgery step: applies its effects, advances or auto-repeats the procedure,
+    /// shows the step/completion popups, and dispatches any attached effect.
+    /// </summary>
+    /// <returns>True if the DoAfter should auto-repeat (effect-less repeatable step that still heals).</returns>
+    private bool ProcessStepDoAfter(EntityUid patient, ActiveSurgeryComponent active, EntityUid? user)
+    {
         if (active.ProcedureId == null ||
             !ProtoManager.TryIndex<SurgeryProcedurePrototype>(active.ProcedureId.Value, out var proto))
         {
             Log.Warning("Surgery step DoAfter completed but procedure {ProcedureId} is invalid on {Patient}", active.ProcedureId, ToPrettyString(patient));
-            return;
+            return false;
         }
 
         if (active.CurrentStep >= proto.Steps.Count)
         {
             _popup.PopupEntity(Loc.GetString("surgery-procedure-complete"), patient);
-            return;
+            return false;
         }
 
         var step = proto.Steps[active.CurrentStep];
@@ -382,6 +359,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         // Apply side effects
         ApplyStepEffects(patient, step);
 
+        var repeat = false;
         var suppressStepPopup = false;
         var repeatable = step.GetRepeatable();
         var effect = step.GetEffect();
@@ -401,9 +379,9 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             var healedSomething = damageAfter < damageBefore;
 
             // Auto-repeat only if healing actually reduced damage.
-            args.Repeat = healedSomething && StepCanStillHeal(patient, step);
+            repeat = healedSomething && StepCanStillHeal(patient, step);
 
-            if (!args.Repeat)
+            if (!repeat)
             {
                 // Swap the step popup for the completion popup so we don't double up.
                 suppressStepPopup = true;
@@ -412,16 +390,18 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         }
 
         // Step popup (skipped on the terminal iteration of a repeatable step).
-        if (!suppressStepPopup && !string.IsNullOrEmpty(popup) && args.User is { } user)
-            _popup.PopupEntity(Loc.GetString(popup, ("user", user), ("target", patient)), patient);
+        if (!suppressStepPopup && !string.IsNullOrEmpty(popup) && user is { } popupUser)
+            _popup.PopupEntity(Loc.GetString(popup, ("user", popupUser), ("target", patient)), patient);
 
         // Trigger effect if this step has one
         if (effect != null)
-            HandleEffect(args.User, patient, effect);
+            HandleEffect(user, patient, effect);
 
         // Procedure steps exhausted, wait for cautery to close
         if (active.CurrentStep >= proto.Steps.Count)
             _popup.PopupEntity(Loc.GetString("surgery-procedure-complete"), patient);
+
+        return repeat;
     }
 
     private void OnCauteryDoAfter(Entity<ActiveSurgeryComponent> ent, ref SurgeryCauteryDoAfterEvent args)
