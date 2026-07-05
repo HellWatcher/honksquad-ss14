@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Server.RussStation.Messenger;
+using Content.Shared.CartridgeLoader;
 using Content.Shared.PDA;
 using Content.Shared.RussStation.Messenger;
 using Content.Shared.StationRecords;
@@ -20,7 +21,9 @@ public sealed class MessengerServerTest
 {
     /// <summary>
     /// Build a cartridge wired into a PDA the way the loader does at runtime: the cartridge's
-    /// transform parent is a PDA, and that PDA optionally holds an ID card.
+    /// transform parent is a PDA, and that PDA optionally holds an ID card. Pass
+    /// <paramref name="withLoader"/> to mark the PDA as a cartridge loader so the cartridge is
+    /// visible to the contact-list discovery scan.
     /// </summary>
     private static EntityUid MakeWiredCartridge(
         IEntityManager entMan,
@@ -28,10 +31,14 @@ public sealed class MessengerServerTest
         MapCoordinates coords,
         string address,
         bool withId = true,
-        bool stationCrewId = false)
+        bool stationCrewId = false,
+        bool withLoader = false)
     {
         var pda = entMan.SpawnEntity(null, coords);
         var pdaComp = entMan.AddComponent<PdaComponent>(pda);
+
+        if (withLoader)
+            entMan.AddComponent<CartridgeLoaderComponent>(pda);
 
         if (withId)
         {
@@ -276,6 +283,122 @@ public sealed class MessengerServerTest
             var crew = MakeWiredCartridge(entMan, xformSys, coords, "NT9012", stationCrewId: true);
             Assert.That(messenger.IsContactReadOnly(crew), Is.False,
                 "A station-roster crew cartridge should be writable.");
+
+            entMan.DeleteEntity(mapSys.GetMap(mapId));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task GetContactsDiscoversCrewAndGatesStrangersTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapSys = entMan.System<SharedMapSystem>();
+        var xformSys = entMan.System<SharedTransformSystem>();
+        var messenger = entMan.System<MessengerServerSystem>();
+
+        await server.WaitAssertion(() =>
+        {
+            mapSys.CreateMap(out var mapId);
+            var coords = new MapCoordinates(0, 0, mapId);
+
+            var me = MakeWiredCartridge(entMan, xformSys, coords, "NT0001", stationCrewId: true, withLoader: true);
+            var crew = MakeWiredCartridge(entMan, xformSys, coords, "NT0002", stationCrewId: true, withLoader: true);
+            // Antag address: hidden until there's a conversation.
+            var antag = MakeWiredCartridge(entMan, xformSys, coords, "SY0003", stationCrewId: true, withLoader: true);
+            // Crew address but no ID: also hidden until there's a conversation.
+            var noId = MakeWiredCartridge(entMan, xformSys, coords, "NT0004", withId: false, withLoader: true);
+
+            var contacts = messenger.GetContacts(me);
+            var cartridges = contacts.Select(c => entMan.GetEntity(c.Cartridge)).ToList();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(cartridges, Does.Not.Contain(me), "Own cartridge is excluded.");
+                Assert.That(cartridges, Does.Contain(crew), "Station crew should always be discovered.");
+                Assert.That(cartridges, Does.Not.Contain(antag), "Antag with no conversation should be hidden.");
+                Assert.That(cartridges, Does.Not.Contain(noId), "No-ID stranger with no conversation should be hidden.");
+            });
+
+            var crewContact = contacts.First(c => entMan.GetEntity(c.Cartridge) == crew);
+            Assert.That(crewContact.ReadOnly, Is.False, "Station crew contacts are writable.");
+
+            entMan.DeleteEntity(mapSys.GetMap(mapId));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task GetContactsIncludesConversationPartnersReadOnlyTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapSys = entMan.System<SharedMapSystem>();
+        var xformSys = entMan.System<SharedTransformSystem>();
+        var messenger = entMan.System<MessengerServerSystem>();
+
+        await server.WaitAssertion(() =>
+        {
+            mapSys.CreateMap(out var mapId);
+            var coords = new MapCoordinates(0, 0, mapId);
+
+            var me = MakeWiredCartridge(entMan, xformSys, coords, "NT0001", stationCrewId: true, withLoader: true);
+            var antag = MakeWiredCartridge(entMan, xformSys, coords, "SY0003", withLoader: true);
+
+            bool Lists(EntityUid cart) =>
+                messenger.GetContacts(me).Any(c => entMan.GetEntity(c.Cartridge) == cart);
+
+            Assert.That(Lists(antag), Is.False, "A stranger with no conversation should not be listed.");
+
+            // Once the antag messages us, they surface as a read-only contact.
+            Assert.That(messenger.SendMessage(antag, me, "knock knock"), Is.True);
+
+            var antagContact = messenger.GetContacts(me).FirstOrDefault(c => entMan.GetEntity(c.Cartridge) == antag);
+            Assert.That(antagContact, Is.Not.Null, "A conversation partner should be listed.");
+            Assert.That(antagContact!.ReadOnly, Is.True, "Non-crew conversation partners are read-only.");
+
+            entMan.DeleteEntity(mapSys.GetMap(mapId));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task GetContactsReconcilesOrphanedConversationsTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var mapSys = entMan.System<SharedMapSystem>();
+        var xformSys = entMan.System<SharedTransformSystem>();
+        var messenger = entMan.System<MessengerServerSystem>();
+
+        await server.WaitAssertion(() =>
+        {
+            mapSys.CreateMap(out var mapId);
+            var coords = new MapCoordinates(0, 0, mapId);
+
+            var me = MakeWiredCartridge(entMan, xformSys, coords, "NT0001", stationCrewId: true, withLoader: true);
+            var other = MakeWiredCartridge(entMan, xformSys, coords, "NT0002", stationCrewId: true, withLoader: true);
+
+            Assert.That(messenger.SendMessage(other, me, "ping"), Is.True);
+
+            // Remove the cartridge component so the discovery scan no longer enumerates it, even
+            // though the entity still exists: it must be reconciled from the stored conversation,
+            // labelled with the last name the partner signed with.
+            entMan.RemoveComponent<MessengerCartridgeComponent>(other);
+
+            var contacts = messenger.GetContacts(me);
+            var orphan = contacts.FirstOrDefault(c => entMan.GetEntity(c.Cartridge) == other);
+
+            Assert.That(orphan, Is.Not.Null, "A conversation partner missing from the scan should still appear.");
+            Assert.That(orphan!.ReadOnly, Is.True, "Reconciled orphan contacts are read-only.");
+            Assert.That(orphan.Name, Is.EqualTo("NT0002"), "Orphan is labelled with the partner's last known name.");
 
             entMan.DeleteEntity(mapSys.GetMap(mapId));
         });

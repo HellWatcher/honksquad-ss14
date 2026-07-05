@@ -1,9 +1,6 @@
-using Content.Shared.Access.Components;
-using Content.Shared.CartridgeLoader;
 using Content.Shared.GameTicking;
 using Content.Shared.PDA;
 using Content.Shared.RussStation.Messenger;
-using Content.Shared.StationRecords;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
@@ -14,7 +11,7 @@ namespace Content.Server.RussStation.Messenger;
 /// Messages are keyed by cartridge entity pairs and wiped on round restart.
 /// Each cartridge gets a unique short address (like a MAC) on init.
 /// </summary>
-public sealed class MessengerServerSystem : EntitySystem
+public sealed class MessengerServerSystem : EntitySystem, IMessengerMessageStore
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
@@ -23,16 +20,10 @@ public sealed class MessengerServerSystem : EntitySystem
     public const int MaxMessagesPerConversation = 50;
 
     /// <summary>
-    /// Address prefixes for antag categories. Any address starting with one of these is filtered.
+    /// Default address prefix for station crew. Kept for backwards compatibility; the canonical
+    /// value lives on <see cref="AntagAddressFilter"/>.
     /// </summary>
-    private static readonly Dictionary<string, string> AntagPrefixes = new()
-    {
-        { "syndicate", "SY" },
-        { "ninja", "NJ" },
-        { "pirate", "PR" },
-        { "wizard", "WZ" },
-        { "CBURN", "CB" },
-    };
+    public const string CrewAddressPrefix = AntagAddressFilter.CrewAddressPrefix;
 
     /// <summary>
     /// Messages keyed by canonical cartridge UID pair (lower first).
@@ -46,9 +37,18 @@ public sealed class MessengerServerSystem : EntitySystem
 
     private readonly HashSet<string> _usedAddresses = new();
 
+    private AntagAddressFilter _antagFilter = default!;
+    private CartridgeIdentityValidator _identity = default!;
+    private ContactListBuilder _contactBuilder = default!;
+
     public override void Initialize()
     {
         base.Initialize();
+
+        _antagFilter = AntagAddressFilter.Default;
+        _identity = new CartridgeIdentityValidator(EntityManager, _antagFilter);
+        _contactBuilder = new ContactListBuilder(EntityManager, _identity, this);
+
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
         SubscribeLocalEvent<MessengerCartridgeComponent, MapInitEvent>(OnMapInit);
     }
@@ -63,24 +63,11 @@ public sealed class MessengerServerSystem : EntitySystem
     private void OnMapInit(EntityUid uid, MessengerCartridgeComponent comp, MapInitEvent args)
     {
         var loaderUid = Transform(uid).ParentUid;
-        var prefix = CrewAddressPrefix;
+        var prefix = _antagFilter.CrewPrefix;
         if (HasComp<PdaComponent>(loaderUid))
-            prefix = GetAddressPrefix(MetaData(loaderUid).EntityName);
+            prefix = _antagFilter.GetAddressPrefix(MetaData(loaderUid).EntityName);
         comp.Address = GenerateAddress(prefix);
         Dirty(uid, comp);
-    }
-
-    public const string CrewAddressPrefix = "NT";
-
-    private static string GetAddressPrefix(string pdaName)
-    {
-        foreach (var (keyword, prefix) in AntagPrefixes)
-        {
-            if (pdaName.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                return prefix;
-        }
-
-        return CrewAddressPrefix;
     }
 
     private string GenerateAddress(string prefix)
@@ -92,20 +79,19 @@ public sealed class MessengerServerSystem : EntitySystem
                 return addr;
         }
 
-        var fallback = $"{prefix}{_usedAddresses.Count:X4}";
-        _usedAddresses.Add(fallback);
-        return fallback;
-    }
-
-    private static bool IsAntagAddress(string address)
-    {
-        foreach (var (_, prefix) in AntagPrefixes)
+        // Random generation kept colliding; deterministically scan the address space for the first
+        // free slot so we never silently hand out a duplicate address.
+        for (var n = 0; n < MessengerConstants.CrewAddressHexRange; n++)
         {
-            if (address.StartsWith(prefix))
-                return true;
+            var addr = $"{prefix}{n:X4}";
+            if (_usedAddresses.Add(addr))
+                return addr;
         }
 
-        return false;
+        // The entire 4-hex address space for this prefix is exhausted (~65k cartridges); a collision
+        // is now unavoidable. This should never happen in a real round.
+        Log.Error("Messenger address space exhausted for prefix '{Prefix}'; addresses may now collide.", prefix);
+        return $"{prefix}{_random.Next(MessengerConstants.CrewAddressHexRange):X4}";
     }
 
     /// <summary>
@@ -116,11 +102,11 @@ public sealed class MessengerServerSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(text))
             return false;
 
-        if (!TryComp<MessengerCartridgeComponent>(senderCart, out var senderComp))
+        if (!TryComp<MessengerCartridgeComponent>(senderCart, out _))
             return false;
 
         // Must have an ID card to send.
-        var senderName = GetCartridgeIdName(senderCart);
+        var senderName = _identity.GetCartridgeIdName(senderCart);
         if (senderName == null)
             return false;
 
@@ -182,56 +168,40 @@ public sealed class MessengerServerSystem : EntitySystem
     /// <summary>
     /// Build a contact list for a given cartridge. Scans all other cartridges.
     /// </summary>
-    public List<MessengerContact> GetContacts(EntityUid myCart)
+    public List<MessengerContact> GetContacts(EntityUid myCart) => _contactBuilder.Build(myCart);
+
+    /// <summary>
+    /// Check if a target cartridge is read-only. A cartridge is writable only when it belongs
+    /// to station crew: not an antag address, has an ID inserted, and that ID is on the station
+    /// records roster (so CentComm and ERT IDs are excluded).
+    /// </summary>
+    public bool IsContactReadOnly(EntityUid targetCart) => !_identity.IsStationCrewCartridge(targetCart);
+
+    /// <summary>
+    /// Check if the cartridge's PDA has an ID card inserted.
+    /// </summary>
+    public bool HasIdCard(EntityUid cartUid) => _identity.HasIdCard(cartUid);
+
+    /// <inheritdoc/>
+    public bool HasConversation(EntityUid a, EntityUid b)
     {
-        if (!TryComp<MessengerCartridgeComponent>(myCart, out var myComp))
-            return new List<MessengerContact>();
+        var key = MakeKey(a, b);
+        return _messages.TryGetValue(key, out var msgs) && msgs.Count > 0;
+    }
 
-        var contacts = new List<MessengerContact>();
-        var seen = new HashSet<EntityUid>();
-        seen.Add(myCart);
-
-        var query = EntityQueryEnumerator<MessengerCartridgeComponent>();
-        while (query.MoveNext(out var cartUid, out var cartComp))
-        {
-            if (!seen.Add(cartUid))
-                continue;
-
-            var loaderUid = Transform(cartUid).ParentUid;
-            if (!HasComp<CartridgeLoaderComponent>(loaderUid))
-                continue;
-
-            if (!TryComp<PdaComponent>(loaderUid, out var pda))
-                continue;
-
-            // Station crew = not an antag, holds an ID, ID is registered in station records.
-            // Anyone else (antag, no ID, CentComm/ERT) only shows up when there's already a
-            // conversation, and is always read-only.
-            var isCrew = !IsAntagAddress(cartComp.Address)
-                         && pda.ContainedId is { } id
-                         && IsStationCrewId(id);
-
-            if (!isCrew && !HasConversation(myCart, cartUid))
-                continue;
-
-            var contact = BuildContact(myCart, cartUid, pda, readOnly: !isCrew);
-            contacts.Add(contact);
-        }
-
-        // Find conversation partners whose cartridges aren't in the scan (destroyed, etc.)
+    /// <inheritdoc/>
+    public IEnumerable<ConversationPartner> GetConversationPartners(EntityUid myCart)
+    {
         foreach (var ((a, b), msgs) in _messages)
         {
             if (msgs.Count == 0)
                 continue;
 
             var other = a == myCart ? b : b == myCart ? a : EntityUid.Invalid;
-            if (other == EntityUid.Invalid || !seen.Add(other))
+            if (other == EntityUid.Invalid)
                 continue;
 
-            if (!Exists(other))
-                continue;
-
-            // Use the last known sender name from the conversation.
+            // Use the last name the other party signed with, falling back to their address.
             var lastName = CompOrNull<MessengerCartridgeComponent>(other)?.Address ?? "?";
             for (var i = msgs.Count - 1; i >= 0; i--)
             {
@@ -242,86 +212,8 @@ public sealed class MessengerServerSystem : EntitySystem
                 }
             }
 
-            contacts.Add(new MessengerContact(GetNetEntity(other), lastName, "", "", HasUnread(myCart, other), true));
+            yield return new ConversationPartner(other, lastName);
         }
-
-        return contacts;
-    }
-
-    private MessengerContact BuildContact(EntityUid myCart, EntityUid otherCart, PdaComponent pda, bool readOnly)
-    {
-        var name = CompOrNull<MessengerCartridgeComponent>(otherCart)?.Address ?? "?";
-        var jobTitle = "";
-        var jobIcon = "";
-
-        if (pda.ContainedId is { } idUid &&
-            TryComp<IdCardComponent>(idUid, out var idCard))
-        {
-            if (!string.IsNullOrEmpty(idCard.FullName))
-                name = idCard.FullName;
-            jobTitle = idCard.LocalizedJobTitle ?? "";
-        }
-
-        return new MessengerContact(GetNetEntity(otherCart), name, jobTitle, jobIcon, HasUnread(myCart, otherCart), readOnly);
-    }
-
-    /// <summary>
-    /// Check if a target cartridge is read-only. A cartridge is writable only when it belongs
-    /// to station crew: not an antag address, has an ID inserted, and that ID is on the station
-    /// records roster (so CentComm and ERT IDs are excluded).
-    /// </summary>
-    public bool IsContactReadOnly(EntityUid targetCart) => !IsStationCrewCartridge(targetCart);
-
-    private bool IsStationCrewCartridge(EntityUid cartUid)
-    {
-        return TryComp<MessengerCartridgeComponent>(cartUid, out var comp)
-               && !IsAntagAddress(comp.Address)
-               && TryComp<PdaComponent>(Transform(cartUid).ParentUid, out var pda)
-               && pda.ContainedId is { } id
-               && IsStationCrewId(id);
-    }
-
-    /// <summary>
-    /// True if the ID card was issued through station records (i.e. the holder is on the station crew roster).
-    /// CentComm/ERT IDs spawn directly from prototypes and lack a station record key.
-    /// </summary>
-    private bool IsStationCrewId(EntityUid idCard)
-    {
-        return TryComp<StationRecordKeyStorageComponent>(idCard, out var keyStorage)
-               && keyStorage.Key != null;
-    }
-
-    /// <summary>
-    /// Get the ID card name for a cartridge's PDA, or null if no ID is inserted.
-    /// </summary>
-    private string? GetCartridgeIdName(EntityUid cartUid)
-    {
-        var loaderUid = Transform(cartUid).ParentUid;
-        if (!TryComp<PdaComponent>(loaderUid, out var pda) || pda.ContainedId == null)
-            return null;
-
-        if (TryComp<IdCardComponent>(pda.ContainedId.Value, out var idCard) &&
-            !string.IsNullOrEmpty(idCard.FullName))
-        {
-            return idCard.FullName;
-        }
-
-        return CompOrNull<MessengerCartridgeComponent>(cartUid)?.Address ?? "?";
-    }
-
-    /// <summary>
-    /// Check if the cartridge's PDA has an ID card inserted.
-    /// </summary>
-    public bool HasIdCard(EntityUid cartUid)
-    {
-        var loaderUid = Transform(cartUid).ParentUid;
-        return TryComp<PdaComponent>(loaderUid, out var pda) && pda.ContainedId != null;
-    }
-
-    private bool HasConversation(EntityUid a, EntityUid b)
-    {
-        var key = MakeKey(a, b);
-        return _messages.TryGetValue(key, out var msgs) && msgs.Count > 0;
     }
 
     private static (EntityUid, EntityUid) MakeKey(EntityUid a, EntityUid b)
