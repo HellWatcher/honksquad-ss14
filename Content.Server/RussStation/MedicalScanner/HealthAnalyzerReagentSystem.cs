@@ -1,24 +1,5 @@
-using System.Linq;
-using Content.Server.Body.Components;
-using Content.Server.Body.Systems;
 using Content.Server.Medical.Components;
-using Content.Shared.Body;
 using Content.Shared.Body.Components;
-using Content.Shared.Body.Systems;
-using Content.Shared.Chemistry.Components;
-using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Chemistry.Reagent;
-using Content.Shared.Damage;
-using Content.Shared.Damage.Prototypes;
-using Content.Shared.EntityConditions;
-using Content.Shared.EntityConditions.Conditions;
-using Content.Shared.EntityEffects;
-using Content.Shared.EntityEffects.Effects;
-using Content.Shared.EntityEffects.Effects.Damage;
-using Content.Shared.EntityEffects.Effects.Solution;
-using Content.Shared.EntityEffects.Effects.StatusEffects;
-using Content.Shared.EntityEffects.Effects.Transform;
-using Content.Shared.FixedPoint;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Item.ItemToggle.Components;
@@ -27,7 +8,6 @@ using Content.Shared.RussStation.MedicalScanner;
 using Content.Shared.RussStation.Scanner;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using UpstreamHealthAnalyzerSystem = Content.Server.Medical.HealthAnalyzerSystem;
 
@@ -46,19 +26,9 @@ namespace Content.Server.RussStation.MedicalScanner;
 public sealed class HealthAnalyzerReagentSystem : SharedHealthAnalyzerReagentSystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly SharedSolutionContainerSystem _solutions = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
-
-    private readonly Dictionary<string, ReagentDoseThresholds> _thresholdCache = new();
-
-    public readonly record struct ReagentDoseThresholds(
-        FixedPoint2? HarmfulMin,
-        FixedPoint2? HarmfulMax,
-        FixedPoint2? BeneficialMin);
-
-    private enum EffectClass { Harmful, Beneficial, Neutral }
+    [Dependency] private readonly SolutionAggregator _aggregator = default!;
 
     public override void Initialize()
     {
@@ -71,8 +41,6 @@ public sealed class HealthAnalyzerReagentSystem : SharedHealthAnalyzerReagentSys
         SubscribeLocalEvent<HealthAnalyzerReagentScannerComponent, DroppedEvent>(OnDropped);
         SubscribeLocalEvent<HealthAnalyzerReagentScannerComponent, EntGotInsertedIntoContainerMessage>(OnInsertedIntoContainer);
         SubscribeLocalEvent<HealthAnalyzerReagentScannerComponent, ItemToggledEvent>(OnToggled);
-
-        SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
     }
 
     public override void Update(float frameTime)
@@ -110,12 +78,6 @@ public sealed class HealthAnalyzerReagentSystem : SharedHealthAnalyzerReagentSys
                     break;
             }
         }
-    }
-
-    private void OnPrototypesReloaded(PrototypesReloadedEventArgs args)
-    {
-        if (args.WasModified<ReagentPrototype>())
-            _thresholdCache.Clear();
     }
 
     private void OnHealthDoAfter(Entity<HealthAnalyzerReagentScannerComponent> ent, ref HealthAnalyzerDoAfterEvent args)
@@ -201,233 +163,14 @@ public sealed class HealthAnalyzerReagentSystem : SharedHealthAnalyzerReagentSys
             StopReagentScan(ent);
     }
 
+    /// <summary>
+    /// Builds the full reagent UI state for <paramref name="target"/>. Group construction is
+    /// delegated to <see cref="SolutionAggregator"/>; this wrapper just attaches the display name.
+    /// </summary>
     public HealthAnalyzerReagentState BuildState(EntityUid target)
     {
-        var groups = new List<HealthAnalyzerReagentGroup>();
-
-        if (TryComp<BloodstreamComponent>(target, out var bloodstream))
-        {
-            // Reagent OD/UD thresholds are calibrated against whole-reagent doses in the blood.
-            // Metabolites are the trickle of in-progress metabolism output — their quantities
-            // never reach those thresholds, so flagging them would be misleading noise. Only the
-            // Blood group gets dose flags; metabolites / stomach / lung / puddle / container
-            // entries pass false and render plain "{reagent}: Nu" without the dose chrome.
-            AddSolution(groups, target, bloodstream.BloodSolutionName, ref bloodstream.BloodSolution,
-                Loc.GetString("health-analyzer-reagent-group-blood"), showDoseFlags: true);
-            AddSolution(groups, target, bloodstream.MetabolitesSolutionName, ref bloodstream.MetabolitesSolution,
-                Loc.GetString("health-analyzer-reagent-group-metabolites"));
-
-            AddOrganSolutions<StomachComponent>(groups, target,
-                "health-analyzer-reagent-group-stomach",
-                "health-analyzer-reagent-group-stomach-indexed",
-                (uid, stomach) =>
-                {
-                    var handle = stomach.Solution;
-                    return _solutions.ResolveSolution(uid, StomachSystem.DefaultSolutionName, ref handle, out var sol)
-                        ? sol : null;
-                });
-
-            AddOrganSolutions<LungComponent>(groups, target,
-                "health-analyzer-reagent-group-lung",
-                "health-analyzer-reagent-group-lung-indexed",
-                (uid, lung) =>
-                {
-                    // LungComponent is [Access]-locked to LungSystem; copy Solution into a local
-                    // so ResolveSolution's ref parameter doesn't write back through the locked field.
-                    var handle = lung.Solution;
-                    return _solutions.ResolveSolution(uid, lung.SolutionName, ref handle, out var sol)
-                        ? sol : null;
-                });
-        }
-
+        var groups = _aggregator.BuildGroups(target);
         var displayName = Identity.Name(target, EntityManager);
         return new HealthAnalyzerReagentState(GetNetEntity(target), displayName, groups);
-    }
-
-    private void AddOrganSolutions<TOrgan>(
-        List<HealthAnalyzerReagentGroup> groups,
-        EntityUid body,
-        string singleKey,
-        string indexedKey,
-        Func<EntityUid, TOrgan, Solution?> resolve)
-        where TOrgan : IComponent
-    {
-        if (!TryComp<BodyComponent>(body, out var bodyComp) || bodyComp.Organs is null)
-            return;
-
-        var organs = new List<(EntityUid Uid, TOrgan Comp)>();
-        foreach (var organ in bodyComp.Organs.ContainedEntities)
-        {
-            if (TryComp<TOrgan>(organ, out var comp))
-                organs.Add((organ, comp));
-        }
-
-        for (var i = 0; i < organs.Count; i++)
-        {
-            var (uid, comp) = organs[i];
-            var label = organs.Count > MedicalScannerConstants.MultiOrganLabelThreshold
-                ? Loc.GetString(indexedKey, ("index", i + MedicalScannerConstants.OrganIndexLabelOffset))
-                : Loc.GetString(singleKey);
-            if (resolve(uid, comp) is { } sol)
-                AddSolutionFromSolution(groups, sol, label);
-        }
-    }
-
-    private void AddSolution(List<HealthAnalyzerReagentGroup> groups, EntityUid owner, string name,
-        ref Entity<SolutionComponent>? handle, string label, bool showDoseFlags = false)
-    {
-        if (!_solutions.ResolveSolution(owner, name, ref handle, out var solution))
-            return;
-
-        AddSolutionFromSolution(groups, solution, label, showDoseFlags);
-    }
-
-    private void AddSolutionFromSolution(List<HealthAnalyzerReagentGroup> groups, Solution solution, string label, bool showDoseFlags = false)
-    {
-        var entries = new List<HealthAnalyzerReagentEntry>(solution.Contents.Count);
-        foreach (var (id, qty) in solution.Contents
-                     .Select(rq => (rq.Reagent.Prototype, rq.Quantity))
-                     .OrderByDescending(t => t.Quantity))
-        {
-            if (!_proto.TryIndex<ReagentPrototype>(id, out var protoData))
-                continue;
-
-            var od = false;
-            var ud = false;
-            if (showDoseFlags)
-            {
-                var thresholds = GetDoseThresholds(protoData);
-                od = (thresholds.HarmfulMin.HasValue && qty >= thresholds.HarmfulMin.Value)
-                     || (thresholds.HarmfulMax.HasValue && qty <= thresholds.HarmfulMax.Value);
-                ud = !od && thresholds.BeneficialMin.HasValue && qty < thresholds.BeneficialMin.Value;
-            }
-            entries.Add(new HealthAnalyzerReagentEntry(id, protoData.LocalizedName, protoData.SubstanceColor, qty, od, ud));
-        }
-
-        groups.Add(new HealthAnalyzerReagentGroup(label, solution.Volume, solution.MaxVolume, entries));
-    }
-
-    /// <summary>
-    /// Walks a reagent's metabolisms looking for self-referencing <see cref="ReagentCondition"/>s
-    /// and buckets the bounds into harmful or beneficial thresholds based on the effect type.
-    /// </summary>
-    public ReagentDoseThresholds GetDoseThresholds(ReagentPrototype proto)
-    {
-        if (_thresholdCache.TryGetValue(proto.ID, out var cached))
-            return cached;
-
-        FixedPoint2? harmfulMin = null;
-        FixedPoint2? harmfulMax = null;
-        FixedPoint2? beneficialMin = null;
-
-        if (proto.Metabolisms != null)
-        {
-            foreach (var (_, entry) in proto.Metabolisms.Metabolisms)
-            {
-                foreach (var effect in entry.Effects)
-                {
-                    if (effect.Conditions == null)
-                        continue;
-
-                    var cls = ClassifyEffect(effect, proto.ID);
-                    if (cls == EffectClass.Neutral)
-                        continue;
-
-                    var (selfMin, selfMax) = SelfBounds(proto.ID, effect.Conditions);
-                    if (selfMin is null && selfMax is null)
-                        continue;
-
-                    if (cls == EffectClass.Beneficial)
-                    {
-                        if (selfMin is { } bMin && (beneficialMin is null || bMin < beneficialMin.Value))
-                            beneficialMin = bMin;
-                    }
-                    else
-                    {
-                        if (selfMin is { } hMin && (harmfulMin is null || hMin < harmfulMin.Value))
-                            harmfulMin = hMin;
-                        if (selfMax is { } hMax && (harmfulMax is null || hMax > harmfulMax.Value))
-                            harmfulMax = hMax;
-                    }
-                }
-            }
-        }
-
-        var result = new ReagentDoseThresholds(harmfulMin, harmfulMax, beneficialMin);
-        _thresholdCache[proto.ID] = result;
-        return result;
-    }
-
-    private static (FixedPoint2? Min, FixedPoint2? Max) SelfBounds(string reagentId, EntityCondition[] conditions)
-    {
-        FixedPoint2? min = null;
-        FixedPoint2? max = null;
-        foreach (var cond in conditions)
-        {
-            if (cond is not ReagentCondition rc)
-                continue;
-            if (rc.Reagent != reagentId)
-                continue;
-            if (rc.Inverted)
-                continue;
-
-            if (rc.Min > FixedPoint2.Zero && (min is null || rc.Min < min.Value))
-                min = rc.Min;
-            if (rc.Max < FixedPoint2.MaxValue && (max is null || rc.Max > max.Value))
-                max = rc.Max;
-        }
-        return (min, max);
-    }
-
-    private static EffectClass ClassifyEffect(EntityEffect effect, string reagentId)
-    {
-        switch (effect)
-        {
-            case HealthChange hc:
-                return ClassifyDamageValues(hc.Damage.DamageDict.Values);
-            case EvenHealthChange ehc:
-                return ClassifyDamageValues(ehc.Damage.Values);
-
-            case AdjustReagent ar:
-                if (ar.Reagent == reagentId)
-                    return ar.Amount < FixedPoint2.Zero ? EffectClass.Neutral : EffectClass.Harmful;
-                return EffectClass.Neutral;
-
-            case MovementSpeedModifier msm:
-                if (msm.WalkSpeedModifier < MedicalScannerConstants.NeutralMovementSpeedModifier
-                    || msm.SprintSpeedModifier < MedicalScannerConstants.NeutralMovementSpeedModifier)
-                    return EffectClass.Harmful;
-                if (msm.WalkSpeedModifier > MedicalScannerConstants.NeutralMovementSpeedModifier
-                    || msm.SprintSpeedModifier > MedicalScannerConstants.NeutralMovementSpeedModifier)
-                    return EffectClass.Beneficial;
-                return EffectClass.Neutral;
-
-            case PopupMessage:
-            case Emote:
-            case GenericStatusEffect:
-            case ModifyStatusEffect:
-                return EffectClass.Neutral;
-
-            default:
-                return EffectClass.Harmful;
-        }
-    }
-
-    private static EffectClass ClassifyDamageValues(IEnumerable<FixedPoint2> values)
-    {
-        var anyPositive = false;
-        var anyNegative = false;
-        foreach (var v in values)
-        {
-            if (v > FixedPoint2.Zero)
-                anyPositive = true;
-            else if (v < FixedPoint2.Zero)
-                anyNegative = true;
-        }
-        if (anyPositive)
-            return EffectClass.Harmful;
-        if (anyNegative)
-            return EffectClass.Beneficial;
-        return EffectClass.Neutral;
     }
 }

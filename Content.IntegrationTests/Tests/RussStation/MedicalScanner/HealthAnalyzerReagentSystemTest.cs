@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Server.RussStation.MedicalScanner;
+using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
@@ -120,6 +121,28 @@ public sealed class HealthAnalyzerReagentSystemTest
         - !type:ReagentCondition
           reagent: TestSelfDecayReagent
           min: 1
+
+# Mob dummy carrying a real stomach organ so the organ-aggregation path
+# (AddOrganSolutions) has something to walk. Bloodstream is required for
+# SolutionAggregator's mob branch to run at all; the stomach is filled into the
+# body_organs container so BuildState surfaces a stomach group.
+- type: entity
+  id: HealthAnalyzerReagentStomachDummy
+  components:
+  - type: SolutionContainerManager
+  - type: Body
+  - type: Bloodstream
+    bloodlossDamage:
+      types:
+        Bloodloss: 1
+    bloodlossHealDamage:
+      types:
+        Bloodloss: -1
+  - type: EntityTableContainerFill
+    containers:
+      body_organs: !type:AllSelector
+        children:
+        - id: OrganHumanStomach
 ";
 
     private static readonly ProtoId<ReagentPrototype> Bicaridine = "Bicaridine";
@@ -173,11 +196,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index(Bicaridine));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index(Bicaridine));
             Assert.That(thresholds.HarmfulMin, Is.Not.Null,
                 "Bicaridine's metabolism gates harmful effects on a min threshold.");
             Assert.That(thresholds.HarmfulMin!.Value, Is.EqualTo(FixedPoint2.New(15)));
@@ -195,11 +218,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestUnderdoseReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestUnderdoseReagent));
             Assert.That(thresholds.BeneficialMin, Is.Not.Null,
                 "Healing-gated reagents should surface a beneficial activation threshold.");
             Assert.That(thresholds.BeneficialMin!.Value, Is.EqualTo(FixedPoint2.New(8)));
@@ -217,11 +240,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestNeutralFlavorReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestNeutralFlavorReagent));
             Assert.That(thresholds.HarmfulMin, Is.Null, "Emote/PopupMessage effects must not generate harmful thresholds.");
             Assert.That(thresholds.HarmfulMax, Is.Null);
             Assert.That(thresholds.BeneficialMin, Is.Null);
@@ -237,11 +260,11 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestRangeHarmfulReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestRangeHarmfulReagent));
             Assert.That(thresholds.HarmfulMax, Is.Not.Null, "max-gated slow effect should surface as HarmfulMax.");
             Assert.That(thresholds.HarmfulMax!.Value, Is.EqualTo(FixedPoint2.New(10)));
             Assert.That(thresholds.HarmfulMin, Is.Not.Null, "min-gated poison effect should surface as HarmfulMin.");
@@ -259,14 +282,142 @@ public sealed class HealthAnalyzerReagentSystemTest
         var server = pair.Server;
         var protoMan = server.ResolveDependency<IPrototypeManager>();
         var entityManager = server.ResolveDependency<IEntityManager>();
-        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var analyzer = entityManager.System<ReagentDoseThresholdAnalyzer>();
 
         await server.WaitAssertion(() =>
         {
-            var thresholds = system.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestSelfDecayReagent));
+            var thresholds = analyzer.GetDoseThresholds(protoMan.Index<ReagentPrototype>(TestSelfDecayReagent));
             Assert.That(thresholds.HarmfulMin, Is.Null, "Self-decaying AdjustReagent (negative amount) must not be harmful.");
             Assert.That(thresholds.HarmfulMax, Is.Null);
             Assert.That(thresholds.BeneficialMin, Is.Null);
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task MetabolitesGroupNeverShowsDoseFlags()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var mob = entityManager.SpawnEntity("HealthAnalyzerReagentMobDummy", mapData.GridCoords);
+            var bloodstream = entityManager.GetComponent<BloodstreamComponent>(mob);
+            Assert.That(containerSystem.TryGetSolution(mob, bloodstream.MetabolitesSolutionName,
+                out var metaboliteHandle, out _), "BloodstreamSystem should have created the metabolites solution on init.");
+
+            // 20u Bicaridine overdoses in BLOOD (15u threshold). Metabolites pass showDoseFlags: false,
+            // so the identical quantity must render with no OD/UD chrome — metabolites are the trickle
+            // of in-progress metabolism output and never reach whole-dose thresholds.
+            containerSystem.TryAddSolution(metaboliteHandle!.Value, new Solution("Bicaridine", FixedPoint2.New(20)));
+
+            var state = system.BuildState(mob);
+            var metabolitesGroup = state.Groups.Single(g => g.Label == Loc.GetString("health-analyzer-reagent-group-metabolites"));
+            var bicaridine = metabolitesGroup.Reagents.Single(r => r.ReagentId == "Bicaridine");
+
+            Assert.That(bicaridine.Quantity, Is.EqualTo(FixedPoint2.New(20)));
+            Assert.That(bicaridine.Overdose, Is.False, "Only the Blood group carries dose flags; metabolites must never overdose.");
+            Assert.That(bicaridine.Underdose, Is.False);
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task BloodUnderdoseFlagsBelowBeneficialThreshold()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var mob = entityManager.SpawnEntity("HealthAnalyzerReagentMobDummy", mapData.GridCoords);
+            var bloodstream = entityManager.GetComponent<BloodstreamComponent>(mob);
+            Assert.That(containerSystem.TryGetSolution(mob, bloodstream.BloodSolutionName,
+                out var bloodHandle, out _), "BloodstreamSystem should have created the blood solution on init.");
+
+            // TestUnderdoseReagent's healing effect only activates at 8u (BeneficialMin). 4u sits
+            // below that, so Blood should flag it underdosed and never overdosed.
+            containerSystem.TryAddSolution(bloodHandle!.Value, new Solution(TestUnderdoseReagent, FixedPoint2.New(4)));
+
+            var state = system.BuildState(mob);
+            var bloodGroup = state.Groups.Single(g => g.Label == Loc.GetString("health-analyzer-reagent-group-blood"));
+            var reagent = bloodGroup.Reagents.Single(r => r.ReagentId == TestUnderdoseReagent);
+
+            Assert.That(reagent.Underdose, Is.True, "4u is below the 8u beneficial activation threshold.");
+            Assert.That(reagent.Overdose, Is.False);
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task MobWithoutBloodstreamYieldsNoGroups()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            // No BloodstreamComponent -> SolutionAggregator skips the mob branch entirely and
+            // BuildState returns an empty group list (just the display name).
+            var notAMob = entityManager.SpawnEntity(null, mapData.GridCoords);
+
+            var state = system.BuildState(notAMob);
+            Assert.That(state.Groups, Is.Empty, "Entities without a bloodstream expose no reagent groups.");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task StomachOrganSurfacesAsGroupWithoutDoseFlags()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var containerSystem = entityManager.System<SharedSolutionContainerSystem>();
+        var system = entityManager.System<HealthAnalyzerReagentSystem>();
+        var mapData = await pair.CreateTestMap();
+
+        await server.WaitAssertion(() =>
+        {
+            var mob = entityManager.SpawnEntity("HealthAnalyzerReagentStomachDummy", mapData.GridCoords);
+
+            var bodyComp = entityManager.GetComponent<BodyComponent>(mob);
+            Assert.That(bodyComp.Organs, Is.Not.Null, "Body container should be initialized.");
+
+            var stomach = bodyComp.Organs!.ContainedEntities
+                .Single(organ => entityManager.HasComponent<StomachComponent>(organ));
+
+            Assert.That(containerSystem.TryGetSolution(stomach, "stomach", out var stomachHandle, out _),
+                "Stomach organ should have its 'stomach' solution from OrganBaseStomach.");
+
+            // 20u Bicaridine would overdose in BLOOD (15u threshold); organ solutions pass
+            // showDoseFlags: false, so the stomach group surfaces it with no OD/UD chrome.
+            containerSystem.TryAddSolution(stomachHandle!.Value, new Solution("Bicaridine", FixedPoint2.New(20)));
+
+            var state = system.BuildState(mob);
+            // A single organ uses the bare label (indexed labels only kick in with 2+ organs).
+            var stomachGroup = state.Groups.Single(g => g.Label == Loc.GetString("health-analyzer-reagent-group-stomach"));
+            var bicaridine = stomachGroup.Reagents.Single(r => r.ReagentId == "Bicaridine");
+
+            Assert.That(bicaridine.Quantity, Is.EqualTo(FixedPoint2.New(20)));
+            Assert.That(bicaridine.Overdose, Is.False, "Organ groups never carry dose flags.");
+            Assert.That(bicaridine.Underdose, Is.False);
         });
 
         await pair.CleanReturnAsync();
