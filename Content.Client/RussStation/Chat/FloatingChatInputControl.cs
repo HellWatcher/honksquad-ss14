@@ -35,6 +35,7 @@ public sealed class FloatingChatInputControl : Control
     private readonly SharedTransformSystem _transform;
     private readonly StyleBoxFlat _backgroundStyle;
     private readonly ChatUIController _chatUi;
+    private readonly FloatingChatInputChannelManager _channelManager;
 
     public readonly ChatInputBox InputBox;
 
@@ -44,17 +45,11 @@ public sealed class FloatingChatInputControl : Control
     public event Action<string, ChatSelectChannel>? OnSubmit;
     public event Action? OnCancel;
 
-    private RadioChannelPrototype? _pendingRadioChannel;
-    private bool _suppressPendingClear;
-
     /// <summary>
     /// Specific radio channel to route to when the widget submits on
     /// <see cref="ChatSelectChannel.Radio"/> without a typed prefix.
-    /// Cleared automatically when the user picks a channel via dropdown
-    /// or cycle hotkey; use <see cref="RestoreChannel"/> to seed it at
-    /// open time.
     /// </summary>
-    public RadioChannelPrototype? PendingRadioChannel => _pendingRadioChannel;
+    public RadioChannelPrototype? PendingRadioChannel => _channelManager.PendingRadioChannel;
 
     public FloatingChatInputControl()
     {
@@ -78,30 +73,28 @@ public sealed class FloatingChatInputControl : Control
         InputBox.FilterButton.Visible = false;
         AddChild(InputBox);
 
+        _channelManager = new FloatingChatInputChannelManager(InputBox, _chatUi);
+
         InputBox.Input.OnTextEntered += OnTextEntered;
         InputBox.Input.OnKeyBindDown += OnInputKeyBindDown;
         InputBox.Input.OnTextChanged += OnInputTextChanged;
         InputBox.Input.OnFocusEnter += OnInputFocusEnter;
         InputBox.Input.OnFocusExit += OnInputFocusExit;
-        InputBox.ChannelSelector.OnChannelSelect += OnChannelSelectorChanged;
+        InputBox.ChannelSelector.OnChannelSelect += _channelManager.OnChannelSelectorChanged;
 
         // Pick up the accessibility text-opacity knob too so the typed text
         // fades in sync with in-world bubble text.
         ApplyTextOpacity(_config.GetCVar(CCVars.SpeechBubbleTextOpacity));
 
-        _config.OnValueChanged(CCVars.SpeechBubbleBackgroundOpacity, OnBackgroundOpacityChanged);
-        _config.OnValueChanged(CCVars.SpeechBubbleTextOpacity, OnTextOpacityChanged);
+        _config.OnValueChanged(CCVars.SpeechBubbleBackgroundOpacity, ApplyBackgroundOpacity);
+        _config.OnValueChanged(CCVars.SpeechBubbleTextOpacity, ApplyTextOpacity);
     }
 
     private void ApplyTextOpacity(float alpha)
-    {
-        InputBox.Input.ModulateSelfOverride = Color.White.WithAlpha(Math.Clamp(alpha, 0f, 1f));
-    }
+        => InputBox.Input.ModulateSelfOverride = Color.White.WithAlpha(Math.Clamp(alpha, 0f, 1f));
 
-    private void OnTextOpacityChanged(float newAlpha)
-    {
-        ApplyTextOpacity(newAlpha);
-    }
+    private void ApplyBackgroundOpacity(float alpha)
+        => _backgroundStyle.BackgroundColor = BuildBackgroundColor(alpha);
 
     private static Color BuildBackgroundColor(float alpha)
     {
@@ -111,31 +104,16 @@ public sealed class FloatingChatInputControl : Control
             FloatingChatInputConstants.BackgroundBlue).WithAlpha(Math.Clamp(alpha, 0f, 1f));
     }
 
-    private void OnBackgroundOpacityChanged(float newAlpha)
-    {
-        _backgroundStyle.BackgroundColor = BuildBackgroundColor(newAlpha);
-    }
-
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
         if (disposing)
         {
-            _config.UnsubValueChanged(CCVars.SpeechBubbleBackgroundOpacity, OnBackgroundOpacityChanged);
-            _config.UnsubValueChanged(CCVars.SpeechBubbleTextOpacity, OnTextOpacityChanged);
+            _config.UnsubValueChanged(CCVars.SpeechBubbleBackgroundOpacity, ApplyBackgroundOpacity);
+            _config.UnsubValueChanged(CCVars.SpeechBubbleTextOpacity, ApplyTextOpacity);
             // Clear the typing indicator if the widget vanishes mid-message so it doesn't stick.
             _chatUi.NotifyChatFocus(false);
         }
-    }
-
-    private void OnChannelSelectorChanged(ChatSelectChannel channel)
-    {
-        // User interaction (dropdown or cycle) overrides any restored radio
-        // target. Programmatic restore via RestoreChannel suppresses this.
-        if (!_suppressPendingClear)
-            _pendingRadioChannel = null;
-
-        RefreshChannelLabel();
     }
 
     /// <summary>
@@ -144,24 +122,11 @@ public sealed class FloatingChatInputControl : Control
     /// submit routing address it.
     /// </summary>
     public void RestoreChannel(ChatSelectChannel channel, RadioChannelPrototype? pendingRadio)
-    {
-        _suppressPendingClear = true;
-        try
-        {
-            InputBox.ChannelSelector.Select(channel);
-        }
-        finally
-        {
-            _suppressPendingClear = false;
-        }
-
-        _pendingRadioChannel = channel == ChatSelectChannel.Radio ? pendingRadio : null;
-        RefreshChannelLabel();
-    }
+        => _channelManager.RestoreChannel(channel, pendingRadio);
 
     private void OnInputTextChanged(LineEditEventArgs args)
     {
-        RefreshChannelLabel();
+        _channelManager.RefreshChannelLabel();
         // Mirror ChatBox: the typing-indicator system listens for these notifications, so the
         // floating input has to call them too or bystanders never see the indicator while the
         // local player is typing here.
@@ -176,55 +141,6 @@ public sealed class FloatingChatInputControl : Control
     private void OnInputFocusExit(LineEditEventArgs args)
     {
         _chatUi.NotifyChatFocus(false);
-    }
-
-    /// <summary>
-    /// Mirrors <see cref="ChatUIController.UpdateSelectedChannel"/>. The button
-    /// text is only refreshed here; <see cref="ChannelSelectorButton.Select"/>
-    /// short-circuits on same-channel and neither it nor the dropdown's
-    /// OnChannelSelect handler repaints the label.
-    /// </summary>
-    private void RefreshChannelLabel()
-    {
-        var chatUi = _uiManager.GetUIController<ChatUIController>();
-        var (prefixChannel, _, prefixRadio) = chatUi.SplitInputContents(InputBox.Input.Text.ToLower());
-        var selected = InputBox.ChannelSelector.SelectedChannel;
-
-        var source = FloatingChatInputRouting.ResolveLabelSource(
-            selected,
-            _pendingRadioChannel != null,
-            prefixChannel);
-
-        switch (source)
-        {
-            case FloatingChatInputRouting.LabelSource.Prefix:
-                InputBox.ChannelSelector.UpdateChannelSelectButton(prefixChannel, prefixRadio);
-                break;
-            case FloatingChatInputRouting.LabelSource.PendingRadio:
-                InputBox.ChannelSelector.UpdateChannelSelectButton(ChatSelectChannel.Radio, _pendingRadioChannel);
-                break;
-            default:
-                InputBox.ChannelSelector.UpdateChannelSelectButton(selected, null);
-                break;
-        }
-    }
-
-    private void CycleChannel(bool forward)
-    {
-        var chatUi = _uiManager.GetUIController<ChatUIController>();
-        var order = ChannelSelectorPopup.ChannelSelectorOrder;
-        var idx = Array.IndexOf(order, InputBox.ChannelSelector.SelectedChannel);
-        do
-        {
-            idx += forward ? 1 : -1;
-            idx = MathHelper.Mod(idx, order.Length);
-        } while ((chatUi.SelectableChannels & order[idx]) == 0);
-
-        var target = chatUi.MapLocalIfGhost(order[idx]);
-        if ((chatUi.SelectableChannels & target) == 0)
-            return;
-
-        InputBox.ChannelSelector.Select(target);
     }
 
     /// <summary>
@@ -269,14 +185,14 @@ public sealed class FloatingChatInputControl : Control
 
         if (args.Function == ContentKeyFunctions.CycleChatChannelForward)
         {
-            CycleChannel(true);
+            _channelManager.CycleChannel(true);
             args.Handle();
             return;
         }
 
         if (args.Function == ContentKeyFunctions.CycleChatChannelBackward)
         {
-            CycleChannel(false);
+            _channelManager.CycleChannel(false);
             args.Handle();
         }
     }
