@@ -90,7 +90,7 @@ public sealed class MessengerServerSystem : EntitySystem, IMessengerMessageStore
 
         // The entire 4-hex address space for this prefix is exhausted (~65k cartridges); a collision
         // is now unavoidable. This should never happen in a real round.
-        Log.Error($"Messenger address space exhausted for prefix '{prefix}'; addresses may now collide.");
+        Log.Error("Messenger address space exhausted for prefix '{Prefix}'; addresses may now collide.", prefix);
         return $"{prefix}{_random.Next(MessengerConstants.CrewAddressHexRange):X4}";
     }
 
