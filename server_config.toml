@@ -53,3 +53,12 @@ engine = "sqlite"
 
 [replay]
 auto_record = true
+
+[metrics]
+# Prometheus metrics endpoint. host = 0.0.0.0 so it is reachable from a sibling
+# monitoring container over the internal Docker network (localhost would bind
+# the game container's own loopback only). Wings does not publish this port to
+# the host, so it is not exposed to the internet.
+enabled = true
+host = "0.0.0.0"
+port = 44880
