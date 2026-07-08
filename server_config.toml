@@ -55,10 +55,13 @@ engine = "sqlite"
 auto_record = true
 
 [metrics]
-# Prometheus metrics endpoint. host = 0.0.0.0 so it is reachable from a sibling
-# monitoring container over the internal Docker network (localhost would bind
-# the game container's own loopback only). Wings does not publish this port to
-# the host, so it is not exposed to the internet.
+# Prometheus metrics endpoint, scraped by a sibling monitoring container over
+# the internal Docker network (not published to the host, so off the internet).
+# host MUST be "*" (or "+"), NOT "0.0.0.0": the engine's SpaceWizards.HttpListener
+# rejects 0.0.0.0 with HttpListenerException 50. The port is intentionally
+# OMITTED: when deployed under Pelican/Wings, the egg's line-based config parser
+# rewrites every "port =" line to the game allocation, so a metrics port here
+# lands on the game port and crashes the listener. Omitting it uses the 44880
+# CVar default, which has no line for the parser to clobber.
 enabled = true
-host = "0.0.0.0"
-port = 44880
+host = "*"
