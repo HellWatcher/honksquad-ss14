@@ -51,9 +51,11 @@ dotnet build
 
 ## License
 
-All code for the content repository is licensed under the [MIT license](https://github.com/space-wizards/space-station-14/blob/master/LICENSE.TXT).
+honksquad-ss14 is a mixed-license project tracked per file with [REUSE](https://reuse.software). The `LICENSES/` directory holds the full text of every license in use, and `REUSE.toml` at the repo root maps each file to its license. Run `reuse lint` to check compliance.
 
-Most assets are licensed under [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) unless stated otherwise. Assets have their license and copyright specified in the metadata file. For example, see the [metadata for a crowbar](https://github.com/space-wizards/space-station-14/blob/master/Resources/Textures/Objects/Tools/crowbar.rsi/meta.json).
+- Code and content inherited from [Space Station 14](https://github.com/space-wizards/space-station-14) stays under the [MIT license](LICENSES/MIT.txt), the same as upstream.
+- Code and content written for the fork (anything under a `RussStation` / `@RussStation` path, or a `*.Honk.cs` file) is [AGPL-3.0-or-later](LICENSES/AGPL-3.0-or-later.txt). The AGPL's network clause applies, so a running honksquad server owes its players the complete source of the version it is running.
+- Assets (sprites, audio) are [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) unless their `meta.json` says otherwise. The `meta.json` beside each asset is the authoritative record of its license and copyright, for example the [metadata for a crowbar](https://github.com/space-wizards/space-station-14/blob/master/Resources/Textures/Objects/Tools/crowbar.rsi/meta.json).
 
 > [!NOTE]
-> Some assets are licensed under the non-commercial [CC-BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) or similar non-commercial licenses and will need to be removed if you wish to use this project commercially.
+> Some assets are licensed under the non-commercial [CC-BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) or similar non-commercial licenses and would need to be removed to use this project commercially.

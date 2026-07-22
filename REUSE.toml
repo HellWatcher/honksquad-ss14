@@ -1,0 +1,50 @@
+version = 1
+
+# honksquad-ss14 license map (ADR 0018).
+#
+# The license each file falls under is decided by its path, via the globs below.
+# REUSE resolves a file that matches several blocks by taking the LAST matching
+# block, so these are ordered broad -> specific: catch-all, then fork code, then
+# assets. Every block uses the default "closest" precedence (never "aggregate"),
+# so a grafted file that ships with its own SPDX header (or .license sidecar)
+# keeps it and is not touched by these defaults.
+#
+# Source of truth for assets stays each .rsi's meta.json; the CC block here is a
+# bulk default that satisfies the linter, it does not override a per-asset
+# meta.json for a human reader. See docs/adr/0018 and the migration plan.
+
+# 1. Catch-all: the inherited upstream tree (code, config, locale, prototypes,
+#    fonts, misc) is MIT, matching space-wizards upstream.
+[[annotations]]
+path = "**"
+precedence = "closest"
+SPDX-FileCopyrightText = "Space Wizards Federation <https://spacestation14.io> and contributors"
+SPDX-License-Identifier = "MIT"
+
+# 2. Fork-authored software content is AGPL-3.0-or-later. Fork code lives under
+#    Content.*/RussStation/ dirs and *.Honk.cs partials; fork prototypes, locale,
+#    guidebook, and shaders live under @RussStation resource dirs. (Block 3 below
+#    reclaims fork *art* under these dirs back to CC, since it runs last.)
+[[annotations]]
+path = [
+  "**/RussStation/**",
+  "**/*.Honk.cs",
+  "Resources/Prototypes/@RussStation/**",
+  "Resources/Locale/**/@RussStation/**",
+  "Resources/ServerInfo/Guidebook/@RussStation/**",
+  "Resources/Textures/Shaders/@RussStation/**",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "honksquad-ss14 contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# 3. Art and audio assets are CC-BY-SA-3.0 (upstream's asset license), matched by
+#    extension so this holds anywhere in the tree, including fork art under
+#    @RussStation. Runs LAST so it wins over block 2 for actual media files; code
+#    (incl. .swsl shaders) never has these extensions, so nothing code-like is
+#    caught here. Per-asset truth lives in the adjacent meta.json.
+[[annotations]]
+path = ["Resources/**/*.png", "Resources/**/*.ogg", "Resources/**/*.svg", "Resources/**/*.webp", "Resources/**/*.ico", "Resources/**/*.sf2"]
+precedence = "closest"
+SPDX-FileCopyrightText = "Recorded per-asset in the adjacent meta.json"
+SPDX-License-Identifier = "CC-BY-SA-3.0"
