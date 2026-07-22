@@ -1,0 +1,26 @@
+name: REUSE compliance
+
+# Enforces the fork's per-file license map (ADR 0018). Fails a PR if any file is
+# not covered by a license, i.e. it falls through every glob in REUSE.toml. New
+# fork files under @RussStation / RussStation dirs are covered automatically; a
+# genuinely uncovered file (a new top-level file type, or a dir no glob matches)
+# is what this catches.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [release]
+  push:
+    branches: [release]
+
+jobs:
+  reuse:
+    name: REUSE lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: REUSE lint
+        uses: fsfe/reuse-action@v6.0.0
+        with:
+          args: lint
