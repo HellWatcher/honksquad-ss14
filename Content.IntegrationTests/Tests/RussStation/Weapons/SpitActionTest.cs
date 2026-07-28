@@ -25,7 +25,6 @@ public sealed class SpitActionTest : GameTest
     // literal ids (RA0033).
     private static readonly EntProtoId ActionSpit = "ActionSpit";
     private static readonly EntProtoId ProjectileSpit = "ProjectileSpit";
-    private static readonly EntProtoId SpitGun = "SpitGun";
     private static readonly EntProtoId SpeciesAppearance = "BaseSpeciesAppearance";
 
     /// <summary>
@@ -46,9 +45,9 @@ public sealed class SpitActionTest : GameTest
             Assert.That(protoManager.HasIndex(ProjectileSpit), Is.True,
                 "ProjectileSpit prototype should exist");
 
-            // The gun entity is gone; spit is now pure YAML on top of upstream's magic system.
-            Assert.That(protoManager.HasIndex(SpitGun), Is.False,
-                "SpitGun should have been removed by the ProjectileSpell migration");
+            // No SpitGun assertion: the YAML linter validates every EntProtoId field, so a
+            // field naming a deliberately-deleted prototype fails validation. The assertions
+            // below already pin that spit runs through ProjectileSpell rather than a gun.
 
             Assert.That(action!.TryGetComponent<WorldTargetActionComponent>(out var worldTarget, compFactory), Is.True,
                 "ActionSpit should be a world-target action");
