@@ -7,9 +7,13 @@ using Robust.Shared.Timing;
 namespace Content.Server.RussStation.Body;
 
 /// <summary>
-/// Bridges the new status effect system to upstream temporary blindness.
-/// When the EMP blindness effect is applied, adds <see cref="TemporaryBlindnessComponent"/>
-/// to the body so the upstream <see cref="TemporaryBlindnessSystem"/> handles the actual blinding.
+/// Bridges the fork's EMP blindness status effect to upstream's blindness implementation.
+/// Upstream removed <c>TemporaryBlindnessComponent</c> (which used to be added to the body);
+/// blindness is now expressed by <see cref="BlindnessStatusEffectComponent"/> sitting on the
+/// status effect entity itself, with <see cref="BlindnessSystem"/> cancelling the relayed
+/// <see cref="CanSeeAttemptEvent"/> for as long as the effect is active.
+/// So this system tags the EMP effect entity with that component while the effect is applied.
+/// Duration is still owned by the status effect, so the timing semantics are unchanged.
 /// </summary>
 public sealed class EmpBlindnessSystem : EntitySystem
 {
@@ -29,12 +33,15 @@ public sealed class EmpBlindnessSystem : EntitySystem
         if (_timing.ApplyingState)
             return;
 
-        EnsureComp<TemporaryBlindnessComponent>(args.Target);
+        // Added during the applied event, so BlindnessSystem's own applied handler will not have
+        // run for this effect entity. Refresh the target ourselves.
+        EnsureComp<BlindnessStatusEffectComponent>(ent);
+        _blindable.UpdateIsBlind(args.Target);
     }
 
     private void OnRemoved(Entity<EmpBlindnessComponent> ent, ref StatusEffectRemovedEvent args)
     {
-        RemComp<TemporaryBlindnessComponent>(args.Target);
+        RemComp<BlindnessStatusEffectComponent>(ent);
         _blindable.UpdateIsBlind(args.Target);
     }
 }

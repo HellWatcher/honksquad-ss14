@@ -1,5 +1,4 @@
 using System.Linq;
-using Content.Server.CartridgeLoader;
 using Content.Shared.CartridgeLoader;
 using Content.Shared.PDA;
 using Content.Shared.RussStation.CartridgeLoader;
@@ -11,9 +10,11 @@ namespace Content.Server.RussStation.CartridgeLoader;
 /// <summary>
 /// Installs fork-specific cartridges on all PDAs at map init,
 /// driven by ForkCartridgeSetPrototype definitions rather than per-entity YAML.
-/// Relies on <see cref="CartridgeLoaderSystem.InstallProgram"/> being idempotent
-/// (HONK in upstream): duplicate calls for the same prototype no-op, so this
-/// system doesn't need ordering or its own bookkeeping set.
+/// Installation is idempotent: a prototype that is already present on the loader
+/// is skipped, so overlapping sets (and re-runs) never stack duplicates.
+/// This guard used to live in the fork's copy of CartridgeLoaderSystem.InstallProgram;
+/// upstream's shared InstallProgram does not dedupe (only InstallCartridge does),
+/// so the check is kept here instead.
 /// </summary>
 public sealed class PdaCartridgeInstallerSystem : EntitySystem
 {
@@ -33,6 +34,8 @@ public sealed class PdaCartridgeInstallerSystem : EntitySystem
         if (!TryComp<CartridgeLoaderComponent>(uid, out var loader))
             return;
 
+        var ent = new Entity<CartridgeLoaderComponent>(uid, loader);
+
         var sets = _protoManager.EnumeratePrototypes<ForkCartridgeSetPrototype>()
             .OrderBy(s => s.Order);
 
@@ -42,8 +45,28 @@ public sealed class PdaCartridgeInstallerSystem : EntitySystem
                 continue;
 
             foreach (var cartridge in set.Cartridges)
-                _cartridgeLoader.InstallProgram(uid, cartridge, deinstallable: false, loader: loader);
+            {
+                if (IsInstalled(uid, cartridge))
+                    continue;
+
+                _cartridgeLoader.InstallProgram(ent, cartridge, deinstallable: false);
+            }
         }
+    }
+
+    /// <summary>
+    /// Whether a program with the given prototype id is already on the loader,
+    /// in either the removable or the preinstalled container.
+    /// </summary>
+    private bool IsInstalled(EntityUid uid, string prototype)
+    {
+        foreach (var program in _cartridgeLoader.GetDiskPrograms(uid))
+        {
+            if (MetaData(program).EntityPrototype?.ID == prototype)
+                return true;
+        }
+
+        return false;
     }
 
     private bool MatchesFilter(EntityUid uid, ForkCartridgeSetPrototype set)
