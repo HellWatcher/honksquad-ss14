@@ -99,7 +99,7 @@ public sealed class ForkCartridgeInstallerTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             var loader = SEntMan.System<CartridgeLoaderSystem>();
-            var installed = loader.GetInstalled(targetEnt);
+            var installed = loader.GetDiskPrograms(targetEnt);
             var protoIds = installed
                 .Select(e => SEntMan.GetComponent<MetaDataComponent>(e).EntityPrototype?.ID)
                 .ToList();
@@ -118,7 +118,7 @@ public sealed class ForkCartridgeInstallerTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             var loader = SEntMan.System<CartridgeLoaderSystem>();
-            var installed = loader.GetInstalled(basicEnt);
+            var installed = loader.GetDiskPrograms(basicEnt);
             var protoIds = installed
                 .Select(e => SEntMan.GetComponent<MetaDataComponent>(e).EntityPrototype?.ID)
                 .ToList();
@@ -134,7 +134,7 @@ public sealed class ForkCartridgeInstallerTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             var loader = SEntMan.System<CartridgeLoaderSystem>();
-            var installed = loader.GetInstalled(physicsEnt);
+            var installed = loader.GetDiskPrograms(physicsEnt);
             var protoIds = installed
                 .Select(e => SEntMan.GetComponent<MetaDataComponent>(e).EntityPrototype?.ID)
                 .ToList();
@@ -154,7 +154,7 @@ public sealed class ForkCartridgeInstallerTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             var loader = SEntMan.System<CartridgeLoaderSystem>();
-            var installed = loader.GetInstalled(basicEnt);
+            var installed = loader.GetDiskPrograms(basicEnt);
             var protoIds = installed
                 .Select(e => SEntMan.GetComponent<MetaDataComponent>(e).EntityPrototype?.ID)
                 .ToList();
@@ -170,7 +170,7 @@ public sealed class ForkCartridgeInstallerTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             var loader = SEntMan.System<CartridgeLoaderSystem>();
-            var installed = loader.GetInstalled(physicsEnt);
+            var installed = loader.GetDiskPrograms(physicsEnt);
             var protoIds = installed
                 .Select(e => SEntMan.GetComponent<MetaDataComponent>(e).EntityPrototype?.ID)
                 .ToList();
@@ -192,7 +192,7 @@ public sealed class ForkCartridgeInstallerTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             var loader = SEntMan.System<CartridgeLoaderSystem>();
-            var installed = loader.GetInstalled(targetEnt);
+            var installed = loader.GetDiskPrograms(targetEnt);
             var count = installed
                 .Count(e => SEntMan.GetComponent<MetaDataComponent>(e).EntityPrototype?.ID == TestCartridgeA);
 

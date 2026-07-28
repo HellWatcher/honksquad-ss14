@@ -28,7 +28,7 @@ public sealed class SingAccentTest
             entMan.AddComponent<SingAccentComponent>(singer);
 
             var ev = new AccentGetEvent(singer, "hello world.");
-            entMan.EventBus.RaiseLocalEvent(singer, ev);
+            entMan.EventBus.RaiseLocalEvent(singer, ref ev);
 
             // "world." -> hold the 'o' -> "woooorld" and the trailing period becomes "!".
             Assert.That(ev.Message, Does.StartWith("hello "), "Only the final word should be reshaped.");
@@ -54,7 +54,7 @@ public sealed class SingAccentTest
             entMan.AddComponent<SingAccentComponent>(singer);
 
             var ev = new AccentGetEvent(singer, "do re mi");
-            entMan.EventBus.RaiseLocalEvent(singer, ev);
+            entMan.EventBus.RaiseLocalEvent(singer, ref ev);
 
             Assert.That(ev.Message, Does.EndWith("!"), "Final word without punctuation should gain an exclamation mark.");
             Assert.That(ev.Message, Does.Contain("miii"), "The vowel 'i' in the final word should be held.");

@@ -47,7 +47,7 @@ public sealed class QueekishThirdPersonTest
             metaData.SetEntityName(speaker, "Thanquol-Boneripper");
 
             var ev = new AccentGetEvent(speaker, "I am leaving");
-            entMan.EventBus.RaiseLocalEvent(speaker, ev);
+            entMan.EventBus.RaiseLocalEvent(speaker, ref ev);
 
             Assert.That(ev.Message, Is.EqualTo("Thanquol am leaving"),
                 "First-person pronouns should be replaced with the Skaven's first name.");
@@ -72,7 +72,7 @@ public sealed class QueekishThirdPersonTest
             metaData.SetEntityName(speaker, "John Smith");
 
             var ev = new AccentGetEvent(speaker, "I am leaving");
-            entMan.EventBus.RaiseLocalEvent(speaker, ev);
+            entMan.EventBus.RaiseLocalEvent(speaker, ref ev);
 
             Assert.That(ev.Message, Is.EqualTo("I am leaving"),
                 "The pronoun rewrite should only apply to Skaven speakers.");
