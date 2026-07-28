@@ -16,8 +16,6 @@ public sealed partial class DamageContactsSystem : EntitySystem
 
     [Dependency] private EntityQuery<DamageContactsComponent> _damageQuery = default!;
 
-    [Dependency] private readonly EntityQuery<DamageContactsComponent> _damageQuery = default!;
-
     public override void Initialize()
     {
         base.Initialize();

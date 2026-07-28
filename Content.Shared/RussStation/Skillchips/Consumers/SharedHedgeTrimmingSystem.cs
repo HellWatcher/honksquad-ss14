@@ -4,6 +4,7 @@ using Content.Shared.Kitchen.Components;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Skillchips.Systems;
 using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Tools.Systems;
 using Robust.Shared.Network;
 using Robust.Shared.Random;
 
@@ -25,6 +26,7 @@ public sealed class SharedHedgeTrimmingSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private readonly SharedToolSystem _tool = default!;
 
     public override void Initialize()
     {
@@ -41,7 +43,8 @@ public sealed class SharedHedgeTrimmingSystem : EntitySystem
         if (args.Handled)
             return;
 
-        if (!HasComp<SharpComponent>(args.Used))
+        // Upstream removed SharpComponent (#36895); the Slicing tool quality is its successor.
+        if (!_tool.HasQuality(args.Used, "Slicing"))
             return;
 
         if (!_skillchip.HasCapability(args.User, HedgetrimmingTag))

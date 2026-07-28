@@ -20,8 +20,6 @@ public abstract partial class SharedEmpSystem : EntitySystem
 
     [Dependency] private EntityQuery<EmpResistanceComponent> _resistanceQuery = default!;
 
-    [Dependency] private readonly EntityQuery<EmpResistanceComponent> _resistanceQuery = default!;
-
     private HashSet<EntityUid> _entSet = new();
 
     public override void Initialize()

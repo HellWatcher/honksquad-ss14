@@ -186,7 +186,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
             // SkinColor is a fixed point of f(x) = ClampColor(EnsureVerified(x)), which is
             // exactly what the server applies on receipt.
             var candidate = ClampColor(coloration.Strategy.EnsureVerified(skinColor));
-            for (var i = 0; i < 8 && !coloration.Strategy.VerifySkinColor(candidate); i++)
+            for (var i = 0; i < 8 && !coloration.Strategy.VerifySkinColor(candidate, out _); i++)
                 candidate = ClampColor(coloration.Strategy.ClosestSkinColor(candidate));
             skinColor = candidate;
             //HONK END

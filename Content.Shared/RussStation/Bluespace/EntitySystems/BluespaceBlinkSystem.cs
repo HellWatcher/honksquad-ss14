@@ -8,6 +8,7 @@ using Content.Shared.Popups;
 using Content.Shared.RussStation.Bluespace.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Throwing;
+using Robust.Shared.Random;
 using System;
 using System.Numerics;
 using Content.Shared.Random.Helpers;
@@ -180,7 +181,7 @@ public sealed class BluespaceBlinkSystem : EntitySystem
         return true;
     }
 
-    private bool TryFindBlinkDestination(System.Random rng, EntityCoordinates source, float range, out EntityCoordinates dest)
+    private bool TryFindBlinkDestination(IRobustRandom rng, EntityCoordinates source, float range, out EntityCoordinates dest)
     {
         // Try several candidate offsets and pick the first one that lands on a
         // walkable tile. Without this filter the target can end up wedged

@@ -17,8 +17,6 @@ public sealed partial class StepTriggerSystem : EntitySystem
 
     [Dependency] private EntityQuery<PhysicsComponent> _physicsquery = default!;
 
-    [Dependency] private readonly EntityQuery<PhysicsComponent> _physicsquery = default!;
-
     public override void Initialize()
     {
         UpdatesOutsidePrediction = true;

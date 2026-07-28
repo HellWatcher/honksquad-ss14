@@ -39,8 +39,6 @@ public abstract partial class SharedAnomalySystem : EntitySystem
 
     [Dependency] private EntityQuery<PhysicsComponent> _physQuery = default!;
 
-    [Dependency] private readonly EntityQuery<PhysicsComponent> _physQuery = default!;
-
     public override void Initialize()
     {
         base.Initialize();

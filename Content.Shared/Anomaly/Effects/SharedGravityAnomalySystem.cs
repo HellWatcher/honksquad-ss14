@@ -19,8 +19,6 @@ public abstract partial class SharedGravityAnomalySystem : EntitySystem
 
     [Dependency] private EntityQuery<PhysicsComponent> _physQuery = default!;
 
-    [Dependency] private readonly EntityQuery<PhysicsComponent> _physQuery = default!;
-
     /// <inheritdoc/>
     public override void Initialize()
     {
