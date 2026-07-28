@@ -20,17 +20,18 @@
     - type: ToolRefinable
       refineResult:
         - id: TrashBluespaceBananaPeel
-    - type: SolutionContainerManager
-      solutions:
-        food:
-          maxVol: 8
-          reagents:
-            - ReagentId: Nutriment
-              Quantity: 4
-            - ReagentId: Vitamin
-              Quantity: 2
-            - ReagentId: BluespaceDust
-              Quantity: 5
+    # Upstream migrated food onto SolutionComponent; keeping SolutionContainerManager
+    # here made the compatibility shim warn, since FoodBanana already declares the solution.
+    - type: Solution
+      solution:
+        maxVol: 8
+        reagents:
+          - ReagentId: Nutriment
+            Quantity: 4
+          - ReagentId: Vitamin
+            Quantity: 2
+          - ReagentId: BluespaceDust
+            Quantity: 5
     - type: Sprite
       sprite: "@RussStation/Objects/Specific/Hydroponics/bluespace_banana.rsi"
       state: produce

@@ -5,17 +5,17 @@
   id: FoodWhite
   description: White as a ghost.
   components:
-  - type: SolutionContainerManager
-    solutions:
-      food:
-        maxVol: 24
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 5
-        - ReagentId: Laughter
-          Quantity: 15
-        - ReagentId: Vitamin
-          Quantity: 4
+  # Upstream migrated food onto SolutionComponent; FoodOrange already declares it.
+  - type: Solution
+    solution:
+      maxVol: 24
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 5
+      - ReagentId: Laughter
+        Quantity: 15
+      - ReagentId: Vitamin
+        Quantity: 4
   - type: FlavorProfile
     flavors:
       - funny
