@@ -42,13 +42,13 @@ using Robust.Shared.Physics.Systems;
 
 namespace Content.Shared.RussStation.Physics;
 
-public sealed class PullMapGuardSystem : EntitySystem
+public sealed partial class PullMapGuardSystem : EntitySystem
 {
-    [Dependency] private readonly INetManager _net = default!;
-    [Dependency] private readonly SharedJointSystem _joints = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly PullingSystem _pulling = default!;
-    [Dependency] private readonly EntityQuery<PullableComponent> _pullableQuery = default!;
+    [Dependency] private INetManager _net = default!;
+    [Dependency] private SharedJointSystem _joints = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private PullingSystem _pulling = default!;
+    [Dependency] private EntityQuery<PullableComponent> _pullableQuery = default!;
 
     private readonly List<Joint> _toBreak = new();
 

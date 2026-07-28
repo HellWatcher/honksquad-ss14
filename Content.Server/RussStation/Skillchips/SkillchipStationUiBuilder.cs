@@ -13,13 +13,13 @@ namespace Content.Server.RussStation.Skillchips;
 /// container changes) and the state-building both live in one place rather than
 /// being interleaved with the implant/remove flow.
 /// </summary>
-public sealed class SkillchipStationUiBuilder : EntitySystem
+public sealed partial class SkillchipStationUiBuilder : EntitySystem
 {
-    [Dependency] private readonly SkillchipStationOccupantManager _occupant = default!;
-    [Dependency] private readonly SharedSkillchipSystem _skillchips = default!;
-    [Dependency] private readonly SharedContainerSystem _containers = default!;
-    [Dependency] private readonly UserInterfaceSystem _ui = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private SkillchipStationOccupantManager _occupant = default!;
+    [Dependency] private SharedSkillchipSystem _skillchips = default!;
+    [Dependency] private SharedContainerSystem _containers = default!;
+    [Dependency] private UserInterfaceSystem _ui = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     public override void Initialize()
     {

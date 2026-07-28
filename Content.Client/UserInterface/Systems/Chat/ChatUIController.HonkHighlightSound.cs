@@ -14,7 +14,7 @@ namespace Content.Client.UserInterface.Systems.Chat;
 
 public sealed partial class ChatUIController
 {
-    [Dependency] private readonly IReplayPlaybackManager _replayPlayback = default!;
+    [Dependency] private IReplayPlaybackManager _replayPlayback = default!;
     [UISystemDependency] private readonly AudioSystem _honkAudio = default!;
 
     private readonly List<Regex> _honkHighlightsPlain = new();

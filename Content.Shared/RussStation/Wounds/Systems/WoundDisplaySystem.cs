@@ -10,9 +10,9 @@ namespace Content.Shared.RussStation.Wounds.Systems;
 /// Builds wound display info for health analyzer and examine text.
 /// Handles bleed source tracking and bleed tier calculation.
 /// </summary>
-public sealed class WoundDisplaySystem : EntitySystem
+public sealed partial class WoundDisplaySystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     /// <summary>
     /// Updates which damage type (Slash or Piercing) is the bleed source for display.

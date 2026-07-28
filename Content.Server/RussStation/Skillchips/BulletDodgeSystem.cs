@@ -13,10 +13,10 @@ namespace Content.Server.RussStation.Skillchips;
 /// covers exactly as long as the flip animation is visible. Consumes stamina on
 /// each successful deflect and closes the window immediately after.
 /// </summary>
-public sealed class BulletDodgeSystem : EntitySystem
+public sealed partial class BulletDodgeSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly SharedStaminaSystem _stamina = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private SharedStaminaSystem _stamina = default!;
 
     public override void Initialize()
     {

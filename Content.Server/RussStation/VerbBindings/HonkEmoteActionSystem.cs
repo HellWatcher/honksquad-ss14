@@ -21,14 +21,14 @@ namespace Content.Server.RussStation.VerbBindings;
 /// they do when the player types the emote command. Emotes show up as regular action buttons in
 /// the action menu and drag onto hotbar slots like any other action.
 /// </summary>
-public sealed class HonkEmoteActionSystem : EntitySystem
+public sealed partial class HonkEmoteActionSystem : EntitySystem
 {
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly SharedActionsSystem _actions = default!;
-    [Dependency] private readonly ActionContainerSystem _actionContainer = default!;
-    [Dependency] private readonly MetaDataSystem _meta = default!;
-    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private ActionContainerSystem _actionContainer = default!;
+    [Dependency] private MetaDataSystem _meta = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!;
 
     // Action entity prototype spawned once per allowed emote.
     private const string EmoteActionProtoId = "HonkActionEmote";

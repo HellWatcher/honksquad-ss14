@@ -11,9 +11,9 @@ namespace Content.Server.RussStation.Body;
 /// When active, intercepts inhaled gas events before lungs can process them,
 /// causing the gas to be returned to the atmosphere and the body to suffocate naturally.
 /// </summary>
-public sealed class BreathingSuppressedSystem : EntitySystem
+public sealed partial class BreathingSuppressedSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {

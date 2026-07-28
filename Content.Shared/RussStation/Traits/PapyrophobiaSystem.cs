@@ -6,9 +6,9 @@ using Content.Shared.UserInterface;
 
 namespace Content.Shared.RussStation.Traits;
 
-public sealed class PapyrophobiaSystem : EntitySystem
+public sealed partial class PapyrophobiaSystem : EntitySystem
 {
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     public override void Initialize()
     {

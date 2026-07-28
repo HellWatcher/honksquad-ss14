@@ -4,8 +4,10 @@ using Content.Shared.Kitchen.Components;
 using Content.Shared.Popups;
 using Content.Shared.RussStation.Skillchips.Systems;
 using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Tools;
 using Content.Shared.Tools.Systems;
 using Robust.Shared.Network;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
 namespace Content.Shared.RussStation.Skillchips.Consumers;
@@ -17,16 +19,22 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// being stashed and pops "You hide the knife..." even though the server later
 /// rejects it. SS13 parallel: TRAIT_BONSAI on <c>/obj/item/kirbyplants</c>.
 /// </summary>
-public sealed class SharedHedgeTrimmingSystem : EntitySystem
+public sealed partial class SharedHedgeTrimmingSystem : EntitySystem
 {
     public const string HedgetrimmingTag = "hedgetrimming";
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly INetManager _net = default!;
-    [Dependency] private readonly SharedToolSystem _tool = default!;
+    /// <summary>
+    /// Upstream removed SharpComponent (#36895); the Slicing tool quality is its successor.
+    /// Held as a field because HasQuality's parameter forbids literals (RA0033).
+    /// </summary>
+    private static readonly ProtoId<ToolQualityPrototype> SlicingQuality = "Slicing";
+
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private INetManager _net = default!;
+    [Dependency] private SharedToolSystem _tool = default!;
 
     public override void Initialize()
     {
@@ -43,8 +51,7 @@ public sealed class SharedHedgeTrimmingSystem : EntitySystem
         if (args.Handled)
             return;
 
-        // Upstream removed SharpComponent (#36895); the Slicing tool quality is its successor.
-        if (!_tool.HasQuality(args.Used, "Slicing"))
+        if (!_tool.HasQuality(args.Used, SlicingQuality))
             return;
 
         if (!_skillchip.HasCapability(args.User, HedgetrimmingTag))

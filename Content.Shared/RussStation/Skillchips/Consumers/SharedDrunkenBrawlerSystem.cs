@@ -24,7 +24,7 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// "the user about to swing" and "the target about to be hit". Lives in
 /// shared so the client predicts the same damage figures as the server.
 /// </summary>
-public sealed class SharedDrunkenBrawlerSystem : EntitySystem
+public sealed partial class SharedDrunkenBrawlerSystem : EntitySystem
 {
     public const string DrunkenBrawlerTag = "drunken_brawler";
 
@@ -37,9 +37,9 @@ public sealed class SharedDrunkenBrawlerSystem : EntitySystem
     /// </summary>
     private const float DefenseMultiplier = 0.8f;
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
-    [Dependency] private readonly SharedMeleeWeaponSystem _melee = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private SharedMeleeWeaponSystem _melee = default!;
 
     public override void Initialize()
     {

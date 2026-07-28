@@ -11,9 +11,9 @@ namespace Content.Server.RussStation.DoAfterCancel;
 /// started themselves. Hostile DoAfters where the player is merely the
 /// target live on a different user's component and are untouched.
 /// </summary>
-public sealed class DoAfterCancelSystem : EntitySystem
+public sealed partial class DoAfterCancelSystem : EntitySystem
 {
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
 
     public override void Initialize()
     {

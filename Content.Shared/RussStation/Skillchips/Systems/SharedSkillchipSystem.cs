@@ -4,10 +4,10 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared.RussStation.Skillchips.Systems;
 
-public abstract class SharedSkillchipSystem : EntitySystem
+public abstract partial class SharedSkillchipSystem : EntitySystem
 {
-    [Dependency] private readonly SharedActionsSystem _actions = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     public override void Initialize()
     {

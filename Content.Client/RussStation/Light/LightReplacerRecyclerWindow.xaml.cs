@@ -15,8 +15,8 @@ public sealed partial class LightReplacerRecyclerWindow : DefaultWindow
 {
     private static readonly Thickness RowIndent = new(16, 0, 0, 0);
 
-    [Dependency] private readonly IPrototypeManager _protoManager = default!;
-    [Dependency] private readonly IComponentFactory _compFactory = default!;
+    [Dependency] private IPrototypeManager _protoManager = default!;
+    [Dependency] private IComponentFactory _compFactory = default!;
 
     public event Action<EntProtoId>? OnExtract;
     public event Action<EntProtoId>? OnPrint;

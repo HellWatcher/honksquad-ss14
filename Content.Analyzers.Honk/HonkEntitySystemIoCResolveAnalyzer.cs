@@ -17,7 +17,7 @@ namespace Content.Analyzers.Honk;
 /// <c>.Honk.cs</c>) so upstream drift is not this rule's problem.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class HonkEntitySystemIoCResolveAnalyzer : DiagnosticAnalyzer
+public sealed partial class HonkEntitySystemIoCResolveAnalyzer : DiagnosticAnalyzer
 {
     private static readonly DiagnosticDescriptor Descriptor = new(
         id: "HONK0007",

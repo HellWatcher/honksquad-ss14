@@ -3,9 +3,9 @@ using Robust.Shared.Enums;
 
 namespace Content.Shared.RussStation.Traits;
 
-public sealed class ProsopagnosiaSystem : EntitySystem
+public sealed partial class ProsopagnosiaSystem : EntitySystem
 {
-    [Dependency] private readonly HumanoidProfileSystem _profile = default!;
+    [Dependency] private HumanoidProfileSystem _profile = default!;
 
     public override void Initialize()
     {

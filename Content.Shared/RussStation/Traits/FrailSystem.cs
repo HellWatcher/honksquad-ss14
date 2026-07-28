@@ -3,9 +3,9 @@ using Content.Shared.RussStation.Wounds.Systems;
 
 namespace Content.Shared.RussStation.Traits;
 
-public sealed class FrailSystem : EntitySystem
+public sealed partial class FrailSystem : EntitySystem
 {
-    [Dependency] private readonly SharedWoundSystem _wound = default!;
+    [Dependency] private SharedWoundSystem _wound = default!;
 
     public override void Initialize()
     {

@@ -16,12 +16,12 @@ namespace Content.Server.RussStation.Skillchips;
 /// Split out of <see cref="SkillchipStationSystem"/> so the implant flow and the
 /// UI builder can ask "who is seated?" without owning the boarding logic.
 /// </summary>
-public sealed class SkillchipStationOccupantManager : EntitySystem
+public sealed partial class SkillchipStationOccupantManager : EntitySystem
 {
-    [Dependency] private readonly SharedContainerSystem _containers = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly ClimbSystem _climb = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedContainerSystem _containers = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private ClimbSystem _climb = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
 
     public override void Initialize()
     {

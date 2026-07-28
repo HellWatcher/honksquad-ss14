@@ -24,14 +24,14 @@ namespace Content.Server.RussStation.Economy;
 /// Right-click on an ID: create a new account (if none linked).
 /// Use spesos on an ID or PDA (with ID inside) to deposit.
 /// </summary>
-public sealed class IdCardAccountSystem : EntitySystem
+public sealed partial class IdCardAccountSystem : EntitySystem
 {
-    [Dependency] private readonly TrackedDialogSystem _trackedDialog = default!;
-    [Dependency] private readonly PopupSystem _popup = default!;
-    [Dependency] private readonly PlayerBalanceSystem _balance = default!;
-    [Dependency] private readonly PaymentCollectionSystem _payment = default!;
-    [Dependency] private readonly StackSystem _stack = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private TrackedDialogSystem _trackedDialog = default!;
+    [Dependency] private PopupSystem _popup = default!;
+    [Dependency] private PlayerBalanceSystem _balance = default!;
+    [Dependency] private PaymentCollectionSystem _payment = default!;
+    [Dependency] private StackSystem _stack = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
 
     public override void Initialize()
     {

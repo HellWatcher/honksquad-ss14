@@ -24,19 +24,19 @@ using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.Bluespace.EntitySystems;
 
-public sealed class BluespaceBlinkSystem : EntitySystem
+public sealed partial class BluespaceBlinkSystem : EntitySystem
 {
-    [Dependency] private readonly INetManager _net = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedJointSystem _joints = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedStackSystem _stack = default!;
-    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
-    [Dependency] private readonly SharedTransformSystem _xform = default!;
-    [Dependency] private readonly ThrownItemSystem _thrown = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly TurfSystem _turf = default!;
-    [Dependency] private readonly UseDelaySystem _useDelay = default!;
+    [Dependency] private INetManager _net = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedJointSystem _joints = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedStackSystem _stack = default!;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
+    [Dependency] private SharedTransformSystem _xform = default!;
+    [Dependency] private ThrownItemSystem _thrown = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private TurfSystem _turf = default!;
+    [Dependency] private UseDelaySystem _useDelay = default!;
 
     private const int BlinkCandidateAttempts = 12;
 

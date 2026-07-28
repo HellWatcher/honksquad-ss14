@@ -14,12 +14,12 @@ namespace Content.Server.RussStation.Wounds;
 /// are skipped — rotting flesh does not heal, and this matches the spec's
 /// "untreated wounds resolve over minutes" framing for live patients.
 /// </summary>
-public sealed class WoundRegenSystem : EntitySystem
+public sealed partial class WoundRegenSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly SharedWoundSystem _wound = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private SharedWoundSystem _wound = default!;
 
     private TimeSpan _nextTick;
 

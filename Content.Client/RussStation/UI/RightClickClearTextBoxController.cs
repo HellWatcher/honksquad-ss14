@@ -11,9 +11,9 @@ namespace Content.Client.RussStation.UI;
 // applies to every LineEdit / HistoryLineEdit in the client. We subscribe to
 // the input manager's UI-scope keybind event so we can inspect the function
 // (UIManager.OnKeyBindDown only surfaces the Control, not the function).
-public sealed class RightClickClearTextBoxController : UIController
+public sealed partial class RightClickClearTextBoxController : UIController
 {
-    [Dependency] private readonly IInputManager _input = default!;
+    [Dependency] private IInputManager _input = default!;
 
     public override void Initialize()
     {

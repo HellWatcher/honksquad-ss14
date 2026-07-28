@@ -16,11 +16,11 @@ namespace Content.Server.RussStation.CartridgeLoader;
 /// upstream's shared InstallProgram does not dedupe (only InstallCartridge does),
 /// so the check is kept here instead.
 /// </summary>
-public sealed class PdaCartridgeInstallerSystem : EntitySystem
+public sealed partial class PdaCartridgeInstallerSystem : EntitySystem
 {
-    [Dependency] private readonly CartridgeLoaderSystem _cartridgeLoader = default!;
-    [Dependency] private readonly IPrototypeManager _protoManager = default!;
-    [Dependency] private readonly IComponentFactory _compFactory = default!;
+    [Dependency] private CartridgeLoaderSystem _cartridgeLoader = default!;
+    [Dependency] private IPrototypeManager _protoManager = default!;
+    [Dependency] private IComponentFactory _compFactory = default!;
 
     public override void Initialize()
     {

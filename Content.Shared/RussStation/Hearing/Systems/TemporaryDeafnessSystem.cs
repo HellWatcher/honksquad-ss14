@@ -16,10 +16,10 @@ namespace Content.Shared.RussStation.Hearing.Systems;
 ///    on a body that has <see cref="DeafableComponent"/>; ComponentStartup falls back to
 ///    treating the host entity as the target.
 /// </summary>
-public sealed class TemporaryDeafnessSystem : EntitySystem
+public sealed partial class TemporaryDeafnessSystem : EntitySystem
 {
-    [Dependency] private readonly DeafableSystem _deafable = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private DeafableSystem _deafable = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {

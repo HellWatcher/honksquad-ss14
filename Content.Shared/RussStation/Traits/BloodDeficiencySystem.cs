@@ -17,12 +17,12 @@ namespace Content.Shared.RussStation.Traits;
 /// they can self-treat: copper pills for copper-blooded species, iron
 /// for everyone else. Prefers the backpack, falls back to hand.
 /// </summary>
-public sealed class BloodDeficiencySystem : EntitySystem
+public sealed partial class BloodDeficiencySystem : EntitySystem
 {
-    [Dependency] private readonly INetManager _net = default!;
-    [Dependency] private readonly InventorySystem _inventory = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedStorageSystem _storage = default!;
+    [Dependency] private INetManager _net = default!;
+    [Dependency] private InventorySystem _inventory = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SharedStorageSystem _storage = default!;
 
     private static readonly EntProtoId IronPills = "PillCanisterIron";
     private static readonly EntProtoId CopperPills = "PillCanisterCopper";

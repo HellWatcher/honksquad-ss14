@@ -12,9 +12,9 @@ namespace Content.Client.RussStation.Emotes;
 /// <see cref="SpriteEmoteAnimEvent"/>:
 ///   <see cref="SpriteEmoteKind.Flip"/> — animate <c>SpriteComponent.Rotation</c>;
 ///   <see cref="SpriteEmoteKind.Spin"/> — step through cardinal directions via DirectionOverride.
-public sealed class SpriteEmoteAnimationSystem : EntitySystem
+public sealed partial class SpriteEmoteAnimationSystem : EntitySystem
 {
-    [Dependency] private readonly AnimationPlayerSystem _anim = default!;
+    [Dependency] private AnimationPlayerSystem _anim = default!;
 
     private const string AnimationKey = "russstation-sprite-emote";
 

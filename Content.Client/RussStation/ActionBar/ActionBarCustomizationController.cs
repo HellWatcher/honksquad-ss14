@@ -15,10 +15,10 @@ namespace Content.Client.RussStation.ActionBar;
 // the preset capture/apply/reset in ActionBarPresetManager, and the float/anchor positioning
 // in ActionBarPositioningManager. The controller keeps the layout-application glue (the bits
 // that touch the live ActionsBar container) and the wiring between those collaborators.
-public sealed class ActionBarCustomizationController : UIController, IOnStateEntered<GameplayState>
+public sealed partial class ActionBarCustomizationController : UIController, IOnStateEntered<GameplayState>
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IClientPreferencesManager _prefs = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IClientPreferencesManager _prefs = default!;
 
     private ActionBarCVarManager _cvars = default!;
     private ActionBarPositioningManager _positioning = default!;

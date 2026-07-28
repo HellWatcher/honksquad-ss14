@@ -6,11 +6,11 @@ using Content.Shared.RussStation.Messenger;
 
 namespace Content.Server.RussStation.Messenger;
 
-public sealed class MessengerCartridgeSystem : EntitySystem
+public sealed partial class MessengerCartridgeSystem : EntitySystem
 {
-    [Dependency] private readonly CartridgeLoaderSystem _cartridgeLoader = default!;
-    [Dependency] private readonly MessengerServerSystem _messenger = default!;
-    [Dependency] private readonly SharedRingerSystem _ringer = default!;
+    [Dependency] private CartridgeLoaderSystem _cartridgeLoader = default!;
+    [Dependency] private MessengerServerSystem _messenger = default!;
+    [Dependency] private SharedRingerSystem _ringer = default!;
 
     public override void Initialize()
     {

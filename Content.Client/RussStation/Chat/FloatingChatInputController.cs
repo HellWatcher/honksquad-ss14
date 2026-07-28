@@ -19,12 +19,12 @@ namespace Content.Client.RussStation.Chat;
 /// focus-chat keybind when the floating-input CVar is enabled. Routes submissions to
 /// the shared chat manager (same path as the anchored chat box).
 /// </summary>
-public sealed class FloatingChatInputController : UIController
+public sealed partial class FloatingChatInputController : UIController
 {
-    [Dependency] private readonly IChatManager _chatManager = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
-    [Dependency] private readonly IPrototypeManager _protoManager = default!;
+    [Dependency] private IChatManager _chatManager = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IConfigurationManager _config = default!;
+    [Dependency] private IPrototypeManager _protoManager = default!;
 
     private FloatingChatInputControl? _active;
 

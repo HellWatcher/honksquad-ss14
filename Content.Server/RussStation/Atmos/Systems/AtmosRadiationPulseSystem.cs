@@ -18,11 +18,11 @@ namespace Content.Server.RussStation.Atmos.Systems;
 ///     radiation field follows the shape of the reacting gas cloud.
 ///     Each source lives for one radiation gridcast cycle (~1 s) then despawns.
 /// </remarks>
-public sealed class AtmosRadiationPulseSystem : EntitySystem
+public sealed partial class AtmosRadiationPulseSystem : EntitySystem
 {
-    [Dependency] private readonly SharedMapSystem _map = default!;
-    [Dependency] private readonly SharedRadiationSystem _radiation = default!;
-    [Dependency] private readonly EntityQuery<MapGridComponent> _gridQuery = default!;
+    [Dependency] private SharedMapSystem _map = default!;
+    [Dependency] private SharedRadiationSystem _radiation = default!;
+    [Dependency] private EntityQuery<MapGridComponent> _gridQuery = default!;
 
     private readonly Dictionary<(EntityUid Grid, Vector2i Tile), float> _pending = new();
 

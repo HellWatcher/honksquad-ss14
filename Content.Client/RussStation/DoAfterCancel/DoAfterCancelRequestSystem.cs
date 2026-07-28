@@ -11,9 +11,9 @@ namespace Content.Client.RussStation.DoAfterCancel;
 /// the result. Returns true when a request was sent so callers (the
 /// Escape key handler) can consume the input.
 /// </summary>
-public sealed class DoAfterCancelRequestSystem : EntitySystem
+public sealed partial class DoAfterCancelRequestSystem : EntitySystem
 {
-    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private IPlayerManager _player = default!;
 
     public bool TryRequestCancel()
     {

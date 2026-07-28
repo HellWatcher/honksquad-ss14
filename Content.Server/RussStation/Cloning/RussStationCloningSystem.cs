@@ -10,9 +10,9 @@ namespace Content.Server.RussStation.Cloning;
 /// CloningSettings prototype, so adding a new fork trait does not require
 /// editing upstream clone.yml.
 /// </summary>
-public sealed class RussStationCloningSystem : EntitySystem
+public sealed partial class RussStationCloningSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     /// <summary>
     /// ID of the fork-side cloningSettings prototype whose Components hashset
@@ -41,7 +41,7 @@ public sealed class RussStationCloningSystem : EntitySystem
 
             // Mirror upstream CloneComponents: clone gets the component iff the original has it.
             RemComp(args.CloneUid, registration.Type);
-            if (EntityManager.TryGetComponent(ent.Owner, registration.Type, out var sourceComp))
+            if (TryComp(ent.Owner, registration.Type, out var sourceComp))
                 CopyComp(ent.Owner, args.CloneUid, sourceComp);
         }
     }

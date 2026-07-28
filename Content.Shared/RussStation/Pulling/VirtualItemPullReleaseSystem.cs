@@ -7,9 +7,9 @@ namespace Content.Shared.RussStation.Pulling;
 
 // Stops the pull when a player drops the virtual item representing a pulled entity.
 // Relocated out of upstream PullingSystem.cs to keep rebase surface minimal (issue #441 P0.1).
-public sealed class VirtualItemPullReleaseSystem : EntitySystem
+public sealed partial class VirtualItemPullReleaseSystem : EntitySystem
 {
-    [Dependency] private readonly PullingSystem _pulling = default!;
+    [Dependency] private PullingSystem _pulling = default!;
 
     public override void Initialize()
     {

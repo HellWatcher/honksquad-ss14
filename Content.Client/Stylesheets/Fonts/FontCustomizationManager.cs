@@ -17,12 +17,12 @@ namespace Content.Client.Stylesheets.Fonts;
 ///     Manages font discovery (built-in + user-provided) and triggers stylesheet
 ///     rebuilds when the player changes their font settings.
 /// </summary>
-public sealed class FontCustomizationManager
+public sealed partial class FontCustomizationManager
 {
-    [Dependency] private readonly IResourceManager _resManager = default!;
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IResourceCache _resCache = default!;
-    [Dependency] private readonly FontTagHijackHolder _fontHijack = default!;
+    [Dependency] private IResourceManager _resManager = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IResourceCache _resCache = default!;
+    [Dependency] private FontTagHijackHolder _fontHijack = default!;
 
     private ISawmill _sawmill = default!;
     private MemoryContentRoot? _userFontRoot;

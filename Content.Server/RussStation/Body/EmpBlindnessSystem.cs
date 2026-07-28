@@ -15,10 +15,10 @@ namespace Content.Server.RussStation.Body;
 /// So this system tags the EMP effect entity with that component while the effect is applied.
 /// Duration is still owned by the status effect, so the timing semantics are unchanged.
 /// </summary>
-public sealed class EmpBlindnessSystem : EntitySystem
+public sealed partial class EmpBlindnessSystem : EntitySystem
 {
-    [Dependency] private readonly BlindableSystem _blindable = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private BlindableSystem _blindable = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {

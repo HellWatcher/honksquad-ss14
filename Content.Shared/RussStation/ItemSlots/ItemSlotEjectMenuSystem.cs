@@ -7,11 +7,11 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared.RussStation.ItemSlots;
 
-public sealed class ItemSlotEjectMenuSystem : EntitySystem
+public sealed partial class ItemSlotEjectMenuSystem : EntitySystem
 {
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly ItemSlotsSystem _itemSlots = default!;
-    [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private ItemSlotsSystem _itemSlots = default!;
+    [Dependency] private SharedUserInterfaceSystem _ui = default!;
 
     public override void Initialize()
     {

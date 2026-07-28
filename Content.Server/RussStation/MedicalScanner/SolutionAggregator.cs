@@ -19,11 +19,11 @@ namespace Content.Server.RussStation.MedicalScanner;
 ///
 /// Overdose/underdose flags are sourced from <see cref="ReagentDoseThresholdAnalyzer"/>.
 /// </summary>
-public sealed class SolutionAggregator : EntitySystem
+public sealed partial class SolutionAggregator : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly SharedSolutionContainerSystem _solutions = default!;
-    [Dependency] private readonly ReagentDoseThresholdAnalyzer _thresholds = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutions = default!;
+    [Dependency] private ReagentDoseThresholdAnalyzer _thresholds = default!;
 
     /// <summary>
     /// Builds the ordered reagent group list for <paramref name="target"/>. Mobs without a

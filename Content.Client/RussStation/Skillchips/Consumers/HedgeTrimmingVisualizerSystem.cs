@@ -8,9 +8,9 @@ namespace Content.Client.RussStation.Skillchips.Consumers;
 /// <see cref="SharedHedgeTrimmingSystem"/>) to the plant's sprite when the
 /// networked component state arrives.
 /// </summary>
-public sealed class HedgeTrimmingVisualizerSystem : EntitySystem
+public sealed partial class HedgeTrimmingVisualizerSystem : EntitySystem
 {
-    [Dependency] private readonly SpriteSystem _sprite = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
 
     public override void Initialize()
     {

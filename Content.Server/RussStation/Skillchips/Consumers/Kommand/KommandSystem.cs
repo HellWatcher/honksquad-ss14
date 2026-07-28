@@ -20,7 +20,7 @@ namespace Content.Server.RussStation.Skillchips.Consumers.Kommand;
 /// tile spawns the arrow but skips the event. Polling unstamped arrows
 /// handles tile and entity points the same way without touching upstream.
 /// </summary>
-public sealed class KommandSystem : SharedKommandSystem
+public sealed partial class KommandSystem : SharedKommandSystem
 {
     /// <summary>
     /// Radius (in map units) around the recovered pointer position to look for
@@ -30,8 +30,8 @@ public sealed class KommandSystem : SharedKommandSystem
     /// </summary>
     private const float PointerMatchRadiusSquared = 0.5f;
 
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly EntityQuery<KommandEnhancedArrowComponent> _enhancedQuery = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private EntityQuery<KommandEnhancedArrowComponent> _enhancedQuery = default!;
 
     public override void Update(float frameTime)
     {
