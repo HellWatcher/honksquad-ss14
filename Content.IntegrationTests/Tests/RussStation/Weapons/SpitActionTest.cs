@@ -25,7 +25,10 @@ public sealed class SpitActionTest : GameTest
     // literal ids (RA0033).
     private static readonly EntProtoId ActionSpit = "ActionSpit";
     private static readonly EntProtoId ProjectileSpit = "ProjectileSpit";
-    private static readonly EntProtoId SpeciesAppearance = "BaseSpeciesAppearance";
+    // A CONCRETE descendant of BaseSpeciesAppearance. The base itself is abstract:true,
+    // and abstract prototypes are never put in the prototype index (PrototypeManager
+    // .TryReadPrototype returns null for them), so TryIndex on it always fails.
+    private static readonly EntProtoId HumanAppearance = "AppearanceHuman";
 
     /// <summary>
     /// ActionSpit must fire a ProjectileSpellEvent carrying the spit projectile, and must
@@ -75,6 +78,11 @@ public sealed class SpitActionTest : GameTest
     /// <summary>
     /// Every humanoid should be granted the spit action directly, now that there is no
     /// per-humanoid SpitGun entity being spawned into nullspace at map init.
+    ///
+    /// Asserted against a concrete species appearance rather than the abstract
+    /// BaseSpeciesAppearance that actually carries the ActionGrant block, because abstract
+    /// prototypes are not indexed. Going through a concrete descendant also proves the grant
+    /// survives inheritance down to something spawnable, which is the real claim here.
     /// </summary>
     [Test]
     public async Task HumanoidsAreGrantedSpit()
@@ -85,8 +93,8 @@ public sealed class SpitActionTest : GameTest
 
         await server.WaitAssertion(() =>
         {
-            Assert.That(protoManager.TryIndex(SpeciesAppearance, out var species), Is.True,
-                "BaseSpeciesAppearance prototype should exist");
+            Assert.That(protoManager.TryIndex(HumanAppearance, out var species), Is.True,
+                "AppearanceHuman prototype should exist");
             Assert.That(species!.TryGetComponent<ActionGrantComponent>(out var grant, compFactory), Is.True,
                 "Humanoids should grant actions directly");
             Assert.That(grant!.Actions.Select(a => a.Id), Does.Contain("ActionSpit"),
