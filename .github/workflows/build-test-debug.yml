@@ -20,7 +20,9 @@ jobs:
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    # HONK - must stay above PoolManagerTestEventHandler.HardStopTimeLimit (35 + 1 min),
+    # plus build time, so the in-test watchdog reports rather than the job being killed.
+    timeout-minutes: 50
 
     steps:
     - name: Checkout Master
