@@ -53,6 +53,18 @@ git remote add wizden https://github.com/space-wizards/space-station-14.git
 - **Who updates it:** Maintainers only.
 - **Protected:** Yes. No direct pushes except during sync (temporarily allow force-push).
 
+The `Check Upstream Stable` workflow (`.github/workflows/check-upstream-stable.yml`) runs daily at
+06:00 UTC and fast-forwards this mirror automatically whenever Wizden moves `stable` forward.
+
+**Required secret: `UPSTREAM_SYNC_PAT`.** GitHub refuses any push that creates or updates a file
+under `.github/workflows/` when the push is authenticated with the workflow's default
+`GITHUB_TOKEN`, and upstream ranges routinely carry workflow changes. The sync job therefore needs a
+PAT with `workflow` scope — classic tokens need `repo` + `workflow`, fine-grained tokens need
+read/write on both *Contents* and *Workflows*. The job falls back to `GITHUB_TOKEN` when the secret
+is unset, which still works for ranges that leave `.github/workflows/` alone; ranges that touch it
+are detected up front and reported as an `upstream-sync` issue instead of failing on an opaque
+remote rejection.
+
 ### `release`
 
 - **Purpose:** The primary deployable branch. Contains all tested fork additions on top of the upstream base.
