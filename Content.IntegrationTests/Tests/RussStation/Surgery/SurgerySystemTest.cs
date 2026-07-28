@@ -198,6 +198,10 @@ public sealed partial class SurgerySystemTest : GameTest
     prototype: Human
   - type: StandingState
   - type: Damageable
+  # Upstream moved damageContainer off Damageable onto the new Injurable component, and
+  # DamageableSystem only applies DamageDealtEvent to entities with Injurable. Without it
+  # the patient can be neither damaged nor healed.
+  - type: Injurable
     damageContainer: Biological
 
 # Single repeatable healing step: a flat budget that auto-repeats until damage is drained.
