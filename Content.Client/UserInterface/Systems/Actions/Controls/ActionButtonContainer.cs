@@ -10,10 +10,10 @@ using Robust.Shared.Utility;
 namespace Content.Client.UserInterface.Systems.Actions.Controls;
 
 [Virtual]
-public class ActionButtonContainer : GridContainer
+public partial class ActionButtonContainer : GridContainer
 {
-    [Dependency] private readonly IEntityManager _entity = default!;
-    //HONK START - upstream had `[Dependency] private readonly IInputManager _input = default!;`; unused after fork refactor
+    [Dependency] private IEntityManager _entity = default!;
+    //HONK START - upstream had `[Dependency] private IInputManager _input = default!;`; unused after fork refactor
     //HONK END
 
     public event Action<GUIBoundKeyEventArgs, ActionButton>? ActionPressed;

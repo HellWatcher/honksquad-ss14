@@ -1,10 +1,10 @@
 using System.Text.RegularExpressions;
 using Content.Server.Speech.Components;
-using Content.Shared.Speech;
+using Content.Shared.Speech.EntitySystems;
 
 namespace Content.Server.Speech.EntitySystems;
 
-public sealed class FrontalLispSystem : EntitySystem
+public sealed class FrontalLispSystem : RelayAccentSystem<FrontalLispComponent>
 {
     // @formatter:off
     private static readonly Regex RegexUpperTh = new(@"[T]+[Ss]+|[S]+[Cc]+(?=[IiEeYy]+)|[C]+(?=[IiEeYy]+)|[P][Ss]+|([S]+[Tt]+|[T]+)(?=[Ii]+[Oo]+[Uu]*[Nn]*)|[C]+[Hh]+(?=[Ii]*[Ee]*)|[Z]+|[S]+|[X]+(?=[Ee]+)");
@@ -13,27 +13,20 @@ public sealed class FrontalLispSystem : EntitySystem
     private static readonly Regex RegexLowerEcks = new(@"[e]+[x]+[c]*|[x]+");
     // @formatter:on
 
-    public override void Initialize()
-    {
-        base.Initialize();
-        // HONK START - #634: run after LizardAccent so Reptilian + FrontalLisp yields stable output.
-        // Without an explicit order, dispatch interleaves with LizardAccent's s->sss transform
-        // and the message varies across sessions for the same player.
-        SubscribeLocalEvent<FrontalLispComponent, AccentGetEvent>(OnAccent, after: [typeof(LizardAccentSystem)]);
-        // HONK END
-    }
+    // HONK START - #634: run after LizardAccent so Reptilian + FrontalLisp yields stable output.
+    // Without an explicit order, dispatch interleaves with LizardAccent's s->sss transform
+    // and the message varies across sessions for the same player.
+    protected override Type[]? AccentAfter => [typeof(LizardAccentSystem)];
+    // HONK END
 
-    private void OnAccent(EntityUid uid, FrontalLispComponent component, AccentGetEvent args)
+    public override string Accentuate(string message, Entity<FrontalLispComponent>? ent = null)
     {
-        var message = args.Message;
-
         // handles ts, sc(i|e|y), c(i|e|y), ps, st(io(u|n)), ch(i|e), z, s
         message = RegexUpperTh.Replace(message, "TH");
         message = RegexLowerTh.Replace(message, "th");
         // handles ex(c), x
         message = RegexUpperEcks.Replace(message, "EKTH");
         message = RegexLowerEcks.Replace(message, "ekth");
-
-        args.Message = message;
+        return message;
     }
 }

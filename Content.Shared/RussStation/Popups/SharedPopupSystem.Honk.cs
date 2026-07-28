@@ -19,7 +19,7 @@ public abstract partial class SharedPopupSystem
 
     public void PopupCursor(string? message, PopupCategory category, PopupType type = PopupType.Small)
     {
-        PopupCursor(message, type);
+        PopupCursor(message, null, type);
         RaiseCategorized(message, category, type, null);
     }
 

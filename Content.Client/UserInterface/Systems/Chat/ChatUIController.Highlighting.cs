@@ -14,8 +14,10 @@ namespace Content.Client.UserInterface.Systems.Chat;
 /// </summary>
 public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSystem>
 {
-    [Dependency] private readonly ILocalizationManager _loc = default!;
+    [Dependency] private ILocalizationManager _loc = default!;
     [UISystemDependency] private readonly CharacterInfoSystem _characterInfo = default!;
+
+    private string _chatSpeechDoubleQuoteBegin = default!;
 
     private static readonly Regex StartDoubleQuote = new("\"$");
     private static readonly Regex EndDoubleQuote = new("^\"|(?<=^@)\"");
@@ -53,6 +55,8 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
         {
             UpdateHighlights(highlights, true);
         }
+
+        _chatSpeechDoubleQuoteBegin = _loc.GetString("chat-manager-speech-double-quote-begin");
     }
 
     public void OnSystemLoaded(CharacterInfoSystem system)
@@ -118,22 +122,18 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
 
             // Make sure the character's name is highlighted only when mentioned directly (eg. it's said by someone),
             // for example in 'Name Surname says, "..."' 'Name Surname' won't be highlighted.
-            //HONK START - issue #656: upstream's @-keyword lookbehind only matches in OOC, after
-            //a `, "..."` quoted-speech preface, or after a literal newline. Two regressions
-            //collide there:
-            //  1. The `, "..."` clause uses ASCII `"`, but upstream 5bd9d21cb6 swapped chat
-            //     wrappers to curly quotes (“ ”), so even say-wrap mentions miss now.
-            //  2. Radio and dead-chat never carried any of those prefaces, so literal "@Name"
-            //     mentions in those channels stopped highlighting outright.
-            //Add curly-quote support to the comma-quote clause and a fourth alternative that
-            //anchors after the speaker's closing `[/bold]` tag. Radio (`[bold]Bob[/bold]
-            //says, "..."`) and dead-chat (`Dead: [bold]Bob[/bold]: ...`) both have `[/bold]`
-            //sitting between byline and message, so the byline itself can't match (it's BEFORE
-            //its own `[/bold]`). Emote and popup channels don't have a `[/bold]` and so won't
-            //match @-prefixed highlights, which is the same as pre-curly-quote behaviour.
+            //HONK START - issue #656: upstream now handles curly quotes (via the loc'd
+            //quote string) and the OOC/LOOC/DEAD/ADMIN prefixes, superseding most of the old
+            //fork fix. Kept on top of upstream's lookbehind: a fourth alternative that anchors
+            //after the speaker's closing `[/bold]` tag. Radio (`[bold]Bob[/bold] says, "..."`)
+            //and dead-chat (`Dead: [bold]Bob[/bold]: ...`) both have `[/bold]` sitting between
+            //byline and message, so literal "@Name" mentions highlight there while the byline
+            //itself can't match (it's BEFORE its own `[/bold]`). Emote and popup channels don't
+            //have a `[/bold]` and so won't match @-prefixed highlights, same as before.
             //The audible-ping path in HonkHighlightSound is unaffected (it strips the @ and
             //substring-matches msg.Message directly).
-            keyword = StartAtSign.Replace(keyword, @"(?<=(?<=^.?OOC:.*:.*)|(?<=,.*[""“].*)|(?<=\n.*)|(?<=\[/bold\].*))");
+            keyword = StartAtSign.Replace(keyword,
+                $@"(?<=(?<=(L?OOC|DEAD|ADMIN):.*:.*)|(?<=,.*{_chatSpeechDoubleQuoteBegin}.*)|(?<=\n.*)|(?<=\[/bold\].*))");
             //HONK END
 
             _highlights.Add(keyword);

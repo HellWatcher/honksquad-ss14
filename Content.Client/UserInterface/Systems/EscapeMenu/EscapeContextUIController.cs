@@ -13,14 +13,14 @@ using Robust.Shared.Input.Binding;
 namespace Content.Client.UserInterface.Systems.EscapeMenu;
 
 [UsedImplicitly]
-public sealed class EscapeContextUIController : UIController
+public sealed partial class EscapeContextUIController : UIController
 {
-    [Dependency] private readonly IInputManager _inputManager = default!;
+    [Dependency] private IInputManager _inputManager = default!;
 
-    [Dependency] private readonly CloseRecentWindowUIController _closeRecentWindowUIController = default!;
-    [Dependency] private readonly EscapeUIController _escapeUIController = default!;
+    [Dependency] private CloseRecentWindowUIController _closeRecentWindowUIController = default!;
+    [Dependency] private EscapeUIController _escapeUIController = default!;
     // HONK START - honksquad #513
-    [Dependency] private readonly IEntityManager _entityManager = default!;
+    [Dependency] private IEntityManager _entityManager = default!;
     // HONK END
 
     public override void Initialize()

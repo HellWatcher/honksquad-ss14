@@ -18,6 +18,7 @@
                 <CheckBox Name="ShowLoocAboveHeadCheckBox" Text="{Loc 'ui-options-show-looc-on-head'}" />
                 <CheckBox Name="FancySpeechBubblesCheckBox" Text="{Loc 'ui-options-fancy-speech'}" />
                 <CheckBox Name="FancyNameBackgroundsCheckBox" Text="{Loc 'ui-options-fancy-name-background'}" />
+                <CheckBox Name="ChatFollowButton" Text="{Loc 'ui-options-chat-follow-button'}" />
                 <!-- HONK START - issue #577 floating chat input -->
                 <CheckBox Name="FloatingChatInputCheckBox" Text="{Loc 'ui-options-floating-chat-input'}" />
                 <CheckBox Name="FloatingChatInputRememberChannelCheckBox" Text="{Loc 'ui-options-floating-chat-input-remember-channel'}" Margin="20 0 0 0" />
