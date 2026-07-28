@@ -1,5 +1,11 @@
 # Lowpop antag rules for ~10-15 player servers.
 # These inherit from upstream rules and only override minPlayers + antag ratios.
+#
+# Migrated to the new AntagSelection schema: `definitions:` was replaced upstream by
+# `antags:` holding !type:AntagCountSelector entries, and every non-numeric field
+# (prefRoles / blacklist / briefing / components / startingGear / mindRoles) now lives
+# on the `antagSpecifier` prototype referenced by `proto:`. All that boilerplate is
+# therefore dropped here and inherited from upstream; only the lowpop tuning remains.
 
 - type: entity
   parent: Traitor
@@ -8,17 +14,13 @@
     - type: GameRule
       minPlayers: 5
     - type: AntagSelection
-      selectionTime: IntraPlayerSpawn
-      definitions:
-        - prefRoles: [Traitor]
-          max: 5
+      antags:
+        - !type:LinearAntagCount
+          proto: Traitor
           playerRatio: 4
-          blacklist:
-            components:
-              - AntagImmune
-          lateJoinAdditional: false
-          mindRoles:
-            - MindRoleTraitor
+          range:
+            min: 1
+            max: 5
 
 - type: entity
   parent: Revolutionary
@@ -27,21 +29,13 @@
     - type: GameRule
       minPlayers: 8
     - type: AntagSelection
-      selectionTime: IntraPlayerSpawn
-      definitions:
-        - prefRoles: [HeadRev]
-          max: 2
+      antags:
+        - !type:LinearAntagCount
+          proto: HeadRev
           playerRatio: 10
-          briefing:
-            text: head-rev-role-greeting
-            color: CornflowerBlue
-            sound: "/Audio/Ambience/Antag/headrev_start.ogg"
-          startingGear: HeadRevGear
-          components:
-            - type: Revolutionary
-            - type: HeadRevolutionary
-          mindRoles:
-            - MindRoleHeadRevolutionary
+          range:
+            min: 1
+            max: 2
 
 - type: entity
   parent: Changeling
@@ -50,38 +44,13 @@
     - type: GameRule
       minPlayers: 10
     - type: AntagSelection
-      agentName: changeling-round-end-agent-name
-      selectionTime: IntraPlayerSpawn
-      definitions:
-        - prefRoles: [Changeling]
-          max: 2
+      antags:
+        - !type:LinearAntagCount
+          proto: Changeling
           playerRatio: 10
-          briefing:
-            text: changeling-role-greeting
-            color: Red
-            sound: /Audio/Ambience/Antag/changeling_start.ogg
-          components:
-            - type: ChangelingDevour
-            - type: ChangelingIdentity
-            - type: ChangelingTransform
-            - type: ActionGrant
-              actions:
-                - ActionChangelingStore
-            - type: Store
-              name: store-preset-name-changeling
-              categories:
-                - ChangelingAbilities
-              currencyWhitelist:
-                - ChangelingDNA
-              balance:
-                ChangelingDNA: 50
-            - type: UserInterface
-              interfaces:
-                enum.StoreUiKey.Key:
-                  type: StoreBoundUserInterface
-                  requireInputValidation: false
-          mindRoles:
-            - MindRoleChangeling
+          range:
+            min: 1
+            max: 2
 
 - type: entity
   parent: Zombie
@@ -90,23 +59,10 @@
     - type: GameRule
       minPlayers: 10
     - type: AntagSelection
-      selectionTime: IntraPlayerSpawn
-      definitions:
-        - prefRoles: [InitialInfected]
-          max: 3
+      antags:
+        - !type:LinearAntagCount
+          proto: InitialInfected
           playerRatio: 10
-          blacklist:
-            components:
-              - ZombieImmune
-              - AntagImmune
-          briefing:
-            text: zombie-patientzero-role-greeting
-            color: Plum
-            sound: "/Audio/Ambience/Antag/zombie_start.ogg"
-          components:
-            - type: PendingZombie
-            - type: ZombifyOnDeath
-            - type: IncurableZombie
-            - type: InitialInfected
-          mindRoles:
-            - MindRoleInitialInfected
+          range:
+            min: 1
+            max: 3

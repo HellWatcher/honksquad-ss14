@@ -54,8 +54,10 @@
     powerLoad: 200
   - type: ExtensionCableReceiver
   - type: Damageable
-    damageContainer: StructuralInorganic
     damageModifierSet: StrongMetallic
+  # Upstream moved damageContainer off Damageable onto the new Injurable component.
+  - type: Injurable
+    damageContainer: StructuralInorganic
   - type: Destructible
     thresholds:
     - trigger:

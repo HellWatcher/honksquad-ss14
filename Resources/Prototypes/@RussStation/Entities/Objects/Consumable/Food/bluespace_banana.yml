@@ -15,9 +15,10 @@
     - type: Edible
       trash:
         - TrashBluespaceBananaPeel
-    - type: Butcherable
-      butcheringType: Knife
-      spawned:
+    # Upstream replaced knife-butchering with ToolRefinable (wizden #36895).
+    # FoodBanana already carries it; this just swaps in the bluespace peel.
+    - type: ToolRefinable
+      refineResult:
         - id: TrashBluespaceBananaPeel
     - type: SolutionContainerManager
       solutions:
