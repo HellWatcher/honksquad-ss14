@@ -34,6 +34,11 @@ jobs:
         env:
           HAS_PAT: ${{ secrets.UPSTREAM_SYNC_PAT != '' }}
         run: |
+          # Boolean only, never the secret itself. Without this the wiring is
+          # unobservable on a run that has nothing to push: the checkout falls
+          # back to GITHUB_TOKEN and succeeds either way.
+          echo "UPSTREAM_SYNC_PAT configured: $HAS_PAT"
+
           LOCAL_SHA=$(git rev-parse origin/upstream/stable)
           REMOTE_SHA=$(git rev-parse wizden/stable)
 
