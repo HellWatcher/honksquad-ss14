@@ -43,6 +43,7 @@ public sealed partial class DoAfterCancelTest : GameTest
 
         var ownEvent = new TestDoAfterEvent();
         var hostileEvent = new TestDoAfterEvent();
+        DoAfterId? hostileId = null;
 
         // Long enough that neither DoAfter completes on its own during the test.
         var longDelay = timing.TickPeriod * 1000;
@@ -63,7 +64,7 @@ public sealed partial class DoAfterCancelTest : GameTest
             // A hostile DoAfter run by the attacker, targeting the player. It is stored on the
             // attacker's DoAfterComponent, not the player's.
             var hostileArgs = new DoAfterArgs(entMan, attacker, longDelay, hostileEvent, null, player) { Broadcast = true };
-            Assert.That(doAfterSys.TryStartDoAfter(hostileArgs), Is.True);
+            Assert.That(doAfterSys.TryStartDoAfter(hostileArgs, out hostileId), Is.True);
 
             Assert.That(ownEvent.Cancelled, Is.False);
             Assert.That(hostileEvent.Cancelled, Is.False);
@@ -82,5 +83,15 @@ public sealed partial class DoAfterCancelTest : GameTest
             Assert.That(hostileEvent.Cancelled, Is.False,
                 "A hostile DoAfter targeting the player should keep running.");
         });
+
+        // The hostile DoAfter is still running by design, which is the whole point of the
+        // assertion above. Leaving it running past the end of the test leaks it into the
+        // pooled server: recycling deletes these dummies, and ShouldCancel then calls
+        // Transform() on the deleted movement entity and logs a resolve error, which the
+        // pool blames on whichever test borrows the pair next. Cancel it so the leak stops
+        // here. See the note on SharedDoAfterSystem.ShouldCancel in the PR description --
+        // upstream dropped the TryComp guards this window, so the unguarded Transform is
+        // an upstream regression, not something this test can fix.
+        await server.WaitPost(() => doAfterSys.Cancel(hostileId));
     }
 }
