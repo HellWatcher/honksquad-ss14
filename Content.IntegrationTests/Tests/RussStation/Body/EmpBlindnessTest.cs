@@ -44,13 +44,17 @@ public sealed class EmpBlindnessTest
             var statusSys = entMan.System<StatusEffectsSystem>();
             var body = entMan.SpawnEntity("EmpBlindTestBody", mapData.GridCoords);
 
-            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.False,
-                "Should not have TemporaryBlindnessComponent before effect");
+            Assert.That(statusSys.HasEffectComp<BlindnessStatusEffectComponent>(body), Is.False,
+                "Should not have a blindness status effect before the EMP effect");
+            Assert.That(entMan.GetComponent<BlindableComponent>(body).IsBlind, Is.False,
+                "Should not be blind before the EMP effect");
 
             var added = statusSys.TryAddStatusEffectDuration(body, EffectProto, TimeSpan.FromSeconds(10));
             Assert.That(added, Is.True, "Should successfully apply EMP blindness effect");
-            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.True,
-                "Should have TemporaryBlindnessComponent after effect applied");
+            Assert.That(statusSys.HasEffectComp<BlindnessStatusEffectComponent>(body), Is.True,
+                "EMP effect entity should carry BlindnessStatusEffectComponent once applied");
+            Assert.That(entMan.GetComponent<BlindableComponent>(body).IsBlind, Is.True,
+                "Should be blind while the EMP effect is applied");
         });
 
         await pair.CleanReturnAsync();
@@ -72,7 +76,8 @@ public sealed class EmpBlindnessTest
             body = entMan.SpawnEntity("EmpBlindTestBody", mapData.GridCoords);
 
             statusSys.TryAddStatusEffectDuration(body, EffectProto, TimeSpan.FromSeconds(10));
-            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.True);
+            Assert.That(statusSys.HasEffectComp<BlindnessStatusEffectComponent>(body), Is.True);
+            Assert.That(entMan.GetComponent<BlindableComponent>(body).IsBlind, Is.True);
 
             statusSys.TryRemoveStatusEffect(body, EffectProto);
         });
@@ -82,8 +87,11 @@ public sealed class EmpBlindnessTest
 
         await server.WaitAssertion(() =>
         {
-            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.False,
-                "TemporaryBlindnessComponent should be removed when effect is removed");
+            var statusSys = entMan.System<StatusEffectsSystem>();
+            Assert.That(statusSys.HasEffectComp<BlindnessStatusEffectComponent>(body), Is.False,
+                "Blindness status effect should be gone when the EMP effect is removed");
+            Assert.That(entMan.GetComponent<BlindableComponent>(body).IsBlind, Is.False,
+                "Should no longer be blind when the EMP effect is removed");
         });
 
         await pair.CleanReturnAsync();
@@ -99,10 +107,13 @@ public sealed class EmpBlindnessTest
 
         await server.WaitAssertion(() =>
         {
+            var statusSys = entMan.System<StatusEffectsSystem>();
             var body = entMan.SpawnEntity("EmpBlindTestBody", mapData.GridCoords);
 
-            Assert.That(entMan.HasComponent<TemporaryBlindnessComponent>(body), Is.False,
-                "Body without EMP blindness effect should not have TemporaryBlindnessComponent");
+            Assert.That(statusSys.HasEffectComp<BlindnessStatusEffectComponent>(body), Is.False,
+                "Body without the EMP blindness effect should not have a blindness status effect");
+            Assert.That(entMan.GetComponent<BlindableComponent>(body).IsBlind, Is.False,
+                "Body without the EMP blindness effect should not be blind");
         });
 
         await pair.CleanReturnAsync();

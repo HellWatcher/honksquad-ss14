@@ -83,7 +83,7 @@ public sealed class PopupLogSystem : EntitySystem
         // Trip-wire against malformed user input: an unparseable color would corrupt the rich
         // text. Fall back to the original dim grey if Color.TryFromHex rejects it.
         var trimmed = raw.Trim();
-        return Color.TryFromHex(trimmed) is null ? FallbackColor : trimmed;
+        return Color.TryFromHex(trimmed, out _) ? trimmed : FallbackColor;
     }
 
     private void OnCategorizedPopup(CategorizedPopupRaisedEvent ev)
