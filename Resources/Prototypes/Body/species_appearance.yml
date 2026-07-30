@@ -87,8 +87,3 @@
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
-  # HONK START - Adding spitting action to all humanoids
-  - type: ActionGrant
-    actions:
-    - ActionSpit
-  # HONK END

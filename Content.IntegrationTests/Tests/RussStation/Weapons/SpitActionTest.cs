@@ -25,10 +25,11 @@ public sealed class SpitActionTest : GameTest
     // literal ids (RA0033).
     private static readonly EntProtoId ActionSpit = "ActionSpit";
     private static readonly EntProtoId ProjectileSpit = "ProjectileSpit";
-    // A CONCRETE descendant of BaseSpeciesAppearance. The base itself is abstract:true,
-    // and abstract prototypes are never put in the prototype index (PrototypeManager
-    // .TryReadPrototype returns null for them), so TryIndex on it always fails.
-    private static readonly EntProtoId HumanAppearance = "AppearanceHuman";
+    // A CONCRETE descendant of BaseSpeciesMob, which carries the grant. The base itself is
+    // abstract:true, and abstract prototypes are never put in the prototype index
+    // (PrototypeManager.TryReadPrototype returns null for them), so TryIndex always fails
+    // on it. Going through a spawnable mob also proves the grant survives inheritance.
+    private static readonly EntProtoId HumanMob = "MobHuman";
 
     /// <summary>
     /// ActionSpit must fire a ProjectileSpellEvent carrying the spit projectile, and must
@@ -79,10 +80,9 @@ public sealed class SpitActionTest : GameTest
     /// Every humanoid should be granted the spit action directly, now that there is no
     /// per-humanoid SpitGun entity being spawned into nullspace at map init.
     ///
-    /// Asserted against a concrete species appearance rather than the abstract
-    /// BaseSpeciesAppearance that actually carries the ActionGrant block, because abstract
-    /// prototypes are not indexed. Going through a concrete descendant also proves the grant
-    /// survives inheritance down to something spawnable, which is the real claim here.
+    /// Asserted against the concrete mob rather than an appearance prototype. The grant sits
+    /// on BaseSpeciesMob, and appearance prototypes deliberately do not carry it, since they
+    /// double as the lobby preview dolls.
     /// </summary>
     [Test]
     public async Task HumanoidsAreGrantedSpit()
@@ -93,12 +93,38 @@ public sealed class SpitActionTest : GameTest
 
         await server.WaitAssertion(() =>
         {
-            Assert.That(protoManager.TryIndex(HumanAppearance, out var species), Is.True,
-                "AppearanceHuman prototype should exist");
-            Assert.That(species!.TryGetComponent<ActionGrantComponent>(out var grant, compFactory), Is.True,
+            Assert.That(protoManager.TryIndex(HumanMob, out var mob), Is.True,
+                "MobHuman prototype should exist");
+            Assert.That(mob!.TryGetComponent<ActionGrantComponent>(out var grant, compFactory), Is.True,
                 "Humanoids should grant actions directly");
             Assert.That(grant!.Actions.Select(a => a.Id), Does.Contain("ActionSpit"),
                 "Humanoids should be granted ActionSpit");
+        });
+    }
+
+    /// <summary>
+    /// A spawned humanoid should end up with exactly one spit action, not several. The grant
+    /// list being correct is not enough on its own: if more than one prototype in the chain
+    /// carries an ActionGrant naming ActionSpit, or something grants it a second time at
+    /// runtime, the player gets duplicate entries in their action bar.
+    /// </summary>
+    [Test]
+    public async Task HumanoidGetsExactlyOneSpitAction()
+    {
+        await Pair.CreateTestMap();
+        var mob = await SpawnAtPosition("MobHuman", Pair.TestMap!.GridCoords);
+        await Pair.RunUntilSynced();
+
+        var actionsSystem = Server.System<SharedActionsSystem>();
+
+        await Server.WaitAssertion(() =>
+        {
+            var spitCount = actionsSystem
+                .GetActions(mob)
+                .Count(a => SEntMan.GetComponent<MetaDataComponent>(a.Owner).EntityPrototype?.ID == ActionSpit.Id);
+
+            Assert.That(spitCount, Is.EqualTo(1),
+                $"MobHuman should be granted ActionSpit exactly once, got {spitCount}");
         });
     }
 }
