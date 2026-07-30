@@ -508,7 +508,8 @@
     - PetWearable
     - CorgiWearable
   - type: ReplacementAccent
-    accent: pirate
+    accents:
+    - pirate
     relayAccent: true
 
 - type: entity
@@ -1056,7 +1057,8 @@
   - type: Clothing
     sprite: Clothing/Head/Hats/piratetricord.rsi
   - type: ReplacementAccent
-    accent: pirate
+    accents:
+    - pirate
     relayAccent: true
 
 - type: entity
@@ -1337,7 +1339,8 @@
     - type: Clothing
       sprite: Clothing/Head/Hats/cowboyhatbrown.rsi
     - type: ReplacementAccent
-      accent: cowboy
+      accents:
+      - cowboy
       relayAccent: true
     - type: Tag
       tags:
