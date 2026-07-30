@@ -508,8 +508,10 @@
     - PetWearable
     - CorgiWearable
   - type: ReplacementAccent
+    # HONK START - list form, so the fork's init handler doesn't mutate the component on spawn
     accents:
     - pirate
+    # HONK END
     relayAccent: true
 
 - type: entity
@@ -1057,8 +1059,10 @@
   - type: Clothing
     sprite: Clothing/Head/Hats/piratetricord.rsi
   - type: ReplacementAccent
+    # HONK START - list form, so the fork's init handler doesn't mutate the component on spawn
     accents:
     - pirate
+    # HONK END
     relayAccent: true
 
 - type: entity
@@ -1339,8 +1343,10 @@
     - type: Clothing
       sprite: Clothing/Head/Hats/cowboyhatbrown.rsi
     - type: ReplacementAccent
+      # HONK START - list form, so the fork's init handler doesn't mutate the component on spawn
       accents:
       - cowboy
+      # HONK END
       relayAccent: true
     - type: Tag
       tags:
