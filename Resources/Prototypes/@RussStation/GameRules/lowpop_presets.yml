@@ -33,21 +33,12 @@
     - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
 
-- type: gamePreset
-  id: LowpopChangeling
-  alias:
-    - lowpopchangeling
-  name: changeling-title
-  description: changeling-description
-  showInVote: false
-  rules:
-    - DummyNonAntagChance
-    - LowpopChangeling
-    - SubGamemodesRuleNoWizard
-    - LowpopRampingStationEventScheduler
-    - MeteorSwarmMildScheduler
-    - SpaceTrafficControlEventScheduler
-    - BasicRoundstartVariation
+# No LowpopChangeling preset: upstream still has the changeling antag behind
+# `setPreference: false` (WIP), and profile validation drops any antag preference whose
+# prototype has that flag. With no player able to opt in, the round would start with zero
+# changelings. Upstream gates it the same way, by shipping no preset that reaches the rule.
+# The LowpopChangeling rule itself is kept in lowpop_roundstart.yml, so re-adding a preset
+# block here is all that is needed once upstream flips the flag.
 
 - type: gamePreset
   id: LowpopZombie
@@ -68,6 +59,5 @@
   weights:
     LowpopTraitor: 0.55
     LowpopRevolutionary: 0.15
-    LowpopChangeling: 0.10
     LowpopZombie: 0.10
     Survival: 0.10

@@ -37,6 +37,8 @@
             min: 1
             max: 2
 
+# Unreachable for now: no preset references this rule, because upstream keeps the changeling
+# antag at `setPreference: false` while it is WIP. See the note in lowpop_presets.yml.
 - type: entity
   parent: Changeling
   id: LowpopChangeling
