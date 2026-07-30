@@ -12,11 +12,11 @@ namespace Content.Shared.RussStation.Janitorial;
 ///     so alt-click surfaces Drink / Insert without the per-slot Eject verbs. Ejecting lives on
 ///     left-click (priority pop) and E (radial menu) instead.
 /// </summary>
-public sealed class JanitorialTrolleySystem : EntitySystem
+public sealed partial class JanitorialTrolleySystem : EntitySystem
 {
-    [Dependency] private readonly ItemSlotsSystem _itemSlots = default!;
-    [Dependency] private readonly SharedStorageSystem _storage = default!;
-    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private ItemSlotsSystem _itemSlots = default!;
+    [Dependency] private SharedStorageSystem _storage = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!;
 
     public override void Initialize()
     {

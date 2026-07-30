@@ -13,7 +13,7 @@ namespace Content.IntegrationTests.Tests.Administration.Logs;
 
 public sealed class LogWindowTest : InteractionTest
 {
-    protected override PoolSettings Settings => new() { Connected = true, Dirty = true, AdminLogsEnabled = true, DummyTicker = false };
+    public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true, AdminLogsEnabled = true, DummyTicker = false };
 
     [Test]
     public async Task TestAdminLogsWindow()
@@ -37,31 +37,37 @@ public sealed class LogWindowTest : InteractionTest
         var refresh = logWindow.Logs.RefreshButton;
         var cont = logWindow.Logs.LogsContainer;
 
-        //HONK START - deflake: log requests are serviced asynchronously (Task.Run) and replied
-        // over the network, so a fixed RunTicks(5) wasn't always enough for the reply to arrive
-        // and populate the container. Poll until the expected log shows up instead.
-        async Task<AdminLogLabel[]> WaitForLog(string expected)
+        async Task<AdminLogLabel[]> SearchForLog(Guid logGuid)
         {
+            await Client.WaitPost(() => search.Text = logGuid.ToString());
+            await ClickControl(refresh);
+
+            await RunUntilSynced();
+            await RunTicks(10);
+
+            //HONK START - deflake: log requests are serviced asynchronously (Task.Run) and replied
+            // over the network, so a fixed wait isn't always enough for the reply to arrive and
+            // populate the container. Poll until the expected log shows up instead.
             AdminLogLabel[] result = [];
             for (var i = 0; i < 30; i++)
             {
-                await RunTicks(5);
-                result = cont.Children.Where(x => x.Visible && x is AdminLogLabel).Cast<AdminLogLabel>().ToArray();
-                if (result.Length == 1 && result[0].Log.Message.Contains(expected))
+                result = cont.Children
+                    .Where(x => x.Visible && x is AdminLogLabel)
+                    .Cast<AdminLogLabel>()
+                    .ToArray();
+                if (result.Length == 1 && result[0].Log.Message.Contains(logGuid.ToString()))
                     break;
+
+                await RunTicks(5);
             }
 
             return result;
+            //HONK END
         }
-        //HONK END
 
         // Search for the log we added earlier.
-        await Client.WaitPost(() => search.Text = guid.ToString());
-        await ClickControl(refresh);
-        //HONK START - deflake: poll for the async reply instead of a single fixed wait
-        var searchResult = await WaitForLog(guid.ToString());
-        //HONK END
-        Assert.That(searchResult.Length, Is.EqualTo(1));
+        var searchResult = await SearchForLog(guid);
+        Assert.That(searchResult, Has.Length.EqualTo(1));
         Assert.That(searchResult[0].Log.Message, Contains.Substring($" test log 1: {guid}"));
 
         // Add a new log
@@ -69,12 +75,8 @@ public sealed class LogWindowTest : InteractionTest
         await Server.WaitPost(() => log.Add(LogType.Unknown, $"{SPlayer} test log 2: {guid}"));
 
         // Update the search and refresh
-        await Client.WaitPost(() => search.Text = guid.ToString());
-        await ClickControl(refresh);
-        //HONK START - deflake: poll for the async reply instead of a single fixed wait
-        searchResult = await WaitForLog(guid.ToString());
-        //HONK END
-        Assert.That(searchResult.Length, Is.EqualTo(1));
+        searchResult = await SearchForLog(guid);
+        Assert.That(searchResult, Has.Length.EqualTo(1));
         Assert.That(searchResult[0].Log.Message, Contains.Substring($" test log 2: {guid}"));
     }
 }

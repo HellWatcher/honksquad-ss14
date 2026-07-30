@@ -11,10 +11,10 @@ namespace Content.Server.RussStation.Messenger;
 /// Messages are keyed by cartridge entity pairs and wiped on round restart.
 /// Each cartridge gets a unique short address (like a MAC) on init.
 /// </summary>
-public sealed class MessengerServerSystem : EntitySystem, IMessengerMessageStore
+public sealed partial class MessengerServerSystem : EntitySystem, IMessengerMessageStore
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     public const int MaxMessageLength = 256;
     public const int MaxMessagesPerConversation = 50;

@@ -7,9 +7,9 @@ namespace Content.Shared.RussStation.Foldable;
 /// <summary>
 /// Plays a buckle sound when an entity is folded or unfolded by a user.
 /// </summary>
-public sealed class FoldSoundSystem : EntitySystem
+public sealed partial class FoldSoundSystem : EntitySystem
 {
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     private static readonly SoundPathSpecifier FoldSound = new("/Audio/Effects/buckle.ogg");
 

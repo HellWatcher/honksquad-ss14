@@ -19,12 +19,12 @@ namespace Content.Shared.RussStation.Traits;
 /// Replaces the normal health examine verb with a numerical/technical readout
 /// when the Self-Aware entity examines themselves.
 /// </summary>
-public sealed class SelfAwareSystem : EntitySystem
+public sealed partial class SelfAwareSystem : EntitySystem
 {
-    [Dependency] private readonly ExamineSystemShared _examine = default!;
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly SharedBloodstreamSystem _bloodstream = default!;
-    [Dependency] private readonly WoundDisplaySystem _woundDisplay = default!;
+    [Dependency] private ExamineSystemShared _examine = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private SharedBloodstreamSystem _bloodstream = default!;
+    [Dependency] private WoundDisplaySystem _woundDisplay = default!;
 
     private static readonly Dictionary<ProtoId<DamageTypePrototype>, string> DamageTypeColors = new()
     {

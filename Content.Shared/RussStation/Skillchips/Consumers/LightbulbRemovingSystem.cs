@@ -17,12 +17,12 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// predicts the burn popup and sound even though the server applies no damage.
 /// SS13 parallel: TRAIT_LIGHTBULB_REMOVER on /obj/machinery/light handling.
 /// </summary>
-public sealed class LightbulbRemovingSystem : EntitySystem
+public sealed partial class LightbulbRemovingSystem : EntitySystem
 {
     public const string LightbulbRemovingTag = "lightbulb_removing";
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     public override void Initialize()
     {

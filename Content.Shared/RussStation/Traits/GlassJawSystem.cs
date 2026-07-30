@@ -4,9 +4,9 @@ using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.RussStation.Traits;
 
-public sealed class GlassJawSystem : EntitySystem
+public sealed partial class GlassJawSystem : EntitySystem
 {
-    [Dependency] private readonly SharedStaminaSystem _stamina = default!;
+    [Dependency] private SharedStaminaSystem _stamina = default!;
 
     public override void Initialize()
     {

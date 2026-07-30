@@ -14,15 +14,15 @@ namespace Content.Server.RussStation.Skillchips.Consumers;
 /// SS13's <c>befriend_janitors</c> AI subtree. SS14 cleanbots have no hostile
 /// mode wired up, so the SS13 faction-add half is purely flavor here too.
 /// </summary>
-public sealed class CleanbotWhispererSystem : EntitySystem
+public sealed partial class CleanbotWhispererSystem : EntitySystem
 {
     public const string CleanbotWhispererTag = "cleanbot_whisperer";
 
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private EntityLookupSystem _lookup = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
 
     private static readonly string[] CommonGreetings =
     {

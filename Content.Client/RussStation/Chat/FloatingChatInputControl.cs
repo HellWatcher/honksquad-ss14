@@ -25,12 +25,12 @@ namespace Content.Client.RussStation.Chat;
 /// <see cref="FloatingChatInputController"/> when the focus-chat keybind fires and the
 /// <c>honk.chat.floating_input</c> CVar is enabled.
 /// </summary>
-public sealed class FloatingChatInputControl : Control
+public sealed partial class FloatingChatInputControl : Control
 {
-    [Dependency] private readonly IEntityManager _entManager = default!;
-    [Dependency] private readonly IEyeManager _eyeManager = default!;
-    [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
+    [Dependency] private IEntityManager _entManager = default!;
+    [Dependency] private IEyeManager _eyeManager = default!;
+    [Dependency] private IUserInterfaceManager _uiManager = default!;
+    [Dependency] private IConfigurationManager _config = default!;
 
     private readonly SharedTransformSystem _transform;
     private readonly StyleBoxFlat _backgroundStyle;

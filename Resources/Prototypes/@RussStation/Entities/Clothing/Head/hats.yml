@@ -24,6 +24,9 @@
         Heat: 1
   - type: Damageable
     damageModifierSet: Wood
+  # Upstream moved the damage container onto Injurable; without it the hat cannot be
+  # damaged by any type. Matches upstream's own ClothingHeadHatStrawHat.
+  - type: Injurable
   - type: Appearance
   - type: FireVisuals
     sprite: Effects/fire.rsi
@@ -68,6 +71,9 @@
         Heat: 1
   - type: Damageable
     damageModifierSet: Wood
+  # Upstream moved the damage container onto Injurable; without it the hat cannot be
+  # damaged by any type. Matches upstream's own ClothingHeadHatStrawHat.
+  - type: Injurable
   - type: Appearance
   - type: FireVisuals
     sprite: Effects/fire.rsi

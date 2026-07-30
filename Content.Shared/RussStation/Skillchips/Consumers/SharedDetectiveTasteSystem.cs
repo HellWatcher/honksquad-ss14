@@ -23,12 +23,12 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// TODO: SS13 also overrides this for blood, returning the blood type. SS14 has
 /// no blood-type metadata on the reagent yet, so the blood branch is deferred.
 /// </summary>
-public sealed class SharedDetectiveTasteSystem : EntitySystem
+public sealed partial class SharedDetectiveTasteSystem : EntitySystem
 {
     public const string DetectiveTasteTag = "detective_taste";
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     public override void Initialize()
     {

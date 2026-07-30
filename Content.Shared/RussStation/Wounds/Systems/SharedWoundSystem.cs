@@ -9,11 +9,11 @@ using Robust.Shared.Timing;
 
 namespace Content.Shared.RussStation.Wounds.Systems;
 
-public abstract class SharedWoundSystem : EntitySystem
+public abstract partial class SharedWoundSystem : EntitySystem
 {
-    [Dependency] protected readonly IPrototypeManager _proto = default!;
-    [Dependency] protected readonly IGameTiming _timing = default!;
-    [Dependency] private readonly WoundDisplaySystem _display = default!;
+    [Dependency] protected IPrototypeManager _proto = default!;
+    [Dependency] protected IGameTiming _timing = default!;
+    [Dependency] private WoundDisplaySystem _display = default!;
 
     private readonly List<WoundTypePrototype> _woundTypes = new();
 

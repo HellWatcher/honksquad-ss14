@@ -117,6 +117,8 @@
               - SurgeryDrape
     - type: Appearance
     - type: Damageable
+    # See hats.yml: the damage container lives on Injurable upstream now.
+    - type: Injurable
     - type: Destructible
       thresholds:
         - trigger: !type:DamageTrigger

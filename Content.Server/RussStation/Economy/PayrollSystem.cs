@@ -20,16 +20,16 @@ namespace Content.Server.RussStation.Economy;
 /// Deposits wages into player accounts on a regular interval based on job tier.
 /// Tiers: Command (heads), Crew (standard), Lower (assistant/visitor).
 /// </summary>
-public sealed class PayrollSystem : EntitySystem
+public sealed partial class PayrollSystem : EntitySystem
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly PlayerBalanceSystem _balance = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedJobSystem _jobs = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private PlayerBalanceSystem _balance = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedJobSystem _jobs = default!;
 
     private static readonly ProtoId<DepartmentPrototype> CommandDepartment = "Command";
 

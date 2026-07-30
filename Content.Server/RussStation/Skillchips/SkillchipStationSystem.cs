@@ -16,16 +16,16 @@ namespace Content.Server.RussStation.Skillchips;
 /// <see cref="SkillchipStationOccupantManager"/> and UI-state serialization in
 /// <see cref="SkillchipStationUiBuilder"/>; this system orchestrates them.
 /// </summary>
-public sealed class SkillchipStationSystem : EntitySystem
+public sealed partial class SkillchipStationSystem : EntitySystem
 {
-    [Dependency] private readonly SharedSkillchipSystem _skillchips = default!;
-    [Dependency] private readonly SharedContainerSystem _containers = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SkillchipStationOccupantManager _occupant = default!;
-    [Dependency] private readonly SkillchipStationUiBuilder _uiBuilder = default!;
+    [Dependency] private SharedSkillchipSystem _skillchips = default!;
+    [Dependency] private SharedContainerSystem _containers = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SkillchipStationOccupantManager _occupant = default!;
+    [Dependency] private SkillchipStationUiBuilder _uiBuilder = default!;
 
     public override void Initialize()
     {

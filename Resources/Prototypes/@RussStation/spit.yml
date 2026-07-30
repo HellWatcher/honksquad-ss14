@@ -5,34 +5,26 @@
   description: Spit a fat wad of phlegm at something you hate.
   components:
   - type: Action
-    raiseOnUser: true
     icon: { sprite : '@RussStation/spit.rsi', state: spit }
     itemIconStyle: BigAction
     priority: 2
+    # Replaces the old SpitGun's rechargeCooldown + GunComponent.FireRate throttle.
+    useDelay: 0.5
+    # Plays from the performer. This is what upstream's #43539 fix relies on, and it
+    # replaces the fork's manual "play the sound from the mob" workaround.
+    sound: !type:SoundPathSpecifier
+      path: /Audio/@RussStation/Spit/russstation_sound_voice_spit_release.ogg
   - type: TargetAction
     checkCanAccess: false
     range: 0
   - type: WorldTargetAction
-    event: !type:ActionGunShootEvent 
-
-- type: entity
-  categories: [ HideSpawnMenu ]
-  id: SpitGun
-  name: spit
-  description: spit.
-  components:
-  - type: RechargeBasicEntityAmmo
-    rechargeCooldown: 0.1
-    rechargeSound: null
-  - type: BasicEntityAmmoProvider
-    proto: ProjectileSpit
-    capacity: 1
-    count: 1
-  - type: Gun
-    soundGunshot: /Audio/@RussStation/Spit/russstation_sound_voice_spit_release.ogg
-    soundEmpty: null
-    projectileSpeed: 10
-    clumsyProof: true
+    event: !type:ProjectileSpellEvent
+      prototype: ProjectileSpit
+      projectileSpeed: 10
+  - type: PopupOnAction
+    popupType: Small
+    selfMessage: action-spit-popup
+    othersMessage: action-spit-popup
 
 - type: entity
   categories: [ HideSpawnMenu ]

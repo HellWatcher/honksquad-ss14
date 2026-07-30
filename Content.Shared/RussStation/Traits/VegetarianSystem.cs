@@ -7,12 +7,12 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared.RussStation.Traits;
 
-public sealed class VegetarianSystem : EntitySystem
+public sealed partial class VegetarianSystem : EntitySystem
 {
-    [Dependency] private readonly TagSystem _tag = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly VomitSystem _vomit = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private TagSystem _tag = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private VomitSystem _vomit = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     private static readonly ProtoId<TagPrototype> MeatTag = "Meat";
 

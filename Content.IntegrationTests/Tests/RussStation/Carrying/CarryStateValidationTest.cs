@@ -33,6 +33,9 @@ public sealed class CarryStateValidationTest
       0: Alive
       100: Dead
   - type: Damageable
+  # Upstream moved damageContainer off Damageable onto Injurable; without it the
+  # entity has no damage container and can be neither damaged nor healed.
+  - type: Injurable
     damageContainer: Biological
   - type: Body
     prototype: Human
@@ -56,6 +59,9 @@ public sealed class CarryStateValidationTest
       0: Alive
       100: Dead
   - type: Damageable
+  # Upstream moved damageContainer off Damageable onto Injurable; without it the
+  # entity has no damage container and can be neither damaged nor healed.
+  - type: Injurable
     damageContainer: Biological
   - type: Body
     prototype: Human

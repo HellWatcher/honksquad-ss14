@@ -22,12 +22,12 @@ namespace Content.Client.RussStation.Popups;
 /// Repeated popups within a short window are coalesced in-place by ChatUIController (shared path with
 /// emote coalescing), so this system does not need its own dedup dictionary.
 /// </remarks>
-public sealed class PopupLogSystem : EntitySystem
+public sealed partial class PopupLogSystem : EntitySystem
 {
-    [Dependency] private readonly IUserInterfaceManager _ui = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly IConfigurationManager _config = default!;
+    [Dependency] private IUserInterfaceManager _ui = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private IConfigurationManager _config = default!;
 
     // Matches SharedChatSystem.VoiceRange so popups log at roughly the same radius as local speech,
     // instead of the 16-tile examine range that lets popups two screens away into the log.
@@ -83,7 +83,7 @@ public sealed class PopupLogSystem : EntitySystem
         // Trip-wire against malformed user input: an unparseable color would corrupt the rich
         // text. Fall back to the original dim grey if Color.TryFromHex rejects it.
         var trimmed = raw.Trim();
-        return Color.TryFromHex(trimmed) is null ? FallbackColor : trimmed;
+        return Color.TryFromHex(trimmed, out _) ? trimmed : FallbackColor;
     }
 
     private void OnCategorizedPopup(CategorizedPopupRaisedEvent ev)

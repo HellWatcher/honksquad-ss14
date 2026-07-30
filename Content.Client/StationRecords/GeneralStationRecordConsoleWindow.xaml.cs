@@ -12,7 +12,7 @@ namespace Content.Client.StationRecords;
 [GenerateTypedNameReferences]
 public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
 {
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
 
     public Action<uint?>? OnKeySelected;
 
@@ -55,14 +55,18 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
         //HONK END
     }
 
-    public void UpdateState(GeneralStationRecordConsoleState state)
+    public void UpdateState(uint? selectedKey,
+        GeneralStationRecord? record,
+        Dictionary<uint, string>? recordListing,
+        StationRecordsFilter? filter,
+        bool canDeleteEntries)
     {
         //HONK START - shared search bar mirrors filter state
-        if (state.Filter != null)
-            SearchBar.ApplyFilterState((int)state.Filter.Type, state.Filter.Value);
+        if (filter != null)
+            SearchBar.ApplyFilterState((int)filter.Type, filter.Value);
         //HONK END
 
-        if (state.RecordListing == null)
+        if (recordListing == null)
         {
             RecordListingStatus.Visible = true;
             RecordListing.Visible = false;
@@ -76,17 +80,17 @@ public sealed partial class GeneralStationRecordConsoleWindow : DefaultWindow
         RecordListing.Visible = true;
         RecordContainer.Visible = true;
 
-        PopulateRecordListing(state.RecordListing!, state.SelectedKey);
+        PopulateRecordListing(recordListing, selectedKey);
 
-        RecordContainerStatus.Visible = state.Record == null;
+        RecordContainerStatus.Visible = record == null;
 
-        if (state.Record != null)
+        if (record != null)
         {
-            RecordContainerStatus.Visible = state.SelectedKey == null;
-            RecordContainerStatus.Text = state.SelectedKey == null
+            RecordContainerStatus.Visible = selectedKey == null;
+            RecordContainerStatus.Text = selectedKey == null
                 ? Loc.GetString("general-station-record-console-no-record-found")
                 : Loc.GetString("general-station-record-console-select-record-info");
-            PopulateRecordContainer(state.Record, state.CanDeleteEntries, state.SelectedKey);
+            PopulateRecordContainer(record, canDeleteEntries, selectedKey);
         }
         else
         {

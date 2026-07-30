@@ -8,9 +8,9 @@ namespace Content.Server.RussStation.UI;
 /// stacking dialogs on repeated interactions. Systems inject this instead of
 /// managing their own HashSet of pending sessions.
 /// </summary>
-public sealed class TrackedDialogSystem : EntitySystem
+public sealed partial class TrackedDialogSystem : EntitySystem
 {
-    [Dependency] private readonly QuickDialogSystem _quickDialog = default!;
+    [Dependency] private QuickDialogSystem _quickDialog = default!;
 
     private readonly HashSet<ICommonSession> _pending = new();
 

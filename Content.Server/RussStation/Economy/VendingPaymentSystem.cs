@@ -18,13 +18,13 @@ namespace Content.Server.RussStation.Economy;
 /// 3. Per-vendor minimum derived from cheapest non-zero item (floor)
 /// All prices rounded up to nearest 5. Global CVar minimum as last resort.
 /// </summary>
-public sealed class VendingPaymentSystem : EntitySystem
+public sealed partial class VendingPaymentSystem : EntitySystem
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly PricingSystem _pricing = default!;
-    [Dependency] private readonly PaymentCollectionSystem _payment = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private PricingSystem _pricing = default!;
+    [Dependency] private PaymentCollectionSystem _payment = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     private float _vendCargoMarkup;
     private float _vendMaterialMarkup;

@@ -17,12 +17,12 @@ namespace Content.Server.RussStation.Economy;
 /// go through this system instead of reaching into the ledger's account index,
 /// keeping the "how do I find and charge an account" knowledge in one place.
 /// </summary>
-public sealed class PaymentCollectionSystem : EntitySystem
+public sealed partial class PaymentCollectionSystem : EntitySystem
 {
-    [Dependency] private readonly PlayerBalanceSystem _balance = default!;
-    [Dependency] private readonly SharedIdCardSystem _idCard = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedStackSystem _stacks = default!;
+    [Dependency] private PlayerBalanceSystem _balance = default!;
+    [Dependency] private SharedIdCardSystem _idCard = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SharedStackSystem _stacks = default!;
 
     /// <summary>
     /// Resolve the balance account linked to an ID card. Returns false when the

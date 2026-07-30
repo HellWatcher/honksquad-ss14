@@ -6,43 +6,47 @@
 // Runs `before` ReplacementAccentSystem so the pronoun swap lands first and the standard
 // Queekish word replacements then operate on the resulting text. Species-guarded to Skaven
 // only via HumanoidProfileComponent so the marker is harmless if it lands on someone else.
+//
+// Upstream #43008 moved every accent onto RelayAccentSystem<T>, which owns the (now by-ref)
+// AccentGetEvent subscription plus the inventory/status-effect relay paths, so this system
+// derives from it instead of hand-rolling its own subscription.
 
 using System.Text.RegularExpressions;
 using Content.Server.RussStation.Speech;
 using Content.Server.Speech.EntitySystems;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Prototypes;
-using Content.Shared.Speech;
+using Content.Shared.Speech.EntitySystems;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server.RussStation.Speech.EntitySystems;
 
-public sealed class QueekishThirdPersonSystem : EntitySystem
+public sealed class QueekishThirdPersonSystem : RelayAccentSystem<QueekishThirdPersonComponent>
 {
     private static readonly ProtoId<SpeciesPrototype> SkavenSpecies = "Skaven";
 
     private static readonly Regex Pronouns =
         new(@"\b(?:I|me|my|mine|myself)\b", RegexOptions.IgnoreCase);
 
-    public override void Initialize()
-    {
-        SubscribeLocalEvent<QueekishThirdPersonComponent, AccentGetEvent>(
-            OnAccent,
-            before: [typeof(ReplacementAccentSystem)]);
-    }
+    protected override Type[]? AccentBefore => [typeof(ReplacementAccentSystem)];
 
-    private void OnAccent(EntityUid uid, QueekishThirdPersonComponent component, AccentGetEvent args)
+    public override string Accentuate(string message, Entity<QueekishThirdPersonComponent>? ent = null)
     {
+        if (ent == null)
+            return message;
+
+        var uid = ent.Value.Owner;
+
         // Species guard. Component lives on the entity but the marker is only meaningful for
         // Skaven; if a job add-component path attaches it to a non-Skaven we silently skip.
         if (!TryComp<HumanoidProfileComponent>(uid, out var profile) || profile.Species != SkavenSpecies)
-            return;
+            return message;
 
         var firstName = ResolveFirstName(uid);
         if (string.IsNullOrEmpty(firstName))
-            return;
+            return message;
 
-        args.Message = Pronouns.Replace(args.Message, firstName);
+        return Pronouns.Replace(message, firstName);
     }
 
     private string ResolveFirstName(EntityUid uid)

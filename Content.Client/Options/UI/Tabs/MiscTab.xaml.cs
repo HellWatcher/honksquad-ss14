@@ -14,8 +14,8 @@ namespace Content.Client.Options.UI.Tabs;
 [GenerateTypedNameReferences]
 public sealed partial class MiscTab : Control
 {
-    [Dependency] private readonly IPlayerManager _playerManager = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IPlayerManager _playerManager = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
 
     public MiscTab()
     {
@@ -56,6 +56,7 @@ public sealed partial class MiscTab : Control
         Control.AddOptionCheckBox(CCVars.FloatingChatInputRememberChannel, FloatingChatInputRememberChannelCheckBox);
         //HONK END
         Control.AddOptionCheckBox(CCVars.StaticStorageUI, StaticStorageUI);
+        Control.AddOptionCheckBox(CCVars.InterfaceChatFollowButton, ChatFollowButton);
 
         //HONK START - Action bar customization
         var cfg = IoCManager.Resolve<Robust.Shared.Configuration.IConfigurationManager>();

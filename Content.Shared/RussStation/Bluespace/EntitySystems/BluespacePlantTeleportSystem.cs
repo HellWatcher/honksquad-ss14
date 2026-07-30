@@ -15,12 +15,12 @@ using Robust.Shared.Random;
 
 namespace Content.Shared.RussStation.Bluespace.EntitySystems;
 
-public sealed class BluespacePlantTeleportSystem : EntitySystem
+public sealed partial class BluespacePlantTeleportSystem : EntitySystem
 {
-    [Dependency] private readonly BluespaceBlinkSystem _blink = default!;
-    [Dependency] private readonly INetManager _net = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private BluespaceBlinkSystem _blink = default!;
+    [Dependency] private INetManager _net = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     // Plant teleports always reuse the canonical bluespace VFX so they read the
     // same as a crystal crush. Pass these explicitly to TryBlink (its defaults

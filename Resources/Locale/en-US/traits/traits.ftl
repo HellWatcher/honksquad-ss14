@@ -58,8 +58,8 @@ trait-german-desc = You seem to come from space Germany.
 trait-french-name = French
 trait-french-desc = Your accent seems to have a certain «je ne sais quoi».
 
-trait-spanish-name = Spanish
-trait-spanish-desc = Hola señor, donde esta la biblioteca.
+trait-spanish-name = Spanish accent
+trait-spanish-desc = Hola señor, ¿dónde está la biblioteca?
 
 trait-scottish-name = Scottish
 trait-scottish-desc = Ye're speaking like ae proper Scot!

@@ -9,10 +9,10 @@ using SharedEconomyConstants = Content.Shared.RussStation.Economy.EconomyConstan
 
 namespace Content.Server.RussStation.Economy;
 
-public sealed class BalanceCartridgeSystem : EntitySystem
+public sealed partial class BalanceCartridgeSystem : EntitySystem
 {
-    [Dependency] private readonly CartridgeLoaderSystem? _cartridgeLoader = default!;
-    [Dependency] private readonly PlayerBalanceSystem _balance = default!;
+    [Dependency] private CartridgeLoaderSystem _cartridgeLoader = default!;
+    [Dependency] private PlayerBalanceSystem _balance = default!;
 
     public override void Initialize()
     {
@@ -76,7 +76,7 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         if (!TryComp<PdaComponent>(loaderUid, out var pda) || pda.ContainedId == null)
         {
             var empty = new BalanceCartridgeUiState(SharedEconomyConstants.EmptyStateBalance, string.Empty, false, new List<TransactionRecord>(), false);
-            _cartridgeLoader?.UpdateCartridgeUiState(loaderUid, empty);
+            _cartridgeLoader.UpdateCartridgeUiState(loaderUid, empty);
             return;
         }
 
@@ -91,6 +91,6 @@ public sealed class BalanceCartridgeSystem : EntitySystem
         var transactions = comp?.Transactions ?? new List<TransactionRecord>();
 
         var state = new BalanceCartridgeUiState(balance, suffix, muted, transactions, true);
-        _cartridgeLoader?.UpdateCartridgeUiState(loaderUid, state);
+        _cartridgeLoader.UpdateCartridgeUiState(loaderUid, state);
     }
 }

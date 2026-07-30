@@ -2,10 +2,19 @@
 # the standard survival contents. Paired with a second double ammonia tank pre-
 # equipped in pocket1 via LoadoutSpeciesSkavenAmmonia, so a Skaven round-starts
 # with two double tanks - one in the box, one in pocket.
+#
+# Parent is BoxSurvivalDeluxeExtended (3x3 BoxCardboard) rather than
+# BoxSurvivalEngineering: upstream #41664 reparented every departmental survival
+# box onto the new 2x2 BoxCardboardSmall and stripped the flare/food/water out of
+# them, which left only 4 cells - not enough for the double tank plus rations.
+# BoxSurvivalDeluxeExtended is upstream's own 9-cell survival box and still ships
+# the flare, nutribrick and water bottle, so it keeps this box's contents intact.
 
 - type: entity
-  parent: BoxSurvivalEngineering
+  parent: BoxSurvivalDeluxeExtended
   id: BoxSurvivalSkaven
+  name: double-capacity survival box
+  description: A survival box containing a double-capacity emergency ammonia tank, an emergency medipen, an emergency flare, and a bit of food and water. Issued to ammonia-breathing crew.
   suffix: Double Ammonia
   components:
     - type: EntityTableContainerFill
@@ -22,4 +31,7 @@
             - id: FoodSnackNutribrick
             - id: DrinkWaterBottleFull
     - type: Label
-      currentLabel: reagent-name-ammonia
+      # Was currentLabel; upstream split LabelComponent into CurrentLabel (runtime
+      # only) and LocalizedLabel (the prototype-facing LocId). Same behaviour: the
+      # key is resolved on map init and appended to the entity name.
+      localizedLabel: reagent-name-ammonia

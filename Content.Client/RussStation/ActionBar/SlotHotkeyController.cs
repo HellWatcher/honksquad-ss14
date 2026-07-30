@@ -14,9 +14,9 @@ namespace Content.Client.RussStation.ActionBar;
 // IInputManager, so Settings → Controls is the single source of truth and the
 // action bar labels refresh when the user changes the binding from either side.
 [UsedImplicitly]
-public sealed class SlotHotkeyController : UIController
+public sealed partial class SlotHotkeyController : UIController
 {
-    [Dependency] private readonly IInputManager _input = default!;
+    [Dependency] private IInputManager _input = default!;
 
     private bool _assignMode;
     private int? _armedSlot;

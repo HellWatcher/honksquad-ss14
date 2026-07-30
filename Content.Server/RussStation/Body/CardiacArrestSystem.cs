@@ -17,13 +17,13 @@ namespace Content.Server.RussStation.Body;
 /// to simulate oxygen not reaching cells due to the heart not pumping blood.
 /// Lungs still work, but can't keep up with the drain.
 /// </summary>
-public sealed class CardiacArrestSystem : EntitySystem
+public sealed partial class CardiacArrestSystem : EntitySystem
 {
-    [Dependency] private readonly AlertsSystem _alerts = default!;
-    [Dependency] private readonly RespiratorSystem _respirator = default!;
-    [Dependency] private readonly SharedStunSystem _stun = default!;
-    [Dependency] private readonly StatusEffectsSystem _statusEffects = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private AlertsSystem _alerts = default!;
+    [Dependency] private RespiratorSystem _respirator = default!;
+    [Dependency] private SharedStunSystem _stun = default!;
+    [Dependency] private StatusEffectsSystem _statusEffects = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     private static readonly EntProtoId EffectProto = "StatusEffectCardiacArrest";
     private static readonly ProtoId<AlertPrototype> CardiacArrestAlert = "CardiacArrest";

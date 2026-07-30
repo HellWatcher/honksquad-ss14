@@ -11,11 +11,11 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// <c>/obj/item/disk/nuclear/examine</c> behaviour on <c>TRAIT_DISK_VERIFIER</c>.
 /// Lives in shared so the client also sees the warning on its predicted examine.
 /// </summary>
-public sealed class SharedDiskVerifierSystem : EntitySystem
+public sealed partial class SharedDiskVerifierSystem : EntitySystem
 {
     public const string DiskVerifierTag = "disk_verifier";
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
 
     public override void Initialize()
     {

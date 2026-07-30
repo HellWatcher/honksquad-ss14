@@ -9,11 +9,11 @@ using Content.Shared.Stacks;
 
 namespace Content.Server.RussStation.Bluespace.EntitySystems;
 
-public sealed class BluespaceResearchInsertSystem : EntitySystem
+public sealed partial class BluespaceResearchInsertSystem : EntitySystem
 {
-    [Dependency] private readonly PopupSystem _popup = default!;
-    [Dependency] private readonly ResearchSystem _research = default!;
-    [Dependency] private readonly SharedStackSystem _stack = default!;
+    [Dependency] private PopupSystem _popup = default!;
+    [Dependency] private ResearchSystem _research = default!;
+    [Dependency] private SharedStackSystem _stack = default!;
 
     public override void Initialize()
     {

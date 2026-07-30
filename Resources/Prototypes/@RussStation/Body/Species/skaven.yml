@@ -94,8 +94,9 @@
         reagents:
           - ReagentId: AmmoniaBlood
             Quantity: 300
+    # butcheringType was removed upstream (wizden #36895); spiking is now the only
+    # butchering path, gated on the Slicing tool quality.
     - type: Butcherable
-      butcheringType: Spike
       spawned:
         - id: FoodMeatRat
           amount: 3

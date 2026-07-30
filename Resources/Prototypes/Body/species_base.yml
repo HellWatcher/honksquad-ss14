@@ -10,6 +10,16 @@
   id: BaseSpeciesMob
   save: false
   components:
+  # HONK START - Adding spitting action to all humanoids.
+  # Granted here rather than on BaseSpeciesAppearance: every species mob is
+  # `parent: [Appearance<X>, BaseSpeciesMob*]`, and both branches reach
+  # BaseSpeciesAppearance, so a list field declared there gets merged twice and the
+  # player ends up with two spit actions. BaseSpeciesMob is reached once. This also
+  # keeps the action off the appearance dolls used for lobby previews.
+  - type: ActionGrant
+    actions:
+    - ActionSpit
+  # HONK END
   - type: DamageVisuals
     thresholds: [ 10, 20, 30, 50, 70, 100 ]
     targetLayers:
@@ -72,10 +82,8 @@
   - type: StatusEffects
     allowed:
     - Electrocution
-    - RatvarianLanguage
     - PressureImmunity
     - Muted
-    - TemporaryBlindness
     - Pacified
     - Flashed
     - Adrenaline
@@ -141,10 +149,7 @@
     speechSounds: Alto
   - type: DamageForceSay
   - type: Vocal
-    sounds:
-      Male: MaleHuman
-      Female: FemaleHuman
-      Unsexed: MaleHuman
+    emoteSounds: MaleHuman
   - type: Emoting
   - type: BodyEmotes
     soundsId: GeneralBodyEmotes
@@ -225,7 +230,6 @@
     thermalRegulationTemperatureThreshold: 2
   - type: Perishable
   - type: Butcherable
-    butcheringType: Spike
     spawned:
     - id: FoodMeat
       amount: 5

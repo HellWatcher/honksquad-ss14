@@ -14,14 +14,14 @@ namespace Content.Shared.RussStation.Wounds.Systems;
 /// Applies gameplay effects based on active wounds:
 /// movement slow, and item drop on hit for tier 3 fractures.
 /// </summary>
-public sealed class WoundEffectsSystem : EntitySystem
+public sealed partial class WoundEffectsSystem : EntitySystem
 {
-    [Dependency] private readonly AlertsSystem _alerts = default!;
-    [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedWoundSystem _wounds = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private AlertsSystem _alerts = default!;
+    [Dependency] private MovementSpeedModifierSystem _movementSpeed = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SharedWoundSystem _wounds = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     public override void Initialize()
     {

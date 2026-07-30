@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Access.Components;
 using Content.Shared.PDA;
 using Content.Shared.RussStation.Messenger;
-using Content.Shared.StationRecords;
+using Content.Shared.StationRecords.Components;
 
 namespace Content.Server.RussStation.Messenger;
 

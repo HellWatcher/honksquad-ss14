@@ -12,10 +12,10 @@ namespace Content.Server.RussStation.Emotes;
 /// HONK Fork-side dispatcher for new physical emotes (Fart, Flip, Spin). One subscription on
 /// <see cref="BodyComponent"/> routes by emote id so the engine's
 /// "no duplicate subscription" rule stays satisfied.
-public sealed class ForkEmoteSystem : EntitySystem
+public sealed partial class ForkEmoteSystem : EntitySystem
 {
-    [Dependency] private readonly AtmosphereSystem _atmos = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private AtmosphereSystem _atmos = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     private const string FartEmoteId = "Fart";
     private const string FlipEmoteId = "Flip";

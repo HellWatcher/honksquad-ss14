@@ -14,15 +14,15 @@ using Robust.Shared.Configuration;
 
 namespace Content.Client.RussStation.HoverTooltip;
 
-public sealed class EntityHoverTooltipSystem : EntitySystem
+public sealed partial class EntityHoverTooltipSystem : EntitySystem
 {
-    [Dependency] private readonly IConfigurationManager _configManager = default!;
-    [Dependency] private readonly IInputManager _inputManager = default!;
-    [Dependency] private readonly IOverlayManager _overlayManager = default!;
-    [Dependency] private readonly IPlayerManager _playerManager = default!;
-    [Dependency] private readonly IResourceCache _resourceCache = default!;
-    [Dependency] private readonly IStateManager _stateManager = default!;
-    [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
+    [Dependency] private IConfigurationManager _configManager = default!;
+    [Dependency] private IInputManager _inputManager = default!;
+    [Dependency] private IOverlayManager _overlayManager = default!;
+    [Dependency] private IPlayerManager _playerManager = default!;
+    [Dependency] private IResourceCache _resourceCache = default!;
+    [Dependency] private IStateManager _stateManager = default!;
+    [Dependency] private IUserInterfaceManager _uiManager = default!;
 
     private EntityHoverTooltipOverlay _overlay = default!;
     private EntityUid? _hoveredEntity;

@@ -15,11 +15,11 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// it (only the ID console does). Lives in shared so the client sees the
 /// line on its predicted examine.
 /// </summary>
-public sealed class SharedIdAppraiserSystem : EntitySystem
+public sealed partial class SharedIdAppraiserSystem : EntitySystem
 {
     public const string IdAppraisalTag = "id_appraisal";
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
 
     public override void Initialize()
     {

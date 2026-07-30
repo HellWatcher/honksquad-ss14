@@ -27,21 +27,21 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// <c>/obj/item/reagent_containers/cup/glass/bottle/champagne</c>'s
 /// <c>attackby</c> branch and its 2-second do-after.
 /// </summary>
-public sealed class SharedSabrageSystem : EntitySystem
+public sealed partial class SharedSabrageSystem : EntitySystem
 {
     public const string SabrageTag = "sabrage_proficiency";
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly OpenableSystem _openable = default!;
-    [Dependency] private readonly SealableSystem _sealable = default!;
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
-    [Dependency] private readonly SharedPuddleSystem _puddle = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private OpenableSystem _openable = default!;
+    [Dependency] private SealableSystem _sealable = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
+    [Dependency] private SharedPuddleSystem _puddle = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private INetManager _net = default!;
 
     public override void Initialize()
     {

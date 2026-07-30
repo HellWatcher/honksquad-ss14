@@ -15,16 +15,16 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server.RussStation.Light;
 
-public sealed class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSystem
+public sealed partial class LightReplacerRecyclerSystem : SharedLightReplacerRecyclerSystem
 {
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly IPrototypeManager _protoManager = default!;
-    [Dependency] private readonly PoweredLightSystem _poweredLight = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly TagSystem _tag = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private IPrototypeManager _protoManager = default!;
+    [Dependency] private PoweredLightSystem _poweredLight = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private TagSystem _tag = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private UserInterfaceSystem _ui = default!;
 
     // Only plain glass shards recycle. Reinforced, plasma, uranium, and clockwork variants are
     // deliberately excluded because they're rarer or have higher-value refine paths elsewhere.

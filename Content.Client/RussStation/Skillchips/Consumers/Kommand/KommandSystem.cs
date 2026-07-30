@@ -14,13 +14,13 @@ namespace Content.Client.RussStation.Skillchips.Consumers.Kommand;
 /// AutoNetworkedField sync; AfterAutoHandleStateEvent reapplies if the color
 /// changes mid-animation.
 /// </summary>
-public sealed class KommandClientSystem : EntitySystem
+public sealed partial class KommandClientSystem : EntitySystem
 {
     private const string KommandRsi = "@RussStation/Interface/Misc/kommand_pointer.rsi";
     private const string WhiteState = "arrow_large_white";
     private const string HighlightsState = "arrow_large_white_highlights";
 
-    [Dependency] private readonly SpriteSystem _sprite = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
 
     public override void Initialize()
     {

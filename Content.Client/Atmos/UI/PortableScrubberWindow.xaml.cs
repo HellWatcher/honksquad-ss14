@@ -18,9 +18,9 @@ namespace Content.Client.Atmos.UI;
 [GenerateTypedNameReferences]
 public sealed partial class PortableScrubberWindow : DefaultWindow
 {
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly IEntityManager _entMan = default!;
-    [Dependency] private readonly IResourceCache _resCache = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IEntityManager _entMan = default!;
+    [Dependency] private IResourceCache _resCache = default!;
 
     private const string PartialCheckboxTexturePath = "/Textures/@RussStation/Interface/Nano/checkbox_partial.svg.96dpi.png";
 

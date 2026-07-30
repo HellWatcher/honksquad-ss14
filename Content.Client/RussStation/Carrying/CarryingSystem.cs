@@ -7,11 +7,11 @@ using DrawDepth = Content.Shared.DrawDepth.DrawDepth;
 
 namespace Content.Client.RussStation.Carrying;
 
-internal sealed class CarryingSystem : SharedCarryingSystem
+internal sealed partial class CarryingSystem : SharedCarryingSystem
 {
-    [Dependency] private readonly SpriteSystem _sprite = default!;
-    [Dependency] private readonly SharedTransformSystem _xform = default!;
-    [Dependency] private readonly EntityQuery<CarrierComponent> _carrierQuery = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
+    [Dependency] private SharedTransformSystem _xform = default!;
+    [Dependency] private EntityQuery<CarrierComponent> _carrierQuery = default!;
 
     public override void Initialize()
     {

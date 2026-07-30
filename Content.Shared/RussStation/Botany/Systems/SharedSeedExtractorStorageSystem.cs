@@ -5,10 +5,10 @@ using Robust.Shared.Containers;
 
 namespace Content.Shared.RussStation.Botany.Systems;
 
-public abstract class SharedSeedExtractorStorageSystem : EntitySystem
+public abstract partial class SharedSeedExtractorStorageSystem : EntitySystem
 {
-    [Dependency] protected readonly SharedContainerSystem Container = default!;
-    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
+    [Dependency] protected SharedContainerSystem Container = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!;
 
     public override void Initialize()
     {

@@ -8,9 +8,9 @@ namespace Content.Client.RussStation.Surgery;
 /// down with a prone / buckled patient instead of standing upright. Direction picking is still left
 /// to the engine's world-rotation-based RSI lookup.
 /// </summary>
-public sealed class SurgeryDrapeOverlayVisibilitySystem : EntitySystem
+public sealed partial class SurgeryDrapeOverlayVisibilitySystem : EntitySystem
 {
-    [Dependency] private readonly EntityQuery<SpriteComponent> _spriteQuery = default!;
+    [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
 
     public override void FrameUpdate(float frameTime)
     {

@@ -24,13 +24,13 @@ public sealed class BalanceChangedEvent : EntityEventArgs
     }
 }
 
-public sealed class PlayerBalanceSystem : EntitySystem
+public sealed partial class PlayerBalanceSystem : EntitySystem
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly SharedIdCardSystem _idCard = default!;
-    [Dependency] private readonly MemoriesSystem _memories = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private SharedIdCardSystem _idCard = default!;
+    [Dependency] private MemoriesSystem _memories = default!;
 
     private int _defaultStartingBalance;
 

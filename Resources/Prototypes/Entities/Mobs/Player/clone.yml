@@ -4,6 +4,38 @@
 # The datafields of the components copied using CopyComp.
 # Subscribe to CloningEvent instead if that is not enough.
 
+# Traits that root mentally or otherwise only affect you mentally.
+- type: cloningSettings
+  id: TraitsMental
+  components:
+  - Clumsy
+  - Pacified
+  - Paracusia
+  - LightweightDrunk
+  # HONK START - Pushover quirk
+  - Pushover
+  # HONK END
+
+# Traits that root in physical things in your body.
+- type: cloningSettings
+  id: TraitsPhysical
+  components:
+  - BlackAndWhiteOverlay
+  - Narcolepsy
+  - ImpairedMobility
+  # - LegsParalyzed (you get healed)
+  - Muted
+  - PermanentBlindness
+  - Snoring
+  - Unrevivable
+
+- type: cloningSettings
+  parent: [TraitsMental, TraitsPhysical]
+  id: Traits
+# HONK START - fork traits live in Resources/Prototypes/@RussStation/Cloning/clone_extensions.yml
+# and are copied by RussStationCloningSystem on CloningEvent.
+# HONK END
+
 # for basic physical traits
 - type: cloningSettings
   id: Body
@@ -20,25 +52,6 @@
   - RandomPrice
   - TemperatureDamage
   - TemperatureSpeed
-  # traits
-  - BlackAndWhiteOverlay
-  - Clumsy
-  - ImpairedMobility
-  # - LegsParalyzed (you get healed)
-  - LightweightDrunk
-  - Muted
-  - Narcolepsy
-  - Pacified
-  - Paracusia
-  # HONK START - Pushover quirk
-  - Pushover
-  # HONK END
-  - PermanentBlindness
-  - Snoring
-  - Unrevivable
-  # HONK START - fork traits live in Resources/Prototypes/@RussStation/Cloning/clone_extensions.yml
-  # and are copied by RussStationCloningSystem on CloningEvent.
-  # HONK END
   # accents
   - Accentless
   - BackwardsAccent
@@ -93,7 +106,7 @@
 - type: cloningSettings
   abstract: true
   id: BaseEquipmentBlacklist
-  blacklist:
+  equipmentBlacklist:
     components:
     - AttachedClothing # helmets, which are part of the suit
     - Implanter # they will spawn full again, but you already get the implant. And we can't do item slot copying yet
@@ -102,7 +115,7 @@
 # a full clone with all traits and items, but no antag roles
 - type: cloningSettings
   id: BaseClone
-  parent: [Body, Special, BaseEquipmentBlacklist]
+  parent: [Body, Special, Traits, BaseEquipmentBlacklist]
 
 # for cloning pods
 - type: cloningSettings
@@ -123,7 +136,10 @@
 # changeling identity copying
 - type: cloningSettings
   id: ChangelingCloningSettings
-  parent: [Body, BaseEquipmentBlacklist]
+  parent: [Body, TraitsPhysical, BaseEquipmentBlacklist]
+  statusEffectWhitelist:
+    components:
+    - ChangelingCloneableStatusEffect
   components:
   # These are already part of the base species prototype that is spawned for the clone,
   # that means we only need to copy them over when switching between species.
@@ -144,6 +160,7 @@
   - Sericulture # arachnids
   - MovementSpeedModifier # moths when weightless
   - JumpAbility # vulp leaping
+  - Bloodstream # blood reagents
   copyInternalStorage: false
   copyImplants: false
   raiseEntityRenamedEvent: false

@@ -16,16 +16,16 @@ namespace Content.Shared.RussStation.Skillchips.Consumers;
 /// <see cref="EdibleComponent"/> so every food and drink inherits the hook
 /// without per-prototype marking. Shared so the client predicts the line.
 /// </summary>
-public sealed class SharedFlavourCalculusSystem : EntitySystem
+public sealed partial class SharedFlavourCalculusSystem : EntitySystem
 {
     public const string FlavourCalculusTag = "flavour_calculus";
     private const string FoodSolutionName = "food";
     private const string DrinkSolutionName = "drink";
     private const string SaltReagentId = "TableSalt";
 
-    [Dependency] private readonly SharedSkillchipSystem _skillchip = default!;
-    [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
-    [Dependency] private readonly FlavorProfileSystem _flavorProfile = default!;
+    [Dependency] private SharedSkillchipSystem _skillchip = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
+    [Dependency] private FlavorProfileSystem _flavorProfile = default!;
 
     public override void Initialize()
     {

@@ -13,11 +13,11 @@ using Robust.Shared.Containers;
 
 namespace Content.Server.RussStation.Botany.Systems;
 
-public sealed class SeedExtractorStorageSystem : SharedSeedExtractorStorageSystem
+public sealed partial class SeedExtractorStorageSystem : SharedSeedExtractorStorageSystem
 {
-    [Dependency] private readonly BotanySystem _botanySystem = default!;
-    [Dependency] private readonly UserInterfaceSystem _uiSys = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private BotanySystem _botanySystem = default!;
+    [Dependency] private UserInterfaceSystem _uiSys = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
 
     public override void Initialize()
     {

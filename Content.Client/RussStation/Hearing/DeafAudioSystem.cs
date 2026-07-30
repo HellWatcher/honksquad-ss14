@@ -17,12 +17,12 @@ namespace Content.Client.RussStation.Hearing;
 /// hearing impairment from cybernetic ears live in their own systems and stack on
 /// top via the same <see cref="AudioSystem.GetOcclusionOverride"/> delegate hook.
 /// </summary>
-public sealed class DeafAudioSystem : EntitySystem
+public sealed partial class DeafAudioSystem : EntitySystem
 {
-    [Dependency] private readonly AudioSystem _audio = default!;
-    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private AudioSystem _audio = default!;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IPlayerManager _player = default!;
 
     private const float DeafOcclusion = 8f;
 

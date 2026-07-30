@@ -118,13 +118,22 @@
       earliestStart: 15
       duration: 1
 
+# HONK START - upstream removed the MimicVendorRule prototype in wizden #44057
+# ("Remove mimic vendor gamerule"). Only the prototype went; MobReplacementRule
+# and MobMimic both still exist, so this keeps the fork's lowpop mimic event
+# working by inlining what it used to inherit. Values below are upstream's old
+# MimicVendorRule with the fork's minimumPlayers override folded in.
 - type: entity
-  parent: MimicVendorRule
+  parent: BaseGameRule
   id: LowpopMimicVendorRule
   components:
     - type: StationEvent
       earliestStart: 0
       minimumPlayers: 10
+      maxOccurrences: 1 # this event has diminishing returns on interesting-ness, so we cap it
+      weight: 5
+    - type: MobReplacementRule
+# HONK END
 
 - type: entity
   parent: VentClog

@@ -2,8 +2,10 @@
   id: Exo
   mapName: 'Exo'
   mapPath: /Maps/exo.yml
+  # HONK START - wider player range than upstream
   minPlayers: 40
   maxPlayers: 80
+  # HONK END
   stations:
     Exo:
       stationProto: StandardNanotrasenStation
@@ -19,6 +21,7 @@
           path: /Maps/Shuttles/cargo_exo.yml
         - type: StationJobs
           availableJobs:
+            # HONK START - fork job slot counts
             #service
             Captain: [ 1, 1 ]
             HeadOfPersonnel: [ 1, 1 ]
@@ -40,6 +43,7 @@
             MedicalDoctor: [ 4, 4 ]
             MedicalIntern: [ 3, 3 ]
             Paramedic: [ 1, 1 ]
+            Psychologist: [ 1, 1 ]
             #science
             ResearchDirector: [ 1, 1 ]
             Scientist: [ 4, 4 ]
@@ -47,9 +51,9 @@
             #security
             HeadOfSecurity: [ 1, 1 ]
             Warden: [ 1, 1 ]
-            SecurityOfficer: [ 4, 4 ]
+            SecurityOfficer: [ 5, 5 ]
             Detective: [ 1, 1 ]
-            SecurityCadet: [ 4, 4 ]
+            SecurityCadet: [ 3, 3 ]
             Lawyer: [ 2, 2 ]
             #supply
             Quartermaster: [ 1, 1 ]
@@ -64,3 +68,4 @@
             #silicon
             StationAi: [ 1, 1 ]
             Borg: [ 2, 2 ]
+            # HONK END

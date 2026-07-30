@@ -15,9 +15,9 @@ public abstract partial class SharedSurgerySystem : EntitySystem
 
     private static readonly ProtoId<ToolQualityPrototype> CauterizingQuality = "Cauterizing";
 
-    [Dependency] protected readonly AlertsSystem _alerts = default!;
-    [Dependency] protected readonly SharedToolSystem _tool = default!;
-    [Dependency] protected readonly IPrototypeManager ProtoManager = default!;
+    [Dependency] protected AlertsSystem _alerts = default!;
+    [Dependency] protected SharedToolSystem _tool = default!;
+    [Dependency] protected IPrototypeManager ProtoManager = default!;
 
     public override void Initialize()
     {

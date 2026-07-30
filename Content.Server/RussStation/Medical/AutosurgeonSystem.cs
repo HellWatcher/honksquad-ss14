@@ -14,12 +14,12 @@ namespace Content.Server.RussStation.Medical;
 /// Handles the autosurgeon: a single-use device that installs a cybernetic organ
 /// via a do-after, bypassing surgery.
 /// </summary>
-public sealed class AutosurgeonSystem : EntitySystem
+public sealed partial class AutosurgeonSystem : EntitySystem
 {
-    [Dependency] private readonly PopupSystem _popup = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private PopupSystem _popup = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedTransformSystem _xform = default!;
 
     public override void Initialize()
     {

@@ -24,15 +24,15 @@ namespace Content.Shared.RussStation.Skillchips.Consumers.Kommand;
 /// (Content.Server) because the live <c>PointingArrowComponent</c> is
 /// server-only.
 /// </summary>
-public abstract class SharedKommandSystem : EntitySystem
+public abstract partial class SharedKommandSystem : EntitySystem
 {
     public const string EnhancedPointingTag = "enhanced_pointing";
 
     /// <summary>Robust BUI lookup string for the client-side picker.</summary>
     protected const string KommandColorPickerBuiName = "KommandColorPickerBoundUserInterface";
 
-    [Dependency] protected readonly SharedSkillchipSystem Skillchip = default!;
-    [Dependency] protected readonly SharedUserInterfaceSystem Ui = default!;
+    [Dependency] protected SharedSkillchipSystem Skillchip = default!;
+    [Dependency] protected SharedUserInterfaceSystem Ui = default!;
 
     public override void Initialize()
     {

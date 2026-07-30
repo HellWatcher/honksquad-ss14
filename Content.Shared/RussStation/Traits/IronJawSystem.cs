@@ -4,9 +4,9 @@ using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.RussStation.Traits;
 
-public sealed class IronJawSystem : EntitySystem
+public sealed partial class IronJawSystem : EntitySystem
 {
-    [Dependency] private readonly SharedStaminaSystem _stamina = default!;
+    [Dependency] private SharedStaminaSystem _stamina = default!;
 
     public override void Initialize()
     {

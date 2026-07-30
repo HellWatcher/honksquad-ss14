@@ -16,13 +16,13 @@ namespace Content.Shared.RussStation.Medical;
 /// do-after that chips away at a critical patient's Asphyxiation damage until
 /// they recover enough to breathe on their own, mirroring SS13 CPR.
 /// </summary>
-public sealed class ManualResuscitatorSystem : EntitySystem
+public sealed partial class ManualResuscitatorSystem : EntitySystem
 {
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     public override void Initialize()
     {

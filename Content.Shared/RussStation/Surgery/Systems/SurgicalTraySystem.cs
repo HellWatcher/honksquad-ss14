@@ -4,9 +4,9 @@ using Content.Shared.RussStation.Surgery.Components;
 
 namespace Content.Shared.RussStation.Surgery.Systems;
 
-public sealed class SurgicalTraySystem : EntitySystem
+public sealed partial class SurgicalTraySystem : EntitySystem
 {
-    [Dependency] private readonly TileFrictionController _friction = default!;
+    [Dependency] private TileFrictionController _friction = default!;
 
     public override void Initialize()
     {

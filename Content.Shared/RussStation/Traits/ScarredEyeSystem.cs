@@ -3,9 +3,9 @@ using Content.Shared.RussStation.Eye;
 
 namespace Content.Shared.RussStation.Traits;
 
-public sealed class ScarredEyeSystem : EntitySystem
+public sealed partial class ScarredEyeSystem : EntitySystem
 {
-    [Dependency] private readonly BlindableSystem _blinding = default!;
+    [Dependency] private BlindableSystem _blinding = default!;
 
     public override void Initialize()
     {
