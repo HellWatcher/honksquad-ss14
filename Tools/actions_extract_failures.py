@@ -49,6 +49,21 @@ all_fails = []
 all_fails.extend(extract('./test_results/logs/Content.Tests.xml'))
 all_fails.extend(extract('./test_results/logs/Content.IntegrationTests.xml'))
 
+# HONK START - upstream runs this on their own repo, where every failure is theirs
+# to action. The fork runs the same suite, so it also re-reports upstream
+# heisentests we can't fix here (NukeOpsTest and ExpireIdCardTest are both tracked
+# upstream and have been flaky there for over a year). Report only fork tests.
+#
+# This filters what gets *reported*, deliberately not what gets *run*: the full
+# suite still executes, so the PoolManager churn that surfaces order-dependent
+# fork flakes is preserved. Narrowing the test run instead would shrink that
+# churn and could hide exactly the kind of bug this is meant to catch.
+#
+# Fork tests all carry "RussStation" in their fully qualified name
+# (Content.IntegrationTests.Tests.RussStation.*, Content.Tests.*.RussStation.*).
+all_fails = [fail for fail in all_fails if 'RussStation' in fail['@fullname']]
+# HONK END
+
 # Create the list of processed failures to create a matrix for later jobs.
 matrix = []
 for fail in all_fails:

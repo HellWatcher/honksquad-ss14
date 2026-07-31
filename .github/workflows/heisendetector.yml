@@ -67,7 +67,11 @@ jobs:
     strategy:
       matrix:
         value: ${{ fromJSON(needs.hunt.outputs.matrix) }}
-    if: ${{ always() && failure() && (needs.hunt.outputs.count < 5) }}
+    # HONK - added `count > 0`. Now that actions_extract_failures.py reports only
+    # fork tests, the usual outcome is a run that fails on an upstream heisentest
+    # and filters down to zero fork failures. Without this guard that produces an
+    # empty matrix, which is a workflow error rather than a skipped job.
+    if: ${{ always() && failure() && (needs.hunt.outputs.count > 0) && (needs.hunt.outputs.count < 5) }}
     name: Error for ${{ matrix.value.name }}
     steps:
       - name: Checkout Master
