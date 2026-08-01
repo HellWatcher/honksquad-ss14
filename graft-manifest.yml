@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: honksquad-ss14 contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# Provenance ledger for content grafted from other Space Station 14 forks.
+#
+# What we took, from whom, at which commit. Under the REUSE licensing model
+# (ADR 0018) this is NOT a licensing gate: grafted files arrive carrying their
+# own SPDX headers and REUSE resolves them by that header, with `closest`
+# precedence keeping the glob defaults in REUSE.toml from overriding them. This
+# file exists so that months later we can answer "where did this come from, and
+# has the donor changed it since?" without archaeology.
+#
+# `Tools/graft/drift_watch.py` reads this file, fetches each donor, and reports
+# donor commits that touched grafted paths since the recorded sha, plus any
+# license that has drifted from what we recorded.
+#
+# The shopping list of what the ecosystem has built lives separately, in
+# Tools/graft/fork-features.yml. An entry only moves here once it is grafted.
+
+version: 1
+
+# Donors we track. `ref` is the branch drift is measured against.
+donors:
+  funky:
+    name: Funky Station
+    url: https://github.com/funky-station/funky-station.git
+    ref: master
+    license: AGPL-3.0-or-later
+
+  forky:
+    name: Forky Station (Funky rebased on Wizard's Den)
+    url: https://github.com/funky-station/forky-station.git
+    ref: master
+    license: MIT
+
+# Grafted modules. Empty until the first graft lands.
+#
+# grafts:
+#   - id: some-feature
+#     donor: funky
+#     # Donor commit the graft was taken at. Drift is measured from here.
+#     synced_at: 0000000000000000000000000000000000000000
+#     synced_on: 2026-01-01
+#     # Paths in the DONOR tree the content came from.
+#     source_paths:
+#       - Content.Shared/_Funkystation/SomeFeature
+#       - Resources/Prototypes/_Funkystation/some_feature.yml
+#     # Where it landed in ours. Used for the license-drift check.
+#     local_paths:
+#       - Content.Shared/_Funkystation/SomeFeature
+#     license: AGPL-3.0-or-later
+#     notes: >-
+#       What was changed on the way in, and anything a future syncer needs to know.
+grafts: []

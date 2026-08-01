@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: honksquad-ss14 contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: Fork catalog / Pages
+
+# Publishes the SS14 fork feature catalog (Tools/graft) to GitHub Pages.
+# Requires Settings -> Pages -> Source = "GitHub Actions" to be enabled once by
+# a maintainer; until then this workflow builds fine and the deploy step fails.
+
+on:
+  push:
+    branches: [release]
+    paths:
+      - 'Tools/graft/**'
+      - '.github/workflows/fork-catalog-pages.yml'
+  pull_request:
+    branches: [release]
+    paths:
+      - 'Tools/graft/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fork-catalog-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build catalog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install --disable-pip-version-check pyyaml
+
+      - name: Check the generated Markdown is current
+        run: python3 Tools/graft/build_markdown.py --check
+
+      - name: Build the page
+        run: python3 Tools/graft/build_page.py --out site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: site
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
