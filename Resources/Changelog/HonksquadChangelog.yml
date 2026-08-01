@@ -1520,3 +1520,45 @@ Entries:
     type: Add
   time: '2026-05-23T22:49:35.0000000+00:00'
   url: https://github.com/HellWatcher/honksquad-ss14/pull/723
+- author: HellWatcher
+  changes:
+  - message: SS13 Musical skillchip. Implanting it makes you sing every sentence, holding the last vowel and ending in an exclamation.
+    type: Add
+  time: '2026-05-23T23:26:11.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/725
+- author: HellWatcher
+  changes:
+  - message: BULLET_DODGER skillchip. Flip or Spin to open a deflect window as long as the emote runs. The next projectile that would hit you is reflected, at the cost of stamina.
+    type: Add
+  time: '2026-05-24T02:42:45.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/726
+- author: HellWatcher
+  changes:
+  - message: B0RK-X3 skillchip. Implant to register as a chef who knows Close Quarters Cooking.
+    type: Add
+  time: '2026-05-24T02:57:30.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/820
+- author: HellWatcher
+  changes:
+  - message: Surgical organ removal now shows a single popup naming the organ that was extracted, rather than two consecutive messages.
+    type: Tweak
+  time: '2026-05-24T07:29:15.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/743
+- author: HellWatcher
+  changes:
+  - message: Skaven engineers, clowns, mimes, security, and syndicate roles now spawn with their ammonia survival kit instead of an empty backpack.
+    type: Fix
+  time: '2026-05-25T12:37:36.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/830
+- author: HellWatcher
+  changes:
+  - message: Cardiac arrest is now a real medical condition. Affected patients are stunned, suffocate even with healthy lungs, and the health analyzer flags them. Defibrillation is the cure.
+    type: Add
+  time: '2026-05-25T21:59:06.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/747
+- author: HellWatcher
+  changes:
+  - message: Dragging a grabbed target into a portal no longer crashes the client or jolts the puller.
+    type: Fix
+  time: '2026-07-04T22:10:26.0000000+00:00'
+  url: https://github.com/HellWatcher/honksquad-ss14/pull/877
