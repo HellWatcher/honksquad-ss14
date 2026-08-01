@@ -329,6 +329,9 @@ CLAUDE.md
 /docs/
 Tools/honk/local/
 
+# Generated fork-catalog page (built by CI, deployed to Pages)
+Tools/graft/site/
+
 # Deploy
 deploy.sh
 # HONK END

@@ -1,0 +1,113 @@
+# SPDX-FileCopyrightText: honksquad-ss14 contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: Graft drift (weekly)
+
+# Watches every donor named in graft-manifest.yml for commits touching content
+# we grafted, and for SPDX headers that no longer match what the manifest
+# recorded. Reports into a single tracking issue.
+
+on:
+  schedule:
+    # Weekly on Mondays at 08:00 UTC, an hour after the YAML drift scan.
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    name: Donor drift scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install --disable-pip-version-check pyyaml
+
+      - name: Watch donors
+        id: watch
+        run: |
+          set +e
+          python3 Tools/graft/drift_watch.py > drift-report.txt 2>&1
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          cat drift-report.txt
+
+      # The report is passed to every later step through the environment, never
+      # interpolated into a script or shell body. A donor commit subject is
+      # attacker-controlled text: `${{ steps.watch.outputs.report }}` inlined
+      # into a run block or a github-script body would execute it.
+      - name: Find existing issue
+        if: steps.watch.outputs.exit_code == '1'
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --label "graft-drift" --state open --json number --jq '.[0].number // empty')
+          echo "issue_number=$ISSUE" >> "$GITHUB_OUTPUT"
+
+      - name: Open issue
+        if: steps.watch.outputs.exit_code == '1' && steps.existing.outputs.issue_number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "Donors have moved on content we grafted, or a grafted file's license no longer"
+            echo "matches \`graft-manifest.yml\`."
+            echo
+            echo '```'
+            cat drift-report.txt
+            echo '```'
+            echo
+            echo "Pull the donor changes worth having, or record the divergence in the graft's"
+            echo "\`notes\`. See [Tools/graft/README.md](/Tools/graft/README.md)."
+            echo
+            echo "From [this run]($RUN_URL)."
+          } > issue-body.md
+          gh issue create \
+            --title "Graft drift: donors have moved" \
+            --label "graft-drift" \
+            --body-file issue-body.md
+
+      - name: Comment on existing issue
+        if: steps.watch.outputs.exit_code == '1' && steps.existing.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ steps.existing.outputs.issue_number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "Still drifting as of the latest scan."
+            echo
+            echo '```'
+            cat drift-report.txt
+            echo '```'
+            echo
+            echo "From [this run]($RUN_URL)."
+          } > comment.md
+          gh issue comment "$ISSUE" --body-file comment.md
+
+      - name: Close issue when clean
+        if: steps.watch.outputs.exit_code == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --label "graft-drift" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$ISSUE" ]; then
+            gh issue close "$ISSUE" --comment "Donor drift scan is clean. Closing."
+          fi
+
+      - name: Fail on scan error
+        if: steps.watch.outputs.exit_code == '2'
+        run: |
+          echo "::error::drift_watch.py could not complete — see the report above"
+          exit 1
