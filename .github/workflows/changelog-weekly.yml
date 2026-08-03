@@ -100,7 +100,14 @@ jobs:
                   Resources/Changelog/.changelog-watermark
           git diff --staged --quiet && echo "No new entries." && exit 0
 
-          git commit -m "honksquad: chore: weekly changelog update [skip ci]"
+          # No [skip ci] here. It suppresses push- and pull_request-triggered
+          # workflows, which is every required check in the release ruleset
+          # (build, YAML Linter, HONK audits, upstream-base and commit-prefix
+          # checks). A changelog PR whose head commit carries it can never go
+          # green, so auto-merge waits forever and the PR silently accumulates
+          # commits until someone admin-merges it. That is what stranded #836
+          # for two months.
+          git commit -m "honksquad: chore: weekly changelog update"
           git push origin "$BRANCH"
 
           if [ "$IS_NEW" = "true" ]; then
