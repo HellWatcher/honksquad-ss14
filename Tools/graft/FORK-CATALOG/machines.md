@@ -183,19 +183,61 @@ Building a mech now includes slotting a physical reactor into its battery bay, s
 - **Touches** — engineering, cargo, science, security, salvage
 - **Verified** — supported. Every gameplay beat checks out against files I fetched myself: the reactor-in-battery-bay step is a real construction-graph node (`tag: MechReactor, store: battery-container` in ripleymkii_construction.yml and clarke_construction.yml), the Ripley-to-RipleyMkII and Paddy conversion kits are real graphs (ripleymkii_upgrade_construction.yml, paddy_upgrade_construction.yml with a TransformMech completion), sirens/air-horn/night-vision/thrusters all exist as dedicated components+systems (MechSirenComponent, MechAirHornComponent+System client/server/shared, MechNightVisionComponent, MechThrustersComponent with a charge DrawRate), the radial-select-with-popup replaces blind cycling exactly as described (SharedMechEquipmentSelectSystem opens a UI and pops 'mech-equipment-select-popup'), and PilotSupportModuleSystem does add/remove whitelist entries plus calls `_mech.TryEject` on removal. On graft_shape the claim is not just confirmed but understated: I fetched the actual upstream (non-_Starlight) files Content.Shared/Mech/EntitySystems/SharedMechSystem.cs and Content.Shared/Mech/Components/MechComponent.cs, and both are directly patched in place with dozens of scattered '// Starlight' / '//Starlight Edit' comments (battery-percent movement thresholds, low-power sound thresholds, a commented-out `SubscribeLocalEvent<MechComponent, MechToggleEquipmentEvent>` with a note 'moved to SharedMechEquipmentSelectSystem', pilot container events, sound playback changes). That is real, in-repo evidence of fork-patches-upstream, not just a hypothetical about wiring into a different codebase - the path-data's evidence_cited list only shows the _Starlight-namespace half of this unit and misses these two heavily-edited upstream files entirely, which is exactly the blind spot the seed warned about. Separately, the construction-graph replacement is also a genuine integration concern: the standard upstream path Resources/Prototypes/Recipes/Construction/Graphs/Mechs/ doesn't exist in this repo at all (404), meaning the fork's _Starlight copies are the only Ripley/Clarke/Durand/Gygax graphs left, so grafting this into a codebase that still has the vanilla graphs would require deleting/replacing them (integration-would-require-upstream-edits too). Both readings are true here.
 
-**backmen, frontier, gaby-station-now-dumont-station, monolith, serbia-strong**
+**frontier**
 
-*activity · drop-in · medium confidence · 3 forks carry it*
+*activity · needs upstream edits · medium confidence · 3 forks carry it*
 
-These forks bolt extra hardware onto the mechs the game already has rather than rebuilding piloting. Cargo gets the biggest win: a forklift attachment lets a pilot spend mech power to scoop up to five crates, lockers or vending machines into the suit with a short hydraulic whine and set them back down beside the mech, and one fork adds a wearable powered exosuit with its own control panel and a "Lift cargo" action so a worker can haul heavy objects without climbing into a full chassis. Elsewhere you get a two-seat Space Buoy escape pod that flies well in vacuum and handles badly under gravity, a bolt-on air recycler module that burns mech battery to make oxygen and scrub toxins so a pilot can sit in a breach longer, buildable control and targeting boards for extra combat chassis, and a pilot mech whose mounted guns are driven from a proper "Mech weapons" hands panel instead of the generic equipment list.
+A forklift attachment bolts onto a chassis the game already ships and lets the pilot spend mech power to scoop up to five crates, lockers or vending machines into the suit with a short hydraulic whine, then set them back down beside the mech. It is extra hardware on an existing mech rather than a rebuild of piloting.
 
-- **Take** — The forklift and cargo-lifting exosuit give cargo and salvage a genuinely new physical job loop (moving crates, lockers and vendors around the station) using a chassis the game already ships.
-- **Skip** — This is five unrelated bolt-ons from five forks rather than one coherent system, and the listed files are visibly incomplete (the fork equipment entity, its toggle action prototype and the construction graphs consuming the Monolith board tags all live outside this unit), so grafting any one piece means chasing prototypes and sprites the file list does not name.
-- **Touches** — cargo, engineering, science, security
+- **Take** — Gives cargo and salvage a physical job loop they do not have: moving crates, lockers and vendors around the station under their own power.
+- **Skip** — The file list is visibly incomplete: the fork equipment entity and its toggle action prototype are not named here, so grafting it means chasing prototypes and sprites this unit does not cover.
+- **Touches** — cargo
+- **Verification** — none; read this as a claim, not a finding.
+
+**serbia-strong**
+
+*activity · needs upstream edits · medium confidence · 3 forks carry it*
+
+A wearable powered exosuit with its own control panel and a "Lift cargo" action, so a worker can haul heavy objects without climbing into a full chassis.
+
+- **Take** — Puts the heavy-hauling loop in reach of a job that would never bother piloting a full mech.
+- **Skip** — A small bolt-on recorded at prototype level; the unit names the actions but not the sprites or the entity they hang on.
+- **Touches** — cargo
+- **Verification** — none; read this as a claim, not a finding.
+
+**gaby-station-now-dumont-station**
+
+*activity · needs upstream edits · medium confidence · 3 forks carry it*
+
+A two-seat Space Buoy escape pod that flies well in vacuum and handles badly under gravity, plus a bolt-on air recycler module that burns mech battery to make oxygen and scrub toxins so a pilot can sit in a breach longer.
+
+- **Take** — The air recycler turns a mech into a breach-work platform, which gives engineering a reason to take one into vacuum at all.
+- **Skip** — Two unrelated additions sharing a namespace rather than one feature, and the buoy arrives as a construction graph whose parts the unit does not enumerate.
+- **Touches** — engineering
 - **Needs** — [exotic-gas-expansion](atmos.md#exotic-gas-expansion)
-- **Verified** — partly supported; assessed as needs upstream edits, corrected by the verifier. Every file I fetched (backmen's vova-mech.ftl, frontier's MechForkComponent.cs and mech.ftl, dumont's SpaceBuoy pod, monolith's Broadsword/Flail control-and-targeting electronics, serbia-strong's SS220 mech actions) sits inside that fork's own namespaced directory (_backmen, _NF, _Gabystation, _Mono, SS220), matching the seed's path-data drop-in signal. The claim's downgrade to needs-upstream-edits leans on a companion file (the toggle-action prototype) it says 'lives outside this unit' — but when I fetched that exact file it turned out to be Resources/Prototypes/_NF/Actions/mech.yml, still inside frontier's own _NF tree, not an upstream directory. That means the stated reasoning describes an incomplete evidence list within the fork's own namespace, not a genuine fork-patches-upstream or wiring-requires-upstream-edits situation, so I could not confirm either upstream_reading option; the concrete gameplay specifics (forklift MaxContents=5 and hydraulic-whine sound, MechAirRecycler's battery-for-oxygen description, Space Buoy's vacuum-good/gravity-bad text, Broadsword/Flail control+targeting modules, SS220's Control Panel/Lift cargo actions) all check out against the raw files.
-  - unsupported: "the fork equipment entity, its toggle action prototype and the construction graphs consuming the Monolith board tags all live outside this unit" (used to justify graft_shape: needs-upstream-edits) — I fetched the toggle action prototype directly at Resources/Prototypes/_NF/Actions/mech.yml (ActionMechForkToggleInsert) and it lives inside frontier's own _NF namespace, not an upstream directory. The files are missing from the cited evidence list, but that's an evidence-completeness gap within the fork's own tree, not proof of an upstream-editing dependency.
-  - unsupported: "a pilot mech whose mounted guns are driven from a proper \"Mech weapons\" hands panel instead of the generic equipment list" — the only cited file (vova-mech.ftl) contains a single locale string `bkm-vova-mech-hands-label = Mech weapons`; that confirms the label text but not the specific claim that this replaces/differs from 'the generic equipment list' UI behavior.
+- **Verification** — none; read this as a claim, not a finding.
+
+**monolith**
+
+*activity · needs upstream edits · medium confidence · 3 forks carry it*
+
+Buildable control and targeting electronics for the Broadsword and Flail combat chassis, so those mechs can be constructed on station instead of only spawned.
+
+- **Take** — Moves combat chassis out of the spawner and into science's build list, which is where the decision to field one should be made.
+- **Skip** — The construction graphs that consume these board tags live outside this unit, so the boards on their own do not make anything buildable.
+- **Touches** — science, security
+- **Verification** — none; read this as a claim, not a finding.
+
+**backmen**
+
+*activity · needs upstream edits · medium confidence · 3 forks carry it*
+
+A pilot mech whose mounted guns are driven from a dedicated "Mech weapons" hands panel rather than the generic equipment list.
+
+- **Take** — Guns stop competing with drills and tools in one flat equipment list, so a pilot under fire picks a weapon instead of cycling past a welder.
+- **Skip** — The only evidence is a single locale string naming the panel. That the panel replaces rather than supplements the generic equipment list is unconfirmed.
+- **Touches** — security
+- **Verification** — none; read this as a claim, not a finding.
 
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
