@@ -24,10 +24,15 @@ Two halves, deliberately separate:
 is generated from it:
 
 ```
-python3 Tools/graft/build_markdown.py           # -> FORK-CATALOG.md
+python3 Tools/graft/build_markdown.py           # -> FORK-CATALOG.md + FORK-CATALOG/*.md
 python3 Tools/graft/build_markdown.py --check   # CI: fails if the Markdown is stale
 python3 Tools/graft/build_page.py               # -> site/index.html
 ```
+
+The Markdown is one index plus one file per category. It was a single file
+until it reached 1.4 MB, past GitHub's 1 MB blob limit, which meant the web UI
+would not render it at all; `--check` now fails any file that grows back over
+that limit, and deletes category files whose category has gone away.
 
 `build_page.py` inlines the data, `assets/catalog.css`, `assets/assess.js` and
 `assets/catalog.js` into a single file with no external requests, so the same

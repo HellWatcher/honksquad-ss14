@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: honksquad-ss14 contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Render fork-features.yml into FORK-CATALOG.md.
+"""Render fork-features.yml into FORK-CATALOG.md and FORK-CATALOG/<category>.md.
+
+The index carries the shortlist, the fork table and the feature matrix; each
+category gets its own file for the detail sections. One file held all of it
+until it passed 1.4 MB and GitHub stopped rendering it, so `--check` also fails
+any file that creeps back over the 1 MB blob limit.
 
 The Markdown is generated; edit the YAML instead. `--check` re-renders and
 compares, so CI fails a PR that edits the Markdown by hand or forgets to
@@ -20,6 +25,10 @@ from pathlib import Path
 import catalog as cat
 
 DEFAULT_OUT = cat.HERE / "FORK-CATALOG.md"
+# One file per category alongside the index. The single-file catalog reached
+# 1.4 MB, past GitHub's 1 MB blob limit, so the web UI refused to render it at
+# all; the largest category is a fifth of that.
+PARTS_DIR = "FORK-CATALOG"
 
 OWN = "●"
 VENDORED = "○"
@@ -29,6 +38,27 @@ UPSTREAM_LABEL = {"core": "ships", "partial": "partial", "absent": "no"}
 # license declaration for the script itself, which would fail with an invalid
 # SPDX expression (the trailing comma of the list literal ends up in the value).
 SPDX_TAG = "SPDX-License" "-Identifier"
+
+
+# Which category file each feature's detail section ends up in, so a link can
+# tell a same-file anchor from a cross-file one. Populated by render_all().
+HOME: dict[str, str] = {}
+
+
+def href(fid: str, here: str | None) -> str:
+    """Link to a feature's detail section from the file currently being written.
+
+    `here` is the category being rendered, or None for the index. Splitting the
+    catalog turned every previously-local anchor into a possible cross-file
+    link, and a bare `#id` that no longer resolves is worse than no link.
+    """
+    home = HOME.get(fid)
+    if home is None:
+        return f"#{fid}"
+    if home == here:
+        return f"#{fid}"
+    # The index sits beside the parts directory; the parts sit inside it.
+    return f"{PARTS_DIR}/{home}.md#{fid}" if here is None else f"{home}.md#{fid}"
 
 
 def fork_table(forks: list[dict]) -> list[str]:
@@ -63,7 +93,9 @@ def matrix(features: list[dict], columns: list[dict], category: str) -> list[str
         cells = [glyphs.get(fork["id"], "") for fork in columns]
         upstream = UPSTREAM_LABEL.get(feature.get("upstream", "absent"), "?")
         lines.append(
-            f"| [{feature['name']}](#{feature['id']}) | {upstream} | " + " | ".join(cells) + " |"
+            f"| [{feature['name']}]({href(feature['id'], None)}) | {upstream} | "
+            + " | ".join(cells)
+            + " |"
         )
     return lines
 
@@ -75,14 +107,15 @@ SHAPE_LABEL = {
 }
 
 
-def assessment(feature: dict, entry: dict, with_name: bool) -> list[str]:
+def assessment(feature: dict, entry: dict, with_name: bool, here: str | None) -> list[str]:
     """One gameplay assessment, with its verification alongside the claim.
 
     The verdict is never folded into the claim: a reader has to be able to see
     that a second pass disagreed, and on what.
     """
     covers = ", ".join(entry.get("covers") or []) or "?"
-    head = f"[{feature['name']}](#{feature['id']}) — {covers}" if with_name else covers
+    name = f"[{feature['name']}]({href(feature['id'], here)})"
+    head = f"{name} — {covers}" if with_name else covers
     lines = [
         f"**{head}**",
         "",
@@ -97,7 +130,7 @@ def assessment(feature: dict, entry: dict, with_name: bool) -> list[str]:
     if entry.get("touches"):
         lines.append(f"- **Touches** — {', '.join(entry['touches'])}")
     if entry.get("depends_on"):
-        needs = ", ".join(f"[{dep}](#{dep})" for dep in entry["depends_on"])
+        needs = ", ".join(f"[{dep}]({href(dep, here)})" for dep in entry["depends_on"])
         lines.append(f"- **Needs** — {needs}")
 
     check = cat.verdict(entry)
@@ -120,7 +153,7 @@ def detail(feature: dict) -> list[str]:
         lines += [feature["summary"], ""]
 
     for entry in cat.assessments(feature):
-        lines += assessment(feature, entry, with_name=False)
+        lines += assessment(feature, entry, with_name=False, here=feature["category"])
 
     authors = cat.authors(feature)
     carriers = cat.carriers(feature)
@@ -218,7 +251,7 @@ def shortlist_section(data: dict) -> list[str]:
             continue
         lines += [f"### {title}", "", blurb, ""]
         for feature, entries in picked:
-            lines += assessment(feature, entries[0], with_name=True)
+            lines += assessment(feature, entries[0], with_name=True, here=None)
             if len(entries) > 1:
                 lines += rival_table(feature, entries)
 
@@ -232,9 +265,37 @@ def shortlist_section(data: dict) -> list[str]:
             "",
         ]
         lines += [
-            f"- [{f['name']}](#{f['id']}) — {f.get('fit_why', '')}" for f in ruled
+            f"- [{f['name']}]({href(f['id'], None)}) — {f.get('fit_why', '')}" for f in ruled
         ] + [""]
     return lines
+
+
+def header() -> list[str]:
+    return [
+        "<!--",
+        "SPDX-FileCopyrightText: honksquad-ss14 contributors",
+        f"{SPDX_TAG}: AGPL-3.0-or-later",
+        "-->",
+        "",
+    ]
+
+
+def category_page(data: dict, category: str) -> str:
+    """One category's feature detail sections, as its own file."""
+    rows = [f for f in data["features"] if f["category"] == category]
+    lines = header() + [
+        f"# {category.title()}",
+        "",
+        (
+            f"{len(rows)} features. Part of the "
+            f"[SS14 fork feature catalog](../{DEFAULT_OUT.name}); "
+            "generated by `Tools/graft/build_markdown.py`, edit `fork-features.yml`."
+        ),
+        "",
+    ]
+    for feature in rows:
+        lines += detail(feature)
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def render(data: dict) -> str:
@@ -283,14 +344,24 @@ def render(data: dict) -> str:
         if any(f["category"] == category for f in features):
             lines += [f"### {category.title()}", "", *matrix(features, columns, category), ""]
 
-    lines += ["## Features", ""]
+    lines += [
+        "## Features",
+        "",
+        "One file per category, because the single-file catalog outgrew GitHub's 1 MB blob",
+        "limit and stopped rendering in the web UI entirely.",
+        "",
+        "| Category | Features | Assessed |",
+        "| --- | --- | --- |",
+    ]
     for category in categories:
         rows = [f for f in features if f["category"] == category]
         if not rows:
             continue
-        lines += [f"## {category.title()}", ""]
-        for feature in rows:
-            lines += detail(feature)
+        done = sum(1 for f in rows if cat.assessments(f))
+        lines.append(
+            f"| [{category.title()}]({PARTS_DIR}/{category}.md) | {len(rows)} | {done} |"
+        )
+    lines.append("")
 
     unmapped = data.get("unmapped") or []
     if unmapped:
@@ -312,6 +383,22 @@ def render(data: dict) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+BLOB_LIMIT = 1_000_000
+
+
+def render_all(data: dict, out: Path) -> dict[Path, str]:
+    """The index and every category file, keyed by the path each is written to."""
+    HOME.clear()
+    HOME.update({f["id"]: f["category"] for f in data["features"]})
+
+    parts = out.parent / PARTS_DIR
+    pages = {out: render(data)}
+    for category in cat.categories(data):
+        if any(f["category"] == category for f in data["features"]):
+            pages[parts / f"{category}.md"] = category_page(data, category)
+    return pages
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--yaml", type=Path, default=cat.CATALOG)
@@ -319,21 +406,46 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="fail if the Markdown is stale")
     opts = parser.parse_args()
 
-    rendered = render(cat.load(opts.yaml))
+    pages = render_all(cat.load(opts.yaml), opts.out)
+
+    # The whole point of splitting; a file back over the limit is a silent
+    # regression to a catalog GitHub will not render.
+    oversized = [p for p, text in pages.items() if len(text.encode("utf-8")) >= BLOB_LIMIT]
+    for path in oversized:
+        size = len(pages[path].encode("utf-8")) / 1024
+        print(
+            f"{path} is {size:.0f} KiB, at or past GitHub's 1 MB blob limit — split it further",
+            file=sys.stderr,
+        )
+    if oversized:
+        return 1
 
     if opts.check:
-        current = opts.out.read_text(encoding="utf-8") if opts.out.exists() else ""
-        if current != rendered:
-            print(
-                f"{opts.out} is out of date — run: python3 Tools/graft/build_markdown.py",
-                file=sys.stderr,
-            )
+        stale = [
+            path
+            for path, text in pages.items()
+            if (path.read_text(encoding="utf-8") if path.exists() else "") != text
+        ]
+        parts = opts.out.parent / PARTS_DIR
+        orphans = sorted(set(parts.glob("*.md")) - set(pages)) if parts.exists() else []
+        for path in stale + orphans:
+            print(f"{path} is out of date", file=sys.stderr)
+        if stale or orphans:
+            print("run: python3 Tools/graft/build_markdown.py", file=sys.stderr)
             return 1
-        print(f"{opts.out} is up to date")
+        print(f"{len(pages)} catalog files are up to date")
         return 0
 
-    opts.out.write_text(rendered, encoding="utf-8")
-    print(f"wrote {opts.out}")
+    parts = opts.out.parent / PARTS_DIR
+    parts.mkdir(exist_ok=True)
+    # A renamed or emptied category would otherwise leave a stale file behind
+    # that still renders and still looks current.
+    for path in sorted(set(parts.glob("*.md")) - set(pages)):
+        path.unlink()
+        print(f"removed {path}")
+    for path, text in sorted(pages.items()):
+        path.write_text(text, encoding="utf-8")
+    print(f"wrote {len(pages)} files: {opts.out} and {len(pages) - 1} category pages")
     return 0
 
 
