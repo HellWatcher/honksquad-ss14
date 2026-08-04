@@ -12,6 +12,8 @@
 #   wanted      we want this; rank it first
 #   partly-taken already imported here, so the useful question is how other
 #               forks did it differently, not whether to take it
+#   deferred    fine, just not worth analysis effort now. Distinct from
+#               rejected: still shortlist-eligible if it ever gets assessed
 #   rejected    not our direction; keep it off the shortlist and say why
 #
 # `why` is quoted from the decision, not paraphrased into justification.
@@ -48,3 +50,18 @@ features:
   games-instruments-and-performance:
     fit: rejected
     why: Not really interesting.
+
+  # Art content packs. Not rejected, just the back burner: a sprite pack is
+  # bought by looking at it, so a written description earns very little.
+  object-and-tool-art:
+    fit: deferred
+    why: Art pack, back burner.
+  clothing-and-wardrobe-pack:
+    fit: deferred
+    why: Art pack, back burner.
+  interface-and-audio-pack:
+    fit: deferred
+    why: Art pack, back burner.
+  station-and-environment-art:
+    fit: deferred
+    why: Art pack, back burner.

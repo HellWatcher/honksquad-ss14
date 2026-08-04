@@ -138,7 +138,19 @@ def graft_tier(entry: dict) -> str:
         return ""
     if entry.get("graft_shape") == "drop-in":
         return "take-now"
-    if checked.get("gameplay_supported") == "supported" and entry.get("graft_shape") != "entangled":
+    # "Supported and not entangled" was calibrated when 35 units had verdicts
+    # and it admitted 7. At full coverage the same rule admitted 74, roughly
+    # half the catalog, which is not a recommendation. A candidate now has to
+    # survive with NO refuted specific and come from an assessor who was not
+    # hedging: both of those correlate with the unit actually being what it
+    # says, and neither is satisfied by a merely long, confident-sounding
+    # description.
+    if (
+        checked.get("gameplay_supported") == "supported"
+        and not checked.get("overclaims")
+        and entry.get("confidence") == "high"
+        and entry.get("graft_shape") != "entangled"
+    ):
         return "candidate"
     return ""
 

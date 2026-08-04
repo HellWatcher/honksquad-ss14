@@ -22,7 +22,16 @@ function tier(unit) {
   const v = checked(unit);
   if (!v || v.gameplay_supported === "unsupported") return "";
   if (unit.graft_shape === "drop-in") return "take-now";
-  if (v.gameplay_supported === "supported" && unit.graft_shape !== "entangled") return "candidate";
+  // No refuted specific, and an assessor who was not hedging. The looser
+  // "supported and not entangled" rule admitted half the catalog once every
+  // unit had a verdict, which is not a recommendation.
+  if (
+    v.gameplay_supported === "supported" &&
+    !(v.overclaims || []).length &&
+    unit.confidence === "high" &&
+    unit.graft_shape !== "entangled"
+  )
+    return "candidate";
   return "";
 }
 
@@ -32,7 +41,12 @@ function tier(unit) {
 // analysis's.
 const eligible = (feature, unit) => Boolean(tier(unit)) && feature.fit !== "rejected";
 
-const FIT_LABEL = { wanted: "wanted", "partly-taken": "already partly taken", rejected: "not our direction" };
+const FIT_LABEL = {
+  wanted: "wanted",
+  "partly-taken": "already partly taken",
+  deferred: "back burner",
+  rejected: "not our direction",
+};
 
 // Worst case across a feature's units — a feature is only as portable as its
 // least portable assessed take, and rounding that up would flatter it.
