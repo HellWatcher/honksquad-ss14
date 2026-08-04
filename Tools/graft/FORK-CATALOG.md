@@ -9,7 +9,7 @@ What each fork in the ecosystem built on top of Wizard's Den, where it lives in 
 tree, and — for the 298 units assessed so far — what it does to a round.
 A row says a fork *has* the feature; only the shortlist says anything about taking it.
 
-27 forks · 132 features · 803 authored · 680 vendored from another fork · 298 assessed · 29 verified takes
+27 forks · 131 features · 803 authored · 677 vendored from another fork · 298 assessed · 29 verified takes
 
 Portability is measured, not assumed. An independent pass re-read 289
 assessments trying to refute them and corrected the graft shape of 41,
@@ -514,7 +514,7 @@ because "we considered that and said no" is what gets lost and re-proposed later
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [Research tree and lathe rework](#research-tree-rework) | partial | ● |  |  | ○ | ○ |  | ○ | ● | ○ | ● | ● | ● | ● |  |  |  | ● | ● | ● | ○ | ● | ● | ● | ● |  | ○ |
 | [Construction and crafting](#construction-and-crafting) | ships | ○ | ● | ● | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ○ |  | ○ | ○ |  | ○ |
-| [Power grid and device networking](#power-grid-and-device-networking) | ships |  |  | ● | ○ |  | ● |  | ○ |  | ○ | ● |  |  |  | ○ |  | ● | ● | ● |  | ● | ● | ● | ○ |  |  |
+| [Power grid and device networking](#power-grid-and-device-networking) | ships |  |  | ● | ○ | ○ | ● |  | ○ |  | ○ | ● |  |  |  | ○ |  | ● | ● | ● |  | ● | ● | ● | ○ |  | ○ |
 | [Shuttle piloting and navigation extensions](#shuttle-piloting-extensions) | partial | ○ | ● |  | ○ | ○ |  |  | ○ |  | ● |  |  |  | ○ |  |  | ● | ● | ● |  | ● |  | ○ | ○ |  | ○ |
 | [Supermatter engine](#supermatter-engine) | no | ● |  |  |  | ● |  |  | ○ |  |  |  |  | ● |  | ○ |  |  |  | ● |  | ● |  | ○ | ○ |  | ○ |
 | [Fusion reactor](#fusion-reactor) | no |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  | ● |  | ○ |  |  |
@@ -599,7 +599,6 @@ because "we considered that and said no" is what gets lost and re-proposed later
 | [Xenoarchaeology and anomaly extensions](#xenoarchaeology-and-anomalies) | partial |  |  |  | ○ |  | ● |  |  |  | ● |  |  | ● |  | ● |  |  |  | ● |  |  |  | ● |  |  |  |
 | [Item enchantment and granted abilities](#item-enchantment-and-grants) | no | ● |  |  | ○ |  |  | ○ | ○ |  | ○ |  | ● | ● | ○ | ○ |  |  |  | ● |  | ● |  | ○ | ○ |  | ○ |
 | [Fishing minigame](#fishing) | no |  |  |  | ○ | ○ |  |  |  |  |  |  |  | ● |  | ● |  |  | ● |  |  |  |  |  | ○ |  | ○ |
-| [Vendored cross-fork content bundles](#cross-fork-vendored-bundles) | no |  |  |  | ○ | ○ |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  |  | ○ |
 
 ## Features
 
@@ -1428,7 +1427,7 @@ The station AI can start the round secretly hostile, and it plays with a "CPU" m
 - **Take** — It turns the station AI from a support role into a full antagonist with its own economy and shop, which is a whole extra round shape the AI player can be assigned to rather than a new item or gadget.
 - **Skip** — These seven files are only the marker component, the CPU currency plumbing and two abilities; the shop listings, actions, alert, borg UI and objectives all live elsewhere in the fork, and the author's own in-code notes admit the overload ability barely works because no machine carries the AI interaction whitelist upstream, so you would be finishing someone else's half-built antagonist.
 - **Touches** — antagonist, silicon-ai, command, engineering, security, all-players
-- **Needs** — [traitor-uplink](#traitor-uplink), [cross-fork-vendored-bundles](#cross-fork-vendored-bundles), [factory-automation](#factory-automation)
+- **Needs** — [traitor-uplink](#traitor-uplink), [factory-automation](#factory-automation)
 - **Verified** — partly supported. The claim's own graft_shape ("entangled", already downgraded from the seed's drop-in guess) holds up: MalfAiSystem.Abilities.cs imports Content.Server._Funkystation.Factory.Systems (a different fork feature's namespace) and MalfunctioningAiComponent.cs imports Content.Goobstation.Maths.FixedPoint (a cross-fork vendored math bundle), so even though all six files physically live under _Gabystation/, their code reaches into other fork-feature namespaces. On top of that, the author's own Portuguese comment in OnExplodeMachine explicitly says the overload ability barely works because no machine in the game carries the StationAiWhitelist component the AI needs to interact with it — confirming the skip_because reasoning nearly verbatim.
   - unsupported: it plays with a "CPU" meter on its screen that ticks up as it siphons processing power off the station (the code gates this on APCs)  — the six evidence files show a generic FixedPoint2 CpuStore fed by a CurrencyUpdatedEvent handler (OnCurrencyUpdated) and an alert that displays it; none of them contain any APC-siphoning logic. The only trace of "APC CPU siphoning" is a single doc-comment on the marker component ("Used to gate special interactions (e.g., APC CPU siphoning)") — an example in a comment, not code the assessor actually read. Presenting the APC gating as an established mechanic overstates what the cited files show.
   - unsupported: The station AI can start the round secretly hostile — none of the six cited files contain antag-rule, game-preset, or round-start assignment code; this is asserted, not shown, by the evidence set.
@@ -3407,7 +3406,7 @@ A player who becomes a cyborg picks from a much wider set of bodies than usual: 
 - **Take** — It turns "playing a borg" from one flat role into a menu of distinct characters with their own toys, voice, access and comedy, and throws in a stack of ready-made silicon antagonist and ghost-role bodies for free.
 - **Skip** — The chassis definitions lean on fork-extended borg-type prototype fields (extra module counts, injected components, per-type radio and footstep sets) that upstream's borg type does not accept, the voice picker is wired straight into the fork's TTS stack and its sponsor-only voice gating, and the xenoborg line is vendored from another fork, so nothing here lands as a clean copy of a few YAML files.
 - **Touches** — science, security, service, command, antagonist, ghost-roles, silicon-players
-- **Needs** — [text-to-speech](#text-to-speech), [sponsor-and-donator-perks](#sponsor-and-donator-perks), [pirate-crew](#pirate-crew), [cross-fork-vendored-bundles](#cross-fork-vendored-bundles)
+- **Needs** — [text-to-speech](#text-to-speech), [sponsor-and-donator-perks](#sponsor-and-donator-perks), [pirate-crew](#pirate-crew)
 - **Verified** — partly supported. Confirmed entangled (matching the assessor's downgrade from the seed's drop-in guess), on solid grounds distinct from the shaky vendoring claim: SiliconVoiceSystem.cs directly resolves ISharedSponsorsManager and gates TTSVoicePrototype.SponsorOnly voices, hard-wiring the borg voice picker into the fork's sponsor/donator-perk system, and borg_types.yml uses fork-specific borgType prototype fields (extraModuleCount, moduleWhitelist, radioChannels, footstepCollection, addComponents) that go well beyond a plain-YAML drop-in. Pirate, ERT, syndicate-heavy, and xenoborg-reaper antagonist/ghost-role chassis were all independently confirmed in borg_chassis.yml, pirate.yml and xenoborgs.yml, and LawsetEmagComponent.cs confirms the emag-lawset variant. Only the specific 'vendored from another fork' claim about xenoborgs did not hold up.
   - unsupported: "the xenoborg line is vendored from another fork" (and the depends_on entry "cross-fork-vendored-bundles") — GitHub commit history for xenoborgs.yml shows only a single commit ("Ксеноборг жнец для Рыбьей Станции" / "Xenoborg reaper for Fish Station", PR #4164) adding this file from scratch inside sunrise-station itself, with sprites in the fork's own _Sunrise/Mobs/Silicon/ namespace. There is no evidence in the cited files or the file's history that this content was ported/vendored in from a different SS14 fork; it reads as native content built for the fork's own 'Fish Station' map.
 
@@ -4174,7 +4173,7 @@ Engineering gets a bluespace harvester: a machine you dial up through ten levels
 | monolith | Device-linking ports and power cells | 5 | `Resources/Locale/en-US/_Mono/machine-linking/ports.ftl` (+3) |
 | cosmatic-drift | Laser power receiver | 4 | `Resources/Prototypes/_CD/Entities/Structures/Power/Generation/laser_receiver.yml` (+1) |
 
-Also carried by 5: frontier (via `_DV`), deltav (via `_Goobstation, _FarHorizons`), far-horizons (via `_Starlight (partial)`), impstation (via `_Goobstation`), the-den (via `_DV, _Goobstation`)
+Also carried by 7: frontier (via `_DV`), deltav (via `_Goobstation, _FarHorizons`), far-horizons (via `_Starlight (partial)`), impstation (via `_Goobstation`), the-den (via `_DV, _Goobstation`), einstein-engines (via `_Nuclear14`), white-dream (via `_Nuclear14`)
 
 ### Shuttle piloting and navigation extensions
 
@@ -4789,7 +4788,7 @@ Money on Monolith moves in two layers. Inside the round, prices are not fixed: a
 - **Take** — Drifting prices alone turn cargo selling from a fixed-rate chore into a timing decision, and it is a small, self-contained component plus one system that anyone running a cargo loop could feel immediately.
 - **Skip** — It is not one feature but a bundle sitting on borrowed foundations: the tax component reaches into Frontier's vendored sector bank accounts, the persistent savings balance needs new database tables and server DB methods, the vending resale rule has to be called from the cargo pallet pricing path, and Monolith's own economy guidebook page still says the content is not implemented yet.
 - **Touches** — cargo, command, all-players, antagonist
-- **Needs** — [cross-fork-vendored-bundles](#cross-fork-vendored-bundles), [cargo-bounties-and-market](#cargo-bounties-and-market), [vending-and-loot-catalogs](#vending-and-loot-catalogs)
+- **Needs** — [cargo-bounties-and-market](#cargo-bounties-and-market), [vending-and-loot-catalogs](#vending-and-loot-catalogs)
 - **Verified** — partly supported. The claim's graft_shape is already "entangled" (a downgrade from the drop-in seed), and re-fetching the evidence confirms that downgrade is correct — if anything it understates the entanglement. ItemTaxComponent (Content.Shared/_Mono/Cargo/ItemTaxComponent.cs) literally imports Content.Shared._NF.Bank.Components and keys its TaxAccounts dictionary on the SectorBankAccount enum defined in Content.Server/_NF/Bank/SectorBankComponent.cs, a Frontier-vendored bundle. More importantly, cloning the repo and grepping showed the fork's own copies of upstream files are edited in place with '// Mono' tags to wire this feature in: Content.Server/Cargo/Systems/PricingSystem.cs adds a VendingMachinePurchaseSystem dependency and a GetStaticPriceWithVendingDiscount method, Content.Server/VendingMachines/VendingMachineSystem.cs adds the same dependency, and Content.Server/Cargo/Systems/CargoSystem.Shuttle.cs checks TryComp<ItemTaxComponent> and switches on SectorBankAccount.BlackMarket/Frontier/Nfsd directly in the base cargo-sale path. These are non-_Mono, non-namespaced files the fork patches directly (fork-patches-upstream in spirit), not merely files that would need future upstream edits to integrate — so this unit sits well past 'needs-upstream-edits' into genuinely entangled/bundled territory, matching the claim's depends_on list (cross-fork-vendored-bundles, cargo-bounties-and-market). Separately, the persistent-savings half of the feature (MonoCoinsManager, ServerDbBase MonoCoins methods, currency:add / currency:transfer / currency:balance console commands) is real, DB-backed, and matches the described UI text and admin/staff grant capability.
   - unsupported: "a set of tradeable goods carries a market value that wanders every second and slowly pulls back toward a base worth, so a crew hauling cargo to a sell pad can get noticeably more or less for the same haul depending on when they sell, and hoarding to wait out a dip becomes a real call" — the drift math is real (DriftingPriceSystem/DriftingPriceComponent genuinely mean-reverts toward BasePrice), but a full-repo grep for DriftingPriceComponent/DriftingPrice across Resources/Prototypes shows it is attached to exactly four entities: BaseBitcoin and its three variants (Contribcoin, Ideascoin, Goidacoin) in Resources/Prototypes/_Mono/Entities/Objects/Misc/bitcoin.yml — novelty collectible items worth $8,000-$30,000 each. It is not wired to ore, minerals, or any general cargo/trade good, so 'a crew hauling cargo to a sell pad... for the same haul' misrepresents a niche collectible-flip mechanic as a core cargo-economy feature.
   - unsupported: "expanded pirate and USSP bounty boards paying out for hardsuits, faction weapons and other salvaged gear" — Resources/Prototypes/_Mono/Catalogs/Bounties/ussp_bounties.yml contains bounties for artifacts, bread, soup, pizza, and vodka; a full grep of that file for hardsuit/weapon/faction returns zero hits. Only pirate_bounties.yml pays out for hardsuits and faction weapons (PirateBountyTacsuit, PirateBountyTSFEnergyWeapon, etc.); the USSP board is not part of that reward pattern.
@@ -5003,7 +5002,7 @@ Salvagers board a mining shuttle, punch in a destination on a docking console, a
 - **Take** — It gives salvage an actual destination with escalating stakes — a mining planet, readable telegraphed boss fights, and looted weapon upgrades — instead of the station-bound magnet-and-asteroid loop.
 - **Skip** — Goob's version is roughly 900 files spanning procedural planet generation, a dedicated shuttle console, a pressure-based combat rules layer, megafauna, and a weapon-upgrade economy; you are adopting a whole department's worth of content and its maintenance burden, not one system, and the Far Horizons boss layer additionally leans on vendored Starlight sprites and its own Abyss faction.
 - **Touches** — cargo, salvage, science, ghost-roles, all-players
-- **Needs** — [hostile-fauna-and-npcs](#hostile-fauna-and-npcs), [cross-fork-vendored-bundles](#cross-fork-vendored-bundles)
+- **Needs** — [hostile-fauna-and-npcs](#hostile-fauna-and-npcs)
 - **Verified** — supported. Every specific gameplay beat I checked was directly backed by real code: elder.yml's BossCombat/mechanics field pointed at elder_boss_mechanics.yml, whose named moves (warning-shot-that-trails-then-drops, furthest-target sweep, self-centered flourish, healing-decoy clones that heal the boss extra when attacked, final-showdown arena shrink at 20% health) match the claim's move-by-move description almost verbatim; bait.yml literally contains a TableStone + WeaponLauncherRocket + WeaponTurretHostile cluster; DockingConsoleSystem.cs implements the FTL docking-console shuttle flow; PressureArmorChangeComponent.cs implements pressure-tiered armor penetration; BossMusicSystem.cs and MeleeUpgradesSystem.cs/MegafaunaWeaponLooterComponent.cs confirm boss music and weapon-upgrade looting. The 'entangled' graft_shape is also confirmed in the code itself: TileChaserSystem.cs depends on the fork's own Anger and Megafauna namespaces, elder.rsi is sprited from a vendored _Starlight/Mobs/Abyss path with an Abyss NPC faction, and the Content.Server/_Lavaland tree spans Procedural, Biome, Megafauna, Weapons, Atmos, Shuttles as separate subsystems — exactly the sprawl the claim describes as the reason to skip it.
 
 | Fork | Calls it | Files | Primary path |
@@ -5519,7 +5518,7 @@ A grab-bag of pre-round and out-of-round screen dressing rather than one system:
 | ephemeral-space | Diegetic theater lobby, job preference window and game screens | 51 | `Content.Client/_ES/Lobby` (+20) |
 | starfall-drift | Lobby and character customization UI redesign | 47 | `Content.Client/_Starfall/Stylesheets` (+11) |
 | serbia-strong | Round-end titles window and client options | 14 | `Content.Client/SS220/Options` (+5) |
-| stellar-station | Custom lobby; Character window rework | 12 | `Content.Shared/_ST/Lobby` (+9) |
+| stellar-station | Custom lobby; Character window rework | 14 | `Content.Shared/_ST/Lobby` (+10) |
 | impstation | Fork stylesheet, lobby strings and item-slot radial menu | 10 | `Content.Client/_Impstation/ItemSlotsMenu` (+3) |
 | the-den | In-game hub server browser and lobby panels | 9 | `Content.Client/_DEN/Hub` (+3) |
 | cosmatic-drift | Fork lobby screens | 4 | `Resources/Prototypes/_CD/lobbyscreens.yml` (+1) |
@@ -5590,7 +5589,7 @@ This is a grab-bag of world-effect systems rather than one feature. The showpiec
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | rmc14 | Effect sprites, animations, auras, camera shake and scorch marks | 743 | `Content.Client/_RMC14/Animations` (+23) |
-| stellar-station | Interaction feedback and radial menu; Ephemeral Space sparks and screenshake; damage overlays | 123 | `Content.Shared/_ES/Camera` (+13) |
+| stellar-station | Interaction feedback and radial menu; Ephemeral Space sparks and screenshake; damage overlays | 132 | `Content.Shared/_ES/Camera` (+19) |
 | serbia-strong | Effect entities, animations and death reminder | 56 | `Content.Client/SS220/Animations` (+4) |
 | impstation | Combat-mode visuals, smoke emitters, crystal-mass overlay and magic effects | 44 | `Content.Client/_Impstation/CrystalMass` (+9) |
 | backmen | Camera recoil and wield-bonus shake | 8 | `Content.Shared/Backmen/Camera` (+1) |
@@ -6146,7 +6145,7 @@ A large pile of new edibles and smokes: vending-machine junk food (protein bars,
 - **Take** — The wearable-consumable component (lollypops, medicated and cryostasis cigarettes) is a genuinely new way to deliver chemicals over time, and it arrives with a big free pile of vending snacks and drinks that fills out service and cargo variety.
 - **Skip** — 826 files of mostly cosmetic snack prototypes means a permanent art, sprite and localisation maintenance tail for content that does not change how a round plays, and several items lean on things you may not have (gondola and bingle meat need those mobs, and the burger-filling entries point at sprites vendored from Einstein Engines and RMC14).
 - **Touches** — service, medical, cargo, all-players, antagonist
-- **Needs** — [hostile-fauna-and-npcs](#hostile-fauna-and-npcs), [cross-fork-vendored-bundles](#cross-fork-vendored-bundles)
+- **Needs** — [hostile-fauna-and-npcs](#hostile-fauna-and-npcs)
 - **Verified** — partly supported; assessed as drop-in, corrected by the verifier. The item inventory and lollypop mechanics are verbatim-accurate (mask slot, 20u maxVol, PassiveConsumable at 0.1u/3s, lookalike syndicate variant, canReact:false cryostasis cig), but cigarettes use the upstream smoking system rather than the new passive mechanic, and drop-in fails in practice: PassiveConsumableComponent.cs imports the fork-only Content.Goobstation.Maths.FixedPoint assembly, bluespace tomato needs Content.Goobstation.Shared/Throwing/SwapTeleportOnThrowComponent, and gondola/bingle meats need Tranquility/BingleJuice reagents from _Goobstation/Reagents/biological.yml - only two of these four cross-system reaches are declared in depends_on.
   - unsupported: "Chemlab and blueshield cigarettes and reusable e-cigarettes work the same way" - none of the cigarette prototypes carry the PassiveConsumable component; cigarette.yml shows ordinary smokables (Cigar/RefillableSolution) that rely on the upstream smoking system, a different mechanism from the lollypop's passive mask-slot drip
   - unsupported: "it slowly trickles its 20u solution into you" - 20u is the solution's maxVol (comment: 'Room for extra chems'); the lollypop as shipped contains only 5u of Sugar, so the 20u payload exists only after someone fills it
@@ -6673,16 +6672,6 @@ Grab a fishing rod, walk to a patch of "suspicious waves" (water, lava, plasma, 
 | impstation | Fishing rods, baits, lures and tackles | 10 | `Content.Client/_Impstation/Fishing` (+3) |
 
 Also carried by 4: einstein-engines (via `_Goobstation`), the-den (via `_Goobstation`), deltav (via `_Goobstation`), white-dream (via `_Goobstation`)
-
-### Vendored cross-fork content bundles
-
-<a id="cross-fork-vendored-bundles"></a>
-
-Grab-bag imports of another fork's content shipped wholesale under a vendored namespace, decomposing into the individual features listed elsewhere in this taxonomy.
-
-No fork authored this; every copy below is vendored from elsewhere.
-
-Also carried by 5: white-dream (via `_Nuclear14, _Goobstation, _EE, _Impstation, _NF`), deltav (via `_DEN, _NF, _Starlight, _Nuclear14, _CD`), einstein-engines (via `_NF`), stellar-station (via `_ES (Ephemeral Space / MirrorCult)`), frontier (via `_DV, _Goobstation, _EE, _NC, _Corvax, _RMC14, _Emberfall, _Starlight`)
 
 ## Unmapped
 

@@ -51,6 +51,10 @@ features:
     fit: rejected
     why: Not really interesting.
 
+  consent-gated-adult-content:
+    fit: rejected
+    why: ERP content.
+
   # Art content packs. Not rejected, just the back burner: a sprite pack is
   # bought by looking at it, so a written description earns very little.
   object-and-tool-art:

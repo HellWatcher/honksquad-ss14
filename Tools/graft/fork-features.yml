@@ -5418,7 +5418,7 @@ features:
     - Resources/ServerInfo/_Goobstation/Guidebook/Antagonist
   - fork: white-dream
     via: _Goobstation
-    files: 52
+    files: 61
     paths:
     - Content.Server/_Goobstation/Devil
     - Content.Shared/_Goobstation/Devil
@@ -5428,6 +5428,7 @@ features:
     - Resources/Locale/ru-RU/_Goobstation/devil
     - Resources/Prototypes/_Goobstation/Devil
     - Resources/ServerInfo/_Goobstation/Guidebook/Antagonist/Devil.xml
+    - Resources/Textures/_Goobstation/Actions/devil.rsi
     - Resources/Textures/_Goobstation/Devil
   - fork: einstein-engines
     via: _Goobstation
@@ -6026,7 +6027,6 @@ features:
     graft_shape: entangled
     depends_on:
     - traitor-uplink
-    - cross-fork-vendored-bundles
     - factory-automation
     confidence: medium
     evidence:
@@ -8157,7 +8157,7 @@ features:
     - Resources/Textures/_NF/Clothing
   - fork: white-dream
     via: _EE, _NF, _TG, _DEN, _Impstation, _Nuclear14, _Shitmed, _Goobstation
-    files: 2249
+    files: 2435
     paths:
     - Resources/Audio/_White/Equip
     - Resources/Locale/en-US/_EE/accessories
@@ -8176,6 +8176,19 @@ features:
     - Resources/Textures/_EE/Clothing/Uniforms
     - Resources/Textures/_EE/Clothing/Zavodskoi
     - Resources/Textures/_EE/Clothing/corp_dep_jackets.rsi
+    - Resources/Textures/_Goobstation/Clothing/Armor
+    - Resources/Textures/_Goobstation/Clothing/Back/Backpacks
+    - Resources/Textures/_Goobstation/Clothing/Back/Duffels
+    - Resources/Textures/_Goobstation/Clothing/Back/Satchels
+    - Resources/Textures/_Goobstation/Clothing/Belt
+    - Resources/Textures/_Goobstation/Clothing/Eyes
+    - Resources/Textures/_Goobstation/Clothing/Hands/Gloves
+    - Resources/Textures/_Goobstation/Clothing/Head/Hardsuits
+    - Resources/Textures/_Goobstation/Clothing/Head/Hats
+    - Resources/Textures/_Goobstation/Clothing/OuterClothing/Armor
+    - Resources/Textures/_Goobstation/Clothing/OuterClothing/Hardsuits
+    - Resources/Textures/_Goobstation/Clothing/Shoes/Boots
+    - Resources/Textures/_Goobstation/Clothing/Uniforms
     - Resources/Textures/_Impstation/Clothing
     - Resources/Textures/_NF/Clothing
     - Resources/Textures/_Nuclear14/Clothing
@@ -9111,7 +9124,7 @@ features:
   carried_by:
   - fork: einstein-engines
     via: _Nuclear14, _RMC14, DeltaV, Nyanotrasen, _NF
-    files: 6130
+    files: 6133
     paths:
     - Resources/Audio/_Nuclear14/Effects
     - Resources/Locale/en-US/_Nuclear14
@@ -9128,6 +9141,7 @@ features:
     - Resources/Prototypes/Nyanotrasen/Tiles
     - Resources/Prototypes/_Goobstation/Entities/Structures
     - Resources/Prototypes/_NF/Entities/Structures
+    - Resources/Prototypes/_NF/Palettes
     - Resources/Prototypes/_Nuclear14/Decals
     - Resources/Prototypes/_Nuclear14/Entities/Structures
     - Resources/Prototypes/_Nuclear14/Stacks
@@ -9142,6 +9156,7 @@ features:
     - Resources/Textures/DeltaV/Structures
     - Resources/Textures/Nyanotrasen/Structures
     - Resources/Textures/_Goobstation/Structures
+    - Resources/Textures/_NF/Markers
     - Resources/Textures/_NF/Structures
     - Resources/Textures/_Nuclear14
     - Resources/Textures/_Nuclear14/Decals
@@ -12212,7 +12227,6 @@ features:
       yet.'
     graft_shape: entangled
     depends_on:
-    - cross-fork-vendored-bundles
     - cargo-bounties-and-market
     - vending-and-loot-catalogs
     confidence: medium
@@ -13410,7 +13424,6 @@ features:
     graft_shape: entangled
     depends_on:
     - hostile-fauna-and-npcs
-    - cross-fork-vendored-bundles
     confidence: medium
     evidence:
     - Resources/Prototypes/_FarHorizons/Entities/Mobs/Bosses/elder.yml
@@ -13850,12 +13863,13 @@ features:
     - Resources/Prototypes/_MACRO/Reagents
   - fork: einstein-engines
     via: DeltaV, Nyanotrasen, _Goobstation
-    files: 13
+    files: 15
     paths:
     - Resources/Prototypes/DeltaV/Reagents/fun.yml
     - Resources/Prototypes/DeltaV/Recipes/Reactions
     - Resources/Prototypes/Nyanotrasen/Recipes/Reactions
     - Resources/Prototypes/_Goobstation/Recipes/Reactions
+    - Resources/Prototypes/_Nuclear14/Reagents
   - fork: stellar-station
     via: _ES (Ephemeral Space / MirrorCult)
     files: 3
@@ -16724,7 +16738,7 @@ features:
     - Resources/Prototypes/_Goobstation/MartialArts
   - fork: white-dream
     via: _Goobstation
-    files: 28
+    files: 32
     paths:
     - Content.Client/_Goobstation/MartialArts
     - Content.Server/_Goobstation/MartialArts
@@ -16733,6 +16747,7 @@ features:
     - Resources/Locale/en-US/_Goobstation/martial-arts
     - Resources/Locale/ru-RU/_Goobstation/martial-arts
     - Resources/Prototypes/_Goobstation/MartialArts
+    - Resources/Textures/_Goobstation/Actions/kravmaga.rsi
   - fork: the-den
     via: _Goobstation
     files: 19
@@ -16869,13 +16884,14 @@ features:
     - Resources/Textures/_TG/Clothing/Modsuit
   - fork: white-dream
     via: _Goobstation, _EE
-    files: 256
+    files: 259
     paths:
     - Content.Client/_Goobstation/Clothing
     - Content.Server/_Goobstation/Clothing
     - Content.Shared/_Goobstation/Clothing
     - Resources/Prototypes/_EE/Entities/NanoTrasen/Modsuits
     - Resources/Textures/_EE/Clothing/NanoTrasen/Modsuits
+    - Resources/Textures/_Goobstation/Actions/modsuit.rsi
     - Resources/Textures/_Goobstation/Clothing/Back/Modsuits
     - Resources/Textures/_Goobstation/Clothing/Hands/Modsuits
     - Resources/Textures/_Goobstation/Clothing/Head/Modsuits
@@ -17925,7 +17941,7 @@ features:
     - Resources/Prototypes/_Nuclear14/Recipes
   - fork: white-dream
     via: _Goobstation, _EE, _Nuclear14, _NF, _Shitmed, _Funkystation
-    files: 94
+    files: 97
     paths:
     - Content.Shared/_White/FromTileCrafter
     - Content.Shared/_White/Lathe
@@ -17934,6 +17950,8 @@ features:
     - Resources/Prototypes/_Goobstation/Recipes
     - Resources/Prototypes/_NF/Recipes
     - Resources/Prototypes/_Nuclear14/Recipes
+    - Resources/Prototypes/_Nuclear14/Stacks
+    - Resources/Prototypes/_Nuclear14/ore.yml
     - Resources/Prototypes/_Shitmed/Recipes
     - Resources/Prototypes/_White/Recipes
   - fork: backmen
@@ -17959,7 +17977,7 @@ features:
     - Resources/Prototypes/_White/Recipes
   - fork: einstein-engines
     via: Nyanotrasen, DeltaV
-    files: 55
+    files: 65
     paths:
     - Content.Client/ShortConstruction
     - Content.Server/Nyanotrasen/Construction
@@ -17975,6 +17993,7 @@ features:
     - Resources/Prototypes/Nyanotrasen/Recipes/Lathes
     - Resources/Prototypes/_EE/Recipes/Lathes
     - Resources/Prototypes/_NF/Recipes
+    - Resources/Prototypes/_Nuclear14/Recipes
     - Resources/Prototypes/_Shitmed/Recipes/Lathes
   - fork: forky
     via: _FarHorizons
@@ -18312,6 +18331,16 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_DV/DeviceLinking
+  - fork: einstein-engines
+    via: _Nuclear14
+    files: 1
+    paths:
+    - Resources/Prototypes/_Nuclear14/devicenet_frequencies.yml
+  - fork: white-dream
+    via: _Nuclear14
+    files: 1
+    paths:
+    - Resources/Prototypes/_Nuclear14/devicenet_frequencies.yml
   assessments:
   - covers:
     - rmc14
@@ -22245,7 +22274,6 @@ features:
     - text-to-speech
     - sponsor-and-donator-perks
     - pirate-crew
-    - cross-fork-vendored-bundles
     confidence: medium
     evidence:
     - Resources/Prototypes/_Sunrise/borg_types.yml
@@ -30439,7 +30467,6 @@ features:
     graft_shape: entangled
     depends_on:
     - hostile-fauna-and-npcs
-    - cross-fork-vendored-bundles
     confidence: medium
     evidence:
     - Resources/Prototypes/_Goobstation/Cooking/food_sequence_element.yml
@@ -32386,9 +32413,10 @@ features:
     - Resources/Prototypes/_Harmony/tool-qualities.yml
   - fork: einstein-engines
     via: Nyanotrasen
-    files: 5
+    files: 6
     paths:
     - Content.Shared/_DV/Actions
+    - Resources/Prototypes/_NF/tags.yml
     - Resources/Prototypes/_RMC14/Entities
   - fork: forky
     via: _FarHorizons
@@ -34338,93 +34366,6 @@ features:
         which also means the seed''s ''drop-in'' guess was wrong for a reason more concrete than the claim
         itself demonstrates.'
       upstream_reading: both
-- id: cross-fork-vendored-bundles
-  name: Vendored cross-fork content bundles
-  category: misc
-  summary: Grab-bag imports of another fork's content shipped wholesale under a vendored namespace, decomposing
-    into the individual features listed elsewhere in this taxonomy.
-  upstream: absent
-  aliases:
-  - Frontier content pack
-  - Starlight content pack
-  - Cosmatic Drift content pack
-  - Nuclear 14 content pack
-  - Frontier Station content pack
-  - Goobstation content pack (misc items, clothing, weapons)
-  - Goobstation antag & mechanics pack (Changeling, Blob, Devil, Wizard, Martial Arts, Fishing)
-  - Einstein Engines core content (Shadowling, Supermatter, Contractors, Xelthia, Nightmare)
-  - Frontier (NF) clothing and object pack
-  - Delta-V content grab bag (mail, tape recorder, guns, jukebox)
-  - Einstein Engines furniture and misc ports
-  - Small cross-fork ports (radio, respawn, UI, weapons)
-  - Frontier Station clothing, gear and shuttle console
-  - Ephemeral Space system ports
-  - 'Goob Station ports: animated emotes, vehicles, drop pods'
-  - Impstation content pack (Thaven moods, Replicators, species art)
-  - Floofstation content pack (markings, ERP items, consent UI)
-  - Ovinia species and Den content pack
-  - Macrocosm species pack
-  - ADT marking pack
-  - Goobstation syndicate gear
-  - Impstation mobs & Thaven moods
-  - Impstation character cosmetics (vox parts, markings, scars, tattoos)
-  authors: []
-  carried_by:
-  - fork: white-dream
-    via: _Nuclear14, _Goobstation, _EE, _Impstation, _NF
-    files: 1729
-    paths:
-    - Resources/Prototypes/_Nuclear14
-    - Resources/Textures/_Goobstation
-    - Resources/Textures/_Impstation/Mobs
-  - fork: deltav
-    via: _DEN, _NF, _Starlight, _Nuclear14, _CD
-    files: 784
-    paths:
-    - Content.Client/_CD
-    - Content.Client/_NF
-    - Content.Server/_CD
-    - Content.Server/_NF
-    - Content.Shared/_CD
-    - Content.Shared/_NF
-    - Content.Shared/_Starlight
-    - Resources/Audio/_DEN
-    - Resources/Audio/_Nuclear14
-    - Resources/Locale/en-US/_Starlight
-    - Resources/Prototypes/_CD
-    - Resources/Prototypes/_DEN
-    - Resources/Prototypes/_NF
-    - Resources/Prototypes/_Nuclear14
-    - Resources/Prototypes/_Starlight
-    - Resources/Textures/_DEN
-  - fork: einstein-engines
-    via: _NF
-    files: 724
-    paths:
-    - Content.Shared/_NF
-    - Resources/Prototypes/_NF
-    - Resources/Prototypes/_Nuclear14
-    - Resources/Textures/_NF
-  - fork: stellar-station
-    via: _ES (Ephemeral Space / MirrorCult)
-    files: 82
-    paths:
-    - Content.Client/_ES
-    - Content.IntegrationTests/Tests/_ES
-    - Content.Server/_ES
-    - Content.Shared/_ES
-    - Content.Stellar.Client/_ES
-    - Content.Stellar.Server/_ES
-    - Content.Stellar.Shared/_ES
-    - Resources/Audio/_ES
-    - Resources/Locale/en-US/_ES
-    - Resources/Prototypes/_ES
-  - fork: frontier
-    via: _DV, _Goobstation, _EE, _NC, _Corvax, _RMC14, _Emberfall, _Starlight
-    files: 42
-    paths:
-    - Resources/Prototypes/_DV/Entities
-    - Resources/Prototypes/_EE/Entities
 - id: guidebook-rules-and-sop
   name: Server rules, space law and SOP guidebook
   category: roleplay
@@ -35286,7 +35227,7 @@ features:
     - Resources/Prototypes/_Goobstation/Voice
   - fork: einstein-engines
     via: DeltaV, Nyanotrasen, _Impstation, _RMC14
-    files: 114
+    files: 115
     paths:
     - Content.Client/DeltaV/AACTablet
     - Content.Client/InteractionVerbs
@@ -35309,11 +35250,12 @@ features:
     - Resources/Prototypes/_EE/typing_indicator.yml
     - Resources/Prototypes/_Impstation/Accents
     - Resources/Prototypes/_Impstation/Voice
+    - Resources/Prototypes/_Nuclear14/SoundCollections
     - Resources/Prototypes/_RMC14/Voice
     - Resources/Textures/DeltaV/Effects/speech.rsi
   - fork: white-dream
     via: _Impstation, _Goobstation, _EE
-    files: 94
+    files: 95
     paths:
     - Content.Client/_White/Bark
     - Content.Client/_White/UserInterface/Emotes
@@ -35327,6 +35269,7 @@ features:
     - Resources/Prototypes/_EE/typing_indicator.yml
     - Resources/Prototypes/_Goobstation/Accents
     - Resources/Prototypes/_Impstation/Accents
+    - Resources/Prototypes/_Nuclear14/SoundCollections
     - Resources/Prototypes/_White/Bark
     - Resources/Prototypes/_White/Voice
     - Resources/Prototypes/_White/Voice/speech_emote_sounds.yml
@@ -42784,12 +42727,13 @@ features:
     - Content.Stellar.Client/Lobby
     - Content.Stellar.Server/Lobby
     - Content.Stellar.Shared/Lobby
+    - Resources/Locale/en-US/_ES/escape-menu
     - Resources/Locale/en-US/_ST/character/commands.ftl
     - Resources/Locale/en-US/_ST/character/window.ftl
     - Resources/Locale/en-US/_ST/interface/lobby.ftl
     - Resources/Maps/_ST/Other/bluespace_lobby.yml
     - Resources/Prototypes/_ST/Mobs/Playable/lobbyplayer.yml
-    files: 12
+    files: 14
     confidence: high
   - fork: impstation
     local_name: Fork stylesheet, lobby strings and item-slot radial menu
@@ -43025,8 +42969,14 @@ features:
     - Content.Shared/_ES/Sparks
     - Content.Shared/_ST/Interaction
     - Content.Stellar.Client/Interaction
+    - Content.Stellar.Client/_ES/Lighting/ESFlashlightUIController.cs
+    - Content.Stellar.Client/_ES/Lighting/ESInherentLightComponent.cs
+    - Content.Stellar.Client/_ES/Lighting/ESInherentLightSystem.cs
     - Content.Stellar.Shared/Interaction
+    - Content.Stellar.Shared/_ES/Lighting
+    - Resources/Locale/en-US/_ES/lighting
     - Resources/Prototypes/_ES/Debugging/screenshake.yml
+    - Resources/Prototypes/_ES/Entities/Mobs/moblights.yml
     - Resources/Prototypes/_ST/Effects/interaction.yml
     - Resources/Prototypes/_ST/Effects/sparks.yml
     - Resources/Textures/_ST/Effects/damage-overlay_brute.rsi
@@ -43035,7 +42985,7 @@ features:
     - Resources/Textures/_ST/Effects/interaction.rsi
     - Resources/Textures/_ST/Effects/sparks.rsi
     - Resources/Textures/_ST/Icons/interaction-radial-icons.rsi
-    files: 123
+    files: 132
     confidence: high
   - fork: serbia-strong
     local_name: Effect entities, animations and death reminder
