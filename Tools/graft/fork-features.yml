@@ -12922,13 +12922,10 @@ features:
   - fork: impstation
     local_name: Shipyard shuttle catalogue
     paths:
-    - Content.Client/_DV/Shipyard
-    - Content.Server/_DV/Shipyard
-    - Content.Shared/_DV/Shipyard
     - Content.Shared/_Impstation/Shuttles
     - Resources/Maps/_Impstation/Shuttles
     - Resources/Prototypes/_Impstation/Catalog/Shipyard
-    files: 86
+    files: 71
     confidence: high
   - fork: backmen
     local_name: Shipyard console, vessel catalog and for-sale hulls
@@ -12980,14 +12977,17 @@ features:
     files: 2
     paths:
     - Content.Shared/_Mono/Ships
+  - fork: impstation
+    via: _DV
+    files: 15
+    paths:
+    - Content.Client/_DV/Shipyard
+    - Content.Server/_DV/Shipyard
+    - Content.Shared/_DV/Shipyard
   assessments:
   - covers:
-    - backmen
-    - deltav
     - frontier
-    - impstation
     - monolith
-    - starlight
     depth: shared
     gameplay: 'A player pops the ID card out of their PDA, slots it into a shipyard console, and browses
       a catalogue of complete pre-built shuttles filtered by size, class and engine type: a six-seat private

@@ -9,7 +9,7 @@ What each fork in the ecosystem built on top of Wizard's Den, where it lives in 
 tree, and — for the 298 units assessed so far — what it does to a round.
 A row says a fork *has* the feature; only the shortlist says anything about taking it.
 
-27 forks · 131 features · 803 authored · 677 vendored from another fork · 298 assessed · 29 verified takes
+27 forks · 131 features · 803 authored · 678 vendored from another fork · 298 assessed · 29 verified takes
 
 Portability is measured, not assumed. An independent pass re-read 289
 assessments trying to refute them and corrected the graft shape of 41,
@@ -540,7 +540,7 @@ because "we considered that and said no" is what gets lost and re-proposed later
 | [Cargo bounties, contracts and markets](FORK-CATALOG/cargo.md#cargo-bounties-and-market) | partial |  |  |  | ○ |  | ● |  |  |  | ○ | ● | ● | ● |  | ● |  | ● | ● | ● |  | ● |  | ● | ○ |  | ● |
 | [Player banking and economy](FORK-CATALOG/cargo.md#player-economy-and-banking) | no | ● |  |  | ○ |  |  |  | ○ | ● | ● | ● | ● | ● |  |  |  | ● |  | ● | ○ | ● |  |  | ○ |  | ● |
 | [Mail delivery](FORK-CATALOG/cargo.md#mail-delivery) | ships |  |  |  | ○ |  |  | ○ |  | ● | ○ | ● |  | ○ |  | ● |  | ● |  |  |  | ● |  | ● | ● |  |  |
-| [Shipyard and player-owned ships](FORK-CATALOG/cargo.md#shipyard-player-ships) | no | ● |  |  | ● |  |  |  |  |  | ● |  |  | ○ |  | ● |  | ● |  |  |  | ● |  |  | ○ |  |  |
+| [Shipyard and player-owned ships](FORK-CATALOG/cargo.md#shipyard-player-ships) | no | ● |  |  | ● |  |  |  |  |  | ● |  |  | ○ |  | ○ |  | ● |  |  |  | ● |  |  | ○ |  |  |
 | [Expedition missions and objectives](FORK-CATALOG/cargo.md#expedition-missions) | partial | ○ |  |  | ● | ○ |  |  | ○ |  | ● |  |  | ○ |  |  |  |  |  |  |  |  |  | ● | ○ |  |  |
 | [Lavaland mining planet](FORK-CATALOG/cargo.md#lavaland-mining-planet) | partial | ○ |  |  | ○ | ○ |  |  | ● |  |  |  |  | ● |  |  |  |  |  |  | ○ |  |  |  | ○ |  | ○ |
 

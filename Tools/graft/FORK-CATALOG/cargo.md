@@ -319,7 +319,7 @@ Also carried by 4: estacao-pirata (via `Nyanotrasen`), frontier (via `_DV`), del
 
 A console that sells shuttles from a catalog of hand-mapped hulls, with deeds, ownership records, registration and cleanup for returned vessels.
 
-**backmen, deltav, frontier, impstation, monolith, starlight**
+**frontier, monolith**
 
 *structural · needs upstream edits · high confidence · 2 forks carry it*
 
@@ -339,12 +339,12 @@ A player pops the ID card out of their PDA, slots it into a shipyard console, an
 | --- | --- | --- | --- |
 | monolith | Shipyard and player ship catalog + Ship drilling and hitscan gathering | 435 | `Content.Client/_Mono/Shipyard` (+12) |
 | frontier | Shipyard, ship deeds and shuttle records | 405 | `Content.Client/_NF/Shipyard` (+20) |
-| impstation | Shipyard shuttle catalogue | 86 | `Content.Client/_DV/Shipyard` (+5) |
+| impstation | Shipyard shuttle catalogue | 71 | `Content.Shared/_Impstation/Shuttles` (+2) |
 | backmen | Shipyard console, vessel catalog and for-sale hulls | 39 | `Content.Client/Backmen/Shipyard` (+5) |
 | deltav | Shipyard and vessel purchasing | 33 | `Content.Client/_DV/Shipyard` (+7) |
 | starlight | Shipyard console and shuttle catalogs | 16 | `Content.Client/_Starlight/Shipyard` (+5) |
 
-Also carried by 2: the-den (via `_DV`), goobstation (via `_Mono`)
+Also carried by 3: the-den (via `_DV`), goobstation (via `_Mono`), impstation (via `_DV`)
 
 ### Expedition missions and objectives
 
