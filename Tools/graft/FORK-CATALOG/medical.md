@@ -77,8 +77,9 @@ This is a grab-bag of small additions around bringing dead people back. SS220 ca
 | impstation | Fork damage groups, heal-stun and metabolism tweaks | 3 | `Content.Shared/_DV/Medical` |
 | harmony-station | Uncloneable flag on bodies | 2 | `Content.Server/_Harmony/Uncloneable` |
 | frontier | Cloning transfer hook and the unclonable trait's cloning interface | 1 | `Content.Shared/_NF/Cloning` |
+| trauma-station | Medical (CPR, cloning, medigun) | 52 | `Content.Trauma.Client/Medical` (+7) |
 
-Also carried by 3: ephemeral-space (via `_Offbrand`), deltav (via `_Funkystation`), far-horizons (via `_RMC14`)
+Also carried by 4: ephemeral-space (via `_Offbrand`), deltav (via `_Funkystation`), far-horizons (via `_RMC14`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Mob damage, movement and gravity
 
@@ -149,7 +150,7 @@ Five forks each bolt a small piece onto how hits land. The biggest is Ephemeral 
 | estacao-pirata | EmitBuzzOnCrit (entity buzzes while in crit) | 2 | `Content.Server/_EstacaoPirata/EmitBuzzOnCrit/EmitBuzzOnCritSystem.cs` (+1) |
 | deltav | Chronic pain, addictions, light-level health and preening | 1 | `Resources/Prototypes/_Mono/status_effects.yml` |
 
-Also carried by 1: einstein-engines (via `_Shitmed`)
+Also carried by 2: einstein-engines (via `_Shitmed`), trauma-station (via `_Shitmed`)
 
 ### Limb wounds, body-part targeting and surgery
 
@@ -205,8 +206,9 @@ A surgeon lays surgery drapes on a strapped-down patient, which opens a puppet-s
 | deltav | Fork surgery steps and health-analyzer readout changes | 7 | `Content.Server/_DV/Medical/HealthAnalyzerSystem.Print.cs` (+4) |
 | funky | Surgery kits | 2 | `Resources/Prototypes/_Funkystation/Catalog/Fills/Items/surgerykits.yml` (+1) |
 | starfall-drift | Damage and health examine rework | 2 | `Content.Shared/_Starfall/Damage/Systems/StarfallDamageExamineSystem.cs` (+1) |
+| trauma-station | Content.Medical surgery, body parts, wounds and traumas (Trauma author) | 311 | `Content.Medical.Client/Choice` (+59) |
 
-Also carried by 8: einstein-engines (via `_Shitmed`), white-dream (via `_Shitmed`), goobstation (via `_Shitmed`), the-den (via `_Shitmed`), backmen (via `_Shitmed (Shitmed Core), extended`), far-horizons (via `_Starlight (partial)`), ephemeral-space (via `_Offbrand`), sunrise (via `_Starlight`)
+Also carried by 9: einstein-engines (via `_Shitmed`), white-dream (via `_Shitmed`), goobstation (via `_Shitmed`), the-den (via `_Shitmed`), backmen (via `_Shitmed (Shitmed Core), extended`), far-horizons (via `_Starlight (partial)`), ephemeral-space (via `_Offbrand`), sunrise (via `_Starlight`), trauma-station (via `Content.Goobstation.*, _Goobstation, _Shitmed, _White`)
 
 ### Long-running medical conditions
 
@@ -246,6 +248,7 @@ Taking recreational drugs leaves traces in your blood for about ten minutes afte
 | impstation | Fork damage groups, heal-stun and metabolism tweaks | 10 | `Content.Server/_Impstation/Medical` (+5) |
 | serbia-strong | Narcotic tolerance, chemical adaptation and bloodstream effects | 9 | `Content.Client/SS220/Bloodstream` (+4) |
 | cosmatic-drift | Character allergies | 8 | `Content.Client/_CD/Humanoid` (+6) |
+| trauma-station | Drunkenness limit | 2 | `Content.Trauma.Shared/Drunk` |
 
 Also carried by 7: ephemeral-space (via `_Offbrand`), deltav (via `_DEN, _NF, _CD, _Floof, _Funkystation, _Impstation, _Mono`), estacao-pirata (via `SimpleStation14`), white-dream (via `_Shitmed, _Goobstation, _EE`), the-den (via `_DV`), stellar-station (via `_ES (Ephemeral Space / MirrorCult) for the obfuscation, coughing and radio-falloff subtrees`), frontier (via `_DV, _EE, _Harmony`)
 
@@ -302,8 +305,9 @@ In character setup you can give your character robotic arms, hands, legs and fee
 | funky | Reagent implants | 8 | `Content.Server/_Funkystation/Implants/ReagentImplantSystem.cs` (+6) |
 | backmen | Cybernetic implant installation | 3 | `Content.Server/Backmen/Cybernetics` (+2) |
 | harmony-station | Implanters and subdermal implants | 2 | `Resources/Prototypes/_Harmony/Entities/Objects/Misc/implanters.yml` (+1) |
+| trauma-station | Content.Medical augments and cybernetics, brain chips, implants | 42 | `Content.Medical.Client/Augments` (+8) |
 
-Also carried by 6: far-horizons (via `_Starlight (partial)`), the-den (via `_Goobstation, _Funkystation`), sunrise (via `_Starlight (partial)`), white-dream (via `_Shitmed, _Funkystation`), einstein-engines (via `_Shitmed`), frontier (via `_DV`)
+Also carried by 7: far-horizons (via `_Starlight (partial)`), the-den (via `_Goobstation, _Funkystation`), sunrise (via `_Starlight (partial)`), white-dream (via `_Shitmed, _Funkystation`), einstein-engines (via `_Shitmed`), frontier (via `_DV`), trauma-station (via `Content.Goobstation.*`)
 
 ### Disease and virology
 
@@ -380,6 +384,9 @@ Ephemeral Space's slice of this is not a virology department, it is rot as an am
 | far-horizons | Disease, symptom, strain and vaccine system | 41 | `Content.Server/_FarHorizons/Medical/Disease` (+5) |
 | serbia-strong | Pathology disease framework | 29 | `Content.Client/SS220/Pathology` (+7) |
 | ephemeral-space | Filth, miasma and disease clouds | 13 | `Content.Server/_ES/Filth` (+6) |
+| trauma-station | Disease and virology | 20 | `Content.Trauma.Client/Virology` (+5) |
+
+Also carried by 1: trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Automated surgery machine
 
@@ -403,8 +410,9 @@ A patient climbs into a coffin-sized surgical pod wired to a console beside it, 
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | rmc14 | Autodoc surgical machine | 10 | `Content.Client/_RMC14/Medical/Autodoc` (+2) |
+| trauma-station | Content.Medical Autodoc | 17 | `Content.Medical.Client/Autodoc` (+2) |
 
-Also carried by 4: einstein-engines (via `_Shitmed`), goobstation (via `_Shitmed`), the-den (via `_Shitmed`), white-dream (via `_Shitmed`)
+Also carried by 5: einstein-engines (via `_Shitmed`), goobstation (via `_Shitmed`), the-den (via `_Shitmed`), white-dream (via `_Shitmed`), trauma-station (via `_Shitmed`)
 
 ### Genetics and DNA mutations
 
@@ -427,6 +435,7 @@ As written in its text, this is the classic geneticist loop: a subject lies in t
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | funky | Genetics consoles (DNA scanner, sequence injector, genetic analyzer) | 6 | `Resources/Locale/en-US/_Funkystation/genetics` (+1) |
+| trauma-station | Genetics / DNA mutations | 162 | `Content.Trauma.Client/Genetics` (+9) |
 
 Also carried by 2: gaby-station-now-dumont-station (via `_Wega`), viva-station (via `_Funkystation`)
 

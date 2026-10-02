@@ -29,8 +29,9 @@ Assorted new handheld items, tools, devices, props, plushies, toys and joke item
 | estacao-pirata | Fork misc items: bedsheets, law books, wedding rings, cthulhu hat | 21 | `Resources/Prototypes/EstacaoPirata/Entities/Clothing/Hands/accessories.yml` (+7) |
 | corvax | Toys, gavel block, briefcases and brigmedic hypospray art | 20 | `Resources/Audio/Corvax/Items` (+7) |
 | viva-station | Misc props and fun items | 6 | `Resources/Prototypes/_Viva/Entities/Objects/Fun/toys.yml` (+5) |
+| trauma-station | Objects, tools, materials, misc items | 452 | `Content.Trauma.Client/Tools` (+32) |
 
-Also carried by 12: far-horizons (via `_Starlight (partial)`), starlight (via `_Moffstation (partial)`), frontier (via `_DV, _EE, _RMC14`), sunrise (via `_Starlight (partial)`), einstein-engines (via `DeltaV, Nyanotrasen, _NF, _Goobstation`), goobstation (via `_Omu, _Harmony (partial)`), white-dream (via `_NF, _Goobstation, _EE, _Corvax, _DEN, _RMC14, _Nuclear14`), the-den (via `_DV, _NF, _Goobstation`), backmen (via `partly Corvax, _Goobstation`), deltav (via `_Goobstation, _Starlight, _CD, _Impstation, _NF, _Nuclear14`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons, _Funkystation`)
+Also carried by 13: far-horizons (via `_Starlight (partial)`), starlight (via `_Moffstation (partial)`), frontier (via `_DV, _EE, _RMC14`), sunrise (via `_Starlight (partial)`), einstein-engines (via `DeltaV, Nyanotrasen, _NF, _Goobstation`), goobstation (via `_Omu, _Harmony (partial)`), white-dream (via `_NF, _Goobstation, _EE, _Corvax, _DEN, _RMC14, _Nuclear14`), the-den (via `_DV, _NF, _Goobstation`), backmen (via `partly Corvax, _Goobstation`), deltav (via `_Goobstation, _Starlight, _CD, _Impstation, _NF, _Nuclear14`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons, _Funkystation`), trauma-station (via `_Corvax, _DV, _FarHorizons, _Goobstation, _Impstation, _Mono, _NF, _RMC14, _Shitmed`)
 
 ### Clothing and wardrobe pack
 
@@ -53,8 +54,9 @@ Large replacement or additional wardrobe of uniforms, outerwear, headgear, shoes
 | corvax | Corvax clothing set | 512 | `Resources/Prototypes/Corvax/Entities/Clothing` (+1) |
 | ephemeral-space | Clothing and uniform art set | 195 | `Content.Shared/_ES/Clothing` (+2) |
 | estacao-pirata | Brazilian football club uniforms | 91 | `Resources/Prototypes/EstacaoPirata/Entities/Clothing/jumpsuits.yml` (+1) |
+| trauma-station | Clothing | 281 | `Content.Trauma.Common/Armor` (+8) |
 
-Also carried by 11: far-horizons (via `_Starlight, _Funkystation, _TP`), the-den (via `_DV, _Impstation, _NF, _Goobstation`), sunrise (via `_Starlight (partial)`), starlight (via `_Funkystation, _FarHorizons, _Moffstation (partial)`), backmen (via `partly Corvax, _Goobstation`), einstein-engines (via `DeltaV, Nyanotrasen, _NF, _Impstation, _Goobstation, _Shitmed`), deltav (via `_NF, _Impstation, _Starlight, _Goobstation, _Harmony, _Mono, _EE, _Omu`), frontier (via `_DV, _Floof, _EE, _Goobstation, _Impstation`), white-dream (via `_EE, _NF, _TG, _DEN, _Impstation, _Nuclear14, _Shitmed, _Goobstation`), harmony-station (via `_Goobstation + _Impstation`), starfall-drift (via `_Funkystation, _MACRO`)
+Also carried by 12: far-horizons (via `_Starlight, _Funkystation, _TP`), the-den (via `_DV, _Impstation, _NF, _Goobstation`), sunrise (via `_Starlight (partial)`), starlight (via `_Funkystation, _FarHorizons, _Moffstation (partial)`), backmen (via `partly Corvax, _Goobstation`), einstein-engines (via `DeltaV, Nyanotrasen, _NF, _Impstation, _Goobstation, _Shitmed`), deltav (via `_NF, _Impstation, _Starlight, _Goobstation, _Harmony, _Mono, _EE, _Omu`), frontier (via `_DV, _Floof, _EE, _Goobstation, _Impstation`), white-dream (via `_EE, _NF, _TG, _DEN, _Impstation, _Nuclear14, _Shitmed, _Goobstation`), harmony-station (via `_Goobstation + _Impstation`), starfall-drift (via `_Funkystation, _MACRO`), trauma-station (via `Content.Goobstation.*, _DV, _Goobstation, _Lavaland, _Mono, _NF, _Shitmed, _White`)
 
 ### Interface skin and audio pack
 
@@ -76,8 +78,9 @@ Client-side presentation layer: custom stylesheets, fonts, palettes and window a
 | estacao-pirata | Jukebox fork music catalog + fart/laugh/buzz sound collections | 29 | `Resources/Audio/EstacaoPirata/Effects/Buzzes` (+6) |
 | cosmatic-drift | Station theme tracks and verb icons | 10 | `Resources/Audio/_CD/Misc` (+1) |
 | macrocosm | Species footstep and incidental SFX, fork logo | 10 | `Resources/Audio/_MACRO/Effects/Clumsy` (+4) |
+| trauma-station | Interface, lobby, music, ambience, end credits | 253 | `Content.Trauma.Client/AudioMuffle` (+41) |
 
-Also carried by 13: far-horizons (via `_Starlight, _CD, _RMC14`), sunrise (via `_Starlight (partial)`), backmen (via `partly Corvax, _White`), deltav (via `_ES, _ST, _RMC14`), frontier (via `_DV, _EE, _RMC14`), impstation (via `_Harmony`), goobstation (via `_EinsteinEngines, _Impstation (partial)`), starlight (via `_Starfall, _CP14 (partial)`), white-dream (via `_Goobstation`), einstein-engines (via `DeltaV, Nyanotrasen`), the-den (via `_DV, _Funkystation`), forky (via `_MACRO`), starfall-drift (via `_Funkystation, _MACRO`)
+Also carried by 14: far-horizons (via `_Starlight, _CD, _RMC14`), sunrise (via `_Starlight (partial)`), backmen (via `partly Corvax, _White`), deltav (via `_ES, _ST, _RMC14`), frontier (via `_DV, _EE, _RMC14`), impstation (via `_Harmony`), goobstation (via `_EinsteinEngines, _Impstation (partial)`), starlight (via `_Starfall, _CP14 (partial)`), white-dream (via `_Goobstation`), einstein-engines (via `DeltaV, Nyanotrasen`), the-den (via `_DV, _Funkystation`), forky (via `_MACRO`), starfall-drift (via `_Funkystation, _MACRO`), trauma-station (via `_DV, _Goobstation, _Impstation, _Mono, _RMC14, _Starfall, _White, _white`)
 
 ### Station and environment art
 
@@ -97,8 +100,9 @@ Replacement or additional art for the built environment: walls, windows, airlock
 | cosmatic-drift | Decal pack expansion + structure / furniture sprites | 391 | `Resources/Prototypes/_CD/Decals` (+11) |
 | corvax | Floor tiles, decals, wood palettes, parallax, furniture and signage | 206 | `Resources/Prototypes/Corvax/Decals` (+18) |
 | impstation | Fork stylesheet, lobby strings and item-slot radial menu | 188 | `Content.Client/_Starlight/UserInterface` (+11) |
+| trauma-station | Structures, decals, tiles and area art | 862 | `Resources/Locale/en-US/_Trauma/structures` (+18) |
 
-Also carried by 14: einstein-engines (via `_Nuclear14, _RMC14, DeltaV, Nyanotrasen, _NF`), the-den (via `_Nuclear14, _DV, _NF`), far-horizons (via `_Starlight, _CD, _RMC14`), white-dream (via `_Nuclear14, _NF, _Goobstation, _EE, _RMC14, _Corvax`), starlight (via `_Carpmosia, _FarHorizons, _Afterlight (partial)`), sunrise (via `_Starlight, _Afterlight (partial)`), deltav (via `_Nuclear14, _DEN, _Impstation, _Starlight`), frontier (via `_EE, _DV, _Goobstation, _Impstation`), backmen (via `partly Corvax, _CorvaxNext, _Goobstation`), goobstation (via `_Corvax, _CorvaxGoob, _SimpleStation, _NF, _Mono`), forky (via `_MACRO`), harmony-station (via `_Funkystation`), starfall-drift (via `_MACRO, _Funkystation`), macrocosm (via `Funkystation`)
+Also carried by 15: einstein-engines (via `_Nuclear14, _RMC14, DeltaV, Nyanotrasen, _NF`), the-den (via `_Nuclear14, _DV, _NF`), far-horizons (via `_Starlight, _CD, _RMC14`), white-dream (via `_Nuclear14, _NF, _Goobstation, _EE, _RMC14, _Corvax`), starlight (via `_Carpmosia, _FarHorizons, _Afterlight (partial)`), sunrise (via `_Starlight, _Afterlight (partial)`), deltav (via `_Nuclear14, _DEN, _Impstation, _Starlight`), frontier (via `_EE, _DV, _Goobstation, _Impstation`), backmen (via `partly Corvax, _CorvaxNext, _Goobstation`), goobstation (via `_Corvax, _CorvaxGoob, _SimpleStation, _NF, _Mono`), forky (via `_MACRO`), harmony-station (via `_Funkystation`), starfall-drift (via `_MACRO, _Funkystation`), macrocosm (via `Funkystation`), trauma-station (via `_Corvax, _CorvaxGoob, _DV, _FarHorizons, _Goobstation, _Mono, _NF, _RMC14, _Shitmed, _SimpleStation, _Starlight, _White`)
 
 ### Announcer voice packs
 
@@ -131,4 +135,4 @@ Instead of the usual text-only bulletins with a generic chime, the station gets 
 | corvax | Corvax announcement and alert-level voice set | 15 | `Resources/Audio/Corvax/Announcements` (+1) |
 | sunrise | Fork announcement audio and announcement speakers | 12 | `Content.Server/_Sunrise/AnnouncementSpeaker` (+3) |
 
-Also carried by 7: impstation (via `_EE`), estacao-pirata (via `SimpleStation14`), deltav (via `_Harmony, _Mono, _Impstation, _Starlight, _Floof`), white-dream (via `_Goobstation`), the-den (via `_Floof`), far-horizons (via `_Starlight`), backmen (via `Corvax`)
+Also carried by 8: impstation (via `_EE`), estacao-pirata (via `SimpleStation14`), deltav (via `_Harmony, _Mono, _Impstation, _Starlight, _Floof`), white-dream (via `_Goobstation`), the-den (via `_Floof`), far-horizons (via `_Starlight`), backmen (via `Corvax`), trauma-station (via `Content.Goobstation.*, _Goobstation`)

@@ -183,8 +183,9 @@ Funky's version is a security-records rework rather than a general HUD overhaul.
 | goobstation | Fork alerts, status icons and HUD prototypes | 12 | `Content.Goobstation.Client/Alert` (+4) |
 | funky | Security status and criminal record icons | 11 | `Content.Shared/_Funkystation/Security/SecurityStatusPrototype.cs` (+6) |
 | monolith | Job status icons and alert strings | 3 | `Resources/Locale/en-US/_Mono/alerts/alerts.ftl` (+2) |
+| trauma-station | User actions, alerts, status icons, waypointer | 84 | `Content.Trauma.Client/StatusEffects` (+12) |
 
-Also carried by 8: far-horizons (via `_Starlight (partial)`), the-den (via `_DV, _Goobstation`), starlight (via `_Starfall, _ES, _Funkystation (partial)`), deltav (via `_Harmony, _Mono, _Impstation, _Starlight, _Floof`), frontier (via `_Impstation`), white-dream (via `_NF`), starfall-drift (via `_UM`), einstein-engines (via `_NF`)
+Also carried by 9: far-horizons (via `_Starlight (partial)`), the-den (via `_DV, _Goobstation`), starlight (via `_Starfall, _ES, _Funkystation (partial)`), deltav (via `_Harmony, _Mono, _Impstation, _Starlight, _Floof`), frontier (via `_Impstation`), white-dream (via `_NF`), starfall-drift (via `_UM`), einstein-engines (via `_NF`), trauma-station (via `Content.Goobstation.*, _Goobstation, _NF, _White`)
 
 ### Admin and mentor tooling
 
@@ -320,8 +321,9 @@ This fork's whole contribution here is a single extra right-click option for sta
 | ephemeral-space | Debug verbs, debug commands and test entities | 7 | `Content.Server/_ES/Debugging` (+4) |
 | funky | Fork admin commands and admeme props | 3 | `Content.Server/_Funkystation/Administration` (+2) |
 | stellar-station | Stellar admin verbs | 1 | `Content.Stellar.Server/Administration` |
+| trauma-station | Admin tools | 11 | `Content.Trauma.Server/Administration` (+7) |
 
-Also carried by 9: starlight (via `_CD (partial)`), far-horizons (via `_Starlight, _CD, _Moffstation`), deltav (via `_CD`), the-den (via `_DV, _Impstation, _Goobstation`), white-dream (via `_Goobstation, _Funkystation`), frontier (via `_DV, _Harmony`), impstation (via `_CD`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`)
+Also carried by 10: starlight (via `_CD (partial)`), far-horizons (via `_Starlight, _CD, _Moffstation`), deltav (via `_CD`), the-den (via `_DV, _Impstation, _Goobstation`), white-dream (via `_Goobstation, _Funkystation`), frontier (via `_DV, _Harmony`), impstation (via `_CD`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`), trauma-station (via `Content.Goobstation.*, _FarHorizons, _Goobstation`)
 
 ### Lobby and character sheet overhaul
 
@@ -356,8 +358,9 @@ A grab-bag of pre-round and out-of-round screen dressing rather than one system:
 | impstation | Fork stylesheet, lobby strings and item-slot radial menu | 10 | `Content.Client/_Impstation/ItemSlotsMenu` (+3) |
 | the-den | In-game hub server browser and lobby panels | 9 | `Content.Client/_DEN/Hub` (+3) |
 | cosmatic-drift | Fork lobby screens | 4 | `Resources/Prototypes/_CD/lobbyscreens.yml` (+1) |
+| trauma-station | Preferences locale | 1 | `Resources/Locale/en-US/_Trauma/preferences` |
 
-Also carried by 6: starlight (via `_CD`), far-horizons (via `_Starlight (partial)`), backmen (via `partly Corvax`), sunrise (via `_Starlight (partial)`), harmony-station (via `_DV + _LateStation + _NF + _Impstation + _CD + _Funkystation + _RMC14`), frontier (via `_DV, _EE, _RMC14`)
+Also carried by 7: starlight (via `_CD`), far-horizons (via `_Starlight (partial)`), backmen (via `partly Corvax`), sunrise (via `_Starlight (partial)`), harmony-station (via `_DV + _LateStation + _NF + _Impstation + _CD + _Funkystation + _RMC14`), frontier (via `_DV, _EE, _RMC14`), trauma-station (via `_Starfall`)
 
 ### Visual feedback and particle effects
 
@@ -466,8 +469,9 @@ Funky's whole contribution here is a crayon preview. When you have a crayon or s
 | backmen | Camera recoil and wield-bonus shake | 8 | `Content.Shared/Backmen/Camera` (+1) |
 | the-den | Blood and dirt footprints | 7 | `Content.Client/FootPrint` (+2) |
 | funky | Crayon placement overlay | 1 | `Content.Client/_Funkystation/Crayon/Overlays/CrayonPlacementOverlay.cs` |
+| trauma-station | Particles and effects | 36 | `Content.Trauma.Client/Effects` (+14) |
 
-Also carried by 10: sunrise (via `_RMC14 (partial)`), frontier (via `_DV`), deltav (via `_ES, _ST, _RMC14`), starlight (via `_Starfall, _ES, _Funkystation (partial)`), ephemeral-space (via `_ST`), forky (via `_Starfall,_ES,_ST,_MACRO`), far-horizons (via `_Starlight, _Funkystation`), starfall-drift (via `_ES`), goobstation (via `_Starfall (particles)`), white-dream (via `_Goobstation, _EE`)
+Also carried by 11: sunrise (via `_RMC14 (partial)`), frontier (via `_DV`), deltav (via `_ES, _ST, _RMC14`), starlight (via `_Starfall, _ES, _Funkystation (partial)`), ephemeral-space (via `_ST`), forky (via `_Starfall,_ES,_ST,_MACRO`), far-horizons (via `_Starlight, _Funkystation`), starfall-drift (via `_ES`), goobstation (via `_Starfall (particles)`), white-dream (via `_Goobstation, _EE`), trauma-station (via `Content.Goobstation.*, _Goobstation, _RMC14, _Starfall`)
 
 ### Vision overlays and visors
 
@@ -578,8 +582,9 @@ Three separate view-altering pieces. Tinted eyewear: put on goggles (or a headpi
 | backmen | Night vision, monochromacy, nearsight, static and colour-tint overlays | 23 | `Content.Client/Backmen/Eye` (+9) |
 | goobstation | Vision overlays, see-over layering and fork shaders | 22 | `Content.Goobstation.Client/Overlays` (+5) |
 | forky | Eyewear and helmet visor overlays | 14 | `Content.Client/_Funkystation/Clothing` (+4) |
+| trauma-station | Viewcone | 26 | `Content.Trauma.Client/Overlays` (+5) |
 
-Also carried by 9: starlight (via `_CP14 (partial)`), far-horizons (via `_Starlight`), sunrise (via `_RMC14 (partial)`), starfall-drift (via `_Funkystation`), the-den (via `_White`), deltav (via `_Goobstation, _White`), white-dream (via `_EE, _Goobstation`), impstation (via `_EE`), frontier (via `_DV`)
+Also carried by 10: starlight (via `_CP14 (partial)`), far-horizons (via `_Starlight`), sunrise (via `_RMC14 (partial)`), starfall-drift (via `_Funkystation`), the-den (via `_White`), deltav (via `_Goobstation, _White`), white-dream (via `_EE, _Goobstation`), impstation (via `_EE`), frontier (via `_DV`), trauma-station (via `Content.Goobstation.*, _Goobstation, _White`)
 
 ### Storage and inventory rework
 
@@ -608,8 +613,9 @@ This is a grab-bag of changes to where players can put things and who can pick t
 | sunrise | Clothing whitelists, item re-pickup cooldown and nested mob containers | 11 | `Content.Client/_Sunrise/Nesting` (+5) |
 | serbia-strong | Storage spawn hooks, toggleable slots and in-storage material transfer | 9 | `Content.Server/SS220/Storage` (+4) |
 | cosmatic-drift | Extendable clothing / extended equipment + clothing that blocks equip slots | 8 | `Content.Client/_CD/ExtendableClothingSystem.cs` (+7) |
+| trauma-station | Storage, strip and inventory tweaks | 36 | `Content.Trauma.Client/ItemSlotRenderer` (+13) |
 
-Also carried by 8: ephemeral-space (via `_Offbrand`), deltav (via `_NF, _Starlight, _Goobstation`), frontier (via `_Goobstation, _EE`), white-dream (via `_NF`), far-horizons (via `_Starlight`), the-den (via `_NF, _DV`), einstein-engines (via `_NF`), backmen (via `_NF`)
+Also carried by 9: ephemeral-space (via `_Offbrand`), deltav (via `_NF, _Starlight, _Goobstation`), frontier (via `_Goobstation, _EE`), white-dream (via `_NF`), far-horizons (via `_Starlight`), the-den (via `_NF, _DV`), einstein-engines (via `_NF`), backmen (via `_NF`), trauma-station (via `Content.Goobstation.*, _DV`)
 
 ### PDA chat messenger
 
@@ -685,8 +691,9 @@ Your PDA gains a NanoChat app that works like a phone: your ID card is assigned 
 | sunrise | In-game Messenger with groups, emoji and spam limits | 29 | `Content.Client/_Sunrise/Messenger` (+6) |
 | cosmatic-drift | NanoChat PDA messaging | 26 | `Content.Client/_CD/CartridgeLoader/Cartridges` (+9) |
 | deltav | NanoChat PDA messenger | 5 | `Content.Client/_DV/NanoChat` (+3) |
+| trauma-station | Cartridge loader / NanoChat | 37 | `Content.Trauma.Client/CartridgeLoader` (+7) |
 
-Also carried by 6: the-den (via `_Funkystation, _DV`), far-horizons (via `_CD, _Starlight`), impstation (via `_DV`), starlight (via `_CD (partial)`), einstein-engines (via `DeltaV`), goobstation (via `_DV`)
+Also carried by 7: the-den (via `_Funkystation, _DV`), far-horizons (via `_CD, _Starlight`), impstation (via `_DV`), starlight (via `_CD (partial)`), einstein-engines (via `DeltaV`), goobstation (via `_DV`), trauma-station (via `_DV`)
 
 ### PDA cartridge programs
 
@@ -716,4 +723,4 @@ These forks fill the PDA's program slot with extra apps you slot in like a cartr
 | backmen | Fork PDA cartridges (bank app, glimmer monitor) and PDA prototypes | 15 | `Content.Client/Backmen/CartridgeLoader` (+5) |
 | gaby-station-now-dumont-station | NanoBank PDA cartridge program | 7 | `Content.Client/_Gabystation/CartridgeLoader/Cartridges/NanoBankUi.cs` (+6) |
 
-Also carried by 8: the-den (via `_DV`), einstein-engines (via `DeltaV`), frontier (via `_DV`), estacao-pirata (via `DeltaV`), goobstation (via `_DV`), impstation (via `_DV`), starlight (via `_CD (partial)`), far-horizons (via `_Starlight (partial)`)
+Also carried by 9: the-den (via `_DV`), einstein-engines (via `DeltaV`), frontier (via `_DV`), estacao-pirata (via `DeltaV`), goobstation (via `_DV`), impstation (via `_DV`), starlight (via `_CD (partial)`), far-horizons (via `_Starlight (partial)`), trauma-station (via `_DV, _Goobstation`)

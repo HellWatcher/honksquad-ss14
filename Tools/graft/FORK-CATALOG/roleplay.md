@@ -182,8 +182,9 @@ Opening the in-game guidebook gives you an "SOP 101" hub that reads like a corpo
 | harmony-station | Server rules, space law and SOP guidebook | 20 | `Resources/Locale/en-US/_Harmony/guidebook/guides.ftl` (+4) |
 | viva-station | Viva server rules and hidden Command SOP guidebook | 16 | `Resources/ServerInfo/_Viva/Guidebook/CommandHidden/ClearanceLevel1.xml` (+15) |
 | funky | Fork guidebook and SOP | 5 | `Resources/Locale/en-US/_Funkystation/guidebook.ftl` (+1) |
+| trauma-station | Server rules and guidebook | 108 | `Content.Trauma.Client/Guidebook` (+5) |
 
-Also carried by 11: frontier (via `_EE`), deltav (via `_Goobstation, _CD, _FarHorizons, _Funkystation, _Harmony`), ephemeral-space (via `_Offbrand`), starlight (via `_Impstation (partial)`), far-horizons (via `_Starlight (partial)`), backmen (via `partly Corvax`), white-dream (via `_Goobstation, _Impstation`), the-den (via `_DV, _CD`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`), einstein-engines (via `Nyanotrasen, _Impstation`)
+Also carried by 12: frontier (via `_EE`), deltav (via `_Goobstation, _CD, _FarHorizons, _Funkystation, _Harmony`), ephemeral-space (via `_Offbrand`), starlight (via `_Impstation (partial)`), far-horizons (via `_Starlight (partial)`), backmen (via `partly Corvax`), white-dream (via `_Goobstation, _Impstation`), the-den (via `_DV, _CD`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`), einstein-engines (via `Nyanotrasen, _Impstation`), trauma-station (via `_FarHorizons, _Goobstation, _Impstation`)
 
 ### Speech accents, verbs and emotes
 
@@ -337,8 +338,9 @@ Corvax's slice is chat flavour aimed at a Russian-speaking table. Emotes fire of
 | monolith | Speech emotes and species emote audio (from Languages, radio channels and collective minds) | 33 | `Resources/Audio/_Mono/Voice` (+3) |
 | ephemeral-space | Voice obfuscation, coughing accent, transponders and radio falloff | 27 | `Content.Client/_ES/Chat/Obfuscation` (+13) |
 | corvax | Growling accent, fork emotes and chat word replacement | 13 | `Content.Client/Corvax/UserInterface/Systems/Chat/ChatUIController.Replacement.cs` (+6) |
+| trauma-station | Speech, accents and voices | 46 | `Content.Trauma.Common/Speech` (+7) |
 
-Also carried by 14: impstation (via `_EE`), starlight (via `_Impstation, _FarHorizons (partial)`), far-horizons (via `_Starlight, _Afterlight`), deltav (via `_DEN, _Impstation, _Goobstation, _EE, _NF, _Starlight, _RMC14, _Nuclear14`), the-den (via `_DV, _Impstation, _NF`), frontier (via `_DV, _Goobstation, _Impstation, _Starlight`), goobstation (via `_Corvax (barks.yml), _EinsteinEngines (interaction verbs)`), einstein-engines (via `DeltaV, Nyanotrasen, _Impstation, _RMC14`), white-dream (via `_Impstation, _Goobstation, _EE`), starfall-drift (via `_Funkystation, _MACRO, _UM`), forky (via `_MACRO`), harmony-station (via `_DV + _LateStation + _NF + _Impstation + _CD + _Funkystation + _RMC14`), stellar-station (via `_ES (Ephemeral Space / MirrorCult) for the obfuscation, coughing and radio-falloff subtrees`), backmen (via `partly Corvax, _Goobstation`)
+Also carried by 15: impstation (via `_EE`), starlight (via `_Impstation, _FarHorizons (partial)`), far-horizons (via `_Starlight, _Afterlight`), deltav (via `_DEN, _Impstation, _Goobstation, _EE, _NF, _Starlight, _RMC14, _Nuclear14`), the-den (via `_DV, _Impstation, _NF`), frontier (via `_DV, _Goobstation, _Impstation, _Starlight`), goobstation (via `_Corvax (barks.yml), _EinsteinEngines (interaction verbs)`), einstein-engines (via `DeltaV, Nyanotrasen, _Impstation, _RMC14`), white-dream (via `_Impstation, _Goobstation, _EE`), starfall-drift (via `_Funkystation, _MACRO, _UM`), forky (via `_MACRO`), harmony-station (via `_DV + _LateStation + _NF + _Impstation + _CD + _Funkystation + _RMC14`), stellar-station (via `_ES (Ephemeral Space / MirrorCult) for the obfuscation, coughing and radio-falloff subtrees`), backmen (via `partly Corvax, _Goobstation`), trauma-station (via `Content.Goobstation.*, _Corvax, _Goobstation, _Impstation, _Mono, _NF, _RMC14, _White`)
 
 ### Character traits and quirks
 
@@ -372,8 +374,9 @@ At character setup you spend a pool of points on quirks that follow you into the
 | backmen | Fork character traits (giant, monochromacy, nearsighted, mood modifiers) | 6 | `Content.Shared/Backmen/Traits/Components/MonochromacyComponent.cs` (+2) |
 | rmc14 | RMC trait prototypes | 6 | `Content.Server/_RMC14/Traits` (+2) |
 | sunrise | Fork trait categories, disabilities, quirks and speech traits | 4 | `Resources/Prototypes/_Sunrise/Traits` |
+| trauma-station | Traits | 6 | `Content.Trauma.Server/Traits` (+2) |
 
-Also carried by 8: estacao-pirata (via `SimpleStation14`), deltav (via `_CD, _Impstation, _Starlight`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV, _Floof, _CD`), impstation (via `_CD`), frontier (via `_DV`), white-dream (via `_Goobstation, _EE, _Impstation`), harmony-station (via `_CD + _DV + _NF`)
+Also carried by 9: estacao-pirata (via `SimpleStation14`), deltav (via `_CD, _Impstation, _Starlight`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV, _Floof, _CD`), impstation (via `_CD`), frontier (via `_DV`), white-dream (via `_Goobstation, _EE, _Impstation`), harmony-station (via `_CD + _DV + _NF`), trauma-station (via `Content.Goobstation.*, _DV, _Goobstation`)
 
 ### Player-authored documents and books
 
@@ -509,8 +512,9 @@ The second is a martial law switch, available to staff rather than to players. D
 | goobstation | Handheld fax, faxecute and paper additions | 9 | `Content.Goobstation.Common/Paper` (+3) |
 | monolith | Fork paper, stamp and book text | 3 | `Resources/Locale/en-US/_Mono/paper` |
 | gaby-station-now-dumont-station | Arrest warrants and martial law tools | 2 | `Content.Server/_Gabystation/MartialLaw/Commands.cs` (+1) |
+| trauma-station | Paper | 9 | `Content.Trauma.Common/Paper` (+2) |
 
-Also carried by 11: starlight (via `_CD (partial)`), deltav (via `_Goobstation, _Harmony, _NF`), far-horizons (via `_Starlight`), backmen (via `DeadSpace`), impstation (via `_CD`), white-dream (via `_Goobstation`), einstein-engines (via `_CorvaxNext, DeltaV`), frontier (via `_CD, _DV, _RMC14`), starfall-drift (via `_Funkystation`), the-den (via `_DV`), harmony-station (via `_DV`)
+Also carried by 12: starlight (via `_CD (partial)`), deltav (via `_Goobstation, _Harmony, _NF`), far-horizons (via `_Starlight`), backmen (via `DeadSpace`), impstation (via `_CD`), white-dream (via `_Goobstation`), einstein-engines (via `_CorvaxNext, DeltaV`), frontier (via `_CD, _DV, _RMC14`), starfall-drift (via `_Funkystation`), the-den (via `_DV`), harmony-station (via `_DV`), trauma-station (via `Content.Goobstation.*, _DV, _Goobstation`)
 
 ### Ghost roles, respawn and game-master roles
 
@@ -575,8 +579,9 @@ Dead players stop being stuck as ghosts: after a wait timer (and only while the 
 | rmc14 | RMC ghost roles, observer actions and ghost-role raffles | 15 | `Content.Client/_RMC14/Ghost` (+5) |
 | cosmatic-drift | Ghost respawn | 7 | `Content.Client/_CD/Ghostrespawn` (+3) |
 | funky | Jobs, loadouts and ghost roles (ghost-role portion) | 3 | `Resources/Locale/en-US/_Funkystation/ghost` (+2) |
+| trauma-station | Ghost features and ghost roles | 31 | `Content.Trauma.Client/Ghost` (+9) |
 
-Also carried by 9: deltav (via `_Corvax, _NF, _Impstation, _FarHorizons`), white-dream (via `_Goobstation, _Imp`), goobstation (via `_Imp`), harmony-station (via `_DV + _Funkystation + _Goobstation + _Impstation`), frontier (via `_Corvax`), starlight (via `_Impstation (partial)`), far-horizons (via `_Starlight, _CD`), the-den (via `_Goobstation, _DV`), einstein-engines (via `DeltaV`)
+Also carried by 10: deltav (via `_Corvax, _NF, _Impstation, _FarHorizons`), white-dream (via `_Goobstation, _Imp`), goobstation (via `_Imp`), harmony-station (via `_DV + _Funkystation + _Goobstation + _Impstation`), frontier (via `_Corvax`), starlight (via `_Impstation (partial)`), far-horizons (via `_Starlight, _CD`), the-den (via `_Goobstation, _DV`), einstein-engines (via `DeltaV`), trauma-station (via `_FarHorizons, _Goobstation, _Imp, _white`)
 
 ### Games, instruments and performance
 
@@ -619,7 +624,7 @@ Three separate entertainment tweaks bundled together. The headline one is a tape
 | cosmatic-drift | Wehpet playable instrument | 5 | `Resources/Prototypes/_CD/Entities/Objects/Fun/Instruments` (+1) |
 | deltav | Fork instrument additions | 2 | `Content.Shared/_DV/Instruments` |
 
-Also carried by 8: impstation (via `_EstacaoPirata`), white-dream (via `_EstacaoPirata`), starlight (via `_Moffstation`), the-den (via `_EstacaoPirata`), einstein-engines (via `_EstacaoPirata`), harmony-station (via `_EstacaoPirata`), frontier (via `_EstacaoPirata, _DV`), goobstation (via `_EstacaoPirata (cards)`)
+Also carried by 9: impstation (via `_EstacaoPirata`), white-dream (via `_EstacaoPirata`), starlight (via `_Moffstation`), the-den (via `_EstacaoPirata`), einstein-engines (via `_EstacaoPirata`), harmony-station (via `_EstacaoPirata`), frontier (via `_EstacaoPirata, _DV`), goobstation (via `_EstacaoPirata (cards)`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Character records
 
@@ -673,6 +678,7 @@ In the character editor each player fills out a personal file for their characte
 | funky | Character records and medical records console | 27 | `Content.Client/_Funkystation/Medical/MedicalRecordsConsole` (+8) |
 | rmc14 | RMC medical records, crew manifest and detailed examine | 13 | `Content.Client/_RMC14/CrewManifest` (+7) |
 | frontier | Sector-wide station records, records filtering and sector news | 6 | `Content.Client/_NF/StationRecords` (+4) |
+| trauma-station | Forensics and criminal records | 11 | `Content.Trauma.Client/Forensics` (+5) |
 
 Also carried by 6: the-den (via `_CD, _EE`), white-dream (via `_EE`), starlight (via `_CD (partial)`), far-horizons (via `_CD`), deltav (via `_CD`), impstation (via `_CD`)
 
@@ -719,8 +725,9 @@ Every character speaks and understands a set of named languages, and picks which
 | rmc14 | Languages: xeno hivemind channel and marine speech presets | 24 | `Content.Client/_RMC14/Language` (+5) |
 | serbia-strong | In-character languages and telepathy channels | 21 | `Content.Client/SS220/Language` (+6) |
 | monolith | Languages, radio channels and collective minds | 10 | `Content.Client/_Mono/Radio/ClientRadioNoiseSystem.cs` (+8) |
+| trauma-station | Languages and collective mind | 40 | `Content.Trauma.Client/Language` (+6) |
 
-Also carried by 7: far-horizons (via `_Starlight (partial)`), goobstation (via `_EinsteinEngines, _Starlight`), estacao-pirata (via `SimpleStation14`), the-den (via `_Floof`), impstation (via `_Starlight`), white-dream (via `_EE`), deltav (via `_DEN`)
+Also carried by 8: far-horizons (via `_Starlight (partial)`), goobstation (via `_EinsteinEngines, _Starlight`), estacao-pirata (via `SimpleStation14`), the-den (via `_Floof`), impstation (via `_Starlight`), white-dream (via `_EE`), deltav (via `_DEN`), trauma-station (via `_EinsteinEngines, _Goobstation, _Starlight, _White`)
 
 ### Tape recorder and cassettes
 
@@ -817,7 +824,7 @@ You carry a handheld recorder, slot a cassette into it, and open a small window 
 | goobstation | Tape recorder and cassettes | 13 | `Content.Goobstation.Client/TapeRecorder` (+3) |
 | starlight | Tape recorder and cassettes | 11 | `Content.Client/_Starlight/TapeRecorder` (+2) |
 
-Also carried by 5: harmony-station (via `_DV`), impstation (via `_DV`), frontier (via `_DV`), einstein-engines (via `DeltaV`), the-den (via `_Goobstation`)
+Also carried by 6: harmony-station (via `_DV`), impstation (via `_DV`), frontier (via `_DV`), einstein-engines (via `DeltaV`), the-den (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _DV`)
 
 ### Additional language localizations
 
@@ -875,8 +882,9 @@ The chaplain stops being a guy with a bible and becomes a faith-powered role bui
 | serbia-strong | Exorcism and sacred relics | 16 | `Content.Client/SS220/Bible` (+5) |
 | the-den | Chapel and chaplain religion rework | 11 | `Content.Client/Chapel` (+3) |
 | gaby-station-now-dumont-station | Unholy item punishment | 2 | `Content.Server/_Dumont/Religion` (+1) |
+| trauma-station | Chaplain, prayers, bible, empty scroll | 57 | `Content.Trauma.Client/EmptyScroll` (+14) |
 
-Also carried by 2: deltav (via `_Goobstation`), white-dream (via `_Goobstation`)
+Also carried by 3: deltav (via `_Goobstation`), white-dream (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Text-to-speech voice synthesis
 

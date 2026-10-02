@@ -892,6 +892,55 @@ forks:
     helper tool. NOTE: the recursive tree API returned truncated=true, so Resources/Textures was refetched
     as its own subtree and merged; all other paths are complete.'
   pass: refined
+- id: trauma-station
+  name: Trauma Station
+  repo: https://github.com/Trauma-Station/Trauma-Station
+  branch: master
+  license: AGPL-3.0-or-later AND MIT (REUSE LICENSES/; most art CC-BY-SA-3.0, some CC-BY-NC-SA-3.0)
+  lineage: 'Downstream of Goob Station (carries Content.Goobstation.* and _Goobstation wholesale, plus
+    everything Goob vendors). Runs on QuietToolbox (Trauma-Station/QuietToolbox), a modified RobustToolbox:
+    upstream v291.0.0 plus about 15 Trauma engine PRs (#54-#72), merged with upstream RT every few weeks.'
+  last_push: '2026-10-02T17:39:03Z'
+  namespaces:
+  - _Trauma
+  - _Factory
+  - Content.Trauma.*
+  - Content.Medical.*
+  - Content.Factory.*
+  - Content.Lavaland.*
+  vendors_from:
+  - _Goobstation
+  - _EinsteinEngines
+  - _Shitmed
+  - _DV
+  - _Impstation
+  - _Lavaland
+  - _White
+  - _NF
+  - _FarHorizons
+  - _RMC14
+  - _Mono
+  - _ShitChap
+  - _Starlight
+  - _Corvax
+  - _Imp
+  - _SimpleStation
+  - _CorvaxGoob
+  - _Starfall
+  - _Floofstation
+  - _CorvaxNext
+  notes: 'Trauma''s own work sits in dedicated csproj assemblies rather than marker dirs: Content.Trauma.{Shared,Server,Client,Common}
+    (about 2,800 files, one top-level dir per feature), Content.Medical.* (surgery, body, wounds, autodoc,
+    cybernetics), Content.Factory.* plus Resources/*/_Factory (an in-repo automation module: robotic arms,
+    interactors, constructors, filters, circuits, plumbing pumps), and Content.Lavaland.*, a project-split
+    rewrite of Goob''s _Lavaland that ships alongside 614 vendored _Lavaland paths. Non-code content is
+    namespaced Resources/*/_Trauma. Content.Goobstation.* is carried from Goob, not authored here. ENGINE:
+    the RobustToolbox submodule points at Trauma-Station/QuietToolbox, not upstream. Its own PRs are mostly
+    debug asserts, logging and robustness fixes, but some change engine behaviour content can depend on
+    (intentional component desync #57, YAML linter partials #60, PickAndTake RemoveSwap #71). Per ADR
+    0016 any graft that needs those engine changes is blocked, so check for QuietToolbox-only API before
+    grafting. Tree pinned at f4454f2ce9 (69,260 blob paths, not truncated).'
+  pass: refined
 - id: viva-station
   name: Viva Station
   repo: https://github.com/misterghast/viva-station
@@ -1229,6 +1278,38 @@ features:
     - Resources/Prototypes/_Gabystation/Objectives
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Objectives, store and uplink catalog
+    paths:
+    - Content.Trauma.Client/Antag
+    - Content.Trauma.Common/Traitor
+    - Content.Trauma.Server/Antag
+    - Content.Trauma.Server/Objectives
+    - Content.Trauma.Server/Store
+    - Content.Trauma.Shared/Antag
+    - Content.Trauma.Shared/Mindcontrol
+    - Content.Trauma.Shared/Store
+    - Resources/Locale/en-US/_Trauma/contraband
+    - Resources/Locale/en-US/_Trauma/objectives
+    - Resources/Locale/en-US/_Trauma/prototypes/entity/syndicate
+    - Resources/Locale/en-US/_Trauma/prototypes/roles/antags.ftl
+    - Resources/Locale/en-US/_Trauma/set-selector-menu.ftl
+    - Resources/Locale/en-US/_Trauma/store
+    - Resources/Prototypes/_Trauma/Catalog/Uplink
+    - Resources/Prototypes/_Trauma/Catalog/discount_categories.yml
+    - Resources/Prototypes/_Trauma/Catalog/selectable_sets.yml
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/antag_summoner.yml
+    - Resources/Prototypes/_Trauma/Entities/Objects/Syndicate_Gadgets
+    - Resources/Prototypes/_Trauma/Entities/Objects/base_contraband.yml
+    - Resources/Prototypes/_Trauma/Objectives
+    - Resources/Prototypes/_Trauma/Partials/Objectives
+    - Resources/Prototypes/_Trauma/Partials/Store
+    - Resources/Prototypes/_Trauma/Store
+    - Resources/Prototypes/_Trauma/contraband_severities.yml
+    - Resources/Textures/_Trauma/Objects/Devices/reinforcement_callers
+    - Resources/Textures/_Trauma/Objects/Syndicate
+    files: 117
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _Harmony, _Goobstation, _Impstation, _Mono
@@ -1358,6 +1439,19 @@ features:
     paths:
     - Resources/Locale/en-US/_FarHorizons/objectives/conditions
     - Resources/Prototypes/_FarHorizons/Objectives
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 30
+    paths:
+    - Content.Goobstation.Common/Traitor
+    - Content.Goobstation.Server/Antag
+    - Content.Goobstation.Server/Objectives
+    - Resources/Locale/en-US/_Goobstation/mind
+    - Resources/Locale/en-US/_Goobstation/objectives
+    - Resources/Locale/en-US/_Goobstation/store
+    - Resources/Prototypes/_Goobstation/Catalog/uplink_catalog.yml
+    - Resources/Prototypes/_Goobstation/Objectives
+    - Resources/Prototypes/_Goobstation/Store
   assessments:
   - covers:
     - rmc14
@@ -2550,6 +2644,28 @@ features:
     - Resources/Prototypes/_CD/Datasets/shuttle-vote-users.yml
     files: 3
     confidence: medium
+  - fork: trauma-station
+    local_name: Game ticking, game rules and station traits
+    paths:
+    - Content.Trauma.Common/GameTicking
+    - Content.Trauma.Common/RoundEnd
+    - Content.Trauma.Server/GameTicking
+    - Content.Trauma.Server/Station
+    - Content.Trauma.Shared/BlockShuttleRecall
+    - Content.Trauma.Shared/GameTicking
+    - Content.Trauma.Shared/Station
+    - Resources/Locale/en-US/_Trauma/game-ticking
+    - Resources/Locale/en-US/_Trauma/round-end
+    - Resources/Prototypes/_Trauma/GameRules
+    - Resources/Prototypes/_Trauma/Partials/GameRules
+    - Resources/Prototypes/_Trauma/Partials/game_presets.yml
+    - Resources/Prototypes/_Trauma/Partials/secret_weights.yml
+    - Resources/Prototypes/_Trauma/Partials/threats.yml
+    - Resources/Prototypes/_Trauma/Station
+    - Resources/Prototypes/_Trauma/game_presets.yml
+    - Resources/Prototypes/_Trauma/threats.yml
+    files: 76
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight (partial)
@@ -2625,6 +2741,14 @@ features:
     - Resources/Prototypes/Corvax/secret_weights.yml
     - Resources/Prototypes/_Backmen/game_presets.yml
     - Resources/Prototypes/_Backmen/secret_weights.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 10
+    paths:
+    - Content.Goobstation.Client/Polls
+    - Content.Goobstation.Server/Polls
+    - Content.Goobstation.Shared/Polls
+    - Resources/Prototypes/_Goobstation/game_presets.yml
   assessments:
   - covers:
     - starlight
@@ -3010,6 +3134,18 @@ features:
     - Resources/Prototypes/_Starlight/Objectives/selfAgent.yml
     - Resources/Prototypes/_Starlight/Roles/Antags/self.yml
     files: 5
+    confidence: medium
+  - fork: trauma-station
+    local_name: Spy and fugitive antags
+    paths:
+    - Content.Trauma.Client/Spy
+    - Content.Trauma.Server/Spy
+    - Content.Trauma.Shared/Spy
+    - Resources/Locale/en-US/_Trauma/fugitive
+    - Resources/Locale/en-US/_Trauma/prototypes/catalog/spyuplink.ftl
+    - Resources/Locale/en-US/_Trauma/spy
+    - Resources/Prototypes/_Trauma/Spy
+    files: 37
     confidence: medium
   carried_by: []
   assessments:
@@ -3605,6 +3741,24 @@ features:
     - Resources/Prototypes/_Funkystation/Entities/Mobs/Player/minidragon.yml
     files: 6
     confidence: high
+  - fork: trauma-station
+    local_name: Wizard spells, familiars and blink
+    paths:
+    - Content.Trauma.Client/Blink
+    - Content.Trauma.Client/Familiar
+    - Content.Trauma.Client/Wizard
+    - Content.Trauma.Common/Familiar
+    - Content.Trauma.Common/Wizard
+    - Content.Trauma.Server/Blink
+    - Content.Trauma.Server/Wizard
+    - Content.Trauma.Shared/Blink
+    - Content.Trauma.Shared/Familiar
+    - Content.Trauma.Shared/Wizard
+    - Resources/Locale/en-US/_Trauma/Wizard
+    - Resources/Prototypes/_Trauma/Catalog/Wizard
+    - Resources/Prototypes/_Trauma/Catalog/spellbook_catalog.yml
+    files: 203
+    confidence: high
   carried_by:
   - fork: white-dream
     via: _Goobstation
@@ -3648,6 +3802,15 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_Starlight/Polymorphs
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 477
+    paths:
+    - Content.Goobstation.Common/Magic
+    - Resources/Audio/_Goobstation/Wizard
+    - Resources/Locale/en-US/_Goobstation/Wizard
+    - Resources/Prototypes/_Goobstation/Wizard
+    - Resources/Textures/_Goobstation/Wizard
   assessments:
   - covers:
     - goobstation
@@ -3924,6 +4087,39 @@ features:
     - Resources/Prototypes/_EE/Species/shadow.yml
     files: 9
     confidence: high
+  - fork: trauma-station
+    local_name: Shadow demon, morph, wraith, bingle, demons, holoparasite
+    paths:
+    - Content.Trauma.Client/HoloParasite
+    - Content.Trauma.Client/Morph
+    - Content.Trauma.Client/ShadowDemon
+    - Content.Trauma.Common/Dragon
+    - Content.Trauma.Server/Guardian
+    - Content.Trauma.Server/ShadowDemon
+    - Content.Trauma.Shared/Dragon
+    - Content.Trauma.Shared/HoloParasite
+    - Content.Trauma.Shared/LightDetection
+    - Content.Trauma.Shared/Morph
+    - Content.Trauma.Shared/ShadowDemon
+    - Content.Trauma.Shared/Wraith
+    - Resources/Audio/_Trauma/Mobs/ShadowDemon
+    - Resources/Audio/_Trauma/Morph
+    - Resources/Locale/en-US/_Trauma/dragon
+    - Resources/Locale/en-US/_Trauma/holoparasite
+    - Resources/Locale/en-US/_Trauma/morph
+    - Resources/Locale/en-US/_Trauma/shadow-demon
+    - Resources/Locale/en-US/_Trauma/wraith
+    - Resources/Prototypes/_Trauma/ShadowDemon
+    - Resources/Prototypes/_Trauma/Wraith
+    - Resources/Textures/_Trauma/Actions/demon.rsi
+    - Resources/Textures/_Trauma/Actions/wailing.rsi
+    - Resources/Textures/_Trauma/Interface/Alerts/morph_biomass.rsi
+    - Resources/Textures/_Trauma/Mobs/Bingle
+    - Resources/Textures/_Trauma/Mobs/Monsters
+    - Resources/Textures/_Trauma/Mobs/ShadowDemon
+    - Resources/Textures/_Trauma/Mobs/morph.rsi
+    files: 236
+    confidence: medium
   carried_by:
   - fork: white-dream
     via: _Goobstation, _EE
@@ -3957,6 +4153,43 @@ features:
     files: 3
     paths:
     - Resources/Audio/_Goobstation/Effects
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 757
+    paths:
+    - Content.Goobstation.Client/Bingle
+    - Content.Goobstation.Client/ChronoLegionnaire
+    - Content.Goobstation.Client/SlaughterDemon
+    - Content.Goobstation.Client/Wraith
+    - Content.Goobstation.Common/Bingle
+    - Content.Goobstation.Server/Bingle
+    - Content.Goobstation.Server/ChronoLegionnaire
+    - Content.Goobstation.Server/Nightmare
+    - Content.Goobstation.Server/Slasher
+    - Content.Goobstation.Server/SlaughterDemon
+    - Content.Goobstation.Server/Wraith
+    - Content.Goobstation.Shared/Bingle
+    - Content.Goobstation.Shared/ChronoLegionnaire
+    - Content.Goobstation.Shared/Nightmare
+    - Content.Goobstation.Shared/Slasher
+    - Content.Goobstation.Shared/SlaughterDemon
+    - Content.Goobstation.Shared/Wraith
+    - Resources/Audio/_Goobstation/Effects
+    - Resources/Audio/_Goobstation/Misc/Hastur
+    - Resources/Audio/_Goobstation/SlaughterDemon
+    - Resources/Audio/_Goobstation/Wraith
+    - Resources/Locale/en-US/_Goobstation/SlaughterDemon
+    - Resources/Locale/en-US/_Goobstation/Wraith
+    - Resources/Locale/en-US/_Goobstation/bingle
+    - Resources/Prototypes/_Goobstation/Hastur
+    - Resources/Prototypes/_Goobstation/Slasher
+    - Resources/Prototypes/_Goobstation/SlaughterDemon
+    - Resources/Prototypes/_Goobstation/Wraith
+    - Resources/Textures/_Goobstation/Mobs/Bingle
+    - Resources/Textures/_Goobstation/Objects/Specific/ChronoLegionnaire
+    - Resources/Textures/_Goobstation/Objects/Specific/Slasher
+    - Resources/Textures/_Goobstation/SlaughterDemon
+    - Resources/Textures/_Goobstation/Wraith
   assessments:
   - covers:
     - goobstation
@@ -4361,6 +4594,19 @@ features:
     files: 94
     paths:
     - Resources/Textures/Changeling
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 201
+    paths:
+    - Content.Goobstation.Client/Changeling
+    - Content.Goobstation.Common/Changeling
+    - Content.Goobstation.Server/Changeling
+    - Content.Goobstation.Shared/Changeling
+    - Resources/Audio/_Goobstation/Changeling
+    - Resources/Locale/en-US/_Goobstation/Changeling
+    - Resources/Prototypes/_Goobstation/Changeling
+    - Resources/ServerInfo/_Goobstation/Guidebook/Antagonist/Changelings.xml
+    - Resources/Textures/_Goobstation/Changeling
   assessments:
   - covers:
     - goobstation
@@ -4517,6 +4763,19 @@ features:
     - Resources/Textures/_Funkystation/BloodCult
     files: 196
     confidence: high
+  - fork: trauma-station
+    local_name: Blood Cult
+    paths:
+    - Content.Trauma.Client/BloodCult
+    - Content.Trauma.Server/BloodCult
+    - Content.Trauma.Shared/BloodCult
+    - Resources/Audio/_Trauma/BloodCult
+    - Resources/Locale/en-US/_Trauma/bloodcult
+    - Resources/Prototypes/_Trauma/BloodCult
+    - Resources/Textures/_Trauma/BloodCult
+    - Resources/Textures/_Trauma/Structures/Runes
+    files: 359
+    confidence: high
   carried_by:
   - fork: einstein-engines
     via: WhiteDream
@@ -4563,6 +4822,15 @@ features:
     - Resources/Prototypes/Language/FactionSpecific/blood_cult.yml
     - Resources/Prototypes/WhiteDream
     - Resources/Textures/WhiteDream/BloodCult
+  - fork: trauma-station
+    via: _White
+    files: 49
+    paths:
+    - Resources/Prototypes/_White/Entities/Effects
+    - Resources/Prototypes/_White/Entities/Objects
+    - Resources/Prototypes/_White/GameRules
+    - Resources/Prototypes/_White/Roles/Antags
+    - Resources/Textures/_White/Interface/Alerts
   assessments:
   - covers:
     - sunrise
@@ -5255,6 +5523,15 @@ features:
     files: 1
     paths:
     - Content.Server/_Starlight/Roles/PirateRoleComponent.cs
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 26
+    paths:
+    - Content.Goobstation.Common/Pirates
+    - Content.Goobstation.Server/Pirates
+    - Resources/Locale/en-US/_Goobstation/_Pirates
+    - Resources/Prototypes/_Goobstation/_Pirates
+    - Resources/Textures/_Goobstation/_Pirates
   assessments:
   - covers:
     - frontier
@@ -5533,6 +5810,15 @@ features:
     - Resources/Prototypes/_Impstation/CosmicCult
     files: 17
     confidence: medium
+  - fork: trauma-station
+    local_name: Cosmic Cult
+    paths:
+    - Content.Trauma.Client/CosmicCult
+    - Content.Trauma.Common/CosmicCult
+    - Content.Trauma.Server/CosmicCult
+    - Content.Trauma.Shared/CosmicCult
+    files: 108
+    confidence: high
   carried_by:
   - fork: goobstation
     via: _DV
@@ -5570,6 +5856,15 @@ features:
     - Resources/Audio/_Starlight/CosmicCult
     - Resources/Prototypes/_Starlight/CosmicCult
     - Resources/Textures/_Starlight/CosmicCult
+  - fork: trauma-station
+    via: _DV
+    files: 567
+    paths:
+    - Resources/Audio/_DV/CosmicCult
+    - Resources/Locale/en-US/_DV/cosmiccult
+    - Resources/Maps/_DV/Nonstations/cosmicvoid.yml
+    - Resources/Prototypes/_DV/CosmicCult
+    - Resources/Textures/_DV/CosmicCult
   assessments:
   - covers:
     - deltav
@@ -5821,6 +6116,20 @@ features:
     - Content.Shared/Vampiric
     files: 8
     confidence: medium
+  - fork: trauma-station
+    local_name: Vampires
+    paths:
+    - Content.Trauma.Client/Vampires
+    - Content.Trauma.Common/Vampires
+    - Content.Trauma.Server/Vampires
+    - Content.Trauma.Shared/Vampires
+    - Resources/Audio/_Trauma/Vampires
+    - Resources/Locale/en-US/_Trauma/vampires
+    - Resources/Prototypes/_Trauma/Vampires
+    - Resources/Textures/_Trauma/Interface/Vampires
+    - Resources/Textures/_Trauma/Vampires
+    files: 201
+    confidence: high
   carried_by:
   - fork: far-horizons
     via: _Starlight (un-namespaced)
@@ -5962,6 +6271,20 @@ features:
     - Resources/Textures/_White/Mobs/Aliens
     files: 183
     confidence: high
+  - fork: trauma-station
+    local_name: Xenomorphs
+    paths:
+    - Content.Trauma.Client/Xenomorphs
+    - Content.Trauma.Common/Xenomorphs
+    - Content.Trauma.Server/Xenomorphs
+    - Content.Trauma.Shared/Xenomorph
+    - Content.Trauma.Shared/Xenomorphs
+    - Resources/Audio/_Trauma/Xenomorphs
+    - Resources/Locale/en-US/_Trauma/xenomorphs
+    - Resources/Prototypes/_Trauma/Xenomorphs
+    - Resources/Textures/_Trauma/Mobs/Xenos
+    files: 75
+    confidence: high
   carried_by:
   - fork: goobstation
     via: _White (sprites from _RMC14)
@@ -6012,6 +6335,20 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_White/Entities/Mobs
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _RMC14, _White, _white
+    files: 283
+    paths:
+    - Content.Goobstation.Shared/Xenomorph
+    - Resources/Audio/_RMC14/Xeno
+    - Resources/Audio/_White/Voice/Xenomorph
+    - Resources/Locale/en-US/_white/xenomorphs
+    - Resources/Prototypes/_White/Entities/Mobs
+    - Resources/Prototypes/_White/xenomorph_cast.yml
+    - Resources/Textures/_Goobstation/Mobs/Xenos
+    - Resources/Textures/_RMC14/Structures/Xenos
+    - Resources/Textures/_White/Interface/Xenomorph
+    - Resources/Textures/_White/Mobs/Aliens
   assessments:
   - covers:
     - rmc14
@@ -6124,6 +6461,20 @@ features:
     - Resources/Prototypes/_Starlight/Species/abductor.yml
     files: 29
     confidence: high
+  - fork: trauma-station
+    local_name: Abductors (incl. Content.Medical abductor surgery)
+    paths:
+    - Content.Medical.Client/Abductor
+    - Content.Medical.Server/Abductor
+    - Content.Medical.Shared/Abductor
+    - Content.Trauma.Client/Abductor
+    - Content.Trauma.Server/Abductor
+    - Content.Trauma.Shared/Abductor
+    - Resources/Locale/en-US/_Trauma/abductor
+    - Resources/Prototypes/_Trauma/Abductor
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/abductor.yml
+    files: 39
+    confidence: high
   carried_by:
   - fork: einstein-engines
     via: _Shitmed
@@ -6172,6 +6523,28 @@ features:
     - Content.Shared/_Starlight/Antags/Abductor
     - Resources/Prototypes/_Starlight/Roles/Antags/abductor.yml
     - Resources/Prototypes/_Starlight/Species/abductor.yml
+  - fork: trauma-station
+    via: _Shitmed
+    files: 49
+    paths:
+    - Resources/Prototypes/_Shitmed/Actions/abductor.yml
+    - Resources/Prototypes/_Shitmed/Datasets/Names/abductor.yml
+    - Resources/Prototypes/_Shitmed/Entities/Specific/Abductor
+    - Resources/Prototypes/_Shitmed/Entities/Structures/Specific/abductor_experimentator.yml
+    - Resources/Prototypes/_Shitmed/Entities/Structures/Specific/alien_pad.yml
+    - Resources/Prototypes/_Shitmed/GameRules/events.yml
+    - Resources/Prototypes/_Shitmed/Guidebook/antagonist.yml
+    - Resources/Prototypes/_Shitmed/Objectives
+    - Resources/Prototypes/_Shitmed/Roles/Antags
+    - Resources/Prototypes/_Shitmed/Species/abductor.yml
+    - Resources/Prototypes/_Shitmed/Tiles/abductor.yml
+    - Resources/Textures/_Shitmed/Effects/teleportation.rsi
+    - Resources/Textures/_Shitmed/Objects/Specific/Abductor
+    - Resources/Textures/_Shitmed/Structures/Machines/abductor_camera_console.rsi
+    - Resources/Textures/_Shitmed/Structures/Machines/abductor_console.rsi
+    - Resources/Textures/_Shitmed/Structures/abductor_alien_pad.rsi
+    - Resources/Textures/_Shitmed/Structures/abductor_experimentator.rsi
+    - Resources/Textures/_Shitmed/Tiles/abductor_tile.png
   assessments:
   - covers:
     - starlight
@@ -6313,6 +6686,27 @@ features:
     - Content.Shared/_Goobstation/Devil
     - Resources/Prototypes/_Goobstation/Devil
     - Resources/Textures/_Goobstation/Devil/devil_grip.rsi
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 101
+    paths:
+    - Content.Goobstation.Client/Devil
+    - Content.Goobstation.Server/Devil
+    - Content.Goobstation.Shared/Devil
+    - Resources/Audio/_Goobstation/Ambience/Antag
+    - Resources/Locale/en-US/_Goobstation/condemned
+    - Resources/Locale/en-US/_Goobstation/devil
+    - Resources/Locale/en-US/_Goobstation/devour
+    - Resources/Prototypes/_Goobstation/Actions/devil.yml
+    - Resources/Prototypes/_Goobstation/Devil
+    - Resources/Prototypes/_Goobstation/Effects/helldrag.yml
+    - Resources/Prototypes/_Goobstation/Effects/pentagram.yml
+    - Resources/Prototypes/_Goobstation/Entities/Effects
+    - Resources/Prototypes/_Goobstation/Entities/Mobs/NPCs/jaunt.yml
+    - Resources/Prototypes/_Goobstation/Objectives/devilObjectives.yml
+    - Resources/ServerInfo/_Goobstation/Guidebook/Antagonist
+    - Resources/Textures/_Goobstation/Actions/devil.rsi
+    - Resources/Textures/_Goobstation/Devil
   assessments:
   - covers:
     - goobstation
@@ -6422,6 +6816,17 @@ features:
     - Resources/Prototypes/_Gabystation/Heretic
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Heretic (paths, rituals, knowledge)
+    paths:
+    - Content.Trauma.Client/Heretic
+    - Content.Trauma.Common/Heretic
+    - Content.Trauma.Server/Heretic
+    - Content.Trauma.Shared/Heretic
+    - Resources/Locale/en-US/_Trauma/Heretic
+    - Resources/Prototypes/_Trauma/Heretic
+    files: 392
+    confidence: high
   carried_by:
   - fork: impstation
     via: _Goobstation
@@ -6461,6 +6866,15 @@ features:
     files: 1
     paths:
     - Resources/ServerInfo/_Impstation/Guidebook/Antagonist
+  - fork: trauma-station
+    via: _Goobstation
+    files: 648
+    paths:
+    - Content.IntegrationTests/Tests/_Goobstation/Heretic
+    - Resources/Audio/_Goobstation/Heretic
+    - Resources/Locale/en-US/_Goobstation/Heretic
+    - Resources/Prototypes/_Goobstation/Heretic
+    - Resources/Textures/_Goobstation/Heretic
   assessments:
   - covers:
     - gaby-station-now-dumont-station
@@ -6576,6 +6990,14 @@ features:
     - Resources/ServerInfo/_Backmen/Guidebook/Antagonist/Blob.xml
     files: 71
     confidence: high
+  - fork: trauma-station
+    local_name: Blob
+    paths:
+    - Content.Trauma.Server/Blob
+    - Resources/Locale/en-US/_Trauma/blob
+    - Resources/Prototypes/_Trauma/Blob
+    files: 4
+    confidence: medium
   carried_by:
   - fork: white-dream
     via: _Goobstation
@@ -6597,6 +7019,18 @@ features:
     - Content.Server/_Goobstation/Blob
     - Content.Shared/_Goobstation/Blob
     - Resources/Prototypes/_Goobstation/Blob
+    - Resources/Textures/_Goobstation/Blob
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 188
+    paths:
+    - Content.Goobstation.Client/Blob
+    - Content.Goobstation.Common/Blob
+    - Content.Goobstation.Server/Blob
+    - Content.Goobstation.Shared/Blob
+    - Resources/Locale/en-US/_Goobstation/blob
+    - Resources/Prototypes/_Goobstation/Blob
+    - Resources/ServerInfo/_Goobstation/Guidebook/Antagonist/Blob.xml
     - Resources/Textures/_Goobstation/Blob
   assessments:
   - covers:
@@ -7435,6 +7869,11 @@ features:
     - Resources/Prototypes/_Impstation/Catalog/revenant_catalog.yml
     - Resources/Prototypes/_Impstation/Entities/Objects/Specific/revenant.yml
     - Resources/Prototypes/_Impstation/SoundCollections/revenant.yml
+  - fork: trauma-station
+    via: _Impstation
+    files: 6
+    paths:
+    - Resources/Audio/_Impstation/Effects/Revenant
   assessments:
   - covers:
     - impstation
@@ -7548,6 +7987,17 @@ features:
   - fork: goobstation
     via: _EinsteinEngines (assets)
     files: 162
+    paths:
+    - Content.Goobstation.Client/Shadowling
+    - Content.Goobstation.Server/Shadowling
+    - Content.Goobstation.Shared/Shadowling
+    - Resources/Audio/_EinsteinEngines/Shadowling
+    - Resources/Audio/_Goobstation/Shadowling
+    - Resources/Locale/en-US/_EinsteinEngines/shadowling
+    - Resources/Textures/_EinsteinEngines/Shadowling
+  - fork: trauma-station
+    via: Content.Goobstation.*, _EinsteinEngines, _Goobstation
+    files: 156
     paths:
     - Content.Goobstation.Client/Shadowling
     - Content.Goobstation.Server/Shadowling
@@ -7748,6 +8198,19 @@ features:
     - Resources/Prototypes/_Starlight/Roles/Antags/revolutionary.yml
     files: 7
     confidence: medium
+  - fork: trauma-station
+    local_name: Revolution rework (rev gear, mindshield)
+    paths:
+    - Content.Trauma.Common/Mindshield
+    - Content.Trauma.Server/Revolutionary
+    - Content.Trauma.Shared/Mindshield
+    - Content.Trauma.Shared/Revolutionary
+    - Resources/Audio/_Trauma/Revs
+    - Resources/Prototypes/_Trauma/Entities/Objects/Revs
+    - Resources/Textures/_Trauma/Objects/Misc/revcuffs.rsi
+    - Resources/Textures/_Trauma/Objects/Revs
+    files: 146
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight
@@ -7849,6 +8312,12 @@ features:
     - Content.Shared/SS220/Ninja
     files: 13
     confidence: medium
+  - fork: trauma-station
+    local_name: Zombie tweak
+    paths:
+    - Content.Trauma.Server/Zombies
+    files: 1
+    confidence: low
   carried_by:
   - fork: far-horizons
     via: _Starlight, _Afterlight
@@ -8403,6 +8872,44 @@ features:
     - Resources/Textures/_Viva/Objects/Fun/toys.rsi/plushie_bvulp.png
     files: 6
     confidence: high
+  - fork: trauma-station
+    local_name: Objects, tools, materials, misc items
+    paths:
+    - Content.Trauma.Client/Tools
+    - Content.Trauma.Shared/Tools
+    - Resources/Locale/en-US/_Trauma/prototypes/entity/objects
+    - Resources/Locale/en-US/_Trauma/prototypes/entity/security
+    - Resources/Locale/en-US/_Trauma/tools
+    - Resources/Prototypes/_Trauma/Entities/Fun
+    - Resources/Prototypes/_Trauma/Entities/Objects/Fun
+    - Resources/Prototypes/_Trauma/Entities/Objects/Misc
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Security
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Service
+    - Resources/Prototypes/_Trauma/Entities/Objects/Tools
+    - Resources/Prototypes/_Trauma/Entities/Specific
+    - Resources/Prototypes/_Trauma/Partials/Entities/Objects
+    - Resources/Prototypes/_Trauma/tool-qualities.yml
+    - Resources/Textures/_Trauma/Objects/Devices/Holoprojector
+    - Resources/Textures/_Trauma/Objects/Devices/communication.rsi
+    - Resources/Textures/_Trauma/Objects/Devices/device_remote.rsi
+    - Resources/Textures/_Trauma/Objects/Devices/encryption_keys.rsi
+    - Resources/Textures/_Trauma/Objects/Devices/fusionCore.rsi
+    - Resources/Textures/_Trauma/Objects/Devices/gates.rsi
+    - Resources/Textures/_Trauma/Objects/Devices/tablets.rsi
+    - Resources/Textures/_Trauma/Objects/Fun
+    - Resources/Textures/_Trauma/Objects/Materials
+    - Resources/Textures/_Trauma/Objects/Misc/ashpile.rsi
+    - Resources/Textures/_Trauma/Objects/Misc/cuffs_barbwire.rsi
+    - Resources/Textures/_Trauma/Objects/Misc/emergency_vapor.rsi
+    - Resources/Textures/_Trauma/Objects/Misc/gore.rsi
+    - Resources/Textures/_Trauma/Objects/Misc/id_cards.rsi
+    - Resources/Textures/_Trauma/Objects/Misc/thunder-cloud.rsi
+    - Resources/Textures/_Trauma/Objects/Misc/unfinished_knit_balaclava.rsi
+    - Resources/Textures/_Trauma/Objects/Specific/Tools
+    - Resources/Textures/_Trauma/Objects/Storage
+    - Resources/Textures/_Trauma/Objects/Tools
+    files: 452
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight (partial)
@@ -8745,6 +9252,39 @@ features:
     - Resources/Textures/_FarHorizons/Objects/Devices/Holoprojectors
     - Resources/Textures/_MACRO/Objects/Consumable
     - Resources/Textures/_MACRO/Objects/Storage/boxes.rsi
+  - fork: trauma-station
+    via: _Corvax, _DV, _FarHorizons, _Goobstation, _Impstation, _Mono, _NF, _RMC14, _Shitmed
+    files: 2751
+    paths:
+    - Resources/Audio/_DV/Items
+    - Resources/Audio/_Impstation/Items
+    - Resources/Locale/en-US/_DV/tools
+    - Resources/Locale/en-US/_Goobstation/datasets/figurines.ftl
+    - Resources/Locale/en-US/_Goobstation/item
+    - Resources/Prototypes/_DV/Actions
+    - Resources/Prototypes/_DV/Entities/Objects
+    - Resources/Prototypes/_FarHorizons/Entities/Objects
+    - Resources/Prototypes/_Goobstation/Datasets/figurines.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Fun
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Misc
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Medical
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Misc
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Tools
+    - Resources/Prototypes/_Goobstation/Objects
+    - Resources/Prototypes/_Mono/Entities/Objects/Devices
+    - Resources/Prototypes/_NF/Entities/Objects
+    - Resources/Prototypes/_Shitmed/Entities/Objects
+    - Resources/Textures/_Corvax/Objects
+    - Resources/Textures/_DV/Actions
+    - Resources/Textures/_DV/Misc
+    - Resources/Textures/_DV/Objects
+    - Resources/Textures/_FarHorizons/Objects
+    - Resources/Textures/_Goobstation/Objects
+    - Resources/Textures/_Mono/Objects/Devices
+    - Resources/Textures/_NF/Objects
+    - Resources/Textures/_RMC14/Objects
+    - Resources/Textures/_Shitmed/Objects/Misc
+    - Resources/Textures/_Shitmed/Objects/Weapons
 - id: clothing-and-wardrobe-pack
   name: Clothing and wardrobe pack
   category: art
@@ -8952,6 +9492,20 @@ features:
     - Resources/Textures/EstacaoPirata/Clothing/Uniforms/Jumpsuit
     files: 91
     confidence: high
+  - fork: trauma-station
+    local_name: Clothing
+    paths:
+    - Content.Trauma.Common/Armor
+    - Content.Trauma.Common/Clothing
+    - Content.Trauma.Shared/Armor
+    - Content.Trauma.Shared/Clothing
+    - Resources/Locale/en-US/_Trauma/armor
+    - Resources/Locale/en-US/_Trauma/clothing
+    - Resources/Prototypes/_Trauma/Entities/Clothing
+    - Resources/Prototypes/_Trauma/Partials/Entities/Clothing
+    - Resources/Textures/_Trauma/Clothing
+    files: 281
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight, _Funkystation, _TP
@@ -9165,6 +9719,30 @@ features:
     - Resources/Prototypes/_Funkystation/Entities/Clothing
     - Resources/Textures/_Funkystation/Clothing
     - Resources/Textures/_Funkystation/Objects/Weapons
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _Goobstation, _Lavaland, _Mono, _NF, _Shitmed, _White
+    files: 1530
+    paths:
+    - Content.Goobstation.Client/Clothing
+    - Content.Goobstation.Common/Clothing
+    - Content.Goobstation.Server/Clothing
+    - Content.Goobstation.Shared/Clothing
+    - Resources/Locale/en-US/_Goobstation/accessories
+    - Resources/Locale/en-US/_Goobstation/clothing
+    - Resources/Prototypes/_DV/Entities/Clothing
+    - Resources/Prototypes/_Goobstation/Entities/Clothing
+    - Resources/Prototypes/_Mono/Entities/Clothing
+    - Resources/Prototypes/_NF/Entities/Clothing
+    - Resources/Prototypes/_Shitmed/Clothing
+    - Resources/Prototypes/_Shitmed/Entities/Clothing
+    - Resources/Prototypes/_White/Entities/Clothing
+    - Resources/Textures/_DV/Clothing
+    - Resources/Textures/_Goobstation/Clothing
+    - Resources/Textures/_Lavaland/Equipment
+    - Resources/Textures/_Mono/Clothing
+    - Resources/Textures/_NF/Clothing
+    - Resources/Textures/_Shitmed/Clothing
+    - Resources/Textures/_White/Clothing
 - id: interface-and-audio-pack
   name: Interface skin and audio pack
   category: art
@@ -9403,6 +9981,53 @@ features:
     - Resources/Textures/_MACRO/Logo/logo.png
     files: 10
     confidence: high
+  - fork: trauma-station
+    local_name: Interface, lobby, music, ambience, end credits
+    paths:
+    - Content.Trauma.Client/AudioMuffle
+    - Content.Trauma.Client/RoundEndCredits
+    - Content.Trauma.Client/Stylesheets
+    - Content.Trauma.Client/UserInterface
+    - Content.Trauma.Common/Stylesheets
+    - Content.Trauma.Server/AudioMuffle
+    - Content.Trauma.Shared/AudioMuffle
+    - Content.Trauma.Shared/UserInterface
+    - Resources/Audio/_Trauma/Actions
+    - Resources/Audio/_Trauma/Ambience
+    - Resources/Audio/_Trauma/Effects
+    - Resources/Audio/_Trauma/Footsteps
+    - Resources/Audio/_Trauma/Jukebox
+    - Resources/Audio/_Trauma/Lobby
+    - Resources/Audio/_Trauma/Misc
+    - Resources/Audio/_Trauma/Music
+    - Resources/Audio/_Trauma/RadioStation
+    - Resources/Audio/_Trauma/Specific
+    - Resources/Audio/_Trauma/Tools
+    - Resources/Fonts/_Trauma
+    - Resources/Locale/en-US/_Trauma/credits
+    - Resources/Locale/en-US/_Trauma/escape-menu
+    - Resources/Locale/en-US/_Trauma/lobby
+    - Resources/Prototypes/_Trauma/Audio
+    - Resources/Prototypes/_Trauma/Catalog/Jukebox
+    - Resources/Prototypes/_Trauma/Parallaxes
+    - Resources/Prototypes/_Trauma/Partials/SoundCollections
+    - Resources/Prototypes/_Trauma/Shaders
+    - Resources/Prototypes/_Trauma/SoundCollections
+    - Resources/Prototypes/_Trauma/lobbyscreens.yml
+    - Resources/Textures/_Trauma/EndCredits
+    - Resources/Textures/_Trauma/Interface/Actions
+    - Resources/Textures/_Trauma/Interface/Alerts/HolyFire
+    - Resources/Textures/_Trauma/Interface/Alerts/counterattack.rsi
+    - Resources/Textures/_Trauma/Interface/Alerts/parry.rsi
+    - Resources/Textures/_Trauma/Interface/Misc
+    - Resources/Textures/_Trauma/Interface/VerbIcons
+    - Resources/Textures/_Trauma/Interface/attributions.yml
+    - Resources/Textures/_Trauma/Interface/brown_ice_by_darkwood67.jpg
+    - Resources/Textures/_Trauma/Interface/target_doll.png
+    - Resources/Textures/_Trauma/LobbyScreens
+    - Resources/Textures/_Trauma/Shaders
+    files: 253
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight, _CD, _RMC14
@@ -9737,6 +10362,29 @@ features:
     - Resources/Audio/_MACRO/Effects
     - Resources/Prototypes/_Funkystation/Catalog/Jukebox/funky_jukebox.yml
     - Resources/Prototypes/_MACRO/SoundCollections
+  - fork: trauma-station
+    via: _DV, _Goobstation, _Impstation, _Mono, _RMC14, _Starfall, _White, _white
+    files: 236
+    paths:
+    - Resources/Audio/_Goobstation/Ambience
+    - Resources/Audio/_Goobstation/Interface
+    - Resources/Audio/_Goobstation/Music
+    - Resources/Audio/_Mono/Effects
+    - Resources/Audio/_Mono/Weapons
+    - Resources/Locale/en-US/_Starfall/escape-menu
+    - Resources/Locale/en-US/_white/escape-menu
+    - Resources/Prototypes/_DV/shaders.yml
+    - Resources/Prototypes/_Goobstation/Palettes
+    - Resources/Prototypes/_Goobstation/fonts.yml
+    - Resources/Prototypes/_Goobstation/themes.yml
+    - Resources/Prototypes/_Mono/SoundCollections
+    - Resources/Prototypes/_RMC14/Audio
+    - Resources/Prototypes/_White/hud.yml
+    - Resources/Prototypes/_White/themes.yml
+    - Resources/Textures/_DV/Interface
+    - Resources/Textures/_DV/Shaders
+    - Resources/Textures/_Goobstation/Interface
+    - Resources/Textures/_Impstation/Interface
 - id: station-and-environment-art
   name: Station and environment art
   category: art
@@ -10067,6 +10715,30 @@ features:
     - Resources/Textures/_Funkystation/Structures
     - Resources/Textures/_Goobstation/Structures
     files: 188
+    confidence: medium
+  - fork: trauma-station
+    local_name: Structures, decals, tiles and area art
+    paths:
+    - Resources/Locale/en-US/_Trauma/structures
+    - Resources/Prototypes/_Trauma/Decals
+    - Resources/Prototypes/_Trauma/Entities/Structures
+    - Resources/Prototypes/_Trauma/Entities/decal.yml
+    - Resources/Prototypes/_Trauma/Partials/Entities/Structures
+    - Resources/Prototypes/_Trauma/Partials/Tiles
+    - Resources/Prototypes/_Trauma/Tiles
+    - Resources/Textures/_Trauma/Areas
+    - Resources/Textures/_Trauma/Decals
+    - Resources/Textures/_Trauma/Structures/Defences
+    - Resources/Textures/_Trauma/Structures/Doors
+    - Resources/Textures/_Trauma/Structures/Holo
+    - Resources/Textures/_Trauma/Structures/Machines
+    - Resources/Textures/_Trauma/Structures/Storage
+    - Resources/Textures/_Trauma/Structures/Wallmounts
+    - Resources/Textures/_Trauma/Structures/Walls
+    - Resources/Textures/_Trauma/Structures/insulation.rsi
+    - Resources/Textures/_Trauma/Structures/spiders.rsi
+    - Resources/Textures/_Trauma/Tiles
+    files: 862
     confidence: medium
   carried_by:
   - fork: einstein-engines
@@ -10450,6 +11122,44 @@ features:
     - Resources/Prototypes/_MACRO/Decals/pathfind.yml
     - Resources/Textures/_MACRO/Decals/floor_signs.rsi
     - Resources/Textures/_MACRO/Decals/pathfind.rsi
+  - fork: trauma-station
+    via: _Corvax, _CorvaxGoob, _DV, _FarHorizons, _Goobstation, _Mono, _NF, _RMC14, _Shitmed, _SimpleStation,
+      _Starlight, _White
+    files: 1081
+    paths:
+    - Resources/Audio/_RMC14/Structures
+    - Resources/Prototypes/_Corvax/Decals
+    - Resources/Prototypes/_Corvax/Tiles
+    - Resources/Prototypes/_DV/Entities/Structures
+    - Resources/Prototypes/_FarHorizons/Entities/Structures
+    - Resources/Prototypes/_Goobstation/Entities/Structures
+    - Resources/Prototypes/_Goobstation/Tiles
+    - Resources/Prototypes/_Mono/Entities/Structures
+    - Resources/Prototypes/_NF/Entities/Structures
+    - Resources/Prototypes/_Shitmed/Entities/Structures/Computers
+    - Resources/Prototypes/_Shitmed/Entities/Structures/Furniture
+    - Resources/Prototypes/_Shitmed/Entities/Structures/Tables
+    - Resources/Prototypes/_Shitmed/Entities/Structures/Walls
+    - Resources/Prototypes/_White/Entities/Structures/Doors
+    - Resources/Prototypes/_White/Entities/Structures/Furniture
+    - Resources/Textures/_Corvax/Decals
+    - Resources/Textures/_Corvax/Tiles
+    - Resources/Textures/_CorvaxGoob/Structures
+    - Resources/Textures/_FarHorizons/Structures
+    - Resources/Textures/_FarHorizons/Tiles
+    - Resources/Textures/_Goobstation/Structures
+    - Resources/Textures/_Goobstation/Tiles
+    - Resources/Textures/_Mono/Structures
+    - Resources/Textures/_NF/Structures
+    - Resources/Textures/_RMC14/Structures
+    - Resources/Textures/_Shitmed/Structures/Furniture
+    - Resources/Textures/_Shitmed/Structures/Tables
+    - Resources/Textures/_Shitmed/Structures/Walls
+    - Resources/Textures/_SimpleStation/Structures
+    - Resources/Textures/_Starlight/Structures
+    - Resources/Textures/_White/Structures/Furniture
+    - Resources/Textures/_White/Structures/Walls
+    - Resources/Textures/_White/Structures/Windows
 - id: announcer-voice-packs
   name: Announcer voice packs
   category: art
@@ -10615,6 +11325,14 @@ features:
     files: 8
     paths:
     - Resources/Audio/Corvax/Announcements
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 22
+    paths:
+    - Content.Goobstation.Shared/Hailer
+    - Resources/Audio/_Goobstation/Announcements
+    - Resources/Audio/_Goobstation/Hailer
+    - Resources/Locale/en-US/_Goobstation/alert-levels
   assessments:
   - covers:
     - corvax
@@ -10791,6 +11509,12 @@ features:
     - Resources/Prototypes/_Mono/Atmospherics
     files: 8
     confidence: high
+  - fork: trauma-station
+    local_name: Phoron locale
+    paths:
+    - Resources/Locale/en-US/_Trauma/phoron
+    files: 1
+    confidence: low
   carried_by:
   - fork: starfall-drift
     via: _Funkystation
@@ -10884,6 +11608,13 @@ features:
     paths:
     - Resources/Locale/en-US/_ES/gases
     - Resources/Prototypes/_ES/Atmospherics
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 8
+    paths:
+    - Content.Goobstation.Server/Atmos
+    - Content.Goobstation.Shared/Atmos
+    - Resources/Prototypes/_Goobstation/Atmospherics
   assessments:
   - covers:
     - funky
@@ -11367,6 +12098,22 @@ features:
     - Resources/Textures/Backmen/Effects/spacewind.rsi
     files: 3
     confidence: medium
+  - fork: trauma-station
+    local_name: Atmos tweaks
+    paths:
+    - Content.Trauma.Client/SelfExtinguisher
+    - Content.Trauma.Client/Temperature
+    - Content.Trauma.Common/Atmos
+    - Content.Trauma.Server/Atmos
+    - Content.Trauma.Server/SelfExtinguisher
+    - Content.Trauma.Server/SpawnGasOnGib
+    - Content.Trauma.Shared/SelfExtinguisher
+    - Content.Trauma.Shared/Temperature
+    - Resources/Locale/en-US/_Trauma/atmos
+    - Resources/Locale/en-US/_Trauma/gases
+    - Resources/Textures/_Trauma/Effects/atmospherics.rsi
+    files: 27
+    confidence: low
   carried_by:
   - fork: the-den
     via: _EE, _Goobstation
@@ -11542,6 +12289,15 @@ features:
     - Content.Server/TimeCycle
     - Content.Shared/TimeCycle
     files: 3
+    confidence: medium
+  - fork: trauma-station
+    local_name: Weather
+    paths:
+    - Content.Trauma.Server/Weather
+    - Content.Trauma.Shared/Weather
+    - Resources/Locale/en-US/_Trauma/weather
+    - Resources/Textures/_Trauma/Effects/weather.rsi
+    files: 10
     confidence: medium
   carried_by: []
   assessments:
@@ -12038,6 +12794,24 @@ features:
     - Resources/Prototypes/_Viva/Catalog/Fills/Crates/security.yml
     files: 2
     confidence: high
+  - fork: trauma-station
+    local_name: Vending machines, fills and entity tables
+    paths:
+    - Content.Trauma.Client/VendingMachines
+    - Content.Trauma.Common/VendingMachines
+    - Content.Trauma.Server/VendingMachines
+    - Content.Trauma.Shared/EntityTable
+    - Content.Trauma.Shared/VendingMachines
+    - Resources/Locale/en-US/_Trauma/prototypes/catalog/armory.ftl
+    - Resources/Prototypes/_Trauma/Catalog/Fills
+    - Resources/Prototypes/_Trauma/Catalog/Mobs
+    - Resources/Prototypes/_Trauma/Catalog/VendingMachines
+    - Resources/Prototypes/_Trauma/Catalog/books.yml
+    - Resources/Prototypes/_Trauma/Catalog/scarves.yml
+    - Resources/Prototypes/_Trauma/Partials/Catalog
+    - Resources/Prototypes/_Trauma/Partials/VendingMachines
+    files: 52
+    confidence: medium
   carried_by:
   - fork: frontier
     via: _DV
@@ -12183,6 +12957,20 @@ features:
     - Resources/Prototypes/_MACRO/Entities/Objects/Storage/costumes.yml
     - Resources/Prototypes/_MACRO/Entities/Objects/Storage/costumes_job.yml
     - Resources/Textures/_MACRO/Objects/Storage/costume_bundle.rsi
+  - fork: trauma-station
+    via: _DV, _FarHorizons, _Goobstation, _Lavaland, _NF, _Shitmed, _White
+    files: 82
+    paths:
+    - Resources/Locale/en-US/_DV/vending-machines
+    - Resources/Locale/en-US/_Goobstation/advertisements
+    - Resources/Prototypes/_DV/Catalog
+    - Resources/Prototypes/_FarHorizons/Catalog
+    - Resources/Prototypes/_Goobstation/Catalog
+    - Resources/Prototypes/_Shitmed/Catalog
+    - Resources/Prototypes/_White/Catalog
+    - Resources/Textures/_DV/Objects/Storage/boxes.rsi
+    - Resources/Textures/_Lavaland/Structures/VendingMachines
+    - Resources/Textures/_NF/Structures/Machines
   assessments:
   - covers:
     - ephemeral-space
@@ -13303,6 +14091,22 @@ features:
     - Resources/Prototypes/_Gabystation/NTR
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Job listings (side jobs) and cargo
+    paths:
+    - Content.Trauma.Client/JobListings
+    - Content.Trauma.Common/Cargo
+    - Content.Trauma.Common/JobListings
+    - Content.Trauma.Server/JobListings
+    - Content.Trauma.Shared/Cargo
+    - Content.Trauma.Shared/JobListings
+    - Resources/Locale/en-US/_Trauma/cargo
+    - Resources/Locale/en-US/_Trauma/job-listings
+    - Resources/Prototypes/_Trauma/Catalog/Cargo
+    - Resources/Prototypes/_Trauma/Catalog/pods.yml
+    - Resources/Prototypes/_Trauma/Entities/JobListings
+    files: 68
+    confidence: low
   carried_by:
   - fork: frontier
     via: _Goobstation
@@ -13372,6 +14176,15 @@ features:
     paths:
     - Content.Shared/_NF/Cargo
     - Resources/Prototypes/_DV/Catalog/Cargo
+  - fork: trauma-station
+    via: _Goobstation
+    files: 26
+    paths:
+    - Resources/Audio/_Goobstation/DropPod
+    - Resources/Prototypes/_Goobstation/Admin_shit/droppods.yml
+    - Resources/Prototypes/_Goobstation/Catalog/Cargo
+    - Resources/Prototypes/_Goobstation/SoundCollections/siren.yml
+    - Resources/Textures/_Goobstation/Objects/Specific/DropPod
   assessments:
   - covers:
     - rmc14
@@ -13827,6 +14640,13 @@ features:
     - Resources/Locale/en-US/_white/ghost
     files: 5
     confidence: medium
+  - fork: trauma-station
+    local_name: Server currency
+    paths:
+    - Resources/Locale/en-US/_Trauma/servercurrency
+    - Resources/Prototypes/_Trauma/ServerCurrency
+    files: 2
+    confidence: low
   carried_by:
   - fork: far-horizons
     via: _Starlight
@@ -13855,6 +14675,15 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_Mono/Catalogs
+  - fork: trauma-station
+    via: Content.Goobstation.*, _white
+    files: 14
+    paths:
+    - Content.Goobstation.Client/ServerCurrency
+    - Content.Goobstation.Common/ServerCurrency
+    - Content.Goobstation.Server/ServerCurrency
+    - Content.Goobstation.Shared/ServerCurrency
+    - Resources/Locale/en-US/_white/ghost
   assessments:
   - covers:
     - forky
@@ -14261,6 +15090,13 @@ features:
     - Resources/Prototypes/_Mono/Mail/mail.yml
     files: 1
     confidence: low
+  - fork: trauma-station
+    local_name: Mail / deliveries
+    paths:
+    - Content.Trauma.Shared/Mail
+    - Resources/Prototypes/_Trauma/Entities/Objects/Deliveries
+    files: 5
+    confidence: medium
   carried_by:
   - fork: estacao-pirata
     via: Nyanotrasen
@@ -14300,6 +15136,13 @@ features:
     via: _NF
     files: 1
     paths:
+    - Resources/Prototypes/_NF/Mail
+  - fork: trauma-station
+    via: _NF
+    files: 5
+    paths:
+    - Resources/Locale/en-US/_NF/mail
+    - Resources/Prototypes/_NF/Entities/Objects/Misc/mail_capsule.yml
     - Resources/Prototypes/_NF/Mail
   assessments:
   - covers:
@@ -15008,6 +15851,13 @@ features:
     files: 3
     paths:
     - Content.Client/_DV/Salvage
+  - fork: trauma-station
+    via: _DV, _Goobstation
+    files: 4
+    paths:
+    - Resources/Locale/en-US/_DV/salvage
+    - Resources/Prototypes/_DV/Catalog/mining_voucher.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/mining_voucher.yml
   assessments:
   - covers:
     - deltav
@@ -15171,6 +16021,73 @@ features:
     - Resources/Prototypes/_FarHorizons/Entities/Mobs/Bosses
     files: 31
     confidence: high
+  - fork: trauma-station
+    local_name: Content.Lavaland (project-split rewrite of Goob's _Lavaland) plus salvage points
+    paths:
+    - Content.Lavaland.Client/Audio
+    - Content.Lavaland.Client/Content.Lavaland.Client.csproj
+    - Content.Lavaland.Client/Entry
+    - Content.Lavaland.Client/GlobalUsings.cs
+    - Content.Lavaland.Client/Pressure
+    - Content.Lavaland.Client/Shuttles
+    - Content.Lavaland.Client/Weapons
+    - Content.Lavaland.Common/Chasm
+    - Content.Lavaland.Common/Content.Lavaland.Common.csproj
+    - Content.Lavaland.Common/Entry
+    - Content.Lavaland.Common/GlobalUsings.cs
+    - Content.Lavaland.Common/Mining
+    - Content.Lavaland.Common/Mobs
+    - Content.Lavaland.Common/Procedural
+    - Content.Lavaland.Common/Shuttles
+    - Content.Lavaland.Common/Weapons
+    - Content.Lavaland.Server/Audio
+    - Content.Lavaland.Server/Biome
+    - Content.Lavaland.Server/Commands
+    - Content.Lavaland.Server/Content.Lavaland.Server.csproj
+    - Content.Lavaland.Server/EntityConditions
+    - Content.Lavaland.Server/Entry
+    - Content.Lavaland.Server/GlobalUsings.cs
+    - Content.Lavaland.Server/Megafauna
+    - Content.Lavaland.Server/Mobs
+    - Content.Lavaland.Server/Pressure
+    - Content.Lavaland.Server/Procedural
+    - Content.Lavaland.Server/Salvage
+    - Content.Lavaland.Server/Shuttles
+    - Content.Lavaland.Server/Tendril
+    - Content.Lavaland.Server/TileChaser
+    - Content.Lavaland.Server/Weapons
+    - Content.Lavaland.Shared/Aggression
+    - Content.Lavaland.Shared/Anger
+    - Content.Lavaland.Shared/Audio
+    - Content.Lavaland.Shared/Body
+    - Content.Lavaland.Shared/CCVar
+    - Content.Lavaland.Shared/Chasm
+    - Content.Lavaland.Shared/Content.Lavaland.Shared.csproj
+    - Content.Lavaland.Shared/Damage
+    - Content.Lavaland.Shared/EntityConditions
+    - Content.Lavaland.Shared/EntityShapes
+    - Content.Lavaland.Shared/Entry
+    - Content.Lavaland.Shared/GlobalUsings.cs
+    - Content.Lavaland.Shared/Megafauna
+    - Content.Lavaland.Shared/MobPhases
+    - Content.Lavaland.Shared/Movement
+    - Content.Lavaland.Shared/OreBag
+    - Content.Lavaland.Shared/Pressure
+    - Content.Lavaland.Shared/Procedural
+    - Content.Lavaland.Shared/Shelter
+    - Content.Lavaland.Shared/Shuttles
+    - Content.Lavaland.Shared/Spawners
+    - Content.Lavaland.Shared/TileChaser
+    - Content.Lavaland.Shared/Trigger
+    - Content.Lavaland.Shared/Weapons
+    - Content.Trauma.Client/Salvage
+    - Content.Trauma.Common/Mining
+    - Content.Trauma.Common/Salvage
+    - Content.Trauma.Server/Salvage
+    - Content.Trauma.Shared/Salvage
+    - Resources/Prototypes/_Trauma/Partials/ore.yml
+    files: 210
+    confidence: high
   carried_by:
   - fork: white-dream
     via: _Lavaland
@@ -15244,6 +16161,11 @@ features:
     files: 1
     paths:
     - Resources/Maps/_FarHorizons/Dungeon
+  - fork: trauma-station
+    via: _Goobstation
+    files: 1
+    paths:
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/mining_voucher.yml
   assessments:
   - covers:
     - far-horizons
@@ -15478,6 +16400,23 @@ features:
     - Resources/Prototypes/_MACRO/Reagents/toxins.yml
     files: 10
     confidence: high
+  - fork: trauma-station
+    local_name: Reagents and reactions
+    paths:
+    - Content.Trauma.Common/Chemistry
+    - Content.Trauma.Common/Reagents
+    - Content.Trauma.Server/Chemistry
+    - Content.Trauma.Shared/Chemistry
+    - Resources/Locale/en-US/_Trauma/reagents
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Chemistry
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/chemistry-bottles.yml
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/chemistry-vials.yml
+    - Resources/Prototypes/_Trauma/Partials/Reagents
+    - Resources/Prototypes/_Trauma/Reagents
+    - Resources/Prototypes/_Trauma/Recipes/Reactions
+    - Resources/Prototypes/_Trauma/Solutions
+    files: 50
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight, _Funkystation
@@ -15729,6 +16668,26 @@ features:
     files: 3
     paths:
     - Resources/Locale/en-US/_ES/reagents
+  - fork: trauma-station
+    via: Content.Goobstation.*, _FarHorizons, _Goobstation, _NF, _RMC14
+    files: 66
+    paths:
+    - Content.Goobstation.Client/Chemistry
+    - Content.Goobstation.Common/Chemistry
+    - Content.Goobstation.Common/Solutions
+    - Content.Goobstation.Server/Chemistry
+    - Content.Goobstation.Shared/Chemistry
+    - Resources/Locale/en-US/_Goobstation/reagents
+    - Resources/Locale/en-US/_NF/reagents
+    - Resources/Prototypes/_FarHorizons/Reagents
+    - Resources/Prototypes/_Goobstation/Chemistry
+    - Resources/Prototypes/_Goobstation/Flavors
+    - Resources/Prototypes/_Goobstation/Polymorphs
+    - Resources/Prototypes/_Goobstation/Reagents
+    - Resources/Prototypes/_Goobstation/Recipes/Reactions
+    - Resources/Prototypes/_NF/Reagents
+    - Resources/Prototypes/_NF/Recipes/Reactions
+    - Resources/Prototypes/_RMC14/Reagents
   assessments:
   - covers:
     - rmc14
@@ -16379,6 +17338,16 @@ features:
     - Resources/ServerInfo/_Starlight/Guidebook/Engineering/PlumbingMachines.xml
     files: 59
     confidence: high
+  - fork: trauma-station
+    local_name: Factory plumbing and ChemiCompiler
+    paths:
+    - Content.Factory.Client/Plumbing
+    - Content.Factory.Shared/Plumbing
+    - Content.Trauma.Client/ChemiCompiler
+    - Content.Trauma.Server/ChemiCompiler
+    - Content.Trauma.Shared/ChemiCompiler
+    files: 15
+    confidence: medium
   carried_by: []
   assessments:
   - covers:
@@ -16671,6 +17640,35 @@ features:
     - Resources/Textures/_Viva/Objects/Weapons/ksm-5000.rsi/meta.json
     files: 10
     confidence: high
+  - fork: trauma-station
+    local_name: Guns, projectiles, grenades
+    paths:
+    - Content.Trauma.Client/Multhit
+    - Content.Trauma.Client/Projectiles
+    - Content.Trauma.Client/Weapons
+    - Content.Trauma.Common/Projectiles
+    - Content.Trauma.Common/Weapons
+    - Content.Trauma.Server/Bulletholes
+    - Content.Trauma.Server/Multihit
+    - Content.Trauma.Server/Projectiles
+    - Content.Trauma.Server/Weapons
+    - Content.Trauma.Shared/Multihit
+    - Content.Trauma.Shared/Projectiles
+    - Content.Trauma.Shared/Weapons
+    - Resources/Audio/_Trauma/Weapons
+    - Resources/Locale/en-US/_Trauma/launcher
+    - Resources/Locale/en-US/_Trauma/prototypes/entity/weapons
+    - Resources/Locale/en-US/_Trauma/weapons
+    - Resources/Prototypes/_Trauma/Entities/Objects/Weapons/Bombs
+    - Resources/Prototypes/_Trauma/Entities/Objects/Weapons/Guns
+    - Resources/Prototypes/_Trauma/Entities/Objects/Weapons/Throwable
+    - Resources/Prototypes/_Trauma/Entities/Objects/Weapons/classes.yml
+    - Resources/Textures/_Trauma/Objects/Devices/bombcomponents.rsi
+    - Resources/Textures/_Trauma/Objects/Weapons/Grenades
+    - Resources/Textures/_Trauma/Objects/Weapons/Guns
+    - Resources/Textures/_Trauma/Objects/Weapons/Throwable
+    files: 467
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight, _RMC14
@@ -16862,6 +17860,28 @@ features:
     - Resources/Audio/_Funkystation/Weapons
     - Resources/Prototypes/_Funkystation/Entities/Objects/Weapons
     - Resources/Prototypes/_Funkystation/SoundCollections/hit_impacts.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _Impstation, _NF, _RMC14, _White
+    files: 1161
+    paths:
+    - Content.Goobstation.Client/AmmoSelector
+    - Content.Goobstation.Client/Weapons/LaserPointer
+    - Content.Goobstation.Common/Weapons
+    - Content.Goobstation.Server/Weapons
+    - Content.Goobstation.Shared/Weapons
+    - Resources/Audio/_DV/Weapons
+    - Resources/Audio/_Goobstation/Weapons
+    - Resources/Locale/en-US/_Goobstation/weapons
+    - Resources/Locale/en-US/_Impstation/weapons
+    - Resources/Prototypes/_DV/Entities/Objects/Weapons
+    - Resources/Prototypes/_FarHorizons/Entities/Structures/Machines/Computers/nav_map_blips.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects
+    - Resources/Prototypes/_NF/Entities/Objects/Weapons
+    - Resources/Prototypes/_White/Entities/Objects/Weapons/Guns
+    - Resources/Textures/_DV/Objects/Weapons
+    - Resources/Textures/_Goobstation/Objects/Weapons
+    - Resources/Textures/_NF/Objects/Weapons
+    - Resources/Textures/_RMC14/Effects/bulletholes.rsi
   assessments:
   - covers:
     - ephemeral-space
@@ -17101,6 +18121,21 @@ features:
     - Content.Shared/_Starlight/Weapons/Melee
     files: 4
     confidence: medium
+  - fork: trauma-station
+    local_name: Melee weapons, parry and blocking
+    paths:
+    - Content.Trauma.Common/Blocking
+    - Content.Trauma.Shared/Blocking
+    - Content.Trauma.Shared/Parry
+    - Content.Trauma.Shared/ReactiveArmour
+    - Content.Trauma.Shared/TelescopicBaton
+    - Resources/Locale/en-US/_Trauma/blocking
+    - Resources/Locale/en-US/_Trauma/parry
+    - Resources/Prototypes/_Trauma/Entities/Objects/Weapons/Melee
+    - Resources/Prototypes/_Trauma/Entities/Objects/Weapons/Shields
+    - Resources/Textures/_Trauma/Objects/Weapons/Melee
+    files: 135
+    confidence: medium
   carried_by:
   - fork: backmen
     via: _Ataraxia, _White, _Goobstation
@@ -17162,6 +18197,21 @@ features:
     - Resources/Prototypes/_DV/Entities/Objects/Misc/improvised_gun_parts.yml
     - Resources/Prototypes/_Mono/Entities/Objects/Weapons/Melee
     - Resources/Prototypes/_Starlight/Entities/Objects/Shields
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _Lavaland, _NF, _White
+    files: 426
+    paths:
+    - Content.Goobstation.Client/Weapons/Melee
+    - Content.Goobstation.Shared/Boomerang
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Shields
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Melee
+    - Resources/Prototypes/_NF/Entities/Objects/Weapons/Melee
+    - Resources/Prototypes/_White/Entities/Objects/Weapons/Melee
+    - Resources/Textures/_Goobstation/Objects/Shields
+    - Resources/Textures/_Goobstation/Objects/Weapons/Melee
+    - Resources/Textures/_Lavaland/Objects/Weapons
+    - Resources/Textures/_NF/Objects/Weapons/Melee
+    - Resources/Textures/_White/Objects/Weapons/Melee
   assessments:
   - covers:
     - goobstation
@@ -17513,6 +18563,12 @@ features:
     - Resources/Prototypes/_NF/Entities/Effects/emp.yml
     files: 3
     confidence: medium
+  - fork: trauma-station
+    local_name: Explosion partial
+    paths:
+    - Resources/Prototypes/_Trauma/Partials/explosion.yml
+    files: 1
+    confidence: low
   carried_by:
   - fork: forky
     via: _Starfall,_ES,_ST,_MACRO
@@ -17603,6 +18659,16 @@ features:
     files: 1
     paths:
     - Content.Server/_Starlight/Emp
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 19
+    paths:
+    - Content.Goobstation.Shared/Flashbang
+    - Resources/Locale/en-US/_Goobstation/flashbang
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Bombs
+    - Resources/Prototypes/_Goobstation/explosions.yml
+    - Resources/Textures/_Goobstation/Objects/Weapons/Bombs
+    - Resources/Textures/_Goobstation/Objects/Weapons/Grenades
   assessments:
   - covers:
     - stellar-station
@@ -18096,6 +19162,11 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_FarHorizons/Entities/Structures/Holographic/projections.yml
+  - fork: trauma-station
+    via: _FarHorizons
+    files: 2
+    paths:
+    - Resources/Prototypes/_FarHorizons/Entities/Structures/Holographic
   assessments:
   - covers:
     - rmc14
@@ -18376,6 +19447,21 @@ features:
     - Resources/Locale/en-US/_Starfall/execution/gun-execution.ftl
     files: 5
     confidence: high
+  - fork: trauma-station
+    local_name: Tackle, executions, grabs, backstab
+    paths:
+    - Content.Trauma.Common/CombatMode
+    - Content.Trauma.Common/Cuffs
+    - Content.Trauma.Common/Grab
+    - Content.Trauma.Common/Knockdown
+    - Content.Trauma.Shared/BackStab
+    - Content.Trauma.Shared/Cuff
+    - Content.Trauma.Shared/Executions
+    - Content.Trauma.Shared/Grab
+    - Content.Trauma.Shared/Standing
+    - Content.Trauma.Shared/Tackle
+    files: 25
+    confidence: medium
   carried_by:
   - fork: white-dream
     via: _Goobstation
@@ -18493,6 +19579,16 @@ features:
     files: 2
     paths:
     - Content.Stellar.Shared/Throwing
+  - fork: trauma-station
+    via: Content.Goobstation.*, _white
+    files: 14
+    paths:
+    - Content.Goobstation.Common/Stunnable
+    - Content.Goobstation.Shared/GrabReleaseBind
+    - Content.Goobstation.Shared/Knockdown
+    - Content.Goobstation.Shared/Stunnable
+    - Content.Goobstation.Shared/TableSlam
+    - Resources/Locale/en-US/_white/backstab
   assessments:
   - covers:
     - rmc14
@@ -18866,6 +19962,22 @@ features:
     - Content.Shared/SS220/ShuttleGunControl
     files: 6
     confidence: medium
+  - fork: trauma-station
+    local_name: Fire control, radar, ship guns, space artillery
+    paths:
+    - Content.Trauma.Client/FireControl
+    - Content.Trauma.Client/Radar
+    - Content.Trauma.Common/Radar
+    - Content.Trauma.Server/FireControl
+    - Content.Trauma.Server/Radar
+    - Content.Trauma.Server/SpaceArtillery
+    - Content.Trauma.Shared/FireControl
+    - Content.Trauma.Shared/Radar
+    - Content.Trauma.Shared/ShipGuns
+    - Content.Trauma.Shared/Ships
+    - Content.Trauma.Shared/SpaceArtillery
+    files: 29
+    confidence: medium
   carried_by:
   - fork: backmen
     via: _Mono (Monolith), _Lua (LuaStation)
@@ -18902,6 +20014,13 @@ features:
     - Content.Shared/_Mono/ShipGuns
     - Content.Shared/_Mono/SpaceArtillery
     - Resources/Locale/en-US/_Mono/gunnery.ftl
+  - fork: trauma-station
+    via: _Mono
+    files: 39
+    paths:
+    - Resources/Locale/en-US/_Mono/gunnery.ftl
+    - Resources/Prototypes/_Mono/Entities/SpaceArtillery
+    - Resources/Textures/_Mono/Objects/ShuttleWeapons
   assessments:
   - covers:
     - monolith
@@ -19128,6 +20247,11 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_Goobstation/Recipes/Lathes/upgrade_kits.yml
+  - fork: trauma-station
+    via: _Goobstation
+    files: 1
+    paths:
+    - Resources/Prototypes/_Goobstation/Recipes/Lathes/upgrade_kits.yml
   assessments:
   - covers:
     - ephemeral-space
@@ -19227,6 +20351,15 @@ features:
     - Resources/Textures/SS220/Objects/Misc/cqc_manual.rsi
     files: 38
     confidence: high
+  - fork: trauma-station
+    local_name: Martial arts
+    paths:
+    - Content.Trauma.Common/MartialArts
+    - Content.Trauma.Shared/MartialArts
+    - Resources/Locale/en-US/_Trauma/martial-arts
+    - Resources/Prototypes/_Trauma/MartialArts
+    files: 39
+    confidence: high
   carried_by:
   - fork: estacao-pirata
     via: Nyanotrasen
@@ -19260,6 +20393,11 @@ features:
     files: 19
     paths:
     - Content.Shared/_Goobstation/MartialArts
+  - fork: trauma-station
+    via: _Goobstation
+    files: 4
+    paths:
+    - Resources/Textures/_Goobstation/Actions/kravmaga.rsi
   assessments:
   - covers:
     - goobstation
@@ -19421,6 +20559,26 @@ features:
     - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Robotics/modsuit_parts.yml
     - Resources/Prototypes/_Goobstation/Recipes/Construction/Graphs/clothing/modsuit.yml
     - Resources/Textures/_EE/Clothing/NanoTrasen/Modsuits
+  - fork: trauma-station
+    via: _EinsteinEngines, _Goobstation
+    files: 533
+    paths:
+    - Resources/Prototypes/_EinsteinEngines/Entities/Modsuits
+    - Resources/Prototypes/_Goobstation/Entities/Clothing/Back/modsuit.yml
+    - Resources/Prototypes/_Goobstation/Entities/Clothing/Hands/modsuit.yml
+    - Resources/Prototypes/_Goobstation/Entities/Clothing/Head/modsuit.yml
+    - Resources/Prototypes/_Goobstation/Entities/Clothing/OuterClothing/modsuit.yml
+    - Resources/Prototypes/_Goobstation/Entities/Clothing/Shoes/modsuit.yml
+    - Resources/Prototypes/_Goobstation/Entities/Modsuits
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Robotics/modsuit_parts.yml
+    - Resources/Prototypes/_Goobstation/Recipes/Construction/Graphs/clothing/modsuit.yml
+    - Resources/Textures/_EinsteinEngines/Clothing/NanoTrasen/Modsuits
+    - Resources/Textures/_Goobstation/Actions/modsuit.rsi
+    - Resources/Textures/_Goobstation/Clothing/Back/Modsuits
+    - Resources/Textures/_Goobstation/Clothing/Hands/Modsuits
+    - Resources/Textures/_Goobstation/Clothing/Head/Modsuits
+    - Resources/Textures/_Goobstation/Clothing/OuterClothing/Modsuits
+    - Resources/Textures/_Goobstation/Clothing/Shoes/Modsuits
   assessments:
   - covers:
     - gaby-station-now-dumont-station
@@ -19660,6 +20818,19 @@ features:
     - Resources/Prototypes/_ST/Machines/Lathes/departmental.yml
     files: 3
     confidence: high
+  - fork: trauma-station
+    local_name: Research and lathe recipes
+    paths:
+    - Content.Trauma.Common/Lathe
+    - Content.Trauma.Server/Lathe
+    - Content.Trauma.Shared/Lathe
+    - Resources/Locale/en-US/_Trauma/research
+    - Resources/Prototypes/_Trauma/Partials/Recipes
+    - Resources/Prototypes/_Trauma/Partials/Research
+    - Resources/Prototypes/_Trauma/Recipes/Lathes
+    - Resources/Prototypes/_Trauma/Research
+    files: 65
+    confidence: low
   carried_by:
   - fork: estacao-pirata
     via: Nyanotrasen
@@ -19721,6 +20892,21 @@ features:
     files: 2
     paths:
     - Resources/Prototypes/_FarHorizons/Research
+  - fork: trauma-station
+    via: Content.Goobstation.*, _FarHorizons, _Goobstation, _Shitmed, _white
+    files: 58
+    paths:
+    - Content.Goobstation.Client/Research
+    - Content.Goobstation.Common/Research
+    - Content.Goobstation.Shared/Research
+    - Resources/Locale/en-US/_FarHorizons/research
+    - Resources/Locale/en-US/_Goobstation/lathe
+    - Resources/Locale/en-US/_Goobstation/research
+    - Resources/Locale/en-US/_white/research
+    - Resources/Prototypes/_FarHorizons/Research
+    - Resources/Prototypes/_Goobstation/Recipes/Lathes
+    - Resources/Prototypes/_Goobstation/Research
+    - Resources/Prototypes/_Shitmed/Research
   assessments:
   - covers:
     - rmc14
@@ -20277,6 +21463,45 @@ features:
     - Resources/Prototypes/Corvax/Stacks
     files: 13
     confidence: high
+  - fork: trauma-station
+    local_name: Forging, durability, quality, construction and crafting
+    paths:
+    - Content.Trauma.Client/Construction
+    - Content.Trauma.Client/Forging
+    - Content.Trauma.Common/Construction
+    - Content.Trauma.Common/Materials
+    - Content.Trauma.Common/Quality
+    - Content.Trauma.Server/Forging
+    - Content.Trauma.Server/Materials
+    - Content.Trauma.Shared/Construction
+    - Content.Trauma.Shared/Durability
+    - Content.Trauma.Shared/Forging
+    - Content.Trauma.Shared/Materials
+    - Content.Trauma.Shared/Whetstone
+    - Resources/Locale/en-US/_Trauma/construction
+    - Resources/Locale/en-US/_Trauma/durability
+    - Resources/Locale/en-US/_Trauma/forging
+    - Resources/Locale/en-US/_Trauma/materials
+    - Resources/Locale/en-US/_Trauma/recipes
+    - Resources/Locale/en-US/_Trauma/stack
+    - Resources/Prototypes/_Trauma/Entities/Objects/Blueprints
+    - Resources/Prototypes/_Trauma/Entities/Objects/Materials
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Forging
+    - Resources/Prototypes/_Trauma/Entities/Objects/Weapons/durability.yml
+    - Resources/Prototypes/_Trauma/Forging
+    - Resources/Prototypes/_Trauma/Materials
+    - Resources/Prototypes/_Trauma/Quality
+    - Resources/Prototypes/_Trauma/Recipes/Construction
+    - Resources/Prototypes/_Trauma/Recipes/Crafting
+    - Resources/Prototypes/_Trauma/Stacks
+    - Resources/Textures/_Trauma/Crafting
+    - Resources/Textures/_Trauma/Intermediates
+    - Resources/Textures/_Trauma/Objects/Misc/schematics.rsi
+    - Resources/Textures/_Trauma/Objects/Specific/Forging
+    - Resources/Textures/_Trauma/Objects/Specific/forging.rsi
+    - Resources/Textures/_Trauma/Structures/Forging
+    files: 424
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight, _Funkystation, _TP
@@ -20567,6 +21792,30 @@ features:
     - Resources/Prototypes/_Funkystation/Recipes/Construction/weapons.yml
     - Resources/Prototypes/_Funkystation/Recipes/Lathes/machine_boards.yml
     - Resources/Prototypes/_Funkystation/Stacks/Materials/Sheets/metal.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _Mono, _NF, _Shitmed, _StarLight, _White
+    files: 162
+    paths:
+    - Content.Goobstation.Client/Construction
+    - Content.Goobstation.Common/Construction
+    - Resources/Locale/en-US/_DV/construction
+    - Resources/Locale/en-US/_DV/lathe
+    - Resources/Locale/en-US/_DV/stack
+    - Resources/Locale/en-US/_FarHorizons/stack
+    - Resources/Locale/en-US/_Goobstation/construction
+    - Resources/Locale/en-US/_Goobstation/recipes
+    - Resources/Prototypes/_DV/Recipes/Lathes
+    - Resources/Prototypes/_FarHorizons/Catalog/Cargo/cargo_engineering.yml
+    - Resources/Prototypes/_FarHorizons/Entities
+    - Resources/Prototypes/_FarHorizons/Recipes
+    - Resources/Prototypes/_FarHorizons/Stacks
+    - Resources/Prototypes/_Goobstation/RPD
+    - Resources/Prototypes/_Goobstation/Recipes
+    - Resources/Prototypes/_Mono/Recipes
+    - Resources/Prototypes/_NF/Recipes
+    - Resources/Prototypes/_Shitmed/Recipes
+    - Resources/Prototypes/_StarLight/Entities
+    - Resources/Prototypes/_White/Recipes
   assessments:
   - covers:
     - corvax
@@ -20781,6 +22030,26 @@ features:
     - Resources/Textures/_CD/Structures/Power
     files: 4
     confidence: medium
+  - fork: trauma-station
+    local_name: Power, device linking, radio, wires
+    paths:
+    - Content.Trauma.Client/Power
+    - Content.Trauma.Server/DeviceLinking
+    - Content.Trauma.Server/Power
+    - Content.Trauma.Server/Radio
+    - Content.Trauma.Shared/DeviceLinking
+    - Content.Trauma.Shared/Emp
+    - Content.Trauma.Shared/Power
+    - Content.Trauma.Shared/Radio
+    - Resources/Locale/en-US/_Trauma/headset
+    - Resources/Locale/en-US/_Trauma/wires
+    - Resources/Prototypes/_Trauma/DeviceLink
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/emp.yml
+    - Resources/Prototypes/_Trauma/Entities/battery.yml
+    - Resources/Prototypes/_Trauma/Wires
+    - Resources/Prototypes/_Trauma/radio_channels.yml
+    files: 27
+    confidence: low
   carried_by:
   - fork: frontier
     via: _DV
@@ -21166,6 +22435,13 @@ features:
     - Content.Server/Corvax/Shuttle
     files: 3
     confidence: medium
+  - fork: trauma-station
+    local_name: Shuttle tweaks
+    paths:
+    - Content.Trauma.Common/Shuttles
+    - Resources/Locale/en-US/_Trauma/shuttles
+    files: 4
+    confidence: low
   carried_by:
   - fork: sunrise
     via: _Starlight (partial)
@@ -21240,6 +22516,12 @@ features:
     - Content.Server/_Starlight/Shuttles
     - Content.Server/_Starlight/StationGridMemory
     - Content.Shared/_Starlight/StationGridMemory
+  - fork: trauma-station
+    via: _DV, _NF
+    files: 3
+    paths:
+    - Resources/Locale/en-US/_DV/shuttles
+    - Resources/Locale/en-US/_NF/shuttles
   assessments:
   - covers:
     - corvax
@@ -21442,6 +22724,17 @@ features:
     paths:
     - Content.Server/_Starlight/Energy/Supermatter
     - Content.Shared/_Starlight/Energy/Supermatter
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 15
+    paths:
+    - Content.Goobstation.Client/Supermatter
+    - Content.Goobstation.Server/Supermatter
+    - Content.Goobstation.Shared/Supermatter
+    - Resources/Audio/_Goobstation/Supermatter
+    - Resources/Locale/en-US/_Goobstation/supermatter
+    - Resources/Prototypes/_Goobstation/Entities/Supermatter
+    - Resources/Textures/_Goobstation/Supermatter
   assessments:
   - covers:
     - serbia-strong
@@ -21837,6 +23130,12 @@ features:
     files: 1
     paths:
     - Resources/Locale/en-US/_NF/singularity
+  - fork: trauma-station
+    via: Content.Goobstation.*
+    files: 7
+    paths:
+    - Content.Goobstation.Common/Singularity
+    - Content.Goobstation.Server/Singularity
   assessments:
   - covers:
     - goobstation
@@ -21925,6 +23224,14 @@ features:
     - Resources/Textures/_FarHorizons/Interface/FissionGenerator
     files: 62
     confidence: high
+  - fork: trauma-station
+    local_name: Nuclear (fission reactor, gas turbine)
+    paths:
+    - Content.Trauma.Client/Nuclear
+    - Content.Trauma.Server/Nuclear
+    - Content.Trauma.Shared/Nuclear
+    files: 42
+    confidence: medium
   carried_by:
   - fork: starfall-drift
     via: _FarHorizons
@@ -21990,6 +23297,26 @@ features:
     - Resources/Locale/en-US/_FarHorizons/fission-generator
     - Resources/Locale/en-US/_FarHorizons/materials
     - Resources/Prototypes/_FarHorizons
+  - fork: trauma-station
+    via: _FarHorizons
+    files: 164
+    paths:
+    - Resources/Audio/_FarHorizons/Ambience
+    - Resources/Audio/_FarHorizons/Effects
+    - Resources/Audio/_FarHorizons/Machines
+    - Resources/Locale/en-US/_FarHorizons/fission-generator
+    - Resources/Locale/en-US/_FarHorizons/materials
+    - Resources/Locale/en-US/_FarHorizons/research/technologies.ftl
+    - Resources/Locale/en-US/_FarHorizons/stack/stacks.ftl
+    - Resources/Prototypes/_FarHorizons/Catalog/Fills/Crates/reactor_crates.yml
+    - Resources/Prototypes/_FarHorizons/Entities/Objects/Devices/Circuitboards
+    - Resources/Prototypes/_FarHorizons/Entities/Objects/Materials
+    - Resources/Prototypes/_FarHorizons/Entities/Structures/Machines
+    - Resources/Prototypes/_FarHorizons/Entities/Structures/Power
+    - Resources/Prototypes/_FarHorizons/Reagents/Materials/metals.yml
+    - Resources/Prototypes/_FarHorizons/Stacks/Materials/ingots.yml
+    - Resources/ServerInfo/_FarHorizons/Guidebook/Engineering
+    - Resources/Textures/_FarHorizons/Structures/Power
   assessments:
   - covers:
     - far-horizons
@@ -22087,6 +23414,50 @@ features:
     - Resources/Locale/en-US/_Goobstation/factory
     files: 69
     confidence: high
+  - fork: trauma-station
+    local_name: Content.Factory machines, circuits and _Factory resources
+    paths:
+    - Content.Factory.Client/Circuits
+    - Content.Factory.Client/Content.Factory.Client.csproj
+    - Content.Factory.Client/Entry
+    - Content.Factory.Client/Filters
+    - Content.Factory.Client/GlobalUsings.cs
+    - Content.Factory.Client/Guidebook
+    - Content.Factory.Client/Machines
+    - Content.Factory.Common/Construction
+    - Content.Factory.Common/Content.Factory.Common.csproj
+    - Content.Factory.Common/DeviceLinking
+    - Content.Factory.Common/DoAfter
+    - Content.Factory.Common/GlobalUsings.cs
+    - Content.Factory.Server/Atmos
+    - Content.Factory.Server/Circuits
+    - Content.Factory.Server/Content.Factory.Server.csproj
+    - Content.Factory.Server/Entry
+    - Content.Factory.Server/Fax
+    - Content.Factory.Server/Filters
+    - Content.Factory.Server/GlobalUsings.cs
+    - Content.Factory.Server/Lathe
+    - Content.Factory.Server/Machines
+    - Content.Factory.Server/Screens
+    - Content.Factory.Shared/Access
+    - Content.Factory.Shared/Circuits
+    - Content.Factory.Shared/Construction
+    - Content.Factory.Shared/Content.Factory.Shared.csproj
+    - Content.Factory.Shared/DeviceLinking
+    - Content.Factory.Shared/Entry
+    - Content.Factory.Shared/Filters
+    - Content.Factory.Shared/GlobalUsings.cs
+    - Content.Factory.Shared/Light
+    - Content.Factory.Shared/Machines
+    - Content.Factory.Shared/Power
+    - Content.Factory.Shared/Radio
+    - Content.Factory.Shared/Slots
+    - Resources/Locale/en-US/_Factory
+    - Resources/Locale/en-US/_Trauma/circuits
+    - Resources/Prototypes/_Factory
+    - Resources/Textures/_Factory
+    files: 178
+    confidence: high
   carried_by:
   - fork: deltav
     via: _Goobstation
@@ -22116,6 +23487,13 @@ features:
     paths:
     - Content.Client/_Goobstation/Factory
     - Content.Shared/_Goobstation/Factory
+  - fork: trauma-station
+    via: _Goobstation
+    files: 18
+    paths:
+    - Resources/Locale/en-US/_Goobstation/machines
+    - Resources/Prototypes/_Goobstation/Entities/Structures/Machines
+    - Resources/ServerInfo/_Goobstation/Guidebook/Engineering
   assessments:
   - covers:
     - goobstation
@@ -22485,6 +23863,17 @@ features:
     - Resources/Prototypes/Corvax/Roles/Jobs
     files: 12
     confidence: high
+  - fork: trauma-station
+    local_name: Job and role partials
+    paths:
+    - Content.Trauma.Common/Roles
+    - Content.Trauma.Shared/Jobs
+    - Content.Trauma.Shared/Roles
+    - Resources/Locale/en-US/_Trauma/job
+    - Resources/Prototypes/_Trauma/Partials/Roles
+    - Resources/Prototypes/_Trauma/Roles
+    files: 93
+    confidence: low
   carried_by:
   - fork: deltav
     via: _NF
@@ -22585,6 +23974,20 @@ features:
     - Resources/Prototypes/_Goobstation/Roles
     - Resources/Prototypes/_Shitmed/Roles
     - Resources/Prototypes/_White/Roles
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _Goobstation, _Shitmed, _White
+    files: 68
+    paths:
+    - Content.Goobstation.Server/NTR
+    - Content.Goobstation.Shared/NTR
+    - Resources/Locale/en-US/_Goobstation/NTR
+    - Resources/Locale/en-US/_Goobstation/job
+    - Resources/Prototypes/_DV/Entities/Objects/Specific
+    - Resources/Prototypes/_Goobstation/NTR
+    - Resources/Prototypes/_Goobstation/Roles
+    - Resources/Prototypes/_Shitmed/Roles
+    - Resources/Prototypes/_White/Roles
+    - Resources/Textures/_DV/Objects/Specific
   assessments:
   - covers:
     - rmc14
@@ -22851,6 +24254,14 @@ features:
     - Resources/Prototypes/_MACRO/Loadouts/loadout_groups.yml
     files: 3
     confidence: medium
+  - fork: trauma-station
+    local_name: Loadouts
+    paths:
+    - Content.Trauma.Shared/Loadouts
+    - Resources/Locale/en-US/_Trauma/loadouts
+    - Resources/Prototypes/_Trauma/Loadouts
+    files: 17
+    confidence: medium
   carried_by:
   - fork: estacao-pirata
     via: SimpleStation14
@@ -22940,6 +24351,14 @@ features:
     - Resources/Prototypes/_Funkystation/Loadouts
     - Resources/Prototypes/_MACRO/Loadouts
     - Resources/Prototypes/_Starfall/universal_loadout.yml
+  - fork: trauma-station
+    via: _DV, _Goobstation, _NF
+    files: 43
+    paths:
+    - Resources/Locale/en-US/_Goobstation/loadouts
+    - Resources/Prototypes/_DV/Loadouts
+    - Resources/Prototypes/_Goobstation/Loadouts
+    - Resources/Prototypes/_NF/Loadouts
   assessments:
   - covers:
     - frontier
@@ -23941,6 +25360,13 @@ features:
     - Content.Shared/_Viva/Silicon/LawboardDoAfterEvent.cs
     files: 2
     confidence: high
+  - fork: trauma-station
+    local_name: Silicon lawsets
+    paths:
+    - Resources/Prototypes/_Trauma/Partials/silicon-laws.yml
+    - Resources/Prototypes/_Trauma/silicon-laws.yml
+    files: 2
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _Goobstation, _Harmony
@@ -23986,6 +25412,18 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_Goobstation/ai_factions.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 18
+    paths:
+    - Content.Goobstation.Client/CustomLawboard
+    - Content.Goobstation.Server/CustomLawboard
+    - Content.Goobstation.Shared/CustomLawboard
+    - Resources/Locale/en-US/_Goobstation/station-laws
+    - Resources/Prototypes/_Goobstation/CustomLawboard
+    - Resources/Prototypes/_Goobstation/ai_factions.yml
+    - Resources/Prototypes/_Goobstation/silicon-laws.yml
+    - Resources/Textures/_Goobstation/CustomLawboard
   assessments:
   - covers:
     - cosmatic-drift
@@ -25470,6 +26908,32 @@ features:
     - Resources/Textures/SS220/Mobs/Silicon
     files: 15
     confidence: medium
+  - fork: trauma-station
+    local_name: Silicons, borgs, drones, station AI
+    paths:
+    - Content.Trauma.Client/Drone
+    - Content.Trauma.Client/Silicons
+    - Content.Trauma.Common/Silicon
+    - Content.Trauma.Common/Silicons
+    - Content.Trauma.Server/Drone
+    - Content.Trauma.Server/Silicon
+    - Content.Trauma.Server/Silicons
+    - Content.Trauma.Shared/Drone
+    - Content.Trauma.Shared/Silicon
+    - Content.Trauma.Shared/Silicons
+    - Resources/Audio/_Trauma/Mobs/Bots
+    - Resources/Locale/en-US/_Trauma/borg
+    - Resources/Locale/en-US/_Trauma/robotics
+    - Resources/Locale/en-US/_Trauma/silicons
+    - Resources/Locale/en-US/_Trauma/station-laws
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Robotics
+    - Resources/Prototypes/_Trauma/IonLaws
+    - Resources/Prototypes/_Trauma/Partials/Entities/Mobs/Cyborgs
+    - Resources/Prototypes/_Trauma/Partials/borg_types.yml
+    - Resources/Textures/_Trauma/Mobs/Silicon
+    - Resources/Textures/_Trauma/Objects/Specific/Robotics
+    files: 128
+    confidence: medium
   carried_by:
   - fork: starlight
     via: _Afterlight (partial)
@@ -25583,6 +27047,17 @@ features:
     - Resources/Locale/en-US/_NF/robotics
     - Resources/Locale/en-US/_NF/silicons
     - Resources/Textures/_NF/Mobs/Silicons
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 302
+    paths:
+    - Content.Goobstation.Client/Silicon
+    - Content.Goobstation.Common/Silicons
+    - Content.Goobstation.Server/Silicon
+    - Content.Goobstation.Shared/Silicon
+    - Resources/Locale/en-US/_Goobstation/silicons
+    - Resources/Textures/_Goobstation/Mobs
+    - Resources/Textures/_Goobstation/Objects/Specific/Robotics
   assessments:
   - covers:
     - backmen
@@ -26445,6 +27920,18 @@ features:
     - Resources/Textures/Corvax/Objects/Devices/secapartment.rsi
     files: 26
     confidence: high
+  - fork: trauma-station
+    local_name: Knowledge (skills, XP, skillbooks)
+    paths:
+    - Content.Trauma.Client/Knowledge
+    - Content.Trauma.Common/Knowledge
+    - Content.Trauma.Server/Knowledge
+    - Content.Trauma.Shared/Knowledge
+    - Resources/Locale/en-US/_Trauma/knowledge
+    - Resources/Prototypes/_Trauma/Entities/Knowledge
+    - Resources/Textures/_Trauma/Objects/Misc/skillbooks.rsi
+    files: 109
+    confidence: medium
   carried_by: []
   assessments:
   - covers:
@@ -26683,7 +28170,17 @@ features:
     - Resources/Prototypes/_Starlight/Catalog/xenobiology_tables.yml
     files: 49
     confidence: high
-  carried_by: []
+  carried_by:
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 159
+    paths:
+    - Content.Goobstation.Client/Xenobiology
+    - Content.Goobstation.Server/Xenobiology
+    - Content.Goobstation.Shared/Xenobiology
+    - Resources/Locale/en-US/_Goobstation/xenobio
+    - Resources/Prototypes/_Goobstation/Xenobiology
+    - Resources/Textures/_Goobstation/Xenobiology
   assessments:
   - covers:
     - goobstation
@@ -26940,6 +28437,16 @@ features:
     - Resources/Prototypes/Corvax/Entities/Structures/Doors
     files: 4
     confidence: medium
+  - fork: trauma-station
+    local_name: Access and anti-tamper
+    paths:
+    - Content.Trauma.Server/AntiTamper
+    - Content.Trauma.Shared/AntiTamper
+    - Resources/Locale/en-US/_Trauma/prototypes/access
+    - Resources/Prototypes/_Trauma/Access
+    - Resources/Prototypes/_Trauma/Partials/Access
+    files: 14
+    confidence: low
   carried_by:
   - fork: starlight
     via: _CD (partial)
@@ -27015,6 +28522,14 @@ features:
     files: 2
     paths:
     - Resources/Prototypes/_EE/Access
+    - Resources/Prototypes/_Goobstation/Access
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _Goobstation
+    files: 12
+    paths:
+    - Content.Goobstation.Shared/Keyring
+    - Resources/Locale/en-US/_DV/access
+    - Resources/Locale/en-US/_Goobstation/access
     - Resources/Prototypes/_Goobstation/Access
   assessments:
   - covers:
@@ -27562,6 +29077,38 @@ features:
     - Resources/Prototypes/_ST/Science/sensor-tower.yml
     files: 1
     confidence: medium
+  - fork: trauma-station
+    local_name: Phones, holoprojectors and devices
+    paths:
+    - Content.Trauma.Client/Paint
+    - Content.Trauma.Client/Phones
+    - Content.Trauma.Common/Doors
+    - Content.Trauma.Server/Phones
+    - Content.Trauma.Server/SurveillanceCamera
+    - Content.Trauma.Shared/Camera
+    - Content.Trauma.Shared/Disposals
+    - Content.Trauma.Shared/Doors
+    - Content.Trauma.Shared/HolographicProjector
+    - Content.Trauma.Shared/Holosign
+    - Content.Trauma.Shared/Lockers
+    - Content.Trauma.Shared/Paint
+    - Content.Trauma.Shared/Phones
+    - Resources/Audio/_Trauma/Machines/BombComponents
+    - Resources/Locale/en-US/_Trauma/communications
+    - Resources/Locale/en-US/_Trauma/devices
+    - Resources/Locale/en-US/_Trauma/holopad
+    - Resources/Locale/en-US/_Trauma/item-slot-heater
+    - Resources/Locale/en-US/_Trauma/light
+    - Resources/Locale/en-US/_Trauma/machines
+    - Resources/Locale/en-US/_Trauma/paint
+    - Resources/Locale/en-US/_Trauma/phones
+    - Resources/Locale/en-US/_Trauma/traps
+    - Resources/Prototypes/_Trauma/Entities/Objects/Devices
+    - Resources/Prototypes/_Trauma/Entities/Objects/base_paint_remover.yml
+    - Resources/Prototypes/_Trauma/Partials/floor_trap.yml
+    - Resources/Prototypes/_Trauma/PhoneCategorys.yml
+    files: 76
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _NF
@@ -27885,6 +29432,27 @@ features:
     - Resources/Locale/en-US/_FarHorizons/machine-linking
     - Resources/Prototypes/_FarHorizons/DeviceLinking
     - Resources/Prototypes/_Funkystation/Entities/Objects/Devices
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _NF, _RMC14, _Shitmed, _White
+    files: 147
+    paths:
+    - Content.Goobstation.Shared/Teleportation
+    - Resources/Audio/_RMC14/Phone
+    - Resources/Locale/en-US/_FarHorizons/machine-linking
+    - Resources/Locale/en-US/_Goobstation/devices
+    - Resources/Locale/en-US/_Goobstation/teleportation
+    - Resources/Prototypes/_DV/Entities/Objects/Devices
+    - Resources/Prototypes/_DV/Entities/Structures/Holographic
+    - Resources/Prototypes/_DV/Wires
+    - Resources/Prototypes/_FarHorizons/DeviceLinking
+    - Resources/Prototypes/_Goobstation/DeviceLink
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Devices
+    - Resources/Prototypes/_NF/Entities/Objects/Devices/plant_analyzer.yml
+    - Resources/Prototypes/_Shitmed/DeviceLinking
+    - Resources/Prototypes/_White/Entities/Structures/Storage
+    - Resources/Textures/_DV/Objects/Devices
+    - Resources/Textures/_Goobstation/Objects/Devices
+    - Resources/Textures/_Shitmed/Structures/Machines/limbgrower.rsi
   assessments:
   - covers:
     - rmc14
@@ -28635,6 +30203,16 @@ features:
     - Resources/Prototypes/_Mono/Entities/Objects/Electronics/mech.yml
     files: 2
     confidence: low
+  - fork: trauma-station
+    local_name: Mechs
+    paths:
+    - Content.Trauma.Common/Mech
+    - Content.Trauma.Shared/Mech
+    - Resources/Locale/en-US/_Trauma/mechs
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Mech
+    - Resources/Textures/_Trauma/Objects/Specific/Mech
+    files: 21
+    confidence: medium
   carried_by:
   - fork: the-den
     via: _NF, _Goobstation
@@ -28660,6 +30238,21 @@ features:
     files: 2
     paths:
     - Content.Shared/_Starlight/Mech
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 169
+    paths:
+    - Content.Goobstation.Common/Mech
+    - Content.Goobstation.Server/Mech
+    - Content.Goobstation.Shared/Mech
+    - Resources/Audio/_Goobstation/Mecha
+    - Resources/Locale/en-US/_Goobstation/mech
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Devices/Electronics/exosuit_components.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Devices/Electronics/mech.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Mech
+    - Resources/Prototypes/_Goobstation/Recipes/Construction/Graphs/mechs
+    - Resources/Prototypes/_Goobstation/Recipes/Lathes/mech_parts.yml
+    - Resources/Textures/_Goobstation/Objects/Specific/Mech
   assessments:
   - covers:
     - goobstation
@@ -29263,6 +30856,18 @@ features:
     - Resources/Textures/_Funkystation/Effects
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Footprints and blood splatter
+    paths:
+    - Content.Trauma.Common/Footprints
+    - Content.Trauma.Server/Footprints
+    - Content.Trauma.Shared/BloodSplatter
+    - Content.Trauma.Shared/Footprints
+    - Resources/Textures/_Trauma/Effects/blood.rsi
+    - Resources/Textures/_Trauma/Effects/bloodSplatterMinor.rsi
+    - Resources/Textures/_Trauma/Effects/vomit.rsi
+    files: 44
+    confidence: low
   carried_by:
   - fork: starfall-drift
     via: _Funkystation
@@ -29509,6 +31114,12 @@ features:
     - Resources/Textures/_Gabystation/Objects/Vehicles
     files: 8
     confidence: high
+  - fork: trauma-station
+    local_name: Vehicle prototypes
+    paths:
+    - Resources/Prototypes/_Trauma/Entities/Objects/Vehicles
+    files: 1
+    confidence: low
   carried_by:
   - fork: frontier
     via: _Goobstation
@@ -29533,6 +31144,17 @@ features:
     paths:
     - Content.Shared/_Goobstation/Vehicles
     - Resources/Prototypes/_Goobstation/Entities/Objects/Vehicles
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 54
+    paths:
+    - Content.Goobstation.Client/Vehicles
+    - Content.Goobstation.Server/Vehicles
+    - Content.Goobstation.Shared/Vehicles
+    - Resources/Audio/_Goobstation/Vehicle
+    - Resources/Locale/en-US/_Goobstation/vehicle
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Vehicles
+    - Resources/Textures/_Goobstation/Objects/Vehicles
   assessments:
   - covers:
     - rmc14
@@ -30175,6 +31797,19 @@ features:
     - Resources/Prototypes/_Viva/Maps/gala.yml
     files: 4
     confidence: high
+  - fork: trauma-station
+    local_name: Trauma maps, shuttles and areas
+    paths:
+    - Content.Trauma.Client/Areas
+    - Content.Trauma.Common/Areas
+    - Content.Trauma.Shared/Areas
+    - Resources/Locale/en-US/_Trauma/navmap-beacons
+    - Resources/Maps/_Trauma
+    - Resources/Prototypes/_Trauma/Entities/Areas
+    - Resources/Prototypes/_Trauma/Entities/Stations
+    - Resources/Prototypes/_Trauma/Maps
+    files: 125
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _Mono
@@ -30471,6 +32106,14 @@ features:
     - Resources/Prototypes/Corvax/Procedural
     files: 16
     confidence: high
+  - fork: trauma-station
+    local_name: Gateway destinations
+    paths:
+    - Content.Trauma.Client/Gateway
+    - Content.Trauma.Shared/Gateway
+    - Resources/Locale/en-US/_Trauma/gateway
+    files: 7
+    confidence: low
   carried_by:
   - fork: deltav
     via: _Mono
@@ -30920,6 +32563,19 @@ features:
     - Content.Shared/_NF/Cloning
     files: 1
     confidence: low
+  - fork: trauma-station
+    local_name: Medical (CPR, cloning, medigun)
+    paths:
+    - Content.Trauma.Client/Medical
+    - Content.Trauma.Common/Medical
+    - Content.Trauma.Server/Medical
+    - Content.Trauma.Shared/Medical
+    - Resources/Locale/en-US/_Trauma/medical
+    - Resources/Locale/en-US/_Trauma/prototypes/entity/medical
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Medical
+    - Resources/Textures/_Trauma/Objects/Specific/Medical
+    files: 52
+    confidence: medium
   carried_by:
   - fork: ephemeral-space
     via: _Offbrand
@@ -30952,6 +32608,15 @@ features:
     files: 1
     paths:
     - Resources/Prototypes/_RMC14/Entities/Structures/Machines/Medical/iv.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 55
+    paths:
+    - Content.Goobstation.Common/Cloning
+    - Content.Goobstation.Common/Medical
+    - Content.Goobstation.Server/MedicalPatch
+    - Resources/Locale/en-US/_Goobstation/medical
+    - Resources/Textures/_Goobstation/Objects/Specific/Medical
   assessments:
   - covers:
     - goobstation
@@ -31347,6 +33012,11 @@ features:
     - Content.Shared/_Shitmed/StatusEffects
     - Resources/Prototypes/_Shitmed/Damage
     - Resources/Prototypes/_Shitmed/status_effects.yml
+  - fork: trauma-station
+    via: _Shitmed
+    files: 2
+    paths:
+    - Resources/Prototypes/_Shitmed/Damage
   assessments:
   - covers:
     - rmc14
@@ -31723,6 +33393,71 @@ features:
     - Content.Shared/_Starfall/Health/Systems/StarfallHealthExamineSystem.cs
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Content.Medical surgery, body parts, wounds and traumas (Trauma author)
+    paths:
+    - Content.Medical.Client/Choice
+    - Content.Medical.Client/Content.Medical.Client.csproj
+    - Content.Medical.Client/Entry
+    - Content.Medical.Client/GlobalUsings.cs
+    - Content.Medical.Client/ItemSwitch
+    - Content.Medical.Client/Surgery
+    - Content.Medical.Client/Targeting
+    - Content.Medical.Client/UserInterface
+    - Content.Medical.Client/Wounds
+    - Content.Medical.Common/Body
+    - Content.Medical.Common/CCVar
+    - Content.Medical.Common/Clothing
+    - Content.Medical.Common/Content.Medical.Common.csproj
+    - Content.Medical.Common/Damage
+    - Content.Medical.Common/DoAfter
+    - Content.Medical.Common/EntityEffects
+    - Content.Medical.Common/Entry
+    - Content.Medical.Common/GlobalUsings.cs
+    - Content.Medical.Common/Healing
+    - Content.Medical.Common/Medical
+    - Content.Medical.Common/Surgery
+    - Content.Medical.Common/Targeting
+    - Content.Medical.Common/Traumas
+    - Content.Medical.Common/Vomiting
+    - Content.Medical.Common/Wounds
+    - Content.Medical.Server/Content.Medical.Server.csproj
+    - Content.Medical.Server/Entry
+    - Content.Medical.Server/GlobalUsings.cs
+    - Content.Medical.Server/ItemSwitch
+    - Content.Medical.Server/Objectives
+    - Content.Medical.Server/PartStatus
+    - Content.Medical.Server/Targeting
+    - Content.Medical.Shared/Abilities
+    - Content.Medical.Shared/Body
+    - Content.Medical.Shared/Content.Medical.Shared.csproj
+    - Content.Medical.Shared/Damage
+    - Content.Medical.Shared/DelayedDeath
+    - Content.Medical.Shared/DoAfter
+    - Content.Medical.Shared/EntityConditions
+    - Content.Medical.Shared/EntityEffects
+    - Content.Medical.Shared/Entry
+    - Content.Medical.Shared/GameTicking
+    - Content.Medical.Shared/GlobalUsings.cs
+    - Content.Medical.Shared/Hands
+    - Content.Medical.Shared/ItemSwitch
+    - Content.Medical.Shared/PartStatus
+    - Content.Medical.Shared/Restrict
+    - Content.Medical.Shared/Roles
+    - Content.Medical.Shared/Surgery
+    - Content.Medical.Shared/Targeting
+    - Content.Medical.Shared/Traumas
+    - Content.Medical.Shared/Weapons
+    - Content.Medical.Shared/Wounds
+    - Content.Trauma.Common/Body
+    - Content.Trauma.Shared/Body
+    - Resources/Locale/en-US/_Trauma/body
+    - Resources/Locale/en-US/_Trauma/surgery
+    - Resources/Prototypes/_Trauma/Body
+    - Resources/Prototypes/_Trauma/Partials/Body
+    - Resources/Prototypes/_Trauma/Surgery
+    files: 311
+    confidence: high
   carried_by:
   - fork: einstein-engines
     via: _Shitmed
@@ -31973,6 +33708,28 @@ features:
     - Resources/Prototypes/_Starlight/Body
     - Resources/Prototypes/_Sunrise/Surgery
     - Resources/Textures/_Sunrise/Interface/Medical
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _Shitmed, _White
+    files: 802
+    paths:
+    - Content.Goobstation.Common/Body
+    - Content.Goobstation.Shared/Body
+    - Content.Goobstation.Shared/Surgery
+    - Resources/Audio/_Shitmed/Medical
+    - Resources/Locale/en-US/_Shitmed/surgery
+    - Resources/Prototypes/_Goobstation/Body
+    - Resources/Prototypes/_Shitmed/Body
+    - Resources/Prototypes/_Shitmed/Damage
+    - Resources/Prototypes/_Shitmed/Entities
+    - Resources/Prototypes/_Shitmed/Guidebook
+    - Resources/Prototypes/_Shitmed/Recipes/Lathes
+    - Resources/Prototypes/_Shitmed/Species
+    - Resources/Prototypes/_White/Entities/Surgery/surgeries.yml
+    - Resources/ServerInfo/_Shitmed/Guidebook
+    - Resources/Textures/_Shitmed/Interface
+    - Resources/Textures/_Shitmed/Mobs
+    - Resources/Textures/_Shitmed/Objects
+    - Resources/Textures/_Shitmed/Structures/Machines
   assessments:
   - covers:
     - rmc14
@@ -32270,6 +34027,12 @@ features:
     - Content.Server/_CD/Body/Systems
     files: 8
     confidence: high
+  - fork: trauma-station
+    local_name: Drunkenness limit
+    paths:
+    - Content.Trauma.Shared/Drunk
+    files: 2
+    confidence: low
   carried_by:
   - fork: ephemeral-space
     via: _Offbrand
@@ -32566,6 +34329,20 @@ features:
     - Resources/Prototypes/_Harmony/Entities/Objects/Misc/subdermal_implants.yml
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Content.Medical augments and cybernetics, brain chips, implants
+    paths:
+    - Content.Medical.Client/Augments
+    - Content.Medical.Shared/Augments
+    - Content.Medical.Shared/Cybernetics
+    - Content.Trauma.Client/Sandevistan
+    - Content.Trauma.Common/Implants
+    - Content.Trauma.Shared/Implants
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/BrainChips
+    - Resources/Textures/_Trauma/Interface/Alerts/sandevistan.rsi
+    - Resources/Textures/_Trauma/Objects/Specific/brain_chips.rsi
+    files: 42
+    confidence: high
   carried_by:
   - fork: far-horizons
     via: _Starlight (partial)
@@ -32626,6 +34403,18 @@ features:
     files: 2
     paths:
     - Content.Shared/_DV/Implants
+  - fork: trauma-station
+    via: Content.Goobstation.*
+    files: 26
+    paths:
+    - Content.Goobstation.Client/BerserkerImplant
+    - Content.Goobstation.Server/BerserkerImplant
+    - Content.Goobstation.Shared/Autosurgeon
+    - Content.Goobstation.Shared/BerserkerImplant
+    - Content.Goobstation.Shared/MantisBlades
+    - Content.Goobstation.Shared/RecoilAbsorber
+    - Content.Goobstation.Shared/Sandevistan
+    - Content.Goobstation.Shared/SmartLinkImplant
   assessments:
   - covers:
     - goobstation
@@ -32910,7 +34699,31 @@ features:
     - Resources/Textures/_ES/Effects/miasma.rsi
     files: 13
     confidence: medium
-  carried_by: []
+  - fork: trauma-station
+    local_name: Disease and virology
+    paths:
+    - Content.Trauma.Client/Virology
+    - Content.Trauma.Shared/Disease
+    - Content.Trauma.Shared/Virology
+    - Resources/Locale/en-US/_Trauma/virology
+    - Resources/Prototypes/_Trauma/Disease
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/disease.yml
+    files: 20
+    confidence: high
+  carried_by:
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 58
+    paths:
+    - Content.Goobstation.Client/Disease
+    - Content.Goobstation.Server/CheckInfection
+    - Content.Goobstation.Server/Disease
+    - Content.Goobstation.Server/Virology
+    - Content.Goobstation.Shared/CheckInfection
+    - Content.Goobstation.Shared/Disease
+    - Content.Goobstation.Shared/Virology
+    - Resources/Locale/en-US/_Goobstation/disease
+    - Resources/Prototypes/_Goobstation/Disease
   assessments:
   - covers:
     - backmen
@@ -33267,6 +35080,14 @@ features:
     - Content.Shared/_RMC14/Medical/Autodoc
     files: 10
     confidence: high
+  - fork: trauma-station
+    local_name: Content.Medical Autodoc
+    paths:
+    - Content.Medical.Client/Autodoc
+    - Content.Medical.Server/Autodoc
+    - Content.Medical.Shared/Autodoc
+    files: 17
+    confidence: high
   carried_by:
   - fork: einstein-engines
     via: _Shitmed
@@ -33298,6 +35119,12 @@ features:
     - Content.Client/_Shitmed/Autodoc
     - Content.Server/_Shitmed/Autodoc
     - Content.Shared/_Shitmed/Autodoc
+  - fork: trauma-station
+    via: _Shitmed
+    files: 3
+    paths:
+    - Resources/Prototypes/_Shitmed/Entities/Structures/Machines/autodoc.yml
+    - Resources/Textures/_Shitmed/Structures/Machines/autodoc.rsi
   assessments:
   - covers:
     - rmc14
@@ -33389,6 +35216,21 @@ features:
     - Resources/Locale/en-US/_Funkystation/genetics
     - Resources/Prototypes/_Funkystation/Entities/Genetics
     files: 6
+    confidence: high
+  - fork: trauma-station
+    local_name: Genetics / DNA mutations
+    paths:
+    - Content.Trauma.Client/Genetics
+    - Content.Trauma.Common/Genetics
+    - Content.Trauma.Server/Genetics
+    - Content.Trauma.Shared/Genetics
+    - Resources/Locale/en-US/_Trauma/genetics
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Genetics
+    - Resources/Prototypes/_Trauma/Genetics
+    - Resources/Textures/_Trauma/Actions/mutations.rsi
+    - Resources/Textures/_Trauma/Interface/Dna
+    - Resources/Textures/_Trauma/Objects/Specific/dnasampler.rsi
+    files: 162
     confidence: high
   carried_by:
   - fork: gaby-station-now-dumont-station
@@ -33822,6 +35664,28 @@ features:
     - Resources/Textures/_Funkystation/Mobs
     files: 6
     confidence: medium
+  - fork: trauma-station
+    local_name: Animals, mobs and NPC AI
+    paths:
+    - Content.Trauma.Client/MobClass
+    - Content.Trauma.Server/ChangeHTNOnEmag
+    - Content.Trauma.Server/HTN
+    - Content.Trauma.Server/Mobs
+    - Content.Trauma.Shared/ChangeFactionOnEmag
+    - Content.Trauma.Shared/MobClass
+    - Content.Trauma.Shared/Mobs
+    - Content.Trauma.Shared/NPC
+    - Resources/Audio/_Trauma/Mobs/Bioweapon
+    - Resources/Locale/en-US/_Trauma/npc
+    - Resources/Prototypes/_Trauma/Entities/Mobs
+    - Resources/Prototypes/_Trauma/Mobs
+    - Resources/Prototypes/_Trauma/NPCs
+    - Resources/Prototypes/_Trauma/Partials/Entities/Mobs/NPCs
+    - Resources/Prototypes/_Trauma/Partials/ai_factions.yml
+    - Resources/Prototypes/_Trauma/ai_factions.yml
+    - Resources/Textures/_Trauma/Mobs/Animals
+    files: 197
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight (partial)
@@ -34043,6 +35907,20 @@ features:
     - Resources/Prototypes/_EE/ai_factions.yml
     - Resources/Prototypes/_Nuclear14/Entities/Mobs
     - Resources/Textures/_Nuclear14/Mobs
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _Shitmed
+    files: 111
+    paths:
+    - Content.Goobstation.Server/NPC
+    - Content.Goobstation.Server/SpaceWhale
+    - Content.Goobstation.Shared/NPC
+    - Resources/Audio/_Goobstation/Animals
+    - Resources/Prototypes/_Goobstation/Entities/Mobs
+    - Resources/Prototypes/_Goobstation/HTN
+    - Resources/Prototypes/_Goobstation/SpaceWhales
+    - Resources/Prototypes/_Shitmed/Entities/Mobs
+    - Resources/Textures/_Goobstation/Mobs/Animals
+    - Resources/Textures/_Shitmed/Mobs/Aliens
   assessments:
   - covers:
     - sunrise
@@ -35154,6 +37032,47 @@ features:
     - Resources/Prototypes/_ES/Alerts/hunger.yml
     files: 7
     confidence: medium
+  - fork: trauma-station
+    local_name: Deep fryer, botany, ranching, food
+    paths:
+    - Content.Trauma.Client/Botany
+    - Content.Trauma.Client/DeepFryer
+    - Content.Trauma.Common/Botany
+    - Content.Trauma.Common/Kitchen
+    - Content.Trauma.Common/Nutrition
+    - Content.Trauma.Server/BurnableFood
+    - Content.Trauma.Server/DeepFryer
+    - Content.Trauma.Server/Ranching
+    - Content.Trauma.Shared/AnimalAgeing
+    - Content.Trauma.Shared/Botany
+    - Content.Trauma.Shared/BurnableFood
+    - Content.Trauma.Shared/DeepFryer
+    - Content.Trauma.Shared/EffectOnEaten
+    - Content.Trauma.Shared/Nutrition
+    - Content.Trauma.Shared/Ranching
+    - Resources/Audio/_Trauma/Machines/DeepFryer
+    - Resources/Locale/en-US/_Trauma/Ranching
+    - Resources/Locale/en-US/_Trauma/botany
+    - Resources/Locale/en-US/_Trauma/cooking
+    - Resources/Locale/en-US/_Trauma/flavors
+    - Resources/Prototypes/_Trauma/Entities/Objects/Consumable
+    - Resources/Prototypes/_Trauma/Entities/Objects/Ranch
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Hydroponics
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/rehydrateable.yml
+    - Resources/Prototypes/_Trauma/Flavors
+    - Resources/Prototypes/_Trauma/Hydroponics
+    - Resources/Prototypes/_Trauma/Partials/Hydroponics
+    - Resources/Prototypes/_Trauma/Ranching
+    - Resources/Prototypes/_Trauma/Recipes/Cooking
+    - Resources/Textures/_Trauma/Actions/ranching.rsi
+    - Resources/Textures/_Trauma/Mobs/Ranch
+    - Resources/Textures/_Trauma/Objects/Consumable
+    - Resources/Textures/_Trauma/Objects/Misc/eggs.rsi
+    - Resources/Textures/_Trauma/Objects/Specific/Hydroponics
+    - Resources/Textures/_Trauma/Objects/Specific/Kitchen
+    - Resources/Textures/_Trauma/Objects/Specific/egg-snow-effect.rsi
+    files: 659
+    confidence: medium
   carried_by:
   - fork: the-den
     via: _DV, _NF, _Floof
@@ -35339,6 +37258,24 @@ features:
     - Resources/Locale/en-US/_EE/flavors
     - Resources/Locale/en-US/_Goobstation/flavors
     - Resources/Prototypes/_EE/Flavors
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _Goobstation, _NF, _RMC14
+    files: 811
+    paths:
+    - Content.Goobstation.Server/Kitchen
+    - Content.Goobstation.Shared/Nutrition
+    - Resources/Locale/en-US/_Goobstation/flavors
+    - Resources/Locale/en-US/_NF/botany
+    - Resources/Locale/en-US/_NF/flavors
+    - Resources/Prototypes/_DV/Recipes
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Consumable
+    - Resources/Prototypes/_Goobstation/Hydroponics
+    - Resources/Prototypes/_Goobstation/Recipes/Cooking
+    - Resources/Prototypes/_NF/Flavors
+    - Resources/Prototypes/_RMC14/Flavors/flavors.yml
+    - Resources/Textures/_Goobstation/Objects/Consumable
+    - Resources/Textures/_Goobstation/Objects/Specific/Hydroponics
+    - Resources/Textures/_NF/Objects/Consumable
   assessments:
   - covers:
     - rmc14
@@ -36361,6 +38298,23 @@ features:
     - Resources/Prototypes/Corvax/Markers/Spawners/ert.yml
     files: 1
     confidence: low
+  - fork: trauma-station
+    local_name: Station events and alert levels
+    paths:
+    - Content.Trauma.Client/Kudzu
+    - Content.Trauma.Common/AlertLevel
+    - Content.Trauma.Common/StationEvents
+    - Content.Trauma.Server/StationEvents
+    - Content.Trauma.Shared/AlertLevel
+    - Content.Trauma.Shared/Kudzu
+    - Resources/Audio/_Trauma/StationEvents
+    - Resources/Locale/en-US/_Trauma/holidays
+    - Resources/Locale/en-US/_Trauma/station-events
+    - Resources/Prototypes/_Trauma/AlertLevels
+    - Resources/Prototypes/_Trauma/Partials/holidays.yml
+    - Resources/Prototypes/_Trauma/holidays.yml
+    files: 28
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _Goobstation, _Mono, _CD
@@ -36535,6 +38489,20 @@ features:
     paths:
     - Content.Server/_Funkystation/StationEvents
     - Resources/Locale/en-US/_Funkystation/station-events/utility-line-rupture.ftl
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _Goobstation, _Shitmed, _White
+    files: 48
+    paths:
+    - Content.Goobstation.Server/StationEvents
+    - Content.Goobstation.Shared/StationEvents
+    - Resources/Locale/en-US/_DV/station-events
+    - Resources/Locale/en-US/_Goobstation/station-events
+    - Resources/Prototypes/_DV/GameRules
+    - Resources/Prototypes/_Goobstation/GameRules
+    - Resources/Prototypes/_Shitmed/GameRules
+    - Resources/Prototypes/_White/Actions
+    - Resources/Prototypes/_White/GameRules
+    - Resources/Textures/_Goobstation/Objects/Specific/Christmas
   assessments:
   - covers:
     - goobstation
@@ -37495,6 +39463,25 @@ features:
     - Content.Server/_Starfall/Systems/SprintStaminaSystem.cs
     files: 1
     confidence: medium
+  - fork: trauma-station
+    local_name: Vent crawling, carrying, jumping
+    paths:
+    - Content.Trauma.Client/Throwing
+    - Content.Trauma.Client/VentCrawling
+    - Content.Trauma.Common/Carrying
+    - Content.Trauma.Common/Movement
+    - Content.Trauma.Common/Throwing
+    - Content.Trauma.Common/TileMovement
+    - Content.Trauma.Common/VentCrawling
+    - Content.Trauma.Server/VentCrawling
+    - Content.Trauma.Shared/Bouncing
+    - Content.Trauma.Shared/Carrying
+    - Content.Trauma.Shared/Jump
+    - Content.Trauma.Shared/Movement
+    - Content.Trauma.Shared/Shrinking
+    - Content.Trauma.Shared/VentCrawling
+    files: 38
+    confidence: medium
   carried_by:
   - fork: goobstation
     via: _DV, _Starlight
@@ -37599,6 +39586,16 @@ features:
     - Content.Shared/_Goobstation/Dash
     - Content.Shared/_White/Collision/LayDown
     - Content.Shared/_White/Move
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Starlight
+    files: 33
+    paths:
+    - Content.Goobstation.Client/Waddle
+    - Content.Goobstation.Common/Movement
+    - Content.Goobstation.Server/Waddle
+    - Content.Goobstation.Shared/Dash
+    - Content.Goobstation.Shared/Waddle
+    - Resources/Audio/_Starlight/VentCrawling
   assessments:
   - covers:
     - rmc14
@@ -38051,6 +40048,138 @@ features:
     - Resources/Prototypes/EstacaoPirata/Palettes/sixteen.yml
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Entity effects/conditions, triggers, actions, CVars, misc helpers
+    paths:
+    - Content.IntegrationTests
+    - Content.Trauma.Client/Animations
+    - Content.Trauma.Client/Audio
+    - Content.Trauma.Client/Chat
+    - Content.Trauma.Client/Commands
+    - Content.Trauma.Client/Content.Trauma.Client.csproj
+    - Content.Trauma.Client/Entry
+    - Content.Trauma.Client/GlobalUsings.cs
+    - Content.Trauma.Client/Input
+    - Content.Trauma.Client/IoC
+    - Content.Trauma.Client/ListEntitySelector
+    - Content.Trauma.Client/MouseWheel
+    - Content.Trauma.Client/Physics
+    - Content.Trauma.Client/Program.cs
+    - Content.Trauma.Client/RadialSelector
+    - Content.Trauma.Client/Rotation
+    - Content.Trauma.Client/Spawners
+    - Content.Trauma.Client/Sprite
+    - Content.Trauma.Common/Actions
+    - Content.Trauma.Common/Audio
+    - Content.Trauma.Common/CCVar
+    - Content.Trauma.Common/Chat
+    - Content.Trauma.Common/Content.Trauma.Common.csproj
+    - Content.Trauma.Common/Damage
+    - Content.Trauma.Common/Decals
+    - Content.Trauma.Common/Emag
+    - Content.Trauma.Common/EntityEffects
+    - Content.Trauma.Common/Entry
+    - Content.Trauma.Common/Fluids
+    - Content.Trauma.Common/GlobalUsings.cs
+    - Content.Trauma.Common/Hands
+    - Content.Trauma.Common/Input
+    - Content.Trauma.Common/Interaction
+    - Content.Trauma.Common/Mind
+    - Content.Trauma.Common/MouseWheel
+    - Content.Trauma.Common/Polymorph
+    - Content.Trauma.Common/Prying
+    - Content.Trauma.Common/RadialSelector
+    - Content.Trauma.Common/Spawners
+    - Content.Trauma.Common/Sprite
+    - Content.Trauma.Common/Stack
+    - Content.Trauma.Common/StepTrigger
+    - Content.Trauma.Common/Tabletop
+    - Content.Trauma.Common/Teleportation
+    - Content.Trauma.Common/Voting
+    - Content.Trauma.Server/Actions
+    - Content.Trauma.Server/Animations
+    - Content.Trauma.Server/Chat
+    - Content.Trauma.Server/Commands
+    - Content.Trauma.Server/Content.Trauma.Server.csproj
+    - Content.Trauma.Server/Decals
+    - Content.Trauma.Server/EntityEffects
+    - Content.Trauma.Server/Entry
+    - Content.Trauma.Server/Examine
+    - Content.Trauma.Server/GlobalUsings.cs
+    - Content.Trauma.Server/IoC
+    - Content.Trauma.Server/Logging
+    - Content.Trauma.Server/Physics
+    - Content.Trauma.Server/Program.cs
+    - Content.Trauma.Server/PvsOverride
+    - Content.Trauma.Server/Spawners
+    - Content.Trauma.Server/TimedReplace
+    - Content.Trauma.Server/Trigger
+    - Content.Trauma.Shared/Actions
+    - Content.Trauma.Shared/Animations
+    - Content.Trauma.Shared/Buckle
+    - Content.Trauma.Shared/Card
+    - Content.Trauma.Shared/ChildEntities
+    - Content.Trauma.Shared/Commands
+    - Content.Trauma.Shared/Content.Trauma.Shared.csproj
+    - Content.Trauma.Shared/Damage
+    - Content.Trauma.Shared/Emag
+    - Content.Trauma.Shared/EntityConditions
+    - Content.Trauma.Shared/EntityEffectOnUse
+    - Content.Trauma.Shared/EntityEffects
+    - Content.Trauma.Shared/Entry
+    - Content.Trauma.Shared/Fluids
+    - Content.Trauma.Shared/GlobalUsings.cs
+    - Content.Trauma.Shared/Hands
+    - Content.Trauma.Shared/Interaction
+    - Content.Trauma.Shared/Item
+    - Content.Trauma.Shared/ListEntitySelector
+    - Content.Trauma.Shared/Mind
+    - Content.Trauma.Shared/Other
+    - Content.Trauma.Shared/Physics
+    - Content.Trauma.Shared/PullBlocker
+    - Content.Trauma.Shared/ReduceStackSizeOnUse
+    - Content.Trauma.Shared/Repulse
+    - Content.Trauma.Shared/SpaceImmunityOnBuckle
+    - Content.Trauma.Shared/Spawners
+    - Content.Trauma.Shared/Sprite
+    - Content.Trauma.Shared/StepTrigger
+    - Content.Trauma.Shared/Teleportation
+    - Content.Trauma.Shared/TimedReplace
+    - Content.Trauma.Shared/Trigger
+    - Content.Trauma.Shared/Utility
+    - Content.Trauma.Shared/Whitelist
+    - Resources/ConfigPresets/_Trauma
+    - Resources/Locale/en-US/_Trauma/actions
+    - Resources/Locale/en-US/_Trauma/buckle
+    - Resources/Locale/en-US/_Trauma/changelog
+    - Resources/Locale/en-US/_Trauma/chat
+    - Resources/Locale/en-US/_Trauma/commands
+    - Resources/Locale/en-US/_Trauma/connection-messages.ftl
+    - Resources/Locale/en-US/_Trauma/damage
+    - Resources/Locale/en-US/_Trauma/datasets
+    - Resources/Locale/en-US/_Trauma/entity-categories.ftl
+    - Resources/Locale/en-US/_Trauma/interaction
+    - Resources/Locale/en-US/_Trauma/markup
+    - Resources/Locale/en-US/_Trauma/mind
+    - Resources/Locale/en-US/_Trauma/name-identifier.ftl
+    - Resources/Locale/en-US/_Trauma/name-selector.ftl
+    - Resources/Locale/en-US/_Trauma/names
+    - Resources/Locale/en-US/_Trauma/verbs
+    - Resources/Prototypes/_Trauma/Actions
+    - Resources/Prototypes/_Trauma/Chat
+    - Resources/Prototypes/_Trauma/Damage
+    - Resources/Prototypes/_Trauma/Datasets
+    - Resources/Prototypes/_Trauma/Entities/Markers
+    - Resources/Prototypes/_Trauma/Entities/categories.yml
+    - Resources/Prototypes/_Trauma/EntityConditions
+    - Resources/Prototypes/_Trauma/EntityEffects
+    - Resources/Prototypes/_Trauma/Polymorphs
+    - Resources/Prototypes/_Trauma/StepTrigger
+    - Resources/Prototypes/_Trauma/tags.yml
+    - Resources/Textures/_Trauma/Markers
+    - Resources/Textures/_Trauma/empty.rsi
+    files: 525
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _Floof, _RMC14
@@ -38477,6 +40606,37 @@ features:
     - Resources/Prototypes/_FarHorizons/tags.yml
     - Resources/Prototypes/_Funkystation/tags.yml
     - Resources/_FarHorizons/migration.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _Imp, _NF, _Shitmed
+    files: 64
+    paths:
+    - Content.Goobstation.Client/Contraband
+    - Content.Goobstation.Client/IoC
+    - Content.Goobstation.Common/CCVar
+    - Content.Goobstation.Server/Contraband
+    - Content.Goobstation.Server/EntityEffects
+    - Content.Goobstation.Server/IoC
+    - Content.Goobstation.Shared/Contraband
+    - Content.Goobstation.Shared/EntityEffects
+    - Content.Goobstation.Shared/IoC
+    - Content.Goobstation.Shared/Serialization
+    - Content.Goobstation.Shared/Trigger
+    - Content.Goobstation.Shared/Whitelist
+    - Resources/Locale/en-US/_DV/datasets
+    - Resources/Locale/en-US/_DV/mind
+    - Resources/Locale/en-US/_DV/prototypes
+    - Resources/Locale/en-US/_Goobstation/damage
+    - Resources/Prototypes/_DV/Datasets
+    - Resources/Prototypes/_DV/name_identifier_groups.yml
+    - Resources/Prototypes/_DV/tags.yml
+    - Resources/Prototypes/_FarHorizons/Damage
+    - Resources/Prototypes/_Goobstation/Actions/types.yml
+    - Resources/Prototypes/_Goobstation/Damage
+    - Resources/Prototypes/_Goobstation/tags.yml
+    - Resources/Prototypes/_Imp/Tags.yml
+    - Resources/Prototypes/_NF/tags.yml
+    - Resources/Prototypes/_Shitmed/Damage
+    - Resources/Prototypes/_Shitmed/tags.yml
   assessments:
   - covers:
     - corvax
@@ -38677,6 +40837,14 @@ features:
     - Sunrise/Content.Sunrise.Interfaces.Shared/ISharedAccountBindingsManager.cs
     files: 3
     confidence: high
+  - fork: trauma-station
+    local_name: LinkAccount (account linking)
+    paths:
+    - Content.Trauma.Client/LinkAccount
+    - Content.Trauma.Common/LinkAccount
+    - Content.Trauma.Server/LinkAccount
+    files: 25
+    confidence: high
   carried_by:
   - fork: starlight
     via: _NullLink
@@ -38734,6 +40902,15 @@ features:
     - Content.Goobstation.Server/PlayerListener/RageQuitNotifySystem.Discord.cs
     - Content.Goobstation.Server/StationReport/StationReportDiscordIntergration.cs
     - Content.Goobstation.Server/StationReport/StationReportDiscordIntergrationSystem.cs
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 13
+    paths:
+    - Content.Goobstation.Common/StationReport
+    - Content.Goobstation.Server/PlayerListener
+    - Content.Goobstation.Server/StationReport
+    - Resources/Locale/en-US/_Goobstation/playerlistener
+    - Resources/Prototypes/_Goobstation/PlayerListener
   assessments:
   - covers:
     - rmc14
@@ -38994,6 +41171,14 @@ features:
     - Corvax/Content.Corvax.Interfaces.Shared/ISharedSponsorsManager.cs
     files: 5
     confidence: high
+  - fork: trauma-station
+    local_name: Patreon items
+    paths:
+    - Resources/Audio/_Trauma/Patreon
+    - Resources/Prototypes/_Trauma/Entities/Objects/PatreonItems
+    - Resources/Textures/_Trauma/Objects/Patreon
+    files: 120
+    confidence: medium
   carried_by:
   - fork: backmen
     via: Corvax, _DeadSpace
@@ -39038,6 +41223,11 @@ features:
     - Content.Client/_Starlight/GhostTheme
     - Content.Server/_Starlight/GhostTheme
     - Content.Shared/_Starlight/GhostTheme
+  - fork: trauma-station
+    via: Content.Goobstation.*
+    files: 2
+    paths:
+    - Content.Goobstation.Server/ContributorName
   assessments:
   - covers:
     - rmc14
@@ -39582,6 +41772,12 @@ features:
     - Resources/Prototypes/SS220/Entities/Objects/Specific/Xenoarchaeology
     files: 1
     confidence: medium
+  - fork: trauma-station
+    local_name: XenoArch partial
+    paths:
+    - Resources/Prototypes/_Trauma/Partials/XenoArch
+    files: 1
+    confidence: low
   carried_by:
   - fork: deltav
     via: _Impstation
@@ -39598,6 +41794,11 @@ features:
     - Resources/Prototypes/_Impstation/Entities/Mobs/Anomalites
     - Resources/Prototypes/_Impstation/Entities/Structures/Specific/Anomaly
     - Resources/Prototypes/_Impstation/XenoArch
+  - fork: trauma-station
+    via: _Goobstation
+    files: 1
+    paths:
+    - Resources/Locale/en-US/_Goobstation/xenoarchaeology
   assessments:
   - covers:
     - impstation
@@ -39953,6 +42154,15 @@ features:
     - Content.Shared/Backmen/Clothing
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Enchanting
+    paths:
+    - Content.Trauma.Shared/Enchanting
+    - Resources/Prototypes/_Trauma/Enchants
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Enchanting
+    - Resources/Textures/_Trauma/Objects/Enchanting
+    files: 81
+    confidence: high
   carried_by:
   - fork: far-horizons
     via: _Starlight (un-namespaced + partial)
@@ -40026,6 +42236,15 @@ features:
     files: 1
     paths:
     - Resources/Locale/en-US/_NF/implant
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 48
+    paths:
+    - Content.Goobstation.Client/Enchanting
+    - Content.Goobstation.Server/Enchanting
+    - Content.Goobstation.Shared/Enchanting
+    - Resources/Locale/en-US/_Goobstation/enchanting
+    - Resources/Prototypes/_Goobstation/Enchants
   assessments:
   - covers:
     - starlight
@@ -40399,6 +42618,14 @@ features:
     - Resources/Prototypes/_Impstation/Entities/Objects/Fishing
     files: 10
     confidence: high
+  - fork: trauma-station
+    local_name: Fishing
+    paths:
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/Fishing
+    - Resources/Textures/_Trauma/Objects/Specific/Fishing
+    - Resources/Textures/_Trauma/Structures/Fishing
+    files: 15
+    confidence: medium
   carried_by:
   - fork: einstein-engines
     via: _Goobstation
@@ -40444,6 +42671,20 @@ features:
     - Content.Shared/_Goobstation/Fishing
     - Resources/Locale/en-US/_Goobstation/fishing
     - Resources/Locale/ru-RU/_Goobstation/fishing
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 78
+    paths:
+    - Content.Goobstation.Client/Fishing
+    - Content.Goobstation.Server/Fishing
+    - Content.Goobstation.Shared/Fishing
+    - Resources/Audio/_Goobstation/Items/Fishing
+    - Resources/Locale/en-US/_Goobstation/fishing
+    - Resources/Prototypes/_Goobstation/Actions/fishing.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Fishing
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Tools/fishing_rods.yml
+    - Resources/Textures/_Goobstation/Interface/Misc/fish_bar.rsi
+    - Resources/Textures/_Goobstation/Objects/Specific/Fishing
   assessments:
   - covers:
     - goobstation
@@ -40708,6 +42949,17 @@ features:
     - Resources/Prototypes/_Funkystation/Guidebook
     files: 5
     confidence: high
+  - fork: trauma-station
+    local_name: Server rules and guidebook
+    paths:
+    - Content.Trauma.Client/Guidebook
+    - Resources/Locale/en-US/_Trauma/guidebook
+    - Resources/Prototypes/_Trauma/Guidebook
+    - Resources/Prototypes/_Trauma/Partials/Guidebook
+    - Resources/ServerInfo/_Trauma/Guidebook
+    - Resources/Textures/_Trauma/Guidebook
+    files: 108
+    confidence: high
   carried_by:
   - fork: frontier
     via: _EE
@@ -40843,6 +43095,17 @@ features:
     paths:
     - Resources/Prototypes/Nyanotrasen/Guidebook
     - Resources/ServerInfo/_Impstation
+  - fork: trauma-station
+    via: _FarHorizons, _Goobstation, _Impstation
+    files: 64
+    paths:
+    - Resources/Locale/en-US/_FarHorizons/guidebook
+    - Resources/Locale/en-US/_Goobstation/guidebook
+    - Resources/Prototypes/_FarHorizons/Guidebook
+    - Resources/Prototypes/_Goobstation/Guidebook
+    - Resources/ServerInfo/_FarHorizons/Guidebook
+    - Resources/ServerInfo/_Goobstation/Guidebook
+    - Resources/ServerInfo/_Impstation/Guidebook
   assessments:
   - covers:
     - sunrise
@@ -41956,6 +44219,19 @@ features:
     - Resources/Textures/Corvax/Interface/Emotes
     files: 13
     confidence: high
+  - fork: trauma-station
+    local_name: Speech, accents and voices
+    paths:
+    - Content.Trauma.Common/Speech
+    - Content.Trauma.Shared/Speech
+    - Resources/Locale/en-US/_Trauma/accent
+    - Resources/Locale/en-US/_Trauma/emotes.ftl
+    - Resources/Locale/en-US/_Trauma/speech
+    - Resources/Prototypes/_Trauma/Accents
+    - Resources/Prototypes/_Trauma/Voice
+    - Resources/Textures/_Trauma/Mobs/Effects/emote_visuals.rsi
+    files: 46
+    confidence: medium
   carried_by:
   - fork: impstation
     via: _EE
@@ -42377,6 +44653,34 @@ features:
     - Resources/Textures/Backmen/Interface/Emotes
     - Resources/Textures/Backmen/Interface/emotions.svg.192dpi.png
     - Resources/Textures/Backmen/Interface/emotions.svg.192dpi.png.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Corvax, _Goobstation, _Impstation, _Mono, _NF, _RMC14, _White
+    files: 149
+    paths:
+    - Content.Goobstation.Client/Barks
+    - Content.Goobstation.Client/Emoting
+    - Content.Goobstation.Common/Barks
+    - Content.Goobstation.Common/Speech
+    - Content.Goobstation.Server/Emoting
+    - Content.Goobstation.Shared/Emoting
+    - Content.Goobstation.Shared/Speech
+    - Resources/Audio/_Goobstation/Voice
+    - Resources/Audio/_Impstation/Effects
+    - Resources/Audio/_Impstation/Voice
+    - Resources/Audio/_Mono/Voice
+    - Resources/Locale/en-US/_Goobstation/accent
+    - Resources/Locale/en-US/_Goobstation/emotes.ftl
+    - Resources/Locale/en-US/_Impstation/chat
+    - Resources/Locale/en-US/_NF/accent
+    - Resources/Locale/en-US/_RMC14/ui.ftl
+    - Resources/Prototypes/_Corvax/barks.yml
+    - Resources/Prototypes/_Goobstation/Accents
+    - Resources/Prototypes/_Goobstation/Actions/emotes.yml
+    - Resources/Prototypes/_Goobstation/Actions/types.yml
+    - Resources/Prototypes/_Goobstation/Voice
+    - Resources/Prototypes/_NF/Accents
+    - Resources/Prototypes/_White/Voice
+    - Resources/Textures/_Impstation/Interface/Emotes
   assessments:
   - covers:
     - rmc14
@@ -43212,6 +45516,14 @@ features:
     - Resources/Prototypes/_Sunrise/Traits
     files: 4
     confidence: high
+  - fork: trauma-station
+    local_name: Traits
+    paths:
+    - Content.Trauma.Server/Traits
+    - Resources/Locale/en-US/_Trauma/traits
+    - Resources/Prototypes/_Trauma/Traits
+    files: 6
+    confidence: medium
   carried_by:
   - fork: estacao-pirata
     via: SimpleStation14
@@ -43312,6 +45624,17 @@ features:
     - Resources/Prototypes/_DV/Traits/neutral.yml
     - Resources/Prototypes/_Harmony/Traits
     - Resources/Prototypes/_NF/Traits/neutral.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _Goobstation
+    files: 11
+    paths:
+    - Content.Goobstation.Client/Traits
+    - Content.Goobstation.Common/Traits
+    - Content.Goobstation.Shared/Traits
+    - Resources/Locale/en-US/_DV/traits
+    - Resources/Locale/en-US/_Goobstation/traits
+    - Resources/Prototypes/_DV/Traits
+    - Resources/Prototypes/_Goobstation/Traits
   assessments:
   - covers:
     - backmen
@@ -43541,6 +45864,14 @@ features:
     - Resources/Prototypes/_Gabystation/Entities/Objects/Misc/arrest_warrant.yml
     files: 2
     confidence: medium
+  - fork: trauma-station
+    local_name: Paper
+    paths:
+    - Content.Trauma.Common/Paper
+    - Content.Trauma.Shared/Paper
+    - Resources/Textures/_Trauma/Objects/Specific/alienpaper.rsi
+    files: 9
+    confidence: low
   carried_by:
   - fork: starlight
     via: _CD (partial)
@@ -43689,6 +46020,17 @@ features:
     - Resources/Prototypes/_DV/Entities/Objects/Misc/paper.yml
     - Resources/Prototypes/_Harmony/Entities/Objects/Misc/books.yml
     - Resources/Prototypes/_Harmony/Recipes/Lathes/paper.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _Goobstation
+    files: 10
+    paths:
+    - Content.Goobstation.Server/Fax
+    - Content.Goobstation.Shared/Fax
+    - Resources/Locale/en-US/_DV/paper
+    - Resources/Locale/en-US/_Goobstation/paper
+    - Resources/Prototypes/_DV/Entities/Objects/Misc/paper.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Misc/books.yml
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Misc/pen.yml
   assessments:
   - covers:
     - sunrise
@@ -44438,6 +46780,21 @@ features:
     - Resources/Prototypes/_Funkystation/Roles/GhostRoles
     files: 3
     confidence: medium
+  - fork: trauma-station
+    local_name: Ghost features and ghost roles
+    paths:
+    - Content.Trauma.Client/Ghost
+    - Content.Trauma.Client/GhostColor
+    - Content.Trauma.Common/Ghost
+    - Content.Trauma.Server/Ghost
+    - Content.Trauma.Shared/Ghost
+    - Content.Trauma.Shared/GhostColor
+    - Resources/Locale/en-US/_Trauma/ghost
+    - Resources/Locale/en-US/_Trauma/ghostrolealert
+    - Resources/Locale/en-US/_Trauma/observer
+    - Resources/Prototypes/_Trauma/GhostRoleRaffles
+    files: 31
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _Corvax, _NF, _Impstation, _FarHorizons
@@ -44546,6 +46903,15 @@ features:
     paths:
     - Content.Server/DeltaV/Administration
     - Content.Server/DeltaV/Ghost
+  - fork: trauma-station
+    via: _FarHorizons, _Goobstation, _Imp, _white
+    files: 16
+    paths:
+    - Resources/Locale/en-US/_FarHorizons/ghost
+    - Resources/Locale/en-US/_Goobstation/ghost/ghost-role-component.ftl
+    - Resources/Locale/en-US/_Imp/Drone
+    - Resources/Locale/en-US/_white/ghost/roles
+    - Resources/Textures/_Imp/Drone
   assessments:
   - covers:
     - ephemeral-space
@@ -44942,6 +47308,16 @@ features:
     - Resources/Audio/_Goobstation/Loudspeaker
     - Resources/Audio/_Goobstation/RadioStation
     - Resources/Prototypes/_Goobstation/Loudspeaker
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 129
+    paths:
+    - Content.Goobstation.Server/StationRadio
+    - Content.Goobstation.Shared/Loudspeaker
+    - Content.Goobstation.Shared/StationRadio
+    - Resources/Audio/_Goobstation/Loudspeaker
+    - Resources/Audio/_Goobstation/RadioStation
+    - Resources/Prototypes/_Goobstation/Loudspeaker
   assessments:
   - covers:
     - estacao-pirata
@@ -45152,6 +47528,17 @@ features:
     - Resources/Locale/en-US/_NF/station-records
     files: 6
     confidence: medium
+  - fork: trauma-station
+    local_name: Forensics and criminal records
+    paths:
+    - Content.Trauma.Client/Forensics
+    - Content.Trauma.Common/Forensics
+    - Content.Trauma.Server/Forensics
+    - Content.Trauma.Shared/Forensics
+    - Resources/Locale/en-US/_Trauma/criminal-records
+    - Resources/Locale/en-US/_Trauma/forensics
+    files: 11
+    confidence: low
   carried_by:
   - fork: the-den
     via: _CD, _EE
@@ -45522,6 +47909,18 @@ features:
     - Resources/Prototypes/_Mono/radio_channels.yml
     files: 10
     confidence: high
+  - fork: trauma-station
+    local_name: Languages and collective mind
+    paths:
+    - Content.Trauma.Client/Language
+    - Content.Trauma.Common/CollectiveMind
+    - Content.Trauma.Common/Language
+    - Content.Trauma.Server/Language
+    - Content.Trauma.Shared/Language
+    - Resources/Locale/en-US/_Trauma/language
+    - Resources/Prototypes/_Trauma/Language
+    files: 40
+    confidence: high
   carried_by:
   - fork: far-horizons
     via: _Starlight (partial)
@@ -45589,6 +47988,15 @@ features:
     paths:
     - Resources/Locale/en-US/_DEN/language
     - Resources/Prototypes/_DEN/Language
+  - fork: trauma-station
+    via: _EinsteinEngines, _Goobstation, _Starlight, _White
+    files: 9
+    paths:
+    - Content.IntegrationTests/Tests/_EinsteinEngines/Language
+    - Resources/Locale/en-US/_Starlight/collective-mind
+    - Resources/Prototypes/_Goobstation/CollectiveMind
+    - Resources/Prototypes/_Goobstation/Languages
+    - Resources/Prototypes/_White/Language
   assessments:
   - covers:
     - backmen
@@ -45852,6 +48260,18 @@ features:
     paths:
     - Content.Client/_Goobstation/TapeRecorder
     - Content.Shared/_Goobstation/TapeRecorder
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV
+    files: 29
+    paths:
+    - Content.Goobstation.Client/TapeRecorder
+    - Content.Goobstation.Server/TapeRecorder
+    - Content.Goobstation.Shared/TapeRecorder
+    - Resources/Audio/_DV/Items/TapeRecorder
+    - Resources/Locale/en-US/_DV/taperecorder
+    - Resources/Prototypes/_DV/Entities/Objects/Devices/tape_recorder.yml
+    - Resources/Textures/_DV/Objects/Devices/cassette_tapes.rsi
+    - Resources/Textures/_DV/Objects/Devices/tape_recorder.rsi
   assessments:
   - covers:
     - rmc14
@@ -46432,6 +48852,26 @@ features:
     - Resources/Locale/en-US/_Dumont/Religion/EntitySystems/UnholyItemSystem.ftl
     files: 2
     confidence: high
+  - fork: trauma-station
+    local_name: Chaplain, prayers, bible, empty scroll
+    paths:
+    - Content.Trauma.Client/EmptyScroll
+    - Content.Trauma.Common/Bible
+    - Content.Trauma.Common/Chaplain
+    - Content.Trauma.Server/Chaplain
+    - Content.Trauma.Shared/Chaplain
+    - Content.Trauma.Shared/EmptyScroll
+    - Resources/Locale/en-US/_Trauma/prayer
+    - Resources/Locale/en-US/_Trauma/religion
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/emptyscroll.yml
+    - Resources/Prototypes/_Trauma/Prayers
+    - Resources/Textures/_Trauma/Mobs/Effects/onholyfire.rsi
+    - Resources/Textures/_Trauma/Objects/Misc/holy_fire_extinguisher.rsi
+    - Resources/Textures/_Trauma/Objects/Specific/empty_scroll.rsi
+    - Resources/Textures/_Trauma/Objects/Weapons/Nullrod
+    - Resources/Textures/_Trauma/Structures/crucifix.rsi
+    files: 57
+    confidence: medium
   carried_by:
   - fork: deltav
     via: _Goobstation
@@ -46454,6 +48894,17 @@ features:
     - Content.Shared/_Goobstation/Bible
     - Content.Shared/_Goobstation/Exorcism
     - Content.Shared/_Goobstation/Religion
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation
+    files: 31
+    paths:
+    - Content.Goobstation.Common/Religion
+    - Content.Goobstation.Server/Chaplain
+    - Content.Goobstation.Server/Religion
+    - Content.Goobstation.Shared/Bible
+    - Content.Goobstation.Shared/Exorcism
+    - Content.Goobstation.Shared/Religion
+    - Resources/Textures/_Goobstation/Objects/Specific/Chapel
   assessments:
   - covers:
     - gaby-station-now-dumont-station
@@ -47568,6 +50019,16 @@ features:
     - Resources/Textures/_DV/Mobs
     files: 53
     confidence: high
+  - fork: trauma-station
+    local_name: Wings, facepaint and markings
+    paths:
+    - Content.Trauma.Common/Humanoid
+    - Content.Trauma.Shared/Humanoid
+    - Resources/Locale/en-US/_Trauma/markings
+    - Resources/Prototypes/_Trauma/AppearanceCustomization
+    - Resources/Textures/_Trauma/Mobs/Customization
+    files: 177
+    confidence: medium
   carried_by:
   - fork: the-den
     via: _ADT, _DV, _Impstation, _Floof
@@ -47767,6 +50228,21 @@ features:
     paths:
     - Resources/Textures/_MACRO/Mobs/Customization
     - Resources/Textures/_Starfall/Mobs/Species/Playable/Human/parts.rsi
+  - fork: trauma-station
+    via: _DV, _EinsteinEngines, _Goobstation, _Impstation, _White
+    files: 883
+    paths:
+    - Resources/Locale/en-US/_EinsteinEngines/markings
+    - Resources/Locale/en-US/_Goobstation/accessories
+    - Resources/Locale/en-US/_Goobstation/markings
+    - Resources/Locale/en-US/_Impstation/markings
+    - Resources/Prototypes/_Goobstation/AppearanceCustomization
+    - Resources/Prototypes/_Goobstation/Entities/Mobs/Customization
+    - Resources/Prototypes/_White/Entities/Mobs/Customization/Markings
+    - Resources/Textures/_DV/Mobs
+    - Resources/Textures/_Goobstation/Mobs/Customization
+    - Resources/Textures/_Impstation/Mobs/Customization
+    - Resources/Textures/_White/Mobs/Customization
   assessments:
   - covers:
     - corvax
@@ -48017,6 +50493,13 @@ features:
     - Resources/ServerInfo/_Impstation/Guidebook/Mobs/Ungu.xml
     files: 45
     confidence: high
+  - fork: trauma-station
+    local_name: Species sprite variants
+    paths:
+    - Resources/Prototypes/_Trauma/Partials/Entities/Mobs/Player
+    - Resources/Textures/_Trauma/Mobs/Species
+    files: 33
+    confidence: low
   carried_by:
   - fork: starlight
     via: _FarHorizons
@@ -48382,6 +50865,16 @@ features:
     - Resources/ServerInfo/_Harmony/Guidebook/Mobs/Avali.xml
     - Resources/Textures/_Harmony/Mobs/Customization/Avali
     - Resources/Textures/_Harmony/Mobs/Species/Avali
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _Impstation, _Shitmed
+    files: 47
+    paths:
+    - Content.Goobstation.Server/Humanoid
+    - Resources/Locale/en-US/_Impstation/species
+    - Resources/Prototypes/_Goobstation/Species
+    - Resources/Prototypes/_Shitmed/Species
+    - Resources/Textures/_Goobstation/Mobs/Species
+    - Resources/Textures/_Impstation/Mobs/Species
   assessments:
   - covers:
     - corvax
@@ -48800,6 +51293,14 @@ features:
     - Content.Server/_EE/ChangeableSex
     - Content.Shared/_EE/GenderChange
     - Content.Shared/_White/Jump
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV, _white
+    files: 5
+    paths:
+    - Content.Goobstation.Common/Devour
+    - Content.Goobstation.Shared/Devour
+    - Resources/Locale/en-US/_white/blink
+    - Resources/Prototypes/_DV/Entities/Objects/Misc/mouth_storage.yml
   assessments:
   - covers:
     - sunrise
@@ -49481,6 +51982,13 @@ features:
     - Resources/Prototypes/_Sunrise/Species/predator.yml
     files: 12
     confidence: medium
+  - fork: trauma-station
+    local_name: Decapoids
+    paths:
+    - Content.Trauma.Server/Decapoids
+    - Content.Trauma.Shared/Decapoids
+    files: 4
+    confidence: medium
   carried_by:
   - fork: forky
     via: _MACRO
@@ -49685,6 +52193,11 @@ features:
     - Resources/Prototypes/_Impstation/InventoryTemplates/allulalo_inventory_template.yml
     - Resources/Prototypes/_Impstation/Species/allulalo.yml
     - Resources/ServerInfo/_Impstation/Guidebook/Mobs/Allulalo.xml
+  - fork: trauma-station
+    via: _Impstation
+    files: 1
+    paths:
+    - Resources/ServerInfo/_Impstation/Guidebook/Mobs/Decapoid.xml
   assessments:
   - covers:
     - impstation
@@ -49975,6 +52488,24 @@ features:
     - Resources/Prototypes/_Mono/StatusIcon/job.yml
     files: 3
     confidence: low
+  - fork: trauma-station
+    local_name: User actions, alerts, status icons, waypointer
+    paths:
+    - Content.Trauma.Client/StatusEffects
+    - Content.Trauma.Client/UserActions
+    - Content.Trauma.Client/Waypointer
+    - Content.Trauma.Server/Waypointer
+    - Content.Trauma.Shared/StatusEffects
+    - Content.Trauma.Shared/Waypointer
+    - Resources/Locale/en-US/_Trauma/alerts
+    - Resources/Prototypes/_Trauma/Alerts
+    - Resources/Prototypes/_Trauma/Entities/StatusEffects
+    - Resources/Prototypes/_Trauma/Partials/StatusIcon
+    - Resources/Prototypes/_Trauma/StatusEffects
+    - Resources/Prototypes/_Trauma/StatusIcon
+    - Resources/Prototypes/_Trauma/Waypointers
+    files: 84
+    confidence: medium
   carried_by:
   - fork: far-horizons
     via: _Starlight (partial)
@@ -50074,6 +52605,20 @@ features:
     files: 2
     paths:
     - Content.Client/_NF/Hands
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _NF, _White
+    files: 103
+    paths:
+    - Content.Goobstation.Client/Alert
+    - Content.Goobstation.Shared/Alert
+    - Resources/Locale/en-US/_NF/hands
+    - Resources/Prototypes/_Goobstation/Alerts
+    - Resources/Prototypes/_Goobstation/StatusIcon
+    - Resources/Prototypes/_Goobstation/hud.yml
+    - Resources/Prototypes/_White/Alerts
+    - Resources/Textures/_Goobstation/Actions
+    - Resources/Textures/_Goobstation/Interface/Alerts
+    - Resources/Textures/_NF/Actions
   assessments:
   - covers:
     - rmc14
@@ -51109,6 +53654,19 @@ features:
     - Content.Stellar.Server/Administration
     files: 1
     confidence: medium
+  - fork: trauma-station
+    local_name: Admin tools
+    paths:
+    - Content.Trauma.Server/Administration
+    - Content.Trauma.Shared/Administration
+    - Resources/Locale/en-US/_Trauma/administration
+    - Resources/Locale/en-US/_Trauma/sandbox
+    - Resources/Locale/en-US/_Trauma/warps
+    - Resources/Prototypes/_Trauma/Admin
+    - Resources/Prototypes/_Trauma/Entities/Debugging
+    - Resources/Prototypes/_Trauma/Partials/Admin
+    files: 11
+    confidence: low
   carried_by:
   - fork: starlight
     via: _CD (partial)
@@ -51263,6 +53821,18 @@ features:
     paths:
     - Resources/Locale/en-US/_FarHorizons/administration/smites.ftl
     - Resources/Prototypes/_FarHorizons/Polymorphs/admin.yml
+  - fork: trauma-station
+    via: Content.Goobstation.*, _FarHorizons, _Goobstation
+    files: 29
+    paths:
+    - Content.Goobstation.Client/Administration
+    - Content.Goobstation.Common/Administration
+    - Content.Goobstation.Server/Administration
+    - Content.Goobstation.Shared/Administration
+    - Resources/Locale/en-US/_FarHorizons/administration
+    - Resources/Locale/en-US/_Goobstation/administration
+    - Resources/Prototypes/_Goobstation/Admin_shit
+    - Resources/Prototypes/_Goobstation/MisandryBox
   assessments:
   - covers:
     - serbia-strong
@@ -51975,6 +54545,12 @@ features:
     - Resources/Textures/_CD/LobbyScreens
     files: 4
     confidence: high
+  - fork: trauma-station
+    local_name: Preferences locale
+    paths:
+    - Resources/Locale/en-US/_Trauma/preferences
+    files: 1
+    confidence: low
   carried_by:
   - fork: starlight
     via: _CD
@@ -52056,6 +54632,11 @@ features:
     files: 3
     paths:
     - Content.Client/_RMC14/UserInterface
+  - fork: trauma-station
+    via: _Starfall
+    files: 1
+    paths:
+    - Resources/Locale/en-US/_Starfall/escape-menu/ui
   assessments:
   - covers:
     - cosmatic-drift
@@ -52247,6 +54828,26 @@ features:
     paths:
     - Content.Client/_Funkystation/Crayon/Overlays/CrayonPlacementOverlay.cs
     files: 1
+    confidence: medium
+  - fork: trauma-station
+    local_name: Particles and effects
+    paths:
+    - Content.Trauma.Client/Effects
+    - Content.Trauma.Client/Particles
+    - Content.Trauma.Common/Effects
+    - Content.Trauma.Common/Popups
+    - Content.Trauma.Server/Particles
+    - Content.Trauma.Shared/Effects
+    - Content.Trauma.Shared/Particles
+    - Resources/Prototypes/_Trauma/Entities/Effects
+    - Resources/Prototypes/_Trauma/Entities/Objects/Specific/floorfire.yml
+    - Resources/Prototypes/_Trauma/Particles
+    - Resources/Prototypes/_Trauma/light_masks.yml
+    - Resources/Textures/_Trauma/Effects/LightMasks
+    - Resources/Textures/_Trauma/Effects/fire.rsi
+    - Resources/Textures/_Trauma/Effects/floorfire.rsi
+    - Resources/Textures/_Trauma/Effects/void_pocket.rsi
+    files: 36
     confidence: medium
   carried_by:
   - fork: sunrise
@@ -52446,6 +55047,18 @@ features:
     - Content.Shared/_White/Collision/Blur
     - Resources/Textures/_EE/Effects
     - Resources/Textures/_Goobstation/Effects
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _RMC14, _Starfall
+    files: 36
+    paths:
+    - Content.Goobstation.Client/SpecialAnimation
+    - Content.Goobstation.Server/SpecialAnimation
+    - Content.Goobstation.Shared/SpecialAnimation
+    - Resources/Prototypes/_Goobstation/SpecialAnimations
+    - Resources/Prototypes/_Starfall/particle_effects.yml
+    - Resources/Textures/_Goobstation/Effects
+    - Resources/Textures/_RMC14/Effects
+    - Resources/Textures/_Starfall/Particles
   assessments:
   - covers:
     - rmc14
@@ -52981,6 +55594,17 @@ features:
     - Resources/Textures/_Funkystation/Shaders/goggles.swsl
     files: 14
     confidence: high
+  - fork: trauma-station
+    local_name: Viewcone
+    paths:
+    - Content.Trauma.Client/Overlays
+    - Content.Trauma.Client/Viewcone
+    - Content.Trauma.Shared/Blur
+    - Content.Trauma.Shared/Viewcone
+    - Resources/Locale/en-US/_Trauma/viewcone
+    - Resources/Textures/_Trauma/Effects/viewcone_effects.rsi
+    files: 26
+    confidence: medium
   carried_by:
   - fork: starlight
     via: _CP14 (partial)
@@ -53124,6 +55748,22 @@ features:
     - Resources/Prototypes/_NF/Shaders
     - Resources/Prototypes/_NF/shaders.yml
     - Resources/Textures/_NF/Shaders
+  - fork: trauma-station
+    via: Content.Goobstation.*, _Goobstation, _White
+    files: 48
+    paths:
+    - Content.Goobstation.Client/Overlays
+    - Content.Goobstation.Shared/Overlays
+    - Resources/Audio/_Goobstation/Nigthvision
+    - Resources/Audio/_White/Items/Goggles
+    - Resources/Prototypes/_Goobstation/Shaders
+    - Resources/Prototypes/_White/Actions
+    - Resources/Prototypes/_White/Entities/Clothing/Eyes
+    - Resources/Prototypes/_White/Research
+    - Resources/Prototypes/_White/Shaders
+    - Resources/Textures/_Goobstation/Shaders
+    - Resources/Textures/_White/Clothing/Eyes
+    - Resources/Textures/_White/Shaders
   assessments:
   - covers:
     - rmc14
@@ -53673,6 +56313,25 @@ features:
     - Resources/Prototypes/_CD/extendable_example.yml
     files: 8
     confidence: high
+  - fork: trauma-station
+    local_name: Storage, strip and inventory tweaks
+    paths:
+    - Content.Trauma.Client/ItemSlotRenderer
+    - Content.Trauma.Common/Inventory
+    - Content.Trauma.Common/Storage
+    - Content.Trauma.Common/Strip
+    - Content.Trauma.Shared/Containers
+    - Content.Trauma.Shared/Inventory
+    - Content.Trauma.Shared/Storage
+    - Content.Trauma.Shared/Strip
+    - Resources/Locale/en-US/_Trauma/storage
+    - Resources/Locale/en-US/_Trauma/strip
+    - Resources/Prototypes/_Trauma/Entities/Objects/Storage
+    - Resources/Prototypes/_Trauma/Inventory
+    - Resources/Prototypes/_Trauma/InventoryTemplates
+    - Resources/Prototypes/_Trauma/Partials/item_size.yml
+    files: 36
+    confidence: low
   carried_by:
   - fork: ephemeral-space
     via: _Offbrand
@@ -53765,6 +56424,14 @@ features:
     files: 2
     paths:
     - Content.Shared/_NF/Storage
+  - fork: trauma-station
+    via: Content.Goobstation.*, _DV
+    files: 12
+    paths:
+    - Content.Goobstation.Shared/Containers
+    - Content.Goobstation.Shared/Inventory
+    - Content.Goobstation.Shared/Storage
+    - Resources/Locale/en-US/_DV/storage
   assessments:
   - covers:
     - cosmatic-drift
@@ -53916,6 +56583,19 @@ features:
     - Resources/Locale/en-US/_DV/nanochat
     files: 5
     confidence: high
+  - fork: trauma-station
+    local_name: Cartridge loader / NanoChat
+    paths:
+    - Content.Trauma.Client/CartridgeLoader
+    - Content.Trauma.Client/NanoChat
+    - Content.Trauma.Common/CartridgeLoader
+    - Content.Trauma.Common/NanoChat
+    - Content.Trauma.Server/NanoChat
+    - Content.Trauma.Shared/CartridgeLoader
+    - Content.Trauma.Shared/NanoChat
+    - Resources/Textures/_Trauma/Objects/Devices/pda.rsi
+    files: 37
+    confidence: medium
   carried_by:
   - fork: the-den
     via: _Funkystation, _DV
@@ -53983,6 +56663,11 @@ features:
     paths:
     - Content.Client/_DV/NanoChat
     - Content.Shared/_DV/NanoChat
+    - Resources/Locale/en-US/_DV/nanochat
+  - fork: trauma-station
+    via: _DV
+    files: 1
+    paths:
     - Resources/Locale/en-US/_DV/nanochat
   assessments:
   - covers:
@@ -54388,6 +57073,13 @@ features:
     - Content.Server/_Starlight/PAI
     - Content.Shared/_FarHorizons/CartridgeLoader/Cartridges
     - Content.Shared/_Starlight/PAI
+  - fork: trauma-station
+    via: _DV, _Goobstation
+    files: 3
+    paths:
+    - Resources/Locale/en-US/_DV/cartridge-loader
+    - Resources/Locale/en-US/_DV/pda
+    - Resources/Prototypes/_Goobstation/Entities/Objects/Devices/pda.yml
   assessments:
   - covers:
     - backmen
@@ -55061,6 +57753,11 @@ unmapped:
   name: Content.Server/DiscordAuth vs upstream Content.Server/Discord
   why: Mapped to discord-and-external-services, but only the fork's DiscordAuth gate is counted; upstream
     already ships Content.Server/Discord webhooks, which are deliberately excluded.
+- fork: trauma-station
+  name: 'Gimmick systems: CardboardBox, Arena, Mime abilities'
+  why: '10 code files (Content.Trauma.Shared/Common CardboardBox: a hide-in-box stealth gimmick; Arena:
+    an action that builds a duel arena; Abilities/Mime: mime vow punishment). Each is a one-off gimmick;
+    no catalogue id covers stealth boxes, arena creation or mime vows.'
 - fork: viva-station
   name: Undecomposed vendored downstream inheritance (~7,900 blobs)
   why: 'Viva Station is a thin fork of Funky Station: only ~129 blobs live under _Viva. The tree carries

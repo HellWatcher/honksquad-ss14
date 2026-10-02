@@ -93,8 +93,9 @@ Research stops being one science tree and becomes a set of rival manufacturer ca
 | funky | Fork research technologies (arsenal, civilian services) | 4 | `Resources/Locale/en-US/_Funkystation/research` (+2) |
 | serbia-strong | Fork research technologies | 3 | `Resources/Prototypes/SS220/Research` |
 | stellar-station | Departmental techfabs | 3 | `Resources/Locale/en-US/_ST/lathe/lathe-categories.ftl` (+2) |
+| trauma-station | Research and lathe recipes | 65 | `Content.Trauma.Common/Lathe` (+7) |
 
-Also carried by 6: estacao-pirata (via `Nyanotrasen`), einstein-engines (via `Nyanotrasen, _Arcadis`), white-dream (via `_Goobstation, _EE, _Shitmed, _Arcadis`), deltav (via `_White`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`)
+Also carried by 7: estacao-pirata (via `Nyanotrasen`), einstein-engines (via `Nyanotrasen, _Arcadis`), white-dream (via `_Goobstation, _EE, _Shitmed, _Arcadis`), deltav (via `_White`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`), trauma-station (via `Content.Goobstation.*, _FarHorizons, _Goobstation, _Shitmed, _white`)
 
 ### Construction and crafting
 
@@ -133,8 +134,9 @@ Across these ten forks this is mostly a large pile of extra things you can build
 | gaby-station-now-dumont-station | Fork lathe packs, construction graphs, RCD/RPD and flatpack recipes | 16 | `Resources/Prototypes/_Gabystation/Entities/Objects/Devices/flatpack.yml` (+10) |
 | cosmatic-drift | Construction graphs for the fork's furniture, windows, containers and web nests | 15 | `Resources/Locale/en-US/_CD/construction` (+4) |
 | corvax | Fork lathe categories, flatpacks, circuitboards and material stacks | 13 | `Resources/Locale/en-US/corvax/lathe/lathe-categories.ftl` (+10) |
+| trauma-station | Forging, durability, quality, construction and crafting | 424 | `Content.Trauma.Client/Construction` (+33) |
 
-Also carried by 12: far-horizons (via `_Starlight, _Funkystation, _TP`), deltav (via `_Starlight, _Goobstation, _Impstation, _NF, _DEN, _Nuclear14, _EE, _Floof, _Funkystation, _Mono`), frontier (via `_DV, _Goobstation, _Impstation`), starlight (via `_DEN, _Funkystation, _Moffstation, _TP, _FarHorizons, _Carpmosia (partial)`), sunrise (via `_Starlight`), the-den (via `_Goobstation, _NF, _Nuclear14`), white-dream (via `_Goobstation, _EE, _Nuclear14, _NF, _Shitmed, _Funkystation`), backmen (via `partly Corvax, _CorvaxNext, _White, _Goobstation`), einstein-engines (via `Nyanotrasen, DeltaV`), forky (via `_FarHorizons`), harmony-station (via `_Sich + _DV`), starfall-drift (via `_FarHorizons`)
+Also carried by 13: far-horizons (via `_Starlight, _Funkystation, _TP`), deltav (via `_Starlight, _Goobstation, _Impstation, _NF, _DEN, _Nuclear14, _EE, _Floof, _Funkystation, _Mono`), frontier (via `_DV, _Goobstation, _Impstation`), starlight (via `_DEN, _Funkystation, _Moffstation, _TP, _FarHorizons, _Carpmosia (partial)`), sunrise (via `_Starlight`), the-den (via `_Goobstation, _NF, _Nuclear14`), white-dream (via `_Goobstation, _EE, _Nuclear14, _NF, _Shitmed, _Funkystation`), backmen (via `partly Corvax, _CorvaxNext, _White, _Goobstation`), einstein-engines (via `Nyanotrasen, DeltaV`), forky (via `_FarHorizons`), harmony-station (via `_Sich + _DV`), starfall-drift (via `_FarHorizons`), trauma-station (via `Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _Mono, _NF, _Shitmed, _StarLight, _White`)
 
 ### Power grid and device networking
 
@@ -189,6 +191,7 @@ Engineering gets a bluespace harvester: a machine you dial up through ten levels
 | serbia-strong | Power and device-linking additions | 8 | `Content.Server/Power/EntitySystems/PowerChargeSystem.SS220.cs` (+7) |
 | monolith | Device-linking ports and power cells | 5 | `Resources/Locale/en-US/_Mono/machine-linking/ports.ftl` (+3) |
 | cosmatic-drift | Laser power receiver | 4 | `Resources/Prototypes/_CD/Entities/Structures/Power/Generation/laser_receiver.yml` (+1) |
+| trauma-station | Power, device linking, radio, wires | 27 | `Content.Trauma.Client/Power` (+14) |
 
 Also carried by 7: frontier (via `_DV`), deltav (via `_Goobstation, _FarHorizons`), far-horizons (via `_Starlight (partial)`), impstation (via `_Goobstation`), the-den (via `_DV, _Goobstation`), einstein-engines (via `_Nuclear14`), white-dream (via `_Nuclear14`)
 
@@ -219,8 +222,9 @@ A pilot sitting at a shuttle console gets a lot more than thrust and rotation. T
 | starlight | Shuttle and grid handling additions | 11 | `Content.Server/_Starlight/Grid` (+4) |
 | monolith | Shuttle piloting: autopilot, boost and scuttling | 10 | `Content.Server/_Mono/ScuttleDevice` (+5) |
 | corvax | FTL travel-time command and guidebook readout | 3 | `Content.Client/Corvax/Guidebook` (+1) |
+| trauma-station | Shuttle tweaks | 4 | `Content.Trauma.Common/Shuttles` (+1) |
 
-Also carried by 8: sunrise (via `_Starlight (partial)`), backmen (via `_Lua (LuaStation)`), white-dream (via `_NF, _Lavaland`), deltav (via `_NF`), einstein-engines (via `_NF`), harmony-station (via `_NF`), the-den (via `_NF`), far-horizons (via `_Starlight (partial)`)
+Also carried by 9: sunrise (via `_Starlight (partial)`), backmen (via `_Lua (LuaStation)`), white-dream (via `_NF, _Lavaland`), deltav (via `_NF`), einstein-engines (via `_NF`), harmony-station (via `_NF`), the-den (via `_NF`), far-horizons (via `_Starlight (partial)`), trauma-station (via `_DV, _NF`)
 
 ### Supermatter engine
 
@@ -272,7 +276,7 @@ Engineering gets a glowing crystal reactor instead of just flipping on a generat
 | goobstation | Supermatter engine | 27 | `Content.Goobstation.Client/Supermatter` (+6) |
 | starlight | Supermatter hooks | 2 | `Content.Shared/_Starlight/Supermatter` |
 
-Also carried by 5: the-den (via `_EE`), impstation (via `_EE`), white-dream (via `_EE`), far-horizons (via `_Starlight`), sunrise (via `_Starlight`)
+Also carried by 6: the-den (via `_EE`), impstation (via `_EE`), white-dream (via `_EE`), far-horizons (via `_Starlight`), sunrise (via `_Starlight`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Fusion reactor
 
@@ -339,7 +343,7 @@ Neither fork rebuilds the engine; both add small behavioural tweaks around it. O
 | goobstation | Singularity handling tweaks | 7 | `Content.Goobstation.Common/Singularity` (+1) |
 | serbia-strong | Radiation reduction components | 2 | `Content.Server/SS220/RadiationDecrease` (+1) |
 
-Also carried by 1: frontier (via `_DV`)
+Also carried by 2: frontier (via `_DV`), trauma-station (via `Content.Goobstation.*`)
 
 ### Fission reactor
 
@@ -361,8 +365,9 @@ Engineers get a nuclear reactor as an alternative to the station's usual engine:
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | far-horizons | Nuclear fission reactor and gas turbine | 62 | `Content.Client/_FarHorizons/Power` (+6) |
+| trauma-station | Nuclear (fission reactor, gas turbine) | 42 | `Content.Trauma.Client/Nuclear` (+2) |
 
-Also carried by 4: starfall-drift (via `_FarHorizons`), forky (via `_FarHorizons`), starlight (via `_FarHorizons`), deltav (via `_FarHorizons`)
+Also carried by 5: starfall-drift (via `_FarHorizons`), forky (via `_FarHorizons`), starlight (via `_FarHorizons`), deltav (via `_FarHorizons`), trauma-station (via `_FarHorizons`)
 
 ### Factory automation
 
@@ -384,8 +389,9 @@ You can build a production line that keeps working while you walk away. Robotic 
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | goobstation | Factory / plumbing automation | 69 | `Content.Goobstation.Client/Factory` (+3) |
+| trauma-station | Content.Factory machines, circuits and _Factory resources | 178 | `Content.Factory.Client/Circuits` (+38) |
 
-Also carried by 3: deltav (via `_Goobstation`), the-den (via `_Goobstation`), impstation (via `_Goobstation`)
+Also carried by 4: deltav (via `_Goobstation`), the-den (via `_Goobstation`), impstation (via `_Goobstation`), trauma-station (via `_Goobstation`)
 
 ### Warp drive
 
