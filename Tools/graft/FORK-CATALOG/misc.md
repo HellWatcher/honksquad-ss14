@@ -223,8 +223,9 @@ This fork's contribution here is one file of joke and flavour animals layered on
 | funky | Fork NPC mobs (animals, gondola) | 10 | `Resources/Prototypes/_Funkystation/Entities/Mobs/NPCs` (+1) |
 | cosmatic-drift | Fork pets and their spawners | 6 | `Resources/Locale/en-US/_CD/interaction` (+3) |
 | forky | Small animal NPCs (meowl) shipped with the loot spawner tables | 6 | `Resources/Prototypes/_Funkystation/Entities/Mobs/NPCs` (+1) |
+| trauma-station | Animals, mobs and NPC AI | 197 | `Content.Trauma.Client/MobClass` (+16) |
 
-Also carried by 9: far-horizons (via `_Starlight (partial)`), frontier (via `_DV, _EE`), backmen (via `partly _White, Corvax`), starlight (via `_Impstation (partial)`), deltav (via `_NF, _Impstation`), einstein-engines (via `DeltaV, Nyanotrasen`), the-den (via `_NF, _Impstation`), harmony-station (via `_Impstation`), white-dream (via `_Nuclear14, _Goobstation, _DV, _EE`)
+Also carried by 10: far-horizons (via `_Starlight (partial)`), frontier (via `_DV, _EE`), backmen (via `partly _White, Corvax`), starlight (via `_Impstation (partial)`), deltav (via `_NF, _Impstation`), einstein-engines (via `DeltaV, Nyanotrasen`), the-den (via `_NF, _Impstation`), harmony-station (via `_Impstation`), white-dream (via `_Nuclear14, _Goobstation, _DV, _EE`), trauma-station (via `Content.Goobstation.*, _Goobstation, _Shitmed`)
 
 ### Food, drink and cooking expansion
 
@@ -424,8 +425,9 @@ This fork's slice of the food feature is a rewrite of how eating fills you up, n
 | gaby-station-now-dumont-station | Drinks and alcohol reagents + organ food processor | 11 | `Content.Shared/_Gabystation/OrganFoodProcessor` (+5) |
 | forky | Six-pack beer and extra drink entities | 8 | `Resources/Prototypes/_Funkystation/Entities/Objects/Consumable` (+1) |
 | ephemeral-space | Fork food items, hunger and hangover alerts | 7 | `Content.Client/_ES/Food` (+4) |
+| trauma-station | Deep fryer, botany, ranching, food | 659 | `Content.Trauma.Client/Botany` (+35) |
 
-Also carried by 9: the-den (via `_DV, _NF, _Floof`), deltav (via `_DEN, _NF, _Impstation, _Floof`), frontier (via `_DV`), estacao-pirata (via `DeltaV, Nyanotrasen, (fork-own Brazilian food/drink)`), harmony-station (via `_Impstation`), einstein-engines (via `Nyanotrasen, DeltaV, _DV`), far-horizons (via `_TP, _TP14`), starlight (via `_TP (partial)`), white-dream (via `_Goobstation, _EE`)
+Also carried by 10: the-den (via `_DV, _NF, _Floof`), deltav (via `_DEN, _NF, _Impstation, _Floof`), frontier (via `_DV`), estacao-pirata (via `DeltaV, Nyanotrasen, (fork-own Brazilian food/drink)`), harmony-station (via `_Impstation`), einstein-engines (via `Nyanotrasen, DeltaV, _DV`), far-horizons (via `_TP, _TP14`), starlight (via `_TP (partial)`), white-dream (via `_Goobstation, _EE`), trauma-station (via `Content.Goobstation.*, _DV, _Goobstation, _NF, _RMC14`)
 
 ### Custom station events
 
@@ -603,8 +605,9 @@ Corvax's contribution here is a set of map markers that hold an Emergency Respon
 | cosmatic-drift | Synth storm station event | 4 | `Content.Server/_CD/StationEvents` (+2) |
 | forky | Utility line rupture station event | 3 | `Content.Server/_Funkystation/StationEvents` (+1) |
 | corvax | ERT arrival marker | 1 | `Resources/Prototypes/Corvax/Markers/Spawners/ert.yml` |
+| trauma-station | Station events and alert levels | 28 | `Content.Trauma.Client/Kudzu` (+11) |
 
-Also carried by 10: deltav (via `_Goobstation, _Mono, _CD`), frontier (via `_DV`), impstation (via `_CD`), harmony-station (via `_DV + _Impstation`), backmen (via `partly _White, _Lua`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV`), white-dream (via `_Goobstation, _EE, _Shitmed, _DV`), einstein-engines (via `Nyanotrasen, DeltaV`), starfall-drift (via `_Funkystation`)
+Also carried by 11: deltav (via `_Goobstation, _Mono, _CD`), frontier (via `_DV`), impstation (via `_CD`), harmony-station (via `_DV + _Impstation`), backmen (via `partly _White, _Lua`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV`), white-dream (via `_Goobstation, _EE, _Shitmed, _DV`), einstein-engines (via `Nyanotrasen, DeltaV`), starfall-drift (via `_Funkystation`), trauma-station (via `Content.Goobstation.*, _DV, _Goobstation, _Shitmed, _White`)
 
 ### Movement and mobility tweaks
 
@@ -663,8 +666,9 @@ Small creatures (and fork monsters like headcrabs and flesh mutants) can climb i
 | stellar-station | Sprinting | 2 | `Content.Stellar.Shared/Movement` |
 | harmony-station | Combat mode visual layers | 1 | `Content.Client/_Harmony/CombatMode` |
 | starfall-drift | Sprint stamina | 1 | `Content.Server/_Starfall/Systems/SprintStaminaSystem.cs` |
+| trauma-station | Vent crawling, carrying, jumping | 38 | `Content.Trauma.Client/Throwing` (+13) |
 
-Also carried by 7: goobstation (via `_DV, _Starlight`), far-horizons (via `_Starlight (un-namespaced + partial)`), starlight (via `_ES, _ST (partial)`), deltav (via `_NF`), frontier (via `_EE, _DV`), einstein-engines (via `Nyanotrasen`), white-dream (via `_Goobstation`)
+Also carried by 8: goobstation (via `_DV, _Starlight`), far-horizons (via `_Starlight (un-namespaced + partial)`), starlight (via `_ES, _ST (partial)`), deltav (via `_NF`), frontier (via `_EE, _DV`), einstein-engines (via `Nyanotrasen`), white-dream (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Starlight`)
 
 ### Shared fork infrastructure
 
@@ -697,8 +701,9 @@ Almost none of this is something a player goes looking for; it is the plumbing e
 | viva-station | CCD contraband severity tier and Temporal (paracausal) damage type | 8 | `Resources/Locale/en-US/_Viva/contraband/CCD.ftl` (+7) |
 | gaby-station-now-dumont-station | Fork CVar block, constants, text helper and sprite/map export commands | 7 | `Content.Client/_Dumont/Commands` (+6) |
 | estacao-pirata | Fork damage modifier set and colour palette | 2 | `Resources/Prototypes/EstacaoPirata/Damage/modifier_sets.yml` (+1) |
+| trauma-station | Entity effects/conditions, triggers, actions, CVars, misc helpers | 525 | `Content.IntegrationTests` (+126) |
 
-Also carried by 14: deltav (via `_Floof, _RMC14`), sunrise (via `_Starlight (partial)`), starlight (via `_Moffstation, _ES (partial)`), frontier (via `_DV, _EE, _Harmony`), far-horizons (via `_Starlight, misc`), ephemeral-space (via `_Citadel`), backmen (via `Corvax`), stellar-station (via `_Citadel (Citadel Station) for the RNG helpers; _ES (Ephemeral Space) for the timer and prevent-collide helpers`), the-den (via `_Impstation, _NF`), white-dream (via `_Goobstation, _Impstation, _EE, _Shitmed, _NF, _Funkystation, _Arcadis, _Imp`), harmony-station (via `_Impstation + _RMC14`), einstein-engines (via `Nyanotrasen`), forky (via `_FarHorizons`), starfall-drift (via `_Funkystation, _MACRO, _FarHorizons`)
+Also carried by 15: deltav (via `_Floof, _RMC14`), sunrise (via `_Starlight (partial)`), starlight (via `_Moffstation, _ES (partial)`), frontier (via `_DV, _EE, _Harmony`), far-horizons (via `_Starlight, misc`), ephemeral-space (via `_Citadel`), backmen (via `Corvax`), stellar-station (via `_Citadel (Citadel Station) for the RNG helpers; _ES (Ephemeral Space) for the timer and prevent-collide helpers`), the-den (via `_Impstation, _NF`), white-dream (via `_Goobstation, _Impstation, _EE, _Shitmed, _NF, _Funkystation, _Arcadis, _Imp`), harmony-station (via `_Impstation + _RMC14`), einstein-engines (via `Nyanotrasen`), forky (via `_FarHorizons`), starfall-drift (via `_Funkystation, _MACRO, _FarHorizons`), trauma-station (via `Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _Imp, _NF, _Shitmed`)
 
 ### Discord and external service integration
 
@@ -741,8 +746,9 @@ Before you can play, the server holds you on a full-screen "link your Discord" p
 | estacao-pirata | Discord-gated connection auth + MoMMI chat relay | 9 | `Content.Client/DiscordAuth` (+3) |
 | corvax | Discord-auth connection gate interface shim | 3 | `Corvax/Content.Corvax.Interfaces.Client/IClientDiscordAuthManager.cs` (+2) |
 | sunrise | Discord role requirements for roles, Discord CVars and the account-binding shim | 3 | `Content.Server/_Sunrise/Auth` (+2) |
+| trauma-station | LinkAccount (account linking) | 25 | `Content.Trauma.Client/LinkAccount` (+2) |
 
-Also carried by 5: starlight (via `_NullLink`), goobstation (via `_RMC14 (account linking)`), far-horizons (via `_NullLink`), backmen (via `Corvax`), gaby-station-now-dumont-station (via `_Goobstation`)
+Also carried by 6: starlight (via `_NullLink`), goobstation (via `_RMC14 (account linking)`), far-horizons (via `_NullLink`), backmen (via `Corvax`), gaby-station-now-dumont-station (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Sponsor and donator perks
 
@@ -820,8 +826,9 @@ On Gaby/Dumont a player carries a balance on their account between rounds and sp
 | sunrise | Sponsor tiers, sponsor-only loadouts and uplink, ghost themes and the sponsor manager shim | 23 | `Content.Client/_Sunrise/GhostTheme` (+8) |
 | goobstation | Patron support window, contributor names and ghost cosmetics | 13 | `Content.Goobstation.Client/GhostCosmetics` (+5) |
 | corvax | Sponsor module interface and sponsor-gated loadout effect | 5 | `Content.Client/Corvax/SponsorOnlyHelpers.cs` (+4) |
+| trauma-station | Patreon items | 120 | `Resources/Audio/_Trauma/Patreon` (+2) |
 
-Also carried by 3: backmen (via `Corvax, _DeadSpace`), starlight (via `_NullLink (partial)`), far-horizons (via `_Starlight`)
+Also carried by 4: backmen (via `Corvax, _DeadSpace`), starlight (via `_NullLink (partial)`), far-horizons (via `_Starlight`), trauma-station (via `Content.Goobstation.*`)
 
 ### Station goals
 
@@ -919,8 +926,9 @@ Three small additions on top of the artifact and anomaly loop science already pl
 | frontier | Frontier artifact content and anomaly behaviour | 8 | `Content.Server/_NF/Anomaly` (+5) |
 | goobstation | Xenoarchaeology artifact additions | 2 | `Resources/Locale/en-US/_Goobstation/xenoarchaeology` (+1) |
 | serbia-strong | Artifact discovery bonus tables | 1 | `Resources/Prototypes/SS220/Entities/Objects/Specific/Xenoarchaeology` |
+| trauma-station | XenoArch partial | 1 | `Resources/Prototypes/_Trauma/Partials/XenoArch` |
 
-Also carried by 1: deltav (via `_Impstation`)
+Also carried by 2: deltav (via `_Impstation`), trauma-station (via `_Goobstation`)
 
 ### Item enchantment and granted abilities
 
@@ -1005,8 +1013,9 @@ Backmen's contribution here is a small generic hook: any garment can be tagged s
 | gaby-station-now-dumont-station | Item recall / soul-bound weapons + charge ability | 14 | `Content.Server/_Gabystation/Charge` (+6) |
 | serbia-strong | Polymorph timers and use-granted item effects | 8 | `Content.Client/SS220/PolymorphTimer` (+5) |
 | backmen | Clothing that grants components on equip | 2 | `Content.Shared/Backmen/Clothing` |
+| trauma-station | Enchanting | 81 | `Content.Trauma.Shared/Enchanting` (+3) |
 
-Also carried by 9: far-horizons (via `_Starlight (un-namespaced + partial)`), impstation (via `_Goobstation`), harmony-station (via `_Goobstation`), sunrise (via `_Starlight (partial)`), estacao-pirata (via `Nyanotrasen`), white-dream (via `_Goobstation`), deltav (via `_Goobstation`), the-den (via `_Goobstation, _Funkystation`), frontier (via `_DV`)
+Also carried by 10: far-horizons (via `_Starlight (un-namespaced + partial)`), impstation (via `_Goobstation`), harmony-station (via `_Goobstation`), sunrise (via `_Starlight (partial)`), estacao-pirata (via `Nyanotrasen`), white-dream (via `_Goobstation`), deltav (via `_Goobstation`), the-den (via `_Goobstation, _Funkystation`), frontier (via `_DV`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Fishing minigame
 
@@ -1031,5 +1040,6 @@ Grab a fishing rod, walk to a patch of "suspicious waves" (water, lava, plasma, 
 | goobstation | Fishing minigame | 74 | `Content.Goobstation.Client/Fishing` (+6) |
 | rmc14 | Fishing rods, loot tables and minigame | 61 | `Content.Server/_RMC14/Fishing` (+4) |
 | impstation | Fishing rods, baits, lures and tackles | 10 | `Content.Client/_Impstation/Fishing` (+3) |
+| trauma-station | Fishing | 15 | `Resources/Prototypes/_Trauma/Entities/Objects/Specific/Fishing` (+2) |
 
-Also carried by 4: einstein-engines (via `_Goobstation`), the-den (via `_Goobstation`), deltav (via `_Goobstation`), white-dream (via `_Goobstation`)
+Also carried by 5: einstein-engines (via `_Goobstation`), the-den (via `_Goobstation`), deltav (via `_Goobstation`), white-dream (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation`)

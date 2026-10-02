@@ -110,8 +110,9 @@ Atmos gains extra gases beyond the standard roster (BZ, healium, nitrium alongsi
 | goobstation | Fork atmospherics additions | 16 | `Content.Goobstation.Common/Atmos` (+4) |
 | ephemeral-space | Miasma gas, reactions and alarm thresholds | 10 | `Content.Server/_ES/Atmos/Reactions` (+4) |
 | monolith | Temperature and heating | 8 | `Content.Server/_Mono/Temperature` (+1) |
+| trauma-station | Phoron locale | 1 | `Resources/Locale/en-US/_Trauma/phoron` |
 
-Also carried by 6: starfall-drift (via `_Funkystation`), starlight (via `_Funkystation, _Moffstation, _Carpmosia (partial)`), the-den (via `_Funkystation`), far-horizons (via `_Funkystation, _Starlight`), white-dream (via `_EE`), stellar-station (via `_ES (Ephemeral Space / MirrorCult)`)
+Also carried by 7: starfall-drift (via `_Funkystation`), starlight (via `_Funkystation, _Moffstation, _Carpmosia (partial)`), the-den (via `_Funkystation`), far-horizons (via `_Funkystation, _Starlight`), white-dream (via `_EE`), stellar-station (via `_ES (Ephemeral Space / MirrorCult)`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Atmospherics simulation
 
@@ -141,6 +142,7 @@ Six forks pile extra things to do on top of the standard gas game. Frontier turn
 | sunrise | Reworked atmos alerts console and tile atmosphere patches | 14 | `Content.Client/_Sunrise/Atmos/Consoles` (+6) |
 | deltav | Vendored Funkystation atmospherics structures and alt pipe layers | 5 | `Resources/Locale/en-US/_DV/engineering` (+1) |
 | backmen | Space wind tuning and effect | 3 | `Resources/Prototypes/_Backmen/Atmos` (+1) |
+| trauma-station | Atmos tweaks | 27 | `Content.Trauma.Client/SelfExtinguisher` (+10) |
 
 Also carried by 6: the-den (via `_EE, _Goobstation`), stellar-station (via `_ES (Ephemeral Space / MirrorCult)`), forky (via `_MACRO`), starfall-drift (via `_Funkystation`), far-horizons (via `_Funkystation, _Starlight`), starlight (via `_Carpmosia, _FarHorizons, _Afterlight (partial)`)
 
@@ -182,6 +184,7 @@ Three small planetside atmosphere additions. Gaby's is a "Faithless" weather set
 | gaby-station-now-dumont-station | 'Faithless' weather effect and its audio/visual set | 14 | `Resources/Audio/_Gabystation/Effects/Weather` (+2) |
 | starlight | Weather system additions | 7 | `Content.Server/_Starlight/Weather` (+1) |
 | the-den | Planetary day/night time cycle | 3 | `Content.Server/TimeCycle` (+1) |
+| trauma-station | Weather | 10 | `Content.Trauma.Server/Weather` (+3) |
 
 ### Spreading fire
 

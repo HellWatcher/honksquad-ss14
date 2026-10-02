@@ -214,8 +214,9 @@ Viva's contribution here is a single new cargo order: security (or anyone with t
 | gaby-station-now-dumont-station | Cargo and arsenal crate catalog + fork vending machines | 12 | `Resources/Prototypes/_Dumont/Catalog` (+3) |
 | monolith | Vending adverts and loot spawner tables | 5 | `Resources/Locale/en-US/_Mono/advertisements/vending/barista.ftl` (+4) |
 | viva-station | Security cargo orders and crate fills | 2 | `Resources/Prototypes/_Viva/Catalog/Cargo/cargo_security.yml` (+1) |
+| trauma-station | Vending machines, fills and entity tables | 52 | `Content.Trauma.Client/VendingMachines` (+12) |
 
-Also carried by 11: frontier (via `_DV`), backmen (via `_DV, Corvax, _CorvaxNext, _White`), forky (via `_MACRO`), harmony-station (via `_DV + _Goobstation`), deltav (via `_DEN, _NF, _Impstation, _Goobstation`), einstein-engines (via `DeltaV, Nyanotrasen`), the-den (via `_DV, _Goobstation`), far-horizons (via `_Starlight, _Funkystation, _TP`), white-dream (via `_Goobstation, _EE, _Shitmed, _EstacaoPirata`), starfall-drift (via `_Funkystation`), macrocosm (via `The Den`)
+Also carried by 12: frontier (via `_DV`), backmen (via `_DV, Corvax, _CorvaxNext, _White`), forky (via `_MACRO`), harmony-station (via `_DV + _Goobstation`), deltav (via `_DEN, _NF, _Impstation, _Goobstation`), einstein-engines (via `DeltaV, Nyanotrasen`), the-den (via `_DV, _Goobstation`), far-horizons (via `_Starlight, _Funkystation, _TP`), white-dream (via `_Goobstation, _EE, _Shitmed, _EstacaoPirata`), starfall-drift (via `_Funkystation`), macrocosm (via `The Den`), trauma-station (via `_DV, _FarHorizons, _Goobstation, _Lavaland, _NF, _Shitmed, _White`)
 
 ### Cargo bounties, contracts and markets
 
@@ -297,8 +298,9 @@ Mostly this is more stuff to buy and more stuff to hunt down. Several forks bolt
 | serbia-strong | Fork cargo orders and bounties | 10 | `Content.Server/SS220/CargoMoneyCommand` (+3) |
 | monolith | Cargo categories and faction bounty strings | 3 | `Resources/Locale/en-US/_Mono/cargo` |
 | gaby-station-now-dumont-station | NTR supply-drop pod catalog | 2 | `Resources/Prototypes/_Gabystation/NTR` |
+| trauma-station | Job listings (side jobs) and cargo | 68 | `Content.Trauma.Client/JobListings` (+10) |
 
-Also carried by 3: frontier (via `_Goobstation`), deltav (via `_Goobstation, _Impstation`), the-den (via `_DV, _NF`)
+Also carried by 4: frontier (via `_Goobstation`), deltav (via `_Goobstation, _Impstation`), the-den (via `_DV, _NF`), trauma-station (via `_Goobstation`)
 
 ### Player banking and economy
 
@@ -381,8 +383,9 @@ Your character gets a bank balance and a paycheck: a salary lands in your accoun
 | gaby-station-now-dumont-station | Station economy: ATM, NanoBank cartridge, economy manager | 19 | `Content.Client/_Gabystation/ATM` (+9) |
 | serbia-strong | Slot machine gambling prop | 6 | `Content.Client/SS220/Shitspawn/SlotMachine` (+2) |
 | white-dream | Custom ghost sprites (donor perk) | 5 | `Resources/Locale/en-US/_white/ghost` |
+| trauma-station | Server currency | 2 | `Resources/Locale/en-US/_Trauma/servercurrency` (+1) |
 
-Also carried by 4: far-horizons (via `_Starlight`), starfall-drift (via `_Funkystation`), the-den (via `_DV, _NF, _Goobstation`), deltav (via `_Harmony, _Goobstation, _Impstation, _Mono`)
+Also carried by 5: far-horizons (via `_Starlight`), starfall-drift (via `_Funkystation`), the-den (via `_DV, _NF, _Goobstation`), deltav (via `_Harmony, _Goobstation, _Impstation, _Mono`), trauma-station (via `Content.Goobstation.*, _white`)
 
 ### Mail delivery
 
@@ -490,8 +493,9 @@ Monolith's only addition to mail is six extra parcel types that can turn up in t
 | sunrise | Mail carrier hardware art | 9 | `Resources/Textures/_Sunrise/Objects/Specific/Mail` |
 | starlight | Mail companion | 5 | `Content.Server/_Starlight/Cargo/MailCompanion` (+2) |
 | monolith | Fork mail parcels | 1 | `Resources/Prototypes/_Mono/Mail/mail.yml` |
+| trauma-station | Mail / deliveries | 5 | `Content.Trauma.Shared/Mail` (+1) |
 
-Also carried by 4: estacao-pirata (via `Nyanotrasen`), frontier (via `_DV`), deltav (via `_NF`), goobstation (via `_NF`)
+Also carried by 5: estacao-pirata (via `Nyanotrasen`), frontier (via `_DV`), deltav (via `_NF`), goobstation (via `_NF`), trauma-station (via `_NF`)
 
 ### Shipyard and player-owned ships
 
@@ -563,7 +567,7 @@ A crew flies their ship out to open space, uses the salvage console aboard, and 
 | frontier | Salvage expeditions, mining scanners, digging and gatherables | 18 | `Content.Client/_NF/Salvage` (+7) |
 | sunrise | Salvage expedition modifiers, factions and the advanced magnet | 11 | `Content.Server/_Sunrise/Salvage` (+1) |
 
-Also carried by 5: far-horizons (via `_Starlight (partial)`), backmen (via `_Lavaland (Goobstation), _DV, _NF`), the-den (via `_DV`), goobstation (via `_DV`), einstein-engines (via `DeltaV, Nyanotrasen`)
+Also carried by 6: far-horizons (via `_Starlight (partial)`), backmen (via `_Lavaland (Goobstation), _DV, _NF`), the-den (via `_DV`), goobstation (via `_DV`), einstein-engines (via `DeltaV, Nyanotrasen`), trauma-station (via `_DV, _Goobstation`)
 
 ### Lavaland mining planet
 
@@ -587,5 +591,6 @@ Salvagers board a mining shuttle, punch in a destination on a docking console, a
 | --- | --- | --- | --- |
 | goobstation | Lavaland mining planet, megafauna and expeditions | 906 | `Content.Client/_Lavaland` (+6) |
 | far-horizons | Boss combat, telegraphed attacks and the Elder arena | 31 | `Content.Client/_FarHorizons/Telegraphs` (+6) |
+| trauma-station | Content.Lavaland (project-split rewrite of Goob's _Lavaland) plus salvage points | 210 | `Content.Lavaland.Client/Audio` (+61) |
 
-Also carried by 6: white-dream (via `_Lavaland`), einstein-engines (via `_Lavaland`), the-den (via `_Lavaland`), backmen (via `_Lavaland (Goobstation), _DV, _NF`), deltav (via `_Lavaland`), starfall-drift (via `_FarHorizons`)
+Also carried by 7: white-dream (via `_Lavaland`), einstein-engines (via `_Lavaland`), the-den (via `_Lavaland`), backmen (via `_Lavaland (Goobstation), _DV, _NF`), deltav (via `_Lavaland`), starfall-drift (via `_FarHorizons`), trauma-station (via `_Goobstation`)

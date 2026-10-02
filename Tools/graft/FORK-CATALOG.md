@@ -9,7 +9,7 @@ What each fork in the ecosystem built on top of Wizard's Den, where it lives in 
 tree, and — for the 447 units assessed so far — what it does to a round.
 A row says a fork *has* the feature; only the shortlist says anything about taking it.
 
-27 forks · 131 features · 803 authored · 678 vendored from another fork · 447 assessed · 47 verified takes
+28 forks · 131 features · 890 authored · 768 vendored from another fork · 447 assessed · 47 verified takes
 
 Portability is measured, not assumed. An independent pass re-read 438
 assessments trying to refute them and corrected the graft shape of 70,
@@ -538,6 +538,7 @@ because "we considered that and said no" is what gets lost and re-proposed later
 | [Stellar Station](https://github.com/Stellar-Station/Stellar-Station) | MIT | `_ST` | refined pass | 2026-06-05 |
 | [Sunrise Station](https://github.com/space-sunrise/sunrise-station) | NOASSERTION (custom proprietary 'SUNRISE License' in LICENSE.TXT: study/personal non-commercial use only, derivatives and public hosting need permission, contributions assigned via CLA.txt; upstream Space Wizards code stays MIT per MIT.txt; most assets CC-BY-SA-3.0) | `_Sunrise`, `_sunrise` | refined pass | 2026-07-28 |
 | [The Den](https://github.com/TheDenSS14/TheDen) | AGPL-3.0-or-later AND MIT | `_DEN` | refined pass | 2026-07-26 |
+| [Trauma Station](https://github.com/Trauma-Station/Trauma-Station) | AGPL-3.0-or-later AND MIT (REUSE LICENSES/; most art CC-BY-SA-3.0, some CC-BY-NC-SA-3.0) | `_Trauma`, `_Factory`, `Content.Trauma.*`, `Content.Medical.*`, `Content.Factory.*`, `Content.Lavaland.*` | refined pass | 2026-10-02 |
 | [Viva Station](https://github.com/misterghast/viva-station) | MIT | `_Viva` | refined pass | 2026-04-08 |
 | [White Dream Project (WWDP)](https://github.com/WWhiteDreamProject/wwdpublic) | AGPL-3.0 | `_White`, `_white` | refined pass | 2026-07-15 |
 | [Wizard's Den (upstream)](https://github.com/space-wizards/space-station-14) | MIT | inline | refined pass | 2026-07-28 |
@@ -546,209 +547,209 @@ because "we considered that and said no" is what gets lost and re-proposed later
 
 ### Antag
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Objective and uplink store rework](FORK-CATALOG/antag.md#antag-objectives-and-uplink-rework) | partial | ● | ● |  | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ● | ● | ● | ○ | ● | ○ |
-| [Round modifiers and game director](FORK-CATALOG/antag.md#round-modifier-presets) | partial | ○ | ● | ● | ○ |  | ● |  | ○ |  | ○ | ● |  | ● | ● | ● |  | ● |  | ● |  | ● | ● | ● | ○ |  | ○ |
-| [Minor antagonist roles](FORK-CATALOG/antag.md#minor-antag-roles) | no | ● |  |  | ● |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● |  | ● |  | ● |  | ● |  |
-| [Wizard and spellcasting](FORK-CATALOG/antag.md#wizard-magic) | ships | ● |  |  |  |  |  |  | ○ | ○ | ● | ● |  | ● | ● |  |  |  |  |  |  | ● |  | ○ | ○ |  | ○ |
-| [Solo monster antagonists](FORK-CATALOG/antag.md#solo-monster-antags) | no |  |  |  | ○ | ● |  |  | ○ |  |  |  |  | ● | ● |  |  |  |  | ● |  | ● |  | ● | ○ |  | ○ |
-| [Changeling](FORK-CATALOG/antag.md#changeling) | ships | ● |  |  |  | ○ |  |  | ○ |  |  | ● |  | ● |  | ○ |  |  |  |  |  | ● |  |  | ○ |  | ○ |
-| [Blood cult](FORK-CATALOG/antag.md#blood-cult) | no |  |  |  |  | ○ |  | ○ |  |  |  | ● |  |  |  |  |  |  |  |  | ● |  |  | ● | ○ |  | ● |
-| [Alternate round types](FORK-CATALOG/antag.md#alternate-round-types) | no | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● | ● |  |  |  | ● |  |  |  |
-| [Pirate crew faction](FORK-CATALOG/antag.md#pirate-crew) | no |  |  |  |  |  |  | ● | ○ |  | ● |  |  | ● |  |  |  |  |  |  |  | ● |  |  |  |  |  |
-| [Cosmic cult](FORK-CATALOG/antag.md#cosmic-cult) | no |  |  |  | ● |  |  |  |  |  |  |  |  | ○ |  | ● |  |  |  |  |  | ● | ○ | ○ |  |  |  |
-| [Vampire](FORK-CATALOG/antag.md#vampire) | no | ● |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  | ● |  |  |
-| [Xenomorph hive](FORK-CATALOG/antag.md#xenomorph-hive) | no | ○ |  |  | ○ |  |  |  |  |  |  |  |  | ○ |  |  |  |  | ● |  |  |  |  | ○ | ○ |  | ● |
-| [Abductors](FORK-CATALOG/antag.md#abductors) | no |  |  |  |  | ○ |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  | ● |  |  | ○ |
-| [Devil](FORK-CATALOG/antag.md#devil-pacts) | no |  |  |  | ○ | ○ |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  | ● |  |  |  |  | ○ |
-| [Heretic](FORK-CATALOG/antag.md#heretic) | no |  |  |  |  |  |  |  |  |  |  |  | ● | ● | ○ | ○ |  |  |  |  |  | ○ |  |  |  |  |  |
-| [Blob](FORK-CATALOG/antag.md#blob) | no | ● |  |  |  | ○ |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  | ○ |
-| [Self-replicating swarm antagonists](FORK-CATALOG/antag.md#swarm-antags) | no |  |  |  |  |  |  |  |  |  |  |  |  | ● |  | ● |  |  |  |  |  |  |  |  | ○ |  |  |
-| [Malfunctioning AI](FORK-CATALOG/antag.md#malfunctioning-ai) | no |  |  |  |  |  |  |  |  |  |  | ● | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [Nuclear operatives](FORK-CATALOG/antag.md#nuclear-operatives) | ships |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● |  |  |  |
-| [Small conspiracy team antagonists](FORK-CATALOG/antag.md#small-team-antags) | no |  |  |  | ○ |  |  |  |  |  |  |  |  |  | ○ | ○ |  |  |  |  |  |  |  | ● | ○ |  |  |
-| [Paradox clone](FORK-CATALOG/antag.md#paradox-clone) | ships | ● |  |  |  | ○ |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  |
-| [Revenant](FORK-CATALOG/antag.md#revenant) | ships | ○ |  |  | ○ |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |
-| [Shadowling](FORK-CATALOG/antag.md#shadowling) | no |  |  |  |  | ● |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ○ |
-| [Cortical borer](FORK-CATALOG/antag.md#cortical-borer) | no |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |
-| [Revolutionaries](FORK-CATALOG/antag.md#revolutionaries) | ships |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |
-| [Baseline midround antagonists](FORK-CATALOG/antag.md#upstream-midround-antags) | ships |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |
-| [Hidden secret identities](FORK-CATALOG/antag.md#secret-identities) | no |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [Thief](FORK-CATALOG/antag.md#thief) | ships |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [Traitor](FORK-CATALOG/antag.md#traitor-uplink) | ships |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Objective and uplink store rework](FORK-CATALOG/antag.md#antag-objectives-and-uplink-rework) | partial | ● | ● |  | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ● | ● | ● | ○ | ○ | ● | ○ |
+| [Round modifiers and game director](FORK-CATALOG/antag.md#round-modifier-presets) | partial | ○ | ● | ● | ○ |  | ● |  | ○ |  | ○ | ● |  | ● | ● | ● |  | ● |  | ● |  | ● | ● | ● | ○ | ○ |  | ○ |
+| [Minor antagonist roles](FORK-CATALOG/antag.md#minor-antag-roles) | no | ● |  |  | ● |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● |  | ● |  | ● |  | ● | ● |  |
+| [Wizard and spellcasting](FORK-CATALOG/antag.md#wizard-magic) | ships | ● |  |  |  |  |  |  | ○ | ○ | ● | ● |  | ● | ● |  |  |  |  |  |  | ● |  | ○ | ○ | ○ |  | ○ |
+| [Solo monster antagonists](FORK-CATALOG/antag.md#solo-monster-antags) | no |  |  |  | ○ | ● |  |  | ○ |  |  |  |  | ● | ● |  |  |  |  | ● |  | ● |  | ● | ○ | ○ |  | ○ |
+| [Changeling](FORK-CATALOG/antag.md#changeling) | ships | ● |  |  |  | ○ |  |  | ○ |  |  | ● |  | ● |  | ○ |  |  |  |  |  | ● |  |  | ○ | ○ |  | ○ |
+| [Blood cult](FORK-CATALOG/antag.md#blood-cult) | no |  |  |  |  | ○ |  | ○ |  |  |  | ● |  |  |  |  |  |  |  |  | ● |  |  | ● | ○ | ○ |  | ● |
+| [Alternate round types](FORK-CATALOG/antag.md#alternate-round-types) | no | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● | ● |  |  |  | ● |  |  |  |  |
+| [Pirate crew faction](FORK-CATALOG/antag.md#pirate-crew) | no |  |  |  |  |  |  | ● | ○ |  | ● |  |  | ● |  |  |  |  |  |  |  | ● |  |  |  | ○ |  |  |
+| [Cosmic cult](FORK-CATALOG/antag.md#cosmic-cult) | no |  |  |  | ● |  |  |  |  |  |  |  |  | ○ |  | ● |  |  |  |  |  | ● | ○ | ○ |  | ○ |  |  |
+| [Vampire](FORK-CATALOG/antag.md#vampire) | no | ● |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  | ● | ● |  |  |
+| [Xenomorph hive](FORK-CATALOG/antag.md#xenomorph-hive) | no | ○ |  |  | ○ |  |  |  |  |  |  |  |  | ○ |  |  |  |  | ● |  |  |  |  | ○ | ○ | ○ |  | ● |
+| [Abductors](FORK-CATALOG/antag.md#abductors) | no |  |  |  |  | ○ |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  | ● |  | ○ |  | ○ |
+| [Devil](FORK-CATALOG/antag.md#devil-pacts) | no |  |  |  | ○ | ○ |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  | ● |  |  |  | ○ |  | ○ |
+| [Heretic](FORK-CATALOG/antag.md#heretic) | no |  |  |  |  |  |  |  |  |  |  |  | ● | ● | ○ | ○ |  |  |  |  |  | ○ |  |  |  | ○ |  |  |
+| [Blob](FORK-CATALOG/antag.md#blob) | no | ● |  |  |  | ○ |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  | ○ |  | ○ |
+| [Self-replicating swarm antagonists](FORK-CATALOG/antag.md#swarm-antags) | no |  |  |  |  |  |  |  |  |  |  |  |  | ● |  | ● |  |  |  |  |  |  |  |  | ○ |  |  |  |
+| [Malfunctioning AI](FORK-CATALOG/antag.md#malfunctioning-ai) | no |  |  |  |  |  |  |  |  |  |  | ● | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| [Nuclear operatives](FORK-CATALOG/antag.md#nuclear-operatives) | ships |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● |  |  |  |  |
+| [Small conspiracy team antagonists](FORK-CATALOG/antag.md#small-team-antags) | no |  |  |  | ○ |  |  |  |  |  |  |  |  |  | ○ | ○ |  |  |  |  |  |  |  | ● | ○ |  |  |  |
+| [Paradox clone](FORK-CATALOG/antag.md#paradox-clone) | ships | ● |  |  |  | ○ |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  |  |
+| [Revenant](FORK-CATALOG/antag.md#revenant) | ships | ○ |  |  | ○ |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  | ○ |  |  |
+| [Shadowling](FORK-CATALOG/antag.md#shadowling) | no |  |  |  |  | ● |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  | ○ |  | ○ |
+| [Cortical borer](FORK-CATALOG/antag.md#cortical-borer) | no |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |
+| [Revolutionaries](FORK-CATALOG/antag.md#revolutionaries) | ships |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● |  |  |
+| [Baseline midround antagonists](FORK-CATALOG/antag.md#upstream-midround-antags) | ships |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  | ● |  |  |
+| [Hidden secret identities](FORK-CATALOG/antag.md#secret-identities) | no |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| [Thief](FORK-CATALOG/antag.md#thief) | ships |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| [Traitor](FORK-CATALOG/antag.md#traitor-uplink) | ships |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 ### Medical
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Resuscitation and life support](FORK-CATALOG/medical.md#resuscitation-and-life-support) | no | ● |  |  | ○ |  | ○ |  | ○ |  | ● | ● |  | ● | ● | ● |  |  | ● | ● |  |  |  | ● |  |  |  |
-| [Mob damage, movement and gravity](FORK-CATALOG/medical.md#mob-damage-and-movement) | ships | ● |  |  | ● | ○ | ● | ● |  |  |  |  |  |  |  |  |  | ● | ● | ● |  |  |  | ● |  |  |  |
-| [Limb wounds, body-part targeting and surgery](FORK-CATALOG/medical.md#surgery-and-limb-wounds) | partial | ○ |  |  | ● | ○ | ○ |  | ○ |  |  | ● |  | ○ |  |  |  |  | ● | ● | ● | ● |  | ○ | ○ |  | ○ |
-| [Long-running medical conditions](FORK-CATALOG/medical.md#medical-status-conditions) | no | ● |  | ● | ○ | ● | ○ | ○ |  |  | ○ |  |  |  |  | ● |  |  |  | ● |  |  | ○ | ● | ○ |  | ○ |
-| [Cybernetic augments and prosthetics](FORK-CATALOG/medical.md#cybernetic-augments) | partial | ● |  |  | ● | ○ |  |  | ○ |  | ○ | ● |  | ● | ● |  |  |  |  |  |  | ● |  | ○ | ○ |  | ○ |
-| [Disease and virology](FORK-CATALOG/medical.md#disease-and-virology) | no | ● |  |  |  |  | ● |  | ● |  |  |  |  | ● |  |  |  |  |  | ● |  |  |  |  |  |  |  |
-| [Automated surgery machine](FORK-CATALOG/medical.md#autodoc) | no |  |  |  |  | ○ |  |  |  |  |  |  |  | ○ |  |  |  |  | ● |  |  |  |  |  | ○ |  | ○ |
-| [Genetics and DNA mutations](FORK-CATALOG/medical.md#genetics-and-dna-mutations) | no |  |  |  |  |  |  |  |  |  |  | ● | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ○ |  |
-| [Coroner and autopsy](FORK-CATALOG/medical.md#coroner-autopsy) | no |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Resuscitation and life support](FORK-CATALOG/medical.md#resuscitation-and-life-support) | no | ● |  |  | ○ |  | ○ |  | ○ |  | ● | ● |  | ● | ● | ● |  |  | ● | ● |  |  |  | ● |  | ○ |  |  |
+| [Mob damage, movement and gravity](FORK-CATALOG/medical.md#mob-damage-and-movement) | ships | ● |  |  | ● | ○ | ● | ● |  |  |  |  |  |  |  |  |  | ● | ● | ● |  |  |  | ● |  | ○ |  |  |
+| [Limb wounds, body-part targeting and surgery](FORK-CATALOG/medical.md#surgery-and-limb-wounds) | partial | ○ |  |  | ● | ○ | ○ |  | ○ |  |  | ● |  | ○ |  |  |  |  | ● | ● | ● | ● |  | ○ | ○ | ○ |  | ○ |
+| [Long-running medical conditions](FORK-CATALOG/medical.md#medical-status-conditions) | no | ● |  | ● | ○ | ● | ○ | ○ |  |  | ○ |  |  |  |  | ● |  |  |  | ● |  |  | ○ | ● | ○ | ● |  | ○ |
+| [Cybernetic augments and prosthetics](FORK-CATALOG/medical.md#cybernetic-augments) | partial | ● |  |  | ● | ○ |  |  | ○ |  | ○ | ● |  | ● | ● |  |  |  |  |  |  | ● |  | ○ | ○ | ○ |  | ○ |
+| [Disease and virology](FORK-CATALOG/medical.md#disease-and-virology) | no | ● |  |  |  |  | ● |  | ● |  |  |  |  | ● |  |  |  |  |  | ● |  |  |  |  |  | ○ |  |  |
+| [Automated surgery machine](FORK-CATALOG/medical.md#autodoc) | no |  |  |  |  | ○ |  |  |  |  |  |  |  | ○ |  |  |  |  | ● |  |  |  |  |  | ○ | ○ |  | ○ |
+| [Genetics and DNA mutations](FORK-CATALOG/medical.md#genetics-and-dna-mutations) | no |  |  |  |  |  |  |  |  |  |  | ● | ○ |  |  |  |  |  |  |  |  |  |  |  |  | ● | ○ |  |
+| [Coroner and autopsy](FORK-CATALOG/medical.md#coroner-autopsy) | no |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 ### Chemistry
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Reagent and reaction expansion](FORK-CATALOG/chemistry.md#reagent-and-reaction-expansion) | partial | ○ |  | ● | ○ | ○ | ○ |  | ○ | ○ | ○ | ● |  | ● | ○ | ● | ● | ● | ● | ● | ○ | ○ | ○ | ● | ○ |  | ○ |
-| [Chemical plumbing network](FORK-CATALOG/chemistry.md#chemical-plumbing) | no |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Reagent and reaction expansion](FORK-CATALOG/chemistry.md#reagent-and-reaction-expansion) | partial | ○ |  | ● | ○ | ○ | ○ |  | ○ | ○ | ○ | ● |  | ● | ○ | ● | ● | ● | ● | ● | ○ | ○ | ○ | ● | ○ | ○ |  | ○ |
+| [Chemical plumbing network](FORK-CATALOG/chemistry.md#chemical-plumbing) | no |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  | ● |  |  |
 
 ### Species
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Character markings and editor extensions](FORK-CATALOG/species.md#character-markings-and-editor) | partial | ○ | ● | ● | ○ | ○ | ● | ○ | ○ |  | ○ | ● |  | ○ | ○ | ● |  |  | ● | ● | ○ | ○ | ● | ● | ○ |  | ○ |
-| [Extra playable species](FORK-CATALOG/species.md#extra-playable-species) | partial | ○ | ● | ● | ○ | ○ |  | ○ | ○ |  | ○ |  | ● | ○ | ○ | ● | ○ | ● | ● | ● |  | ○ |  | ○ | ○ |  | ○ |
-| [Species racial abilities](FORK-CATALOG/species.md#species-racial-abilities) | no | ○ |  | ● | ○ | ○ |  | ○ | ○ | ○ | ○ |  |  | ○ |  | ● | ○ | ● |  | ● | ○ | ● |  | ● | ○ |  | ○ |
-| [Synthetic and IPC characters](FORK-CATALOG/species.md#synthetic-and-ipc-species) | no | ● | ● | ● |  |  |  |  | ● |  |  |  |  |  | ○ |  |  |  | ● | ● |  | ○ |  |  |  |  |  |
-| [Non-humanoid species pack](FORK-CATALOG/species.md#non-humanoid-species-pack) | no | ○ |  |  | ○ |  |  |  |  | ○ |  |  |  |  |  | ● | ○ |  |  |  | ○ |  |  | ● |  |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Character markings and editor extensions](FORK-CATALOG/species.md#character-markings-and-editor) | partial | ○ | ● | ● | ○ | ○ | ● | ○ | ○ |  | ○ | ● |  | ○ | ○ | ● |  |  | ● | ● | ○ | ○ | ● | ● | ○ | ○ |  | ○ |
+| [Extra playable species](FORK-CATALOG/species.md#extra-playable-species) | partial | ○ | ● | ● | ○ | ○ |  | ○ | ○ |  | ○ |  | ● | ○ | ○ | ● | ○ | ● | ● | ● |  | ○ |  | ○ | ○ | ○ |  | ○ |
+| [Species racial abilities](FORK-CATALOG/species.md#species-racial-abilities) | no | ○ |  | ● | ○ | ○ |  | ○ | ○ | ○ | ○ |  |  | ○ |  | ● | ○ | ● |  | ● | ○ | ● |  | ● | ○ | ○ |  | ○ |
+| [Synthetic and IPC characters](FORK-CATALOG/species.md#synthetic-and-ipc-species) | no | ● | ● | ● |  |  |  |  | ● |  |  |  |  |  | ○ |  |  |  | ● | ● |  | ○ |  |  |  |  |  |  |
+| [Non-humanoid species pack](FORK-CATALOG/species.md#non-humanoid-species-pack) | no | ○ |  |  | ○ |  |  |  |  | ○ |  |  |  |  |  | ● | ○ |  |  |  | ○ |  |  | ● |  | ○ |  |  |
 
 ### Roleplay
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Server rules, space law and SOP guidebook](FORK-CATALOG/roleplay.md#guidebook-rules-and-sop) | partial | ○ | ● | ● | ○ | ○ | ○ |  | ○ | ○ | ○ | ● | ● | ● | ● | ● |  | ● | ● | ● | ○ | ○ |  | ● | ○ | ● | ○ |
-| [Speech accents, verbs and emotes](FORK-CATALOG/roleplay.md#speech-accents-and-emotes) | partial | ○ | ● | ● | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ● | ● | ○ | ○ | ○ | ● | ○ |  | ○ |
-| [Character traits and quirks](FORK-CATALOG/roleplay.md#character-traits) | ships | ● |  | ● | ○ | ● |  | ○ | ○ |  | ○ | ● |  | ● | ○ | ○ |  | ● | ● | ● |  | ● |  | ● | ○ |  | ○ |
-| [Player-authored documents and books](FORK-CATALOG/roleplay.md#player-authored-text) | partial | ○ | ● | ● | ○ | ○ |  |  | ○ | ● | ○ | ● | ● | ● | ○ | ○ |  | ● |  | ● | ○ | ○ |  | ● | ○ |  | ○ |
-| [Ghost roles, respawn and game-master roles](FORK-CATALOG/roleplay.md#gamemaster-and-ghost-roles) | partial | ● |  | ● | ○ | ○ | ● |  | ○ |  | ○ | ● |  | ○ | ○ | ● |  |  | ● | ● |  | ○ |  | ● | ○ |  | ○ |
-| [Games, instruments and performance](FORK-CATALOG/roleplay.md#games-instruments-and-performance) | partial |  |  | ● | ● | ○ |  | ● |  |  | ○ | ● | ● | ○ | ○ | ○ |  |  | ● | ● |  | ○ |  | ● | ○ |  | ○ |
-| [Character records](FORK-CATALOG/roleplay.md#character-records) | no |  |  | ● | ○ | ● |  |  | ○ |  | ● | ● |  |  |  | ○ |  |  | ● | ● |  | ○ |  | ● | ○ |  | ○ |
-| [In-character languages](FORK-CATALOG/roleplay.md#language-system) | no | ● |  |  | ○ | ● |  | ○ | ○ |  |  |  |  | ○ |  | ○ |  | ● | ● | ● |  | ● |  |  | ○ |  | ○ |
-| [Tape recorder and cassettes](FORK-CATALOG/roleplay.md#tape-recorder) | no |  |  | ● | ● | ○ |  |  |  |  | ○ |  |  | ● | ○ | ○ |  |  | ● |  |  | ● |  | ● | ○ |  |  |
-| [Additional language localizations](FORK-CATALOG/roleplay.md#localization-translations) | no | ○ | ● |  |  |  |  | ● |  |  |  |  | ● |  |  |  |  |  |  | ○ |  |  |  | ● |  |  | ● |
-| [Religion and chaplain rework](FORK-CATALOG/roleplay.md#religion-and-chaplain-rework) | partial |  |  |  | ○ |  |  |  |  |  |  |  | ● | ● |  | ● |  |  |  | ● |  |  |  |  | ● |  | ○ |
-| [Text-to-speech voice synthesis](FORK-CATALOG/roleplay.md#text-to-speech) | no | ○ | ● |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  | ● |  | ● |  | ● |  |  | ● |
-| [Psionics and the Glimmer](FORK-CATALOG/roleplay.md#psionics-and-glimmer) | no | ○ |  |  | ● | ● |  | ○ |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  |  | ○ |  | ● |
-| [Assigned roleplay imperatives](FORK-CATALOG/roleplay.md#assigned-roleplay-moods) | no |  |  |  | ○ | ○ |  |  | ○ |  |  |  |  |  |  | ● |  |  |  |  |  | ● |  |  | ○ | ○ | ○ |
-| [Player factions and corporations](FORK-CATALOG/roleplay.md#player-corporations) | no |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |
-| [Consent framework and adult roleplay content](FORK-CATALOG/roleplay.md#consent-gated-adult-content) | no |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Server rules, space law and SOP guidebook](FORK-CATALOG/roleplay.md#guidebook-rules-and-sop) | partial | ○ | ● | ● | ○ | ○ | ○ |  | ○ | ○ | ○ | ● | ● | ● | ● | ● |  | ● | ● | ● | ○ | ○ |  | ● | ○ | ○ | ● | ○ |
+| [Speech accents, verbs and emotes](FORK-CATALOG/roleplay.md#speech-accents-and-emotes) | partial | ○ | ● | ● | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ● | ● | ○ | ○ | ○ | ● | ○ | ○ |  | ○ |
+| [Character traits and quirks](FORK-CATALOG/roleplay.md#character-traits) | ships | ● |  | ● | ○ | ● |  | ○ | ○ |  | ○ | ● |  | ● | ○ | ○ |  | ● | ● | ● |  | ● |  | ● | ○ | ○ |  | ○ |
+| [Player-authored documents and books](FORK-CATALOG/roleplay.md#player-authored-text) | partial | ○ | ● | ● | ○ | ○ |  |  | ○ | ● | ○ | ● | ● | ● | ○ | ○ |  | ● |  | ● | ○ | ○ |  | ● | ○ | ○ |  | ○ |
+| [Ghost roles, respawn and game-master roles](FORK-CATALOG/roleplay.md#gamemaster-and-ghost-roles) | partial | ● |  | ● | ○ | ○ | ● |  | ○ |  | ○ | ● |  | ○ | ○ | ● |  |  | ● | ● |  | ○ |  | ● | ○ | ○ |  | ○ |
+| [Games, instruments and performance](FORK-CATALOG/roleplay.md#games-instruments-and-performance) | partial |  |  | ● | ● | ○ |  | ● |  |  | ○ | ● | ● | ○ | ○ | ○ |  |  | ● | ● |  | ○ |  | ● | ○ | ○ |  | ○ |
+| [Character records](FORK-CATALOG/roleplay.md#character-records) | no |  |  | ● | ○ | ● |  |  | ○ |  | ● | ● |  |  |  | ○ |  |  | ● | ● |  | ○ |  | ● | ○ | ● |  | ○ |
+| [In-character languages](FORK-CATALOG/roleplay.md#language-system) | no | ● |  |  | ○ | ● |  | ○ | ○ |  |  |  |  | ○ |  | ○ |  | ● | ● | ● |  | ● |  |  | ○ | ○ |  | ○ |
+| [Tape recorder and cassettes](FORK-CATALOG/roleplay.md#tape-recorder) | no |  |  | ● | ● | ○ |  |  |  |  | ○ |  |  | ● | ○ | ○ |  |  | ● |  |  | ● |  | ● | ○ | ○ |  |  |
+| [Additional language localizations](FORK-CATALOG/roleplay.md#localization-translations) | no | ○ | ● |  |  |  |  | ● |  |  |  |  | ● |  |  |  |  |  |  | ○ |  |  |  | ● |  |  |  | ● |
+| [Religion and chaplain rework](FORK-CATALOG/roleplay.md#religion-and-chaplain-rework) | partial |  |  |  | ○ |  |  |  |  |  |  |  | ● | ● |  | ● |  |  |  | ● |  |  |  |  | ● | ○ |  | ○ |
+| [Text-to-speech voice synthesis](FORK-CATALOG/roleplay.md#text-to-speech) | no | ○ | ● |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  |  |  | ● |  | ● |  | ● |  |  |  | ● |
+| [Psionics and the Glimmer](FORK-CATALOG/roleplay.md#psionics-and-glimmer) | no | ○ |  |  | ● | ● |  | ○ |  |  | ○ |  |  |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  | ● |
+| [Assigned roleplay imperatives](FORK-CATALOG/roleplay.md#assigned-roleplay-moods) | no |  |  |  | ○ | ○ |  |  | ○ |  |  |  |  |  |  | ● |  |  |  |  |  | ● |  |  | ○ |  | ○ | ○ |
+| [Player factions and corporations](FORK-CATALOG/roleplay.md#player-corporations) | no |  |  |  |  |  |  |  | ○ |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |
+| [Consent framework and adult roleplay content](FORK-CATALOG/roleplay.md#consent-gated-adult-content) | no |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  |  |
 
 ### Jobs
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Extra jobs and roles](FORK-CATALOG/jobs.md#extra-job-roster) | partial | ● | ● | ● | ○ | ○ | ● | ● | ○ |  | ○ | ● |  | ● | ○ | ● |  | ● | ● | ● |  | ● | ● | ● | ○ | ● | ○ |
-| [Character loadouts](FORK-CATALOG/jobs.md#loadout-system) | ships | ○ | ● | ● | ○ | ● |  | ○ | ○ | ○ | ● | ● | ● | ● | ○ | ● | ● |  |  | ● | ○ | ● | ● | ● | ○ |  | ○ |
-| [Silicon lawsets and AI appearance](FORK-CATALOG/jobs.md#ai-lawsets-and-appearance) | partial | ● |  | ● | ○ | ○ |  |  | ○ |  |  | ● |  | ● | ● |  |  |  |  | ● |  | ● | ● | ● | ○ | ● | ○ |
-| [Role slot management and join queue](FORK-CATALOG/jobs.md#role-slots-and-join-queue) | partial | ○ | ● | ● | ○ |  |  |  | ● |  | ○ |  |  | ● | ● | ● |  | ● | ● | ○ |  | ○ |  | ● | ○ |  |  |
-| [Latejoin spawn flow and cryosleep](FORK-CATALOG/jobs.md#latejoin-spawn-and-cryo) | partial | ● |  | ● |  |  | ● |  | ○ |  | ● |  |  |  |  |  |  |  | ● | ● |  | ● | ● | ● |  |  |  |
-| [Cyborg and station AI overhaul](FORK-CATALOG/jobs.md#silicon-borg-overhaul) | partial | ● |  | ● | ● |  |  |  | ○ |  | ○ |  |  | ○ | ○ | ● |  | ● |  | ● |  | ○ |  | ● | ○ |  | ○ |
-| [Department restructure](FORK-CATALOG/jobs.md#department-restructure) | partial | ● |  |  | ○ | ○ |  |  | ○ |  | ● |  |  |  | ○ | ● |  |  |  |  |  | ● | ● |  | ○ |  |  |
-| [Squads, ranks and skill gating](FORK-CATALOG/jobs.md#squads-ranks-and-skills) | no |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ● | ● |  |  |  |  |  |  |  |
-| [Xenobiology and slime rework](FORK-CATALOG/jobs.md#xenobiology-rework) | partial |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  | ● |  |  |  |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Extra jobs and roles](FORK-CATALOG/jobs.md#extra-job-roster) | partial | ● | ● | ● | ○ | ○ | ● | ● | ○ |  | ○ | ● |  | ● | ○ | ● |  | ● | ● | ● |  | ● | ● | ● | ○ | ○ | ● | ○ |
+| [Character loadouts](FORK-CATALOG/jobs.md#loadout-system) | ships | ○ | ● | ● | ○ | ● |  | ○ | ○ | ○ | ● | ● | ● | ● | ○ | ● | ● |  |  | ● | ○ | ● | ● | ● | ○ | ○ |  | ○ |
+| [Silicon lawsets and AI appearance](FORK-CATALOG/jobs.md#ai-lawsets-and-appearance) | partial | ● |  | ● | ○ | ○ |  |  | ○ |  |  | ● |  | ● | ● |  |  |  |  | ● |  | ● | ● | ● | ○ | ○ | ● | ○ |
+| [Role slot management and join queue](FORK-CATALOG/jobs.md#role-slots-and-join-queue) | partial | ○ | ● | ● | ○ |  |  |  | ● |  | ○ |  |  | ● | ● | ● |  | ● | ● | ○ |  | ○ |  | ● | ○ |  |  |  |
+| [Latejoin spawn flow and cryosleep](FORK-CATALOG/jobs.md#latejoin-spawn-and-cryo) | partial | ● |  | ● |  |  | ● |  | ○ |  | ● |  |  |  |  |  |  |  | ● | ● |  | ● | ● | ● |  |  |  |  |
+| [Cyborg and station AI overhaul](FORK-CATALOG/jobs.md#silicon-borg-overhaul) | partial | ● |  | ● | ● |  |  |  | ○ |  | ○ |  |  | ○ | ○ | ● |  | ● |  | ● |  | ○ |  | ● | ○ | ○ |  | ○ |
+| [Department restructure](FORK-CATALOG/jobs.md#department-restructure) | partial | ● |  |  | ○ | ○ |  |  | ○ |  | ● |  |  |  | ○ | ● |  |  |  |  |  | ● | ● |  | ○ |  |  |  |
+| [Squads, ranks and skill gating](FORK-CATALOG/jobs.md#squads-ranks-and-skills) | no |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | ● | ● |  |  |  |  |  | ● |  |  |
+| [Xenobiology and slime rework](FORK-CATALOG/jobs.md#xenobiology-rework) | partial |  |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  | ● |  |  |  | ○ |  |  |
 
 ### Combat
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Firearms and ammunition expansion](FORK-CATALOG/combat.md#firearms-content-expansion) | partial | ○ |  |  | ○ | ○ | ● |  | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ● | ● | ○ | ○ | ● | ○ |
-| [Melee weapons, shields and blocking](FORK-CATALOG/combat.md#melee-weapons-and-blocking) | partial | ○ | ● | ● | ○ |  |  |  | ○ |  |  | ● | ● | ● | ● |  |  | ● | ● | ● |  | ● | ● | ● | ○ |  | ○ |
-| [Explosion rework and effects](FORK-CATALOG/combat.md#explosion-rework) | partial | ○ |  |  | ● |  |  |  | ○ | ○ |  |  |  | ● | ○ | ● |  | ● | ● |  | ○ | ○ | ● | ○ | ○ |  | ○ |
-| [Barricades, sentries and field fortification](FORK-CATALOG/combat.md#field-deployables-and-fortification) | partial | ○ |  |  |  |  | ● |  | ● | ○ |  |  |  |  |  |  |  |  | ● | ● | ○ | ● |  | ● |  |  |  |
-| [Grabs, shoves and close-quarters mechanics](FORK-CATALOG/combat.md#close-quarters-combat-rework) | no | ○ |  |  | ○ |  |  | ○ | ○ | ○ |  |  |  | ○ |  | ○ |  |  | ● | ● | ● | ● | ○ | ○ | ○ |  | ○ |
-| [Ship-to-ship combat](FORK-CATALOG/combat.md#ship-to-ship-combat) | no | ○ |  |  |  |  |  |  | ○ |  |  |  |  | ○ |  |  |  | ● | ● | ● |  |  |  |  |  |  |  |
-| [Gun attachments and upgrade kits](FORK-CATALOG/combat.md#gun-attachments-and-upgrades) | no |  |  |  |  |  | ● |  | ● |  |  |  |  |  | ○ |  |  |  | ● |  |  |  |  |  | ○ |  |  |
-| [Martial arts](FORK-CATALOG/combat.md#martial-arts) | no |  |  |  |  | ○ |  | ○ |  |  |  |  |  | ● |  |  |  |  |  | ● |  |  |  |  | ○ |  | ○ |
-| [Modular hardsuits (modsuits)](FORK-CATALOG/combat.md#modular-hardsuits) | no |  |  |  |  | ○ |  |  |  |  |  |  | ● | ○ |  |  |  |  |  |  |  |  |  | ● | ○ |  | ○ |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Firearms and ammunition expansion](FORK-CATALOG/combat.md#firearms-content-expansion) | partial | ○ |  |  | ○ | ○ | ● |  | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ● | ● | ○ | ○ | ○ | ● | ○ |
+| [Melee weapons, shields and blocking](FORK-CATALOG/combat.md#melee-weapons-and-blocking) | partial | ○ | ● | ● | ○ |  |  |  | ○ |  |  | ● | ● | ● | ● |  |  | ● | ● | ● |  | ● | ● | ● | ○ | ○ |  | ○ |
+| [Explosion rework and effects](FORK-CATALOG/combat.md#explosion-rework) | partial | ○ |  |  | ● |  |  |  | ○ | ○ |  |  |  | ● | ○ | ● |  | ● | ● |  | ○ | ○ | ● | ○ | ○ | ○ |  | ○ |
+| [Barricades, sentries and field fortification](FORK-CATALOG/combat.md#field-deployables-and-fortification) | partial | ○ |  |  |  |  | ● |  | ● | ○ |  |  |  |  |  |  |  |  | ● | ● | ○ | ● |  | ● |  | ○ |  |  |
+| [Grabs, shoves and close-quarters mechanics](FORK-CATALOG/combat.md#close-quarters-combat-rework) | no | ○ |  |  | ○ |  |  | ○ | ○ | ○ |  |  |  | ○ |  | ○ |  |  | ● | ● | ● | ● | ○ | ○ | ○ | ○ |  | ○ |
+| [Ship-to-ship combat](FORK-CATALOG/combat.md#ship-to-ship-combat) | no | ○ |  |  |  |  |  |  | ○ |  |  |  |  | ○ |  |  |  | ● | ● | ● |  |  |  |  |  | ○ |  |  |
+| [Gun attachments and upgrade kits](FORK-CATALOG/combat.md#gun-attachments-and-upgrades) | no |  |  |  |  |  | ● |  | ● |  |  |  |  |  | ○ |  |  |  | ● |  |  |  |  |  | ○ | ○ |  |  |
+| [Martial arts](FORK-CATALOG/combat.md#martial-arts) | no |  |  |  |  | ○ |  | ○ |  |  |  |  |  | ● |  |  |  |  |  | ● |  |  |  |  | ○ | ○ |  | ○ |
+| [Modular hardsuits (modsuits)](FORK-CATALOG/combat.md#modular-hardsuits) | no |  |  |  |  | ○ |  |  |  |  |  |  | ● | ○ |  |  |  |  |  |  |  |  |  | ● | ○ | ○ |  | ○ |
 
 ### Engineering
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Research tree and lathe rework](FORK-CATALOG/engineering.md#research-tree-rework) | partial | ● |  |  | ○ | ○ |  | ○ | ● | ○ | ● | ● | ● | ● |  |  |  | ● | ● | ● | ○ | ● | ● | ● | ● |  | ○ |
-| [Construction and crafting](FORK-CATALOG/engineering.md#construction-and-crafting) | ships | ○ | ● | ● | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ○ |  | ○ | ○ |  | ○ |
-| [Power grid and device networking](FORK-CATALOG/engineering.md#power-grid-and-device-networking) | ships |  |  | ● | ○ | ○ | ● |  | ○ |  | ○ | ● |  |  |  | ○ |  | ● | ● | ● |  | ● | ● | ● | ○ |  | ○ |
-| [Shuttle piloting and navigation extensions](FORK-CATALOG/engineering.md#shuttle-piloting-extensions) | partial | ○ | ● |  | ○ | ○ |  |  | ○ |  | ● |  |  |  | ○ |  |  | ● | ● | ● |  | ● |  | ○ | ○ |  | ○ |
-| [Supermatter engine](FORK-CATALOG/engineering.md#supermatter-engine) | no | ● |  |  |  | ● |  |  | ○ |  |  |  |  | ● |  | ○ |  |  |  | ● |  | ● |  | ○ | ○ |  | ○ |
-| [Fusion reactor](FORK-CATALOG/engineering.md#fusion-reactor) | no |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  | ● |  | ○ |  |  |
-| [Singularity, tesla and radiation](FORK-CATALOG/engineering.md#singularity-and-tesla-engines) | ships |  |  |  |  |  |  |  |  |  | ○ |  |  | ● |  |  |  |  |  | ● |  |  |  |  |  |  |  |
-| [Fission reactor](FORK-CATALOG/engineering.md#fission-reactor) | no |  |  |  | ○ |  |  |  | ● | ○ |  |  |  |  |  |  |  |  |  |  | ○ | ○ |  |  |  |  |  |
-| [Factory automation](FORK-CATALOG/engineering.md#factory-automation) | no |  |  |  | ○ |  |  |  |  |  |  |  |  | ● |  | ○ |  |  |  |  |  |  |  |  | ○ |  |  |
-| [Warp drive](FORK-CATALOG/engineering.md#warp-drive) | no |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Research tree and lathe rework](FORK-CATALOG/engineering.md#research-tree-rework) | partial | ● |  |  | ○ | ○ |  | ○ | ● | ○ | ● | ● | ● | ● |  |  |  | ● | ● | ● | ○ | ● | ● | ● | ● | ○ |  | ○ |
+| [Construction and crafting](FORK-CATALOG/engineering.md#construction-and-crafting) | ships | ○ | ● | ● | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ○ |  | ○ | ○ | ○ |  | ○ |
+| [Power grid and device networking](FORK-CATALOG/engineering.md#power-grid-and-device-networking) | ships |  |  | ● | ○ | ○ | ● |  | ○ |  | ○ | ● |  |  |  | ○ |  | ● | ● | ● |  | ● | ● | ● | ○ | ● |  | ○ |
+| [Shuttle piloting and navigation extensions](FORK-CATALOG/engineering.md#shuttle-piloting-extensions) | partial | ○ | ● |  | ○ | ○ |  |  | ○ |  | ● |  |  |  | ○ |  |  | ● | ● | ● |  | ● |  | ○ | ○ | ○ |  | ○ |
+| [Supermatter engine](FORK-CATALOG/engineering.md#supermatter-engine) | no | ● |  |  |  | ● |  |  | ○ |  |  |  |  | ● |  | ○ |  |  |  | ● |  | ● |  | ○ | ○ | ○ |  | ○ |
+| [Fusion reactor](FORK-CATALOG/engineering.md#fusion-reactor) | no |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  | ● |  | ○ |  |  |  |
+| [Singularity, tesla and radiation](FORK-CATALOG/engineering.md#singularity-and-tesla-engines) | ships |  |  |  |  |  |  |  |  |  | ○ |  |  | ● |  |  |  |  |  | ● |  |  |  |  |  | ○ |  |  |
+| [Fission reactor](FORK-CATALOG/engineering.md#fission-reactor) | no |  |  |  | ○ |  |  |  | ● | ○ |  |  |  |  |  |  |  |  |  |  | ○ | ○ |  |  |  | ○ |  |  |
+| [Factory automation](FORK-CATALOG/engineering.md#factory-automation) | no |  |  |  | ○ |  |  |  |  |  |  |  |  | ● |  | ○ |  |  |  |  |  |  |  |  | ○ | ○ |  |  |
+| [Warp drive](FORK-CATALOG/engineering.md#warp-drive) | no |  |  |  |  |  | ● |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 
 ### Atmos
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Exotic gases and reactions](FORK-CATALOG/atmos.md#exotic-gas-expansion) | no | ● |  |  |  |  | ● |  | ○ | ● |  | ● |  | ● |  |  |  | ● |  |  | ○ | ○ | ○ | ● | ○ |  | ○ |
-| [Atmospherics simulation](FORK-CATALOG/atmos.md#atmospherics-simulation) | ships | ● |  |  | ● |  |  |  | ○ | ○ | ● | ● |  |  |  |  |  |  |  | ● | ○ | ○ | ○ | ● | ○ |  |  |
-| [Planet weather and fog](FORK-CATALOG/atmos.md#planet-weather-and-fog) | no |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  | ● |  |  | ● |  |  | ● |  |  |
-| [Spreading fire](FORK-CATALOG/atmos.md#spreading-fire-system) | no |  |  |  |  |  | ● |  |  | ● |  |  |  |  |  |  |  |  |  |  | ○ |  | ○ |  |  |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Exotic gases and reactions](FORK-CATALOG/atmos.md#exotic-gas-expansion) | no | ● |  |  |  |  | ● |  | ○ | ● |  | ● |  | ● |  |  |  | ● |  |  | ○ | ○ | ○ | ● | ○ | ○ |  | ○ |
+| [Atmospherics simulation](FORK-CATALOG/atmos.md#atmospherics-simulation) | ships | ● |  |  | ● |  |  |  | ○ | ○ | ● | ● |  |  |  |  |  |  |  | ● | ○ | ○ | ○ | ● | ○ | ● |  |  |
+| [Planet weather and fog](FORK-CATALOG/atmos.md#planet-weather-and-fog) | no |  |  |  |  |  |  |  |  |  |  |  | ● |  |  |  |  |  | ● |  |  | ● |  |  | ● | ● |  |  |
+| [Spreading fire](FORK-CATALOG/atmos.md#spreading-fire-system) | no |  |  |  |  |  | ● |  |  | ● |  |  |  |  |  |  |  |  |  |  | ○ |  | ○ |  |  |  |  |  |
 
 ### Cargo
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Vending machines and container fills](FORK-CATALOG/cargo.md#vending-and-loot-catalogs) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ● | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ○ | ● | ○ |
-| [Cargo bounties, contracts and markets](FORK-CATALOG/cargo.md#cargo-bounties-and-market) | partial |  |  |  | ○ |  | ● |  |  |  | ○ | ● | ● | ● |  | ● |  | ● | ● | ● |  | ● |  | ● | ○ |  | ● |
-| [Player banking and economy](FORK-CATALOG/cargo.md#player-economy-and-banking) | no | ● |  |  | ○ |  |  |  | ○ | ● | ● | ● | ● | ● |  |  |  | ● |  | ● | ○ | ● |  |  | ○ |  | ● |
-| [Mail delivery](FORK-CATALOG/cargo.md#mail-delivery) | ships |  |  |  | ○ |  |  | ○ |  | ● | ○ | ● |  | ○ |  | ● |  | ● |  |  |  | ● |  | ● | ● |  |  |
-| [Shipyard and player-owned ships](FORK-CATALOG/cargo.md#shipyard-player-ships) | no | ● |  |  | ● |  |  |  |  |  | ● |  |  | ○ |  | ○ |  | ● |  |  |  | ● |  |  | ○ |  |  |
-| [Expedition missions and objectives](FORK-CATALOG/cargo.md#expedition-missions) | partial | ○ |  |  | ● | ○ |  |  | ○ |  | ● |  |  | ○ |  |  |  |  |  |  |  |  |  | ● | ○ |  |  |
-| [Lavaland mining planet](FORK-CATALOG/cargo.md#lavaland-mining-planet) | partial | ○ |  |  | ○ | ○ |  |  | ● |  |  |  |  | ● |  |  |  |  |  |  | ○ |  |  |  | ○ |  | ○ |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Vending machines and container fills](FORK-CATALOG/cargo.md#vending-and-loot-catalogs) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ● | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ○ | ○ | ● | ○ |
+| [Cargo bounties, contracts and markets](FORK-CATALOG/cargo.md#cargo-bounties-and-market) | partial |  |  |  | ○ |  | ● |  |  |  | ○ | ● | ● | ● |  | ● |  | ● | ● | ● |  | ● |  | ● | ○ | ○ |  | ● |
+| [Player banking and economy](FORK-CATALOG/cargo.md#player-economy-and-banking) | no | ● |  |  | ○ |  |  |  | ○ | ● | ● | ● | ● | ● |  |  |  | ● |  | ● | ○ | ● |  |  | ○ | ○ |  | ● |
+| [Mail delivery](FORK-CATALOG/cargo.md#mail-delivery) | ships |  |  |  | ○ |  |  | ○ |  | ● | ○ | ● |  | ○ |  | ● |  | ● |  |  |  | ● |  | ● | ● | ○ |  |  |
+| [Shipyard and player-owned ships](FORK-CATALOG/cargo.md#shipyard-player-ships) | no | ● |  |  | ● |  |  |  |  |  | ● |  |  | ○ |  | ○ |  | ● |  |  |  | ● |  |  | ○ |  |  |  |
+| [Expedition missions and objectives](FORK-CATALOG/cargo.md#expedition-missions) | partial | ○ |  |  | ● | ○ |  |  | ○ |  | ● |  |  | ○ |  |  |  |  |  |  |  |  |  | ● | ○ | ○ |  |  |
+| [Lavaland mining planet](FORK-CATALOG/cargo.md#lavaland-mining-planet) | partial | ○ |  |  | ○ | ○ |  |  | ● |  |  |  |  | ● |  |  |  |  |  |  | ○ |  |  |  | ○ | ○ |  | ○ |
 
 ### Machines
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Access control rework](FORK-CATALOG/machines.md#access-control-rework) | partial | ● | ● |  | ● |  | ● |  | ○ |  | ○ | ● | ● | ● | ○ |  |  | ● | ● | ● |  | ○ |  | ● | ○ |  | ○ |
-| [Additional devices, gadgets and structures](FORK-CATALOG/machines.md#device-and-machine-additions) | partial | ○ | ● | ● | ○ | ○ | ○ | ○ | ○ | ○ | ○ | ● | ● | ○ | ○ | ○ |  | ● | ● | ● | ○ | ○ | ● | ● | ○ | ● | ○ |
-| [Mech and exosuit overhaul](FORK-CATALOG/machines.md#mech-overhaul) | partial | ● |  |  |  |  |  |  | ○ |  | ● |  | ● | ● |  |  |  | ● | ● | ● |  | ● |  | ● | ○ |  | ○ |
-| [Stains and laundry](FORK-CATALOG/machines.md#laundry-and-stains) | no | ● |  |  |  | ○ | ● | ○ | ○ | ● |  | ● | ● | ● |  |  |  |  |  |  | ○ | ○ |  | ● | ● |  |  |
-| [Rideable vehicles](FORK-CATALOG/machines.md#rideable-vehicles) | no |  |  |  |  |  |  |  | ● |  | ○ |  | ● | ● |  |  |  |  | ● | ● |  |  |  |  | ○ |  | ○ |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Access control rework](FORK-CATALOG/machines.md#access-control-rework) | partial | ● | ● |  | ● |  | ● |  | ○ |  | ○ | ● | ● | ● | ○ |  |  | ● | ● | ● |  | ○ |  | ● | ○ | ○ |  | ○ |
+| [Additional devices, gadgets and structures](FORK-CATALOG/machines.md#device-and-machine-additions) | partial | ○ | ● | ● | ○ | ○ | ○ | ○ | ○ | ○ | ○ | ● | ● | ○ | ○ | ○ |  | ● | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ● | ○ |
+| [Mech and exosuit overhaul](FORK-CATALOG/machines.md#mech-overhaul) | partial | ● |  |  |  |  |  |  | ○ |  | ● |  | ● | ● |  |  |  | ● | ● | ● |  | ● |  | ● | ○ | ○ |  | ○ |
+| [Stains and laundry](FORK-CATALOG/machines.md#laundry-and-stains) | no | ● |  |  |  | ○ | ● | ○ | ○ | ● |  | ● | ● | ● |  |  |  |  |  |  | ○ | ○ |  | ● | ● | ● |  |  |
+| [Rideable vehicles](FORK-CATALOG/machines.md#rideable-vehicles) | no |  |  |  |  |  |  |  | ● |  | ○ |  | ● | ● |  |  |  |  | ● | ● |  |  |  |  | ○ | ○ |  | ○ |
 
 ### Ui
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [HUD status readouts and alerts](FORK-CATALOG/ui.md#hud-and-status-readouts) | partial | ● | ● |  | ○ | ○ | ● |  | ○ | ● | ○ | ● |  | ● | ● | ● |  | ● | ● | ● | ○ | ○ | ● | ● | ○ |  | ○ |
-| [Admin and mentor tooling](FORK-CATALOG/ui.md#admin-and-mentor-tooling) | partial | ● | ● | ● | ○ |  | ● |  | ○ | ○ | ○ | ● |  | ● | ● | ○ |  | ● | ● | ● | ○ | ○ | ● | ● | ○ |  | ○ |
-| [Lobby and character sheet overhaul](FORK-CATALOG/ui.md#lobby-and-character-ui) | partial | ○ |  | ● |  |  | ● |  | ○ |  | ○ |  | ● |  | ○ | ● |  |  | ● | ● | ● | ○ | ● | ○ | ● |  |  |
-| [Visual feedback and particle effects](FORK-CATALOG/ui.md#visual-feedback-effects) | no | ● |  |  | ○ |  | ○ |  | ○ | ○ | ○ | ● |  | ○ |  | ● |  |  | ● | ● | ○ | ○ | ● | ○ | ● |  | ○ |
-| [Vision overlays and visors](FORK-CATALOG/ui.md#screen-overlays-and-visors) | no | ● |  |  | ○ |  | ● |  | ○ | ● | ○ |  |  | ● |  | ○ |  |  | ● | ● | ○ | ○ | ● | ○ | ○ |  | ○ |
-| [Storage and inventory rework](FORK-CATALOG/ui.md#storage-and-inventory-rework) | partial | ○ |  | ● | ○ | ○ | ○ |  | ○ |  | ○ |  |  | ● |  |  |  |  | ● | ● |  | ● |  | ● | ○ |  | ○ |
-| [PDA chat messenger](FORK-CATALOG/ui.md#nanochat-messenger) | no |  |  | ● | ● | ○ |  |  | ○ |  |  | ● | ● | ○ |  | ○ |  |  |  |  |  | ○ |  | ● | ○ |  |  |
-| [PDA cartridge programs](FORK-CATALOG/ui.md#pda-cartridge-programs) | partial | ● |  |  | ● | ○ |  | ○ | ○ |  | ○ |  | ● | ○ |  | ○ |  |  |  |  |  | ○ |  | ● | ○ |  |  |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [HUD status readouts and alerts](FORK-CATALOG/ui.md#hud-and-status-readouts) | partial | ● | ● |  | ○ | ○ | ● |  | ○ | ● | ○ | ● |  | ● | ● | ● |  | ● | ● | ● | ○ | ○ | ● | ● | ○ | ○ |  | ○ |
+| [Admin and mentor tooling](FORK-CATALOG/ui.md#admin-and-mentor-tooling) | partial | ● | ● | ● | ○ |  | ● |  | ○ | ○ | ○ | ● |  | ● | ● | ○ |  | ● | ● | ● | ○ | ○ | ● | ● | ○ | ○ |  | ○ |
+| [Lobby and character sheet overhaul](FORK-CATALOG/ui.md#lobby-and-character-ui) | partial | ○ |  | ● |  |  | ● |  | ○ |  | ○ |  | ● |  | ○ | ● |  |  | ● | ● | ● | ○ | ● | ○ | ● | ○ |  |  |
+| [Visual feedback and particle effects](FORK-CATALOG/ui.md#visual-feedback-effects) | no | ● |  |  | ○ |  | ○ |  | ○ | ○ | ○ | ● |  | ○ |  | ● |  |  | ● | ● | ○ | ○ | ● | ○ | ● | ○ |  | ○ |
+| [Vision overlays and visors](FORK-CATALOG/ui.md#screen-overlays-and-visors) | no | ● |  |  | ○ |  | ● |  | ○ | ● | ○ |  |  | ● |  | ○ |  |  | ● | ● | ○ | ○ | ● | ○ | ○ | ○ |  | ○ |
+| [Storage and inventory rework](FORK-CATALOG/ui.md#storage-and-inventory-rework) | partial | ○ |  | ● | ○ | ○ | ○ |  | ○ |  | ○ |  |  | ● |  |  |  |  | ● | ● |  | ● |  | ● | ○ | ○ |  | ○ |
+| [PDA chat messenger](FORK-CATALOG/ui.md#nanochat-messenger) | no |  |  | ● | ● | ○ |  |  | ○ |  |  | ● | ● | ○ |  | ○ |  |  |  |  |  | ○ |  | ● | ○ | ○ |  |  |
+| [PDA cartridge programs](FORK-CATALOG/ui.md#pda-cartridge-programs) | partial | ● |  |  | ● | ○ |  | ○ | ○ |  | ○ |  | ● | ○ |  | ○ |  |  |  |  |  | ○ |  | ● | ○ | ○ |  |  |
 
 ### Art
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Object, tool and novelty item pack](FORK-CATALOG/art.md#object-and-tool-art) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ○ | ● | ● | ● | ● | ● | ● | ○ | ○ | ● | ○ | ○ | ● | ○ |
-| [Clothing and wardrobe pack](FORK-CATALOG/art.md#clothing-and-wardrobe-pack) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ○ | ● | ○ | ○ |  | ○ |
-| [Interface skin and audio pack](FORK-CATALOG/art.md#interface-and-audio-pack) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ○ | ● | ○ | ● | ● | ● | ● | ○ | ○ | ● | ○ | ○ |  | ○ |
-| [Station and environment art](FORK-CATALOG/art.md#station-and-environment-art) | partial | ○ | ● | ● | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ○ | ○ | ● | ○ | ● | ● | ● | ○ | ○ | ● | ○ | ○ |  | ○ |
-| [Announcer voice packs](FORK-CATALOG/art.md#announcer-voice-packs) | no | ○ | ● |  | ○ |  | ● | ○ | ○ |  | ● |  | ● | ● | ● | ○ |  |  | ● | ● |  | ● |  | ● | ○ |  | ○ |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Object, tool and novelty item pack](FORK-CATALOG/art.md#object-and-tool-art) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ○ | ● | ● | ● | ● | ● | ● | ○ | ○ | ● | ○ | ○ | ○ | ● | ○ |
+| [Clothing and wardrobe pack](FORK-CATALOG/art.md#clothing-and-wardrobe-pack) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ○ | ● | ○ | ○ | ○ |  | ○ |
+| [Interface skin and audio pack](FORK-CATALOG/art.md#interface-and-audio-pack) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ○ | ● | ● | ○ | ● | ○ | ● | ● | ● | ● | ○ | ○ | ● | ○ | ○ | ○ |  | ○ |
+| [Station and environment art](FORK-CATALOG/art.md#station-and-environment-art) | partial | ○ | ● | ● | ○ | ○ | ● |  | ○ | ○ | ○ | ● | ● | ○ | ○ | ● | ○ | ● | ● | ● | ○ | ○ | ● | ○ | ○ | ○ |  | ○ |
+| [Announcer voice packs](FORK-CATALOG/art.md#announcer-voice-packs) | no | ○ | ● |  | ○ |  | ● | ○ | ○ |  | ● |  | ● | ● | ● | ○ |  |  | ● | ● |  | ● |  | ● | ○ | ○ |  | ○ |
 
 ### Maps
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Custom station maps and shuttles](FORK-CATALOG/maps.md#custom-station-maps) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ● | ● | ● | ● | ● | ● |  | ● | ● | ● |  | ● |  | ● | ○ | ● | ● |
-| [Ruins, points of interest and sector generation](FORK-CATALOG/maps.md#ruins-poi-and-sector-generation) | partial | ● | ● |  | ○ | ○ |  |  | ○ |  | ● |  |  |  |  | ● |  | ● |  | ● |  | ● |  | ● | ● |  | ○ |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Custom station maps and shuttles](FORK-CATALOG/maps.md#custom-station-maps) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ○ | ● | ● | ● | ● | ● | ● |  | ● | ● | ● |  | ● |  | ● | ○ | ● | ● | ● |
+| [Ruins, points of interest and sector generation](FORK-CATALOG/maps.md#ruins-poi-and-sector-generation) | partial | ● | ● |  | ○ | ○ |  |  | ○ |  | ● |  |  |  |  | ● |  | ● |  | ● |  | ● |  | ● | ● | ● |  | ○ |
 
 ### Misc
 
-| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | VIVA | WHITE |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Hostile fauna and NPC roster](FORK-CATALOG/misc.md#hostile-fauna-and-npcs) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● |  | ○ | ● | ● | ○ |  | ○ |
-| [Food, drink and cooking expansion](FORK-CATALOG/misc.md#food-and-drink-expansion) | partial | ● | ● | ● | ○ | ○ | ● | ○ | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● |  | ○ |  | ● | ○ |  | ○ |
-| [Custom station events](FORK-CATALOG/misc.md#custom-station-events) | partial | ○ | ● | ● | ○ | ○ | ● |  | ○ | ● | ○ | ● | ● | ● | ○ | ○ |  | ● | ● | ● | ○ | ● |  | ● | ○ |  | ○ |
-| [Movement and mobility tweaks](FORK-CATALOG/misc.md#movement-and-mobility-tweaks) | partial | ● |  |  | ○ | ○ |  |  | ○ |  | ○ |  |  | ○ | ● | ● | ● | ● | ● | ● | ● | ○ | ● | ● | ● |  | ○ |
-| [Shared fork infrastructure](FORK-CATALOG/misc.md#shared-utility-libraries) | partial | ○ | ● | ● | ○ | ○ | ○ | ● | ○ | ○ | ○ |  | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ○ | ○ | ○ | ○ | ● | ○ |
-| [Discord and external service integration](FORK-CATALOG/misc.md#discord-and-external-services) | partial | ○ | ● |  |  | ● |  | ● | ○ |  |  |  | ○ | ○ |  |  |  |  | ● | ● |  | ○ |  | ● | ● |  | ● |
-| [Sponsor and donator perks](FORK-CATALOG/misc.md#sponsor-and-donator-perks) | no | ○ | ● |  |  |  |  |  | ○ |  |  |  | ● | ● |  |  |  |  | ● | ● |  | ○ |  | ● |  |  | ● |
-| [Station goals](FORK-CATALOG/misc.md#station-goals) | no | ● | ● |  |  | ○ |  | ● |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  |  | ● | ● |  | ● |
-| [Xenoarchaeology and anomaly extensions](FORK-CATALOG/misc.md#xenoarchaeology-and-anomalies) | partial |  |  |  | ○ |  | ● |  |  |  | ● |  |  | ● |  | ● |  |  |  | ● |  |  |  | ● |  |  |  |
-| [Item enchantment and granted abilities](FORK-CATALOG/misc.md#item-enchantment-and-grants) | no | ● |  |  | ○ |  |  | ○ | ○ |  | ○ |  | ● | ● | ○ | ○ |  |  |  | ● |  | ● |  | ○ | ○ |  | ○ |
-| [Fishing minigame](FORK-CATALOG/misc.md#fishing) | no |  |  |  | ○ | ○ |  |  |  |  |  |  |  | ● |  | ● |  |  | ● |  |  |  |  |  | ○ |  | ○ |
+| Feature | Wizden | BACKMEN | CORVAX | CD | DV | EE | ES | ESTACAOPI | FARHORIZO | FUNKYSTAT | NF | FUNKYSTAT | GABYSTATI | GOOBSTATI | HARMONY | IMPSTATIO | MACRO | MONO | RMC14 | SS220 | STARFALL | STARLIGHT | ST | SUNRISE | DEN | TRAUMA | VIVA | WHITE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Hostile fauna and NPC roster](FORK-CATALOG/misc.md#hostile-fauna-and-npcs) | partial | ○ | ● | ● | ○ | ○ | ● | ● | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● |  | ○ | ● | ● | ○ | ○ |  | ○ |
+| [Food, drink and cooking expansion](FORK-CATALOG/misc.md#food-and-drink-expansion) | partial | ● | ● | ● | ○ | ○ | ● | ○ | ○ | ● | ○ | ● | ● | ● | ○ | ● |  | ● | ● | ● |  | ○ |  | ● | ○ | ○ |  | ○ |
+| [Custom station events](FORK-CATALOG/misc.md#custom-station-events) | partial | ○ | ● | ● | ○ | ○ | ● |  | ○ | ● | ○ | ● | ● | ● | ○ | ○ |  | ● | ● | ● | ○ | ● |  | ● | ○ | ○ |  | ○ |
+| [Movement and mobility tweaks](FORK-CATALOG/misc.md#movement-and-mobility-tweaks) | partial | ● |  |  | ○ | ○ |  |  | ○ |  | ○ |  |  | ○ | ● | ● | ● | ● | ● | ● | ● | ○ | ● | ● | ● | ○ |  | ○ |
+| [Shared fork infrastructure](FORK-CATALOG/misc.md#shared-utility-libraries) | partial | ○ | ● | ● | ○ | ○ | ○ | ● | ○ | ○ | ○ |  | ● | ● | ○ | ● |  | ● | ● | ● | ○ | ○ | ○ | ○ | ○ | ○ | ● | ○ |
+| [Discord and external service integration](FORK-CATALOG/misc.md#discord-and-external-services) | partial | ○ | ● |  |  | ● |  | ● | ○ |  |  |  | ○ | ○ |  |  |  |  | ● | ● |  | ○ |  | ● | ● | ○ |  | ● |
+| [Sponsor and donator perks](FORK-CATALOG/misc.md#sponsor-and-donator-perks) | no | ○ | ● |  |  |  |  |  | ○ |  |  |  | ● | ● |  |  |  |  | ● | ● |  | ○ |  | ● |  | ○ |  | ● |
+| [Station goals](FORK-CATALOG/misc.md#station-goals) | no | ● | ● |  |  | ○ |  | ● |  |  |  |  |  |  |  |  |  |  |  | ○ |  |  |  | ● | ● |  |  | ● |
+| [Xenoarchaeology and anomaly extensions](FORK-CATALOG/misc.md#xenoarchaeology-and-anomalies) | partial |  |  |  | ○ |  | ● |  |  |  | ● |  |  | ● |  | ● |  |  |  | ● |  |  |  | ● |  | ○ |  |  |
+| [Item enchantment and granted abilities](FORK-CATALOG/misc.md#item-enchantment-and-grants) | no | ● |  |  | ○ |  |  | ○ | ○ |  | ○ |  | ● | ● | ○ | ○ |  |  |  | ● |  | ● |  | ○ | ○ | ○ |  | ○ |
+| [Fishing minigame](FORK-CATALOG/misc.md#fishing) | no |  |  |  | ○ | ○ |  |  |  |  |  |  |  | ● |  | ● |  |  | ● |  |  |  |  |  | ○ | ○ |  | ○ |
 
 ## Features
 
@@ -883,6 +884,7 @@ taxonomy settles.
 | the-den | Content.Shared/Repulsor | A generic repulse-on-touch component with no owning system; fits no canonical id without inventing one. |
 | the-den | Content.Shared/Nyanotrasen/Interaction, Content.Server/Nyanotrasen/Item residue | Small Nyanotrasen-lineage interaction helpers; splitting them further would be guesswork, and folding them into a named system would repeat the round-1 bundling error. |
 | the-den | Content.Server/DiscordAuth vs upstream Content.Server/Discord | Mapped to discord-and-external-services, but only the fork's DiscordAuth gate is counted; upstream already ships Content.Server/Discord webhooks, which are deliberately excluded. |
+| trauma-station | Gimmick systems: CardboardBox, Arena, Mime abilities | 10 code files (Content.Trauma.Shared/Common CardboardBox: a hide-in-box stealth gimmick; Arena: an action that builds a duel arena; Abilities/Mime: mime vow punishment). Each is a one-off gimmick; no catalogue id covers stealth boxes, arena creation or mime vows. |
 | viva-station | Undecomposed vendored downstream inheritance (~7,900 blobs) | Viva Station is a thin fork of Funky Station: only ~129 blobs live under _Viva. The tree carries _Funkystation (4070), _DV (1606), _Goobstation (816), _EinsteinEngines (377), _Shitmed (221), _Impstation (220), _EE (197), _FarHorizons (188), _DEN (96), _NF (60), _RMC14 (41), _Harmony (28), _EstacaoPirata (17), _CD (15), _Gabystation (9), _Mono (8), _White (7), _Andromeda (5) and _SimpleStation (2). The round-1 inventory scoped itself to _Viva-original content, so apart from the _Funkystation genetics subtree recovered above these namespaces have not been decomposed against the taxonomy. Per R0.2 each should take the id its originating fork uses, not cross-fork-vendored-bundles; that decomposition needs a re-inventory pass, not a guess here. |
 | viva-station | Tree truncation past ~49.6k blobs | The inventory notes the recursive git-trees response came back truncated=true inside Resources/Textures/_Funkystation, and only Resources/Textures/_Viva was refetched. Any fork content sorting after that cut point in Resources/Textures cannot be verified against trees/viva-station-tree.txt, so no entry claims a path from that region. |
 | viva-station | Geneticist wardrobe art (_Funkystation) | Resources/Textures/_Funkystation/Clothing/OuterClothing/WinterCoats/geneticistcoat.rsi (6 files) is job clothing art that would belong to clothing-and-wardrobe-pack, but it sits inside the undecomposed _Funkystation wardrobe subtree above; filing it alone would credit Viva with a wardrobe pack entry drawn from one sprite. |

@@ -142,8 +142,9 @@ A handful of new chemicals rather than a chemistry overhaul, and they read as fl
 | monolith | Chemistry, reagents and food (reagent portion) | 16 | `Resources/Locale/en-US/_Mono/flavors/flavor-profiles.ftl` (+5) |
 | funky | Medical and chemistry content (reagents, reactions and glassware) | 15 | `Content.Server/_Funkystation/EntityEffects/Effects/AddReagentToBlood.cs` (+14) |
 | macrocosm | Custom reagents and flavors | 10 | `Resources/Locale/en-US/_MACRO/flavors/flavor-profiles.ftl` (+6) |
+| trauma-station | Reagents and reactions | 50 | `Content.Trauma.Common/Chemistry` (+11) |
 
-Also carried by 13: far-horizons (via `_Starlight, _Funkystation`), the-den (via `_DV, _Goobstation, _Funkystation`), deltav (via `_DEN, _NF, _CD, _Floof, _Funkystation, _Impstation, _Mono`), starlight (via `_Funkystation (partial)`), frontier (via `_DV`), white-dream (via `_Goobstation, _EE, _Nuclear14, _Funkystation`), ephemeral-space (via `_Offbrand`), backmen (via `partly Corvax, _CorvaxNext, _Impstation`), harmony-station (via `_Impstation`), forky (via `_MACRO`), starfall-drift (via `_MACRO, _Funkystation`), einstein-engines (via `DeltaV, Nyanotrasen, _Goobstation`), stellar-station (via `_ES (Ephemeral Space / MirrorCult)`)
+Also carried by 14: far-horizons (via `_Starlight, _Funkystation`), the-den (via `_DV, _Goobstation, _Funkystation`), deltav (via `_DEN, _NF, _CD, _Floof, _Funkystation, _Impstation, _Mono`), starlight (via `_Funkystation (partial)`), frontier (via `_DV`), white-dream (via `_Goobstation, _EE, _Nuclear14, _Funkystation`), ephemeral-space (via `_Offbrand`), backmen (via `partly Corvax, _CorvaxNext, _Impstation`), harmony-station (via `_Impstation`), forky (via `_MACRO`), starfall-drift (via `_MACRO, _Funkystation`), einstein-engines (via `DeltaV, Nyanotrasen, _Goobstation`), stellar-station (via `_ES (Ephemeral Space / MirrorCult)`), trauma-station (via `Content.Goobstation.*, _FarHorizons, _Goobstation, _NF, _RMC14`)
 
 ### Chemical plumbing network
 
@@ -165,3 +166,4 @@ Chemists get a build-out toy: a hand-held Rapid Plumbing Device places hidden fl
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | starlight | Plumbing (chemical piping) | 59 | `Content.Client/_Starlight/Plumbing` (+5) |
+| trauma-station | Factory plumbing and ChemiCompiler | 15 | `Content.Factory.Client/Plumbing` (+4) |

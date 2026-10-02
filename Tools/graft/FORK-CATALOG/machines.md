@@ -78,8 +78,9 @@ When the station changes alert level, an announcement warns that door permission
 | funky | ID card icon selector and access groups | 7 | `Content.Client/_Funkystation/Access/UI/IdCardConsoleIconSelectorWindow.xaml` (+5) |
 | gaby-station-now-dumont-station | Per-department access sets behind the resprited doors | 5 | `Resources/Prototypes/_Dumont/Access` |
 | corvax | Fork ID cards, access levels, airlock access and door electronics | 4 | `Resources/Locale/en-US/corvax/prototypes/access/accesses.ftl` (+3) |
+| trauma-station | Access and anti-tamper | 14 | `Content.Trauma.Server/AntiTamper` (+4) |
 
-Also carried by 6: starlight (via `_CD (partial)`), far-horizons (via `_Starlight, _CD`), frontier (via `_DV, _Harmony`), the-den (via `_DV`), harmony-station (via `_Sich`), white-dream (via `_Goobstation, _EE`)
+Also carried by 7: starlight (via `_CD (partial)`), far-horizons (via `_Starlight, _CD`), frontier (via `_DV, _Harmony`), the-den (via `_DV`), harmony-station (via `_Sich`), white-dream (via `_Goobstation, _EE`), trauma-station (via `Content.Goobstation.*, _DV, _Goobstation`)
 
 ### Additional devices, gadgets and structures
 
@@ -234,8 +235,9 @@ Stellar Station's contribution here is one piece of set dressing, not a machine 
 | monolith | Teleportation, EMP resistance and PVS control | 11 | `Content.Server/_Mono/Teleportation/ScramActionSystem.cs` (+7) |
 | viva-station | CCD long-range radio channel | 5 | `Resources/Locale/en-US/_Viva/radios/channels.ftl` (+4) |
 | stellar-station | Sensor tower | 1 | `Resources/Prototypes/_ST/Science/sensor-tower.yml` |
+| trauma-station | Phones, holoprojectors and devices | 76 | `Content.Trauma.Client/Paint` (+26) |
 
-Also carried by 15: deltav (via `_NF`), the-den (via `_DV, _Goobstation`), einstein-engines (via `Nyanotrasen, DeltaV, _DV`), goobstation (via `_EinsteinEngines, _White`), white-dream (via `_Goobstation, _DV`), backmen (via `partly Nyanotrasen, _DeadSpace`), starlight (via `_Moffstation (partial)`), impstation (via `_Goobstation`), far-horizons (via `_Starlight (partial)`), frontier (via `_NC, _EstacaoPirata`), estacao-pirata (via `Nyanotrasen, DeltaV, (fork-own gift boxes)`), harmony-station (via `_DV + _EstacaoPirata`), forky (via `_FarHorizons`), ephemeral-space (via `_DV`), starfall-drift (via `_FarHorizons`)
+Also carried by 16: deltav (via `_NF`), the-den (via `_DV, _Goobstation`), einstein-engines (via `Nyanotrasen, DeltaV, _DV`), goobstation (via `_EinsteinEngines, _White`), white-dream (via `_Goobstation, _DV`), backmen (via `partly Nyanotrasen, _DeadSpace`), starlight (via `_Moffstation (partial)`), impstation (via `_Goobstation`), far-horizons (via `_Starlight (partial)`), frontier (via `_NC, _EstacaoPirata`), estacao-pirata (via `Nyanotrasen, DeltaV, (fork-own gift boxes)`), harmony-station (via `_DV + _EstacaoPirata`), forky (via `_FarHorizons`), ephemeral-space (via `_DV`), starfall-drift (via `_FarHorizons`), trauma-station (via `Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _NF, _RMC14, _Shitmed, _White`)
 
 ### Mech and exosuit overhaul
 
@@ -367,8 +369,9 @@ A pilot mech whose mounted guns are driven from a dedicated "Mech weapons" hands
 | gaby-station-now-dumont-station | Mech expansion (air recycler, spacebuoy, equipment) | 6 | `Content.Server/_Gabystation/Mech/Equipment` (+2) |
 | serbia-strong | Mech clothing and mech robot modules | 4 | `Content.Server/SS220/MechClothing` (+3) |
 | monolith | Mech content (from Cyborgs, xenoborgs and mechs) | 2 | `Resources/Prototypes/_Mono/Entities/Markers/Spawners/mechs.yml` (+1) |
+| trauma-station | Mechs | 21 | `Content.Trauma.Common/Mech` (+4) |
 
-Also carried by 3: the-den (via `_NF, _Goobstation`), white-dream (via `_Goobstation`), far-horizons (via `_Starlight`)
+Also carried by 4: the-den (via `_NF, _Goobstation`), white-dream (via `_Goobstation`), far-horizons (via `_Starlight`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Stains and laundry
 
@@ -410,6 +413,7 @@ Spills on the floor stop looking like one generic coloured blob. Every liquid ge
 | backmen | Washing machines, showers, blood footprints and fluid splashes | 15 | `Content.Client/Backmen/FootPrint` (+8) |
 | goobstation | Footprints | 7 | `Content.Goobstation.Client/Footprints` (+2) |
 | funky | Crayon placement overlay | 2 | `Resources/Textures/_Funkystation/Effects` |
+| trauma-station | Footprints and blood splatter | 44 | `Content.Trauma.Common/Footprints` (+6) |
 
 Also carried by 5: starfall-drift (via `_Funkystation`), estacao-pirata (via `Nyanotrasen`), starlight (via `_Starfall, _ES, _Funkystation (partial)`), far-horizons (via `_Funkystation, _Starlight`), einstein-engines (via `Nyanotrasen`)
 
@@ -489,5 +493,6 @@ A small piloted pod you climb into the way you climb into a mech, except it hove
 | goobstation | Rideable vehicles (clown car and friends) | 58 | `Content.Goobstation.Client/Vehicles` (+6) |
 | serbia-strong | Rideable vehicles and attachable carts | 18 | `Content.Client/SS220/Vehicle` (+4) |
 | gaby-station-now-dumont-station | Compact pod vehicle | 8 | `Content.Server/_Gabystation/CompactPod` (+2) |
+| trauma-station | Vehicle prototypes | 1 | `Resources/Prototypes/_Trauma/Entities/Objects/Vehicles` |
 
-Also carried by 3: frontier (via `_Goobstation`), white-dream (via `_Goobstation`), the-den (via `_Goobstation`)
+Also carried by 4: frontier (via `_Goobstation`), white-dream (via `_Goobstation`), the-den (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation`)

@@ -45,6 +45,7 @@ This is a content bucket, not a system: each fork's own roster of stations to pl
 | ephemeral-space | Station configs, map pool and fork maps | 18 | `Content.Client/_ES/Station/ESStationSystem.cs` (+8) |
 | frontier | Frontier station and mini-CentComm map pool | 7 | `Resources/Maps/_NF/Outpost` (+2) |
 | viva-station | Camp Chromite and Gala maps | 4 | `Resources/Maps/_Viva/CampChromite.yml` (+3) |
+| trauma-station | Trauma maps, shuttles and areas | 125 | `Content.Trauma.Client/Areas` (+7) |
 
 Also carried by 6: deltav (via `_Mono`), far-horizons (via `_Starlight (partial)`), backmen (via `partly Corvax`), einstein-engines (via `DeltaV`), the-den (via `_DV`), forky (via `_FarHorizons`)
 
@@ -117,5 +118,6 @@ Mostly this is more places to fly to: hand-built wrecks and derelicts that salva
 | monolith | World generation, spawning and cleanup | 32 | `Content.Server/_Mono/Cleanup` (+14) |
 | impstation | Salvage wrecks and space ruins | 24 | `Resources/Maps/_Impstation/Ruins` (+1) |
 | corvax | Corvax space ruins and biome templates | 16 | `Resources/Maps/Corvax/Ruins` (+2) |
+| trauma-station | Gateway destinations | 7 | `Content.Trauma.Client/Gateway` (+2) |
 
 Also carried by 4: deltav (via `_Mono`), far-horizons (via `_Starlight (un-namespaced)`), einstein-engines (via `DeltaV`), white-dream (via `_Lavaland`)

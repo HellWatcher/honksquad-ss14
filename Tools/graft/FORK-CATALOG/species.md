@@ -37,8 +37,9 @@ In the character setup screen you get far longer lists to scroll: dozens of extr
 | stellar-station | Species and character customization art | 197 | `Resources/Locale/en-US/_ST/character/customization` (+3) |
 | funky | Species markings and character customization | 131 | `Content.Shared/_Funkystation/Humanoid` (+4) |
 | impstation | Species markings, palettes and skin colorations | 53 | `Resources/Locale/en-US/_Impstation/markings` (+4) |
+| trauma-station | Wings, facepaint and markings | 177 | `Content.Trauma.Common/Humanoid` (+4) |
 
-Also carried by 12: the-den (via `_ADT, _DV, _Impstation, _Floof`), einstein-engines (via `_ADT, DeltaV, Nyanotrasen, _Impstation`), white-dream (via `_Impstation, _EE, _ADT`), backmen (via `partly _Goobstation`), deltav (via `_ES, _DEN, _NF, _Impstation, _EE, _Goobstation, _Starlight, _Floof, _Funkystation, _FarHorizons`), frontier (via `_DV, _Impstation, _EE`), harmony-station (via `_Impstation + _EE + _ADT + _CD`), goobstation (via `_ADT, _Floofstation, _Trauma`), far-horizons (via `_Starlight (partial)`), starlight (via `_Afterlight, _FarHorizons (partial)`), estacao-pirata (via `DeltaV, Nyanotrasen, (fork-own Daengati)`), starfall-drift (via `_MACRO`)
+Also carried by 13: the-den (via `_ADT, _DV, _Impstation, _Floof`), einstein-engines (via `_ADT, DeltaV, Nyanotrasen, _Impstation`), white-dream (via `_Impstation, _EE, _ADT`), backmen (via `partly _Goobstation`), deltav (via `_ES, _DEN, _NF, _Impstation, _EE, _Goobstation, _Starlight, _Floof, _Funkystation, _FarHorizons`), frontier (via `_DV, _Impstation, _EE`), harmony-station (via `_Impstation + _EE + _ADT + _CD`), goobstation (via `_ADT, _Floofstation, _Trauma`), far-horizons (via `_Starlight (partial)`), starlight (via `_Afterlight, _FarHorizons (partial)`), estacao-pirata (via `DeltaV, Nyanotrasen, (fork-own Daengati)`), starfall-drift (via `_MACRO`), trauma-station (via `_DV, _EinsteinEngines, _Goobstation, _Impstation, _White`)
 
 ### Extra playable species
 
@@ -69,8 +70,9 @@ At character creation you can pick from extra species beyond the upstream roster
 | cosmatic-drift | Playable species: Avali, Foxfolk, Rodentia | 73 | `Resources/Locale/en-US/_CD/datasets` (+8) |
 | gaby-station-now-dumont-station | Waddler, Synth and Tajaran playable species | 49 | `Resources/Prototypes/_Gabystation/Actions/waddler.yml` (+8) |
 | impstation | Anomalocarid species; Kodepiia species; Thaven species; Ungu species | 45 | `Content.Server/_Impstation/Anomalocarid` (+41) |
+| trauma-station | Species sprite variants | 33 | `Resources/Prototypes/_Trauma/Partials/Entities/Mobs/Player` (+1) |
 
-Also carried by 13: starlight (via `_FarHorizons`), far-horizons (via `_Starlight (partial)`), sunrise (via `_Starlight (partial)`), einstein-engines (via `DeltaV, Nyanotrasen, _Impstation`), the-den (via `_DV, _Impstation, _Floof, _EE`), backmen (via `Nyanotrasen, SimpleStation14`), macrocosm (via `Impstation`), deltav (via `_DEN, _Starlight, _RMC14, _Mono, _Impstation`), goobstation (via `_Obelisk, _DV, _Floofstation, _White`), frontier (via `_DV, _EE`), estacao-pirata (via `DeltaV, Nyanotrasen, SimpleStation14, (fork-own Daengati)`), white-dream (via `_EE, _Impstation, _Shitmed`), harmony-station (via `_CD`)
+Also carried by 14: starlight (via `_FarHorizons`), far-horizons (via `_Starlight (partial)`), sunrise (via `_Starlight (partial)`), einstein-engines (via `DeltaV, Nyanotrasen, _Impstation`), the-den (via `_DV, _Impstation, _Floof, _EE`), backmen (via `Nyanotrasen, SimpleStation14`), macrocosm (via `Impstation`), deltav (via `_DEN, _Starlight, _RMC14, _Mono, _Impstation`), goobstation (via `_Obelisk, _DV, _Floofstation, _White`), frontier (via `_DV, _EE`), estacao-pirata (via `DeltaV, Nyanotrasen, SimpleStation14, (fork-own Daengati)`), white-dream (via `_EE, _Impstation, _Shitmed`), harmony-station (via `_CD`), trauma-station (via `Content.Goobstation.*, _Goobstation, _Impstation, _Shitmed`)
 
 ### Species racial abilities
 
@@ -162,7 +164,7 @@ A slime crewmember gets one extra action on their hotbar, "Morph into Geras", wh
 | cosmatic-drift | Mouth storage + Rodentia species action | 8 | `Content.Client/_CD/Species/MouthStorageSystem.cs` (+7) |
 | serbia-strong | Geras morph ability | 7 | `Content.Server/SS220/Geras` (+3) |
 
-Also carried by 12: the-den (via `_DV`), estacao-pirata (via `Nyanotrasen, DeltaV, SimpleStation14`), far-horizons (via `_Starlight`), einstein-engines (via `DeltaV, Nyanotrasen, _Impstation`), deltav (via `_EE, _Impstation`), backmen (via `Nyanotrasen, _White`), macrocosm (via `Impstation`), forky (via `_MACRO`), starfall-drift (via `_MACRO`), goobstation (via `_EinsteinEngines, _White`), frontier (via `_DV`), white-dream (via `_EE, _DV`)
+Also carried by 13: the-den (via `_DV`), estacao-pirata (via `Nyanotrasen, DeltaV, SimpleStation14`), far-horizons (via `_Starlight`), einstein-engines (via `DeltaV, Nyanotrasen, _Impstation`), deltav (via `_EE, _Impstation`), backmen (via `Nyanotrasen, _White`), macrocosm (via `Impstation`), forky (via `_MACRO`), starfall-drift (via `_MACRO`), goobstation (via `_EinsteinEngines, _White`), frontier (via `_DV`), white-dream (via `_EE, _DV`), trauma-station (via `Content.Goobstation.*, _DV, _white`)
 
 ### Synthetic and IPC characters
 
@@ -217,5 +219,6 @@ These are playable species that break the normal human body plan, so picking one
 | --- | --- | --- | --- |
 | impstation | Decapoid species; Allulalo species; Gastropoid, Gray, Apid and Ant visitor species; Pleebnar creatures | 93 | `Content.Client/_Impstation/Pleebnar` (+68) |
 | sunrise | Bespoke-rig playables: humanoid xeno, predator and demon with their own inventory templates | 12 | `Resources/Prototypes/_Sunrise/Body/Parts/demon.yml` (+6) |
+| trauma-station | Decapoids | 4 | `Content.Trauma.Server/Decapoids` (+1) |
 
-Also carried by 5: forky (via `_MACRO`), macrocosm (via `Impstation`), starfall-drift (via `_MACRO`), backmen (via `Nyanotrasen`), deltav (via `_Impstation`)
+Also carried by 6: forky (via `_MACRO`), macrocosm (via `Impstation`), starfall-drift (via `_MACRO`), backmen (via `Nyanotrasen`), deltav (via `_Impstation`), trauma-station (via `_Impstation`)

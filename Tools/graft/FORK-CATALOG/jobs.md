@@ -55,8 +55,9 @@ Adds a long list of extra jobs you can pick at the lobby screen, each with its o
 | viva-station | CCD Agent gear, uniform and identity set | 23 | `Resources/Locale/en-US/_Viva/job/job-names.ftl` (+22) |
 | estacao-pirata | Blue Shield officer job kit | 18 | `Resources/Prototypes/EstacaoPirata/Catalog/Fills/Lockers/blueshield.yml` (+5) |
 | corvax | Magistrate, IAA, senior roles, brigmedic, pilot and CentComm admiral | 12 | `Resources/Prototypes/Corvax/Entities/Markers/Spawners/jobs.yml` (+2) |
+| trauma-station | Job and role partials | 93 | `Content.Trauma.Common/Roles` (+5) |
 
-Also carried by 7: deltav (via `_NF`), the-den (via `_DV`), frontier (via `_Goobstation`), far-horizons (via `_Starlight (partial)`), einstein-engines (via `DeltaV, Nyanotrasen`), harmony-station (via `_DV`), white-dream (via `_Goobstation, _Shitmed`)
+Also carried by 8: deltav (via `_NF`), the-den (via `_DV`), frontier (via `_Goobstation`), far-horizons (via `_Starlight (partial)`), einstein-engines (via `DeltaV, Nyanotrasen`), harmony-station (via `_DV`), white-dream (via `_Goobstation, _Shitmed`), trauma-station (via `Content.Goobstation.*, _DV, _Goobstation, _Shitmed, _White`)
 
 ### Character loadouts
 
@@ -255,8 +256,9 @@ Macrocosm's slice of the loadout system is narrow: it makes the starting surviva
 | corvax | Per-job Corvax loadout groups | 13 | `Resources/Prototypes/Corvax/Loadouts/Fun` (+4) |
 | funky | Species markings and character customization | 6 | `Resources/Locale/en-US/_Funkystation/preferences` (+1) |
 | macrocosm | Survival-kit loadout groups | 3 | `Resources/Locale/en-US/_MACRO/preferences/loadout-groups.ftl` (+2) |
+| trauma-station | Loadouts | 17 | `Content.Trauma.Shared/Loadouts` (+2) |
 
-Also carried by 9: estacao-pirata (via `SimpleStation14`), the-den (via `_DV, _Floof, _CD`), deltav (via `_DEN, _CD, _EE, _Impstation, _Starlight, _RMC14`), far-horizons (via `_Starlight (partial)`), backmen (via `Corvax, _Ataraxia`), harmony-station (via `_DV + _Umbra`), white-dream (via `_DEN`), forky (via `_MACRO`), starfall-drift (via `_MACRO, _Funkystation`)
+Also carried by 10: estacao-pirata (via `SimpleStation14`), the-den (via `_DV, _Floof, _CD`), deltav (via `_DEN, _CD, _EE, _Impstation, _Starlight, _RMC14`), far-horizons (via `_Starlight (partial)`), backmen (via `Corvax, _Ataraxia`), harmony-station (via `_DV + _Umbra`), white-dream (via `_DEN`), forky (via `_MACRO`), starfall-drift (via `_MACRO, _Funkystation`), trauma-station (via `_DV, _Goobstation, _NF`)
 
 ### Silicon lawsets and AI appearance
 
@@ -316,8 +318,9 @@ A player taking the Station AI gets extra looks to pick from: the face on the AI
 | funky | Fork silicon lawset additions | 2 | `Resources/Locale/en-US/_Funkystation/station-laws` (+1) |
 | serbia-strong | Fork silicon lawsets and AI factions | 2 | `Resources/Prototypes/SS220/ai_factions.yml` (+1) |
 | viva-station | Borg lawboard swapping | 2 | `Content.Server/_Viva/Borgs/LawSwapSystem.cs` (+1) |
+| trauma-station | Silicon lawsets | 2 | `Resources/Prototypes/_Trauma/Partials/silicon-laws.yml` (+1) |
 
-Also carried by 5: deltav (via `_Goobstation, _Harmony`), einstein-engines (via `DeltaV`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV`), white-dream (via `_Nuclear14, _Goobstation, _DV, _EE`)
+Also carried by 6: deltav (via `_Goobstation, _Harmony`), einstein-engines (via `DeltaV`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV`), white-dream (via `_Nuclear14, _Goobstation, _DV, _EE`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Role slot management and join queue
 
@@ -638,8 +641,9 @@ Two separate things for silicon players. First, the AI stops hearing everything 
 | cosmatic-drift | Station AI shells + switchable borg subtypes | 46 | `Content.Client/_CD/Silicons/Borgs` (+16) |
 | impstation | Cyborg and drone additions | 21 | `Content.Client/_Impstation/DroneVision` (+9) |
 | serbia-strong | Station AI eye radio and borg modules | 15 | `Content.Server/SS220/Silicons` (+5) |
+| trauma-station | Silicons, borgs, drones, station AI | 128 | `Content.Trauma.Client/Drone` (+20) |
 
-Also carried by 7: starlight (via `_Afterlight (partial)`), goobstation (via `_Trauma (AI sprites), _CorvaxNext, _EinsteinEngines`), far-horizons (via `_Starlight, _Afterlight`), white-dream (via `_Nuclear14, _Goobstation, _DV, _EE`), the-den (via `_DV`), harmony-station (via `_DV + _Funkystation + _Goobstation + _Impstation`), frontier (via `_DV`)
+Also carried by 8: starlight (via `_Afterlight (partial)`), goobstation (via `_Trauma (AI sprites), _CorvaxNext, _EinsteinEngines`), far-horizons (via `_Starlight, _Afterlight`), white-dream (via `_Nuclear14, _Goobstation, _DV, _EE`), the-den (via `_DV`), harmony-station (via `_DV + _Funkystation + _Goobstation + _Impstation`), frontier (via `_DV`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Department restructure
 
@@ -759,6 +763,7 @@ The Head of Security carries a handheld "SecApartment" tablet (battery powered, 
 | rmc14 | Marine squads, ranks, dogtags, orders and per-job skill presets | 188 | `Content.Client/_RMC14/Marines` (+11) |
 | serbia-strong | Experience / skill tree progression | 134 | `Content.Client/SS220/Experience` (+5) |
 | corvax | SecApartment security squad console | 26 | `Content.Client/Corvax/SecApartment` (+6) |
+| trauma-station | Knowledge (skills, XP, skillbooks) | 109 | `Content.Trauma.Client/Knowledge` (+6) |
 
 ### Xenobiology and slime rework
 
@@ -781,3 +786,5 @@ Xenobiology becomes a full slime-ranching loop: you breed slimes through roughly
 | --- | --- | --- | --- |
 | goobstation | Xenobiology rework | 161 | `Content.Goobstation.Client/Xenobiology` (+5) |
 | starlight | Xenobiology slime rework | 49 | `Content.Client/_Starlight/Xenobiology` (+4) |
+
+Also carried by 1: trauma-station (via `Content.Goobstation.*, _Goobstation`)

@@ -213,8 +213,9 @@ This fork's contribution here is two lines of traitor steal content, not an obje
 | corvax | Fork traitor objectives and objective groups | 3 | `Resources/Prototypes/Corvax/Datasets/Names/corvax_syndie_smuggler.yml` (+2) |
 | monolith | Faction uplink catalogs (TSFMC, PDV) | 3 | `Resources/Locale/en-US/_Mono/store` |
 | gaby-station-now-dumont-station | Fork traitor objectives and steal-target groups | 2 | `Resources/Prototypes/_Gabystation/Objectives` |
+| trauma-station | Objectives, store and uplink catalog | 117 | `Content.Trauma.Client/Antag` (+26) |
 
-Also carried by 9: deltav (via `_Harmony, _Goobstation, _Impstation, _Mono`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV, _Goobstation`), white-dream (via `_Goobstation, _EE, _TG`), harmony-station (via `_Goobstation + _EstacaoPirata + _DV + _Sich`), frontier (via `_DV`), einstein-engines (via `DeltaV, Nyanotrasen`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`)
+Also carried by 10: deltav (via `_Harmony, _Goobstation, _Impstation, _Mono`), far-horizons (via `_Starlight (partial)`), the-den (via `_DV, _Goobstation`), white-dream (via `_Goobstation, _EE, _TG`), harmony-station (via `_Goobstation + _EstacaoPirata + _DV + _Sich`), frontier (via `_DV`), einstein-engines (via `DeltaV, Nyanotrasen`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Round modifiers and game director
 
@@ -296,8 +297,9 @@ Instead of one "secret" roll, the shift can open in a named alternate mode: "Spy
 | harmony-station | Fork game presets, roundstart rules and subgamemodes | 8 | `Resources/Locale/en-US/_Harmony/game-ticking/game-presets` (+4) |
 | corvax | Peaceful round end and secret preset weights | 4 | `Content.Server/Corvax/PeacefulRoundEnd` (+2) |
 | cosmatic-drift | Round-end evacuation shuttle vote | 3 | `Content.Server/_CD/RoundEnd/ShuttleVoteSystem.cs` (+2) |
+| trauma-station | Game ticking, game rules and station traits | 76 | `Content.Trauma.Common/GameTicking` (+16) |
 
-Also carried by 6: far-horizons (via `_Starlight (partial)`), white-dream (via `_Goobstation, _Shitmed`), deltav (via `_Harmony`), the-den (via `_Harmony, _Goobstation`), frontier (via `_DV`), backmen (via `Corvax`)
+Also carried by 7: far-horizons (via `_Starlight (partial)`), white-dream (via `_Goobstation, _Shitmed`), deltav (via `_Harmony`), the-den (via `_Harmony, _Goobstation`), frontier (via `_DV`), backmen (via `Corvax`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Minor antagonist roles
 
@@ -404,6 +406,7 @@ Starlight's contribution here is a single extra antagonist: an agent of the Sili
 | sunrise | Fugitive antagonist | 8 | `Content.Server/_Sunrise/Fugitive` (+1) |
 | backmen | Fugitive antag role | 6 | `Content.Server/Backmen/Fugitive` (+2) |
 | starlight | SELF agent role | 5 | `Content.Server/_Starlight/GameTicking/Rules/SELFRuleSystem.cs` (+4) |
+| trauma-station | Spy and fugitive antags | 37 | `Content.Trauma.Client/Spy` (+6) |
 
 ### Wizard and spellcasting
 
@@ -446,8 +449,9 @@ Robed Wizard Federation casters exist as a hostile faction to fight rather than 
 | harmony-station | Wizard spells, spellbook additions, familiars and the Honkmother summon | 17 | `Resources/Audio/_Harmony/Misc/honkmother_arrival.ogg` (+12) |
 | backmen | Backmen magic spells, magic audio and wizard surplus bundle | 12 | `Content.Client/Backmen/Magic` (+7) |
 | funky | Wizard familiar (mini dragon) | 6 | `Content.IntegrationTests/Tests/_Funkystation/WizardFamiliar` (+4) |
+| trauma-station | Wizard spells, familiars and blink | 203 | `Content.Trauma.Client/Blink` (+12) |
 
-Also carried by 5: white-dream (via `_Goobstation`), far-horizons (via `_Starlight (partial)`), the-den (via `_Goobstation`), forky (via `_FarHorizons`), sunrise (via `_Starlight (partial)`)
+Also carried by 6: white-dream (via `_Goobstation`), far-horizons (via `_Starlight (partial)`), the-den (via `_Goobstation`), forky (via `_FarHorizons`), sunrise (via `_Starlight (partial)`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Solo monster antagonists
 
@@ -515,8 +519,9 @@ These three forks each drop a different single-creature midround monster into th
 | harmony-station | Bingle pit creature | 32 | `Content.Client/_Harmony/Bingle` (+7) |
 | starlight | Terror spiders and the Terminator midround roles | 20 | `Content.Client/_Starlight/Antags/TerrorSpider` (+11) |
 | einstein-engines | Nightmare and shadow antag | 9 | `Content.Server/_EE/Nightmare` (+4) |
+| trauma-station | Shadow demon, morph, wraith, bingle, demons, holoparasite | 236 | `Content.Trauma.Client/HoloParasite` (+27) |
 
-Also carried by 4: white-dream (via `_Goobstation, _EE`), the-den (via `_Goobstation`), far-horizons (via `_Starlight`), deltav (via `_Goobstation`)
+Also carried by 5: white-dream (via `_Goobstation, _EE`), the-den (via `_Goobstation`), far-horizons (via `_Starlight`), deltav (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Changeling
 
@@ -543,7 +548,7 @@ A changeling looks and sounds exactly like a crewmate until it doesn't. It grabs
 | backmen | Changeling antagonist | 102 | `Content.Shared/Backmen/Changeling` (+3) |
 | funky | Changeling reagent interactions | 3 | `Content.Server/_Funkystation/EntityEffects/CureChangelingInfection.cs` (+2) |
 
-Also carried by 5: white-dream (via `_Goobstation`), einstein-engines (via `_Goobstation`), the-den (via `_Goobstation`), impstation (via `_Goobstation`), far-horizons (via `_Starlight (un-namespaced)`)
+Also carried by 6: white-dream (via `_Goobstation`), einstein-engines (via `_Goobstation`), the-den (via `_Goobstation`), impstation (via `_Goobstation`), far-horizons (via `_Starlight (un-namespaced)`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Blood cult
 
@@ -607,8 +612,9 @@ A handful of crew wake up as Blood Cultists of Nar'Sie: they shape a ritual dagg
 | starfall-drift | Blood cult antagonist (inherited from Funky Station, shipped un-namespaced) | 264 | `Content.Client/BloodCult` (+16) |
 | white-dream | Blood Cult antagonist | 221 | `Content.Client/_White/BloodCult` (+14) |
 | funky | Blood Cult antagonist | 196 | `Content.Client/_Funkystation/BloodCult` (+13) |
+| trauma-station | Blood Cult | 359 | `Content.Trauma.Client/BloodCult` (+7) |
 
-Also carried by 3: einstein-engines (via `WhiteDream`), the-den (via `_White`), estacao-pirata (via `WhiteDream`)
+Also carried by 4: einstein-engines (via `WhiteDream`), the-den (via `_White`), estacao-pirata (via `WhiteDream`), trauma-station (via `_White`)
 
 ### Alternate round types
 
@@ -735,7 +741,7 @@ Starlight's slice of the pirate feature is just the role and its scoring, not a 
 | estacao-pirata | Pirate roles and department (Piratas) | 7 | `Resources/Prototypes/EstacaoPirata/PiratasRoles` |
 | starlight | Pirate antag role | 5 | `Content.Server/_Starlight/Roles/PirateRoleComponent.cs` (+4) |
 
-Also carried by 1: far-horizons (via `_Starlight`)
+Also carried by 2: far-horizons (via `_Starlight`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Cosmic cult
 
@@ -785,8 +791,9 @@ This slice is the cosmic cult's physical set dressing rather than the antagonist
 | deltav | Cosmic Cult antagonist | 689 | `Content.Client/_DV/CosmicCult` (+12) |
 | starlight | Cosmic Cult antag | 656 | `Content.Client/_Starlight/CosmicCult` (+8) |
 | impstation | Cosmic Cult content | 17 | `Resources/Audio/_Impstation/CosmicCult` (+2) |
+| trauma-station | Cosmic Cult | 108 | `Content.Trauma.Client/CosmicCult` (+3) |
 
-Also carried by 3: goobstation (via `_DV`), stellar-station (via `Cosmic Cult project (AftrLite), originally an Impstation antagonist`), sunrise (via `_Starlight`)
+Also carried by 4: goobstation (via `_DV`), stellar-station (via `Cosmic Cult project (AftrLite), originally an Impstation antagonist`), sunrise (via `_Starlight`), trauma-station (via `_DV`)
 
 ### Vampire
 
@@ -811,6 +818,7 @@ A vampire starts the shift as an ordinary crewmember who can extend fangs and bi
 | starlight | Vampire antag | 152 | `Content.Client/_Starlight/Antags/Vampires` (+12) |
 | backmen | Vampire / bloodsucker antagonist | 25 | `Content.Client/Backmen/Vampiric` (+7) |
 | the-den | Vampire antagonist and life drain (un-namespaced EE lineage) | 8 | `Content.Server/LifeDrainer` (+2) |
+| trauma-station | Vampires | 201 | `Content.Trauma.Client/Vampires` (+8) |
 
 Also carried by 1: far-horizons (via `_Starlight (un-namespaced)`)
 
@@ -837,8 +845,9 @@ A facehugger leaps onto someone's face and latches on too tight to pull off; ove
 | --- | --- | --- | --- |
 | rmc14 | Xenonid castes, hive management, evolution, resin construction, weeds and parasites | 3404 | `Content.Client/_RMC14/Xenonids` (+29) |
 | white-dream | Xenomorph antagonist | 183 | `Content.Client/_White/Xenomorphs` (+10) |
+| trauma-station | Xenomorphs | 75 | `Content.Trauma.Client/Xenomorphs` (+8) |
 
-Also carried by 5: goobstation (via `_White (sprites from _RMC14)`), sunrise (via `_RMC14`), backmen (via `partly _White, Corvax`), deltav (via `_RMC14`), the-den (via `_White`)
+Also carried by 6: goobstation (via `_White (sprites from _RMC14)`), sunrise (via `_RMC14`), backmen (via `partly _White, Corvax`), deltav (via `_RMC14`), the-den (via `_White`), trauma-station (via `Content.Goobstation.*, _Goobstation, _RMC14, _White, _white`)
 
 ### Abductors
 
@@ -862,8 +871,9 @@ Two ghost players spawn as mute grey aliens on a hidden ship: a Scientist and an
 | --- | --- | --- | --- |
 | sunrise | Abductor antagonist with ship, consoles and abductor species | 238 | `Content.Client/_Sunrise/Antags/Abductor` (+8) |
 | starlight | Abductor antag | 29 | `Content.Client/_Starlight/Antags/Abductor` (+7) |
+| trauma-station | Abductors (incl. Content.Medical abductor surgery) | 39 | `Content.Medical.Client/Abductor` (+8) |
 
-Also carried by 3: einstein-engines (via `_Shitmed`), white-dream (via `_Shitmed`), far-horizons (via `_Starlight`)
+Also carried by 4: einstein-engines (via `_Shitmed`), white-dream (via `_Shitmed`), far-horizons (via `_Starlight`), trauma-station (via `_Shitmed`)
 
 ### Devil
 
@@ -890,7 +900,7 @@ A crew member is secretly a devil who wins by talking people into signing a cont
 | starlight | Devil antag | 48 | `Content.Client/_Starlight/Devil` (+8) |
 | goobstation | Devil antagonist | 47 | `Content.Goobstation.Client/Devil` (+5) |
 
-Also carried by 3: deltav (via `_Goobstation`), white-dream (via `_Goobstation`), einstein-engines (via `_Goobstation`)
+Also carried by 4: deltav (via `_Goobstation`), white-dream (via `_Goobstation`), einstein-engines (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Heretic
 
@@ -915,8 +925,9 @@ A crew member wakes up hearing whispers from the Gates of Mansus and starts a se
 | --- | --- | --- | --- |
 | goobstation | Heretic antagonist | 672 | `Content.Client/_Shitcode/Heretic` (+8) |
 | gaby-station-now-dumont-station | Fork heretic role and eldritch item additions | 2 | `Resources/Prototypes/_Gabystation/Heretic` |
+| trauma-station | Heretic (paths, rituals, knowledge) | 392 | `Content.Trauma.Client/Heretic` (+5) |
 
-Also carried by 3: impstation (via `_Goobstation`), harmony-station (via `_Impstation`), starlight (via `_Impstation (partial)`)
+Also carried by 4: impstation (via `_Goobstation`), harmony-station (via `_Impstation`), starlight (via `_Impstation (partial)`), trauma-station (via `_Goobstation`)
 
 ### Blob
 
@@ -953,8 +964,9 @@ A player starts (or ghost-joins) as a blob carrier: usually a humanoid, sometime
 | --- | --- | --- | --- |
 | goobstation | Blob antagonist | 187 | `Content.Goobstation.Client/Blob` (+5) |
 | backmen | Blob antagonist (carrier, core, chems, blob pods) | 71 | `Content.Client/Backmen/Blob` (+14) |
+| trauma-station | Blob | 4 | `Content.Trauma.Server/Blob` (+2) |
 
-Also carried by 2: white-dream (via `_Goobstation`), einstein-engines (via `_Goobstation`)
+Also carried by 3: white-dream (via `_Goobstation`), einstein-engines (via `_Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Self-replicating swarm antagonists
 
@@ -1123,7 +1135,7 @@ Impstation's revenant gets teeth and a second life. It can spend essence to poss
 | --- | --- | --- | --- |
 | impstation | Revenant rework | 27 | `Content.Client/_Impstation/Revenant` (+4) |
 
-Also carried by 2: backmen (via `_Impstation`), deltav (via `_Impstation`)
+Also carried by 3: backmen (via `_Impstation`), deltav (via `_Impstation`), trauma-station (via `_Impstation`)
 
 ### Shadowling
 
@@ -1148,7 +1160,7 @@ A shadowling starts the round looking like an ordinary crewmember, then "hatches
 | --- | --- | --- | --- |
 | einstein-engines | Shadowling antag | 182 | `Content.Client/_EE/Shadowling` (+7) |
 
-Also carried by 2: white-dream (via `_EE`), goobstation (via `_EinsteinEngines (assets)`)
+Also carried by 3: white-dream (via `_EE`), goobstation (via `_EinsteinEngines (assets)`), trauma-station (via `Content.Goobstation.*, _EinsteinEngines, _Goobstation`)
 
 ### Cortical borer
 
@@ -1197,6 +1209,7 @@ Head revolutionaries get their own black-market store, stocked with Soviet-flavo
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | starlight | Revolutionary additions and rev uplink | 7 | `Content.Server/_Starlight/Revolutionary` (+3) |
+| trauma-station | Revolution rework (rev gear, mindshield) | 146 | `Content.Trauma.Common/Mindshield` (+7) |
 
 Also carried by 1: far-horizons (via `_Starlight`)
 
@@ -1222,6 +1235,7 @@ Adds a stealth objective for the space ninja: go the whole round without ever be
 | Fork | Calls it | Files | Primary path |
 | --- | --- | --- | --- |
 | serbia-strong | Space ninja 'leave no trace' objective | 13 | `Content.Client/SS220/Ninja` (+2) |
+| trauma-station | Zombie tweak | 1 | `Content.Trauma.Server/Zombies` |
 
 Also carried by 1: far-horizons (via `_Starlight, _Afterlight`)
 

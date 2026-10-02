@@ -39,8 +39,9 @@ Players get a much larger armoury: extra pistols, revolvers, snipers, SMGs, shot
 | forky | Security sidearm set (energy pistol, mk58, viper, laser gun, magazines) and nightstick with hit-impact audio | 90 | `Resources/Audio/_Funkystation/Effects/HitImpacts` (+6) |
 | funky | Weapons and firearms expansion (guns, ammo, explosives) + EMP weapons and syndicate gadgets | 47 | `Content.Server/_Funkystation/EmpWeapon` (+14) |
 | viva-station | KSM-5000 assault laser and temporal magnum ammunition | 10 | `Resources/Prototypes/_Viva/Entities/Objects/Power/powercells.yml` (+9) |
+| trauma-station | Guns, projectiles, grenades | 467 | `Content.Trauma.Client/Multhit` (+23) |
 
-Also carried by 10: far-horizons (via `_Starlight, _RMC14`), sunrise (via `_Starlight, _RMC14 (partial)`), the-den (via `_Goobstation, _DV, _NF`), backmen (via `partly _Goobstation`), frontier (via `_DV, _Emberfall`), deltav (via `_Starlight, _Impstation, _NF, _Mono, _Goobstation`), white-dream (via `_Goobstation`), harmony-station (via `_DV`), einstein-engines (via `DeltaV, Nyanotrasen, _NF, _Goobstation`), starfall-drift (via `_Funkystation`)
+Also carried by 11: far-horizons (via `_Starlight, _RMC14`), sunrise (via `_Starlight, _RMC14 (partial)`), the-den (via `_Goobstation, _DV, _NF`), backmen (via `partly _Goobstation`), frontier (via `_DV, _Emberfall`), deltav (via `_Starlight, _Impstation, _NF, _Mono, _Goobstation`), white-dream (via `_Goobstation`), harmony-station (via `_DV`), einstein-engines (via `DeltaV, Nyanotrasen, _NF, _Goobstation`), starfall-drift (via `_Funkystation`), trauma-station (via `Content.Goobstation.*, _DV, _FarHorizons, _Goobstation, _Impstation, _NF, _RMC14, _White`)
 
 ### Melee weapons, shields and blocking
 
@@ -116,8 +117,9 @@ Shields stop being passive luck and become something you actively hold up: a ded
 | corvax | Fork melee hammer | 5 | `Resources/Prototypes/Corvax/Entities/Objects/Weapons` (+1) |
 | cosmatic-drift | Bokken practice sword | 5 | `Resources/Prototypes/_CD/Entities/Objects/Weapons/Melee/bokken.yml` (+1) |
 | starlight | Melee weapon layer | 4 | `Content.Client/_Starlight/Weapon` (+1) |
+| trauma-station | Melee weapons, parry and blocking | 135 | `Content.Trauma.Common/Blocking` (+9) |
 
-Also carried by 5: backmen (via `_Ataraxia, _White, _Goobstation`), the-den (via `_NF, _Lavaland`), white-dream (via `_Goobstation, _EE`), far-horizons (via `_Starlight, _RMC14`), deltav (via `_Starlight, _Impstation, _NF, _Mono, _Goobstation`)
+Also carried by 6: backmen (via `_Ataraxia, _White, _Goobstation`), the-den (via `_NF, _Lavaland`), white-dream (via `_Goobstation, _EE`), far-horizons (via `_Starlight, _RMC14`), deltav (via `_Starlight, _Impstation, _NF, _Mono, _Goobstation`), trauma-station (via `Content.Goobstation.*, _Goobstation, _Lavaland, _NF, _White`)
 
 ### Explosion rework and effects
 
@@ -213,8 +215,9 @@ Delta-V's contribution here is three placeable objects rather than any change to
 | monolith | Explosives, triggers and chain radiation | 11 | `Content.Server/_Mono/Radiation` (+4) |
 | impstation | Explosion and trigger tweaks | 6 | `Content.Server/_Impstation/Trigger` (+2) |
 | deltav | EMP blast propagation and overlay, land mines and plutonium core | 3 | `Resources/Prototypes/_DV/Entities/Objects/Misc/land_mine.yml` (+2) |
+| trauma-station | Explosion partial | 1 | `Resources/Prototypes/_Trauma/Partials/explosion.yml` |
 
-Also carried by 9: forky (via `_Starfall,_ES,_ST,_MACRO`), starfall-drift (via `_Funkystation`), backmen (via `partly _White`), sunrise (via `_RMC14`), white-dream (via `_Goobstation, _EE`), starlight (via `_Impstation (partial)`), the-den (via `_Goobstation`), harmony-station (via `_Impstation + _RMC14`), far-horizons (via `_Starlight, _RMC14`)
+Also carried by 10: forky (via `_Starfall,_ES,_ST,_MACRO`), starfall-drift (via `_Funkystation`), backmen (via `partly _White`), sunrise (via `_RMC14`), white-dream (via `_Goobstation, _EE`), starlight (via `_Impstation (partial)`), the-den (via `_Goobstation`), harmony-station (via `_Impstation + _RMC14`), far-horizons (via `_Starlight, _RMC14`), trauma-station (via `Content.Goobstation.*, _Goobstation`)
 
 ### Barricades, sentries and field fortification
 
@@ -272,7 +275,7 @@ These four forks each add one deployable-cover gadget rather than a fortificatio
 | ephemeral-space | Barricade construction | 3 | `Content.Shared/_ES/Barricade` |
 | starlight | Energy dome deployable shield | 3 | `Content.Server/_Starlight/EnergyDome` |
 
-Also carried by 3: backmen (via `partly _White`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`)
+Also carried by 4: backmen (via `partly _White`), forky (via `_FarHorizons`), starfall-drift (via `_FarHorizons`), trauma-station (via `_FarHorizons`)
 
 ### Grabs, shoves and close-quarters mechanics
 
@@ -342,8 +345,9 @@ This fork's slice of the melee-rework space is the gun half of executions: with 
 | starlight | Disarm blocking, on-hit effects, knockback and executions | 24 | `Content.Client/_Starlight/Combat` (+12) |
 | serbia-strong | Multi-stage grab and disarm rework | 20 | `Content.Client/SS220/Grab` (+8) |
 | starfall-drift | Gun executions | 5 | `Content.Shared/_Starfall/Execution` (+1) |
+| trauma-station | Tackle, executions, grabs, backstab | 25 | `Content.Trauma.Common/CombatMode` (+9) |
 
-Also carried by 11: white-dream (via `_Goobstation`), goobstation (via `_White (partial)`), sunrise (via `_Starlight`), far-horizons (via `_Starlight, _Funkystation`), the-den (via `_Goobstation, _White`), deltav (via `_Floof, _RMC14`), impstation (via `_EE`), backmen (via `_White`), forky (via `_Starfall`), estacao-pirata (via `SimpleStation14`), stellar-station (via `Ephemeral Space / MirrorCult (credited in changelog)`)
+Also carried by 12: white-dream (via `_Goobstation`), goobstation (via `_White (partial)`), sunrise (via `_Starlight`), far-horizons (via `_Starlight, _Funkystation`), the-den (via `_Goobstation, _White`), deltav (via `_Floof, _RMC14`), impstation (via `_EE`), backmen (via `_White`), forky (via `_Starfall`), estacao-pirata (via `SimpleStation14`), stellar-station (via `Ephemeral Space / MirrorCult (credited in changelog)`), trauma-station (via `Content.Goobstation.*, _white`)
 
 ### Ship-to-ship combat
 
@@ -391,8 +395,9 @@ This fork adds a gunnery console for a ship's mounted guns. A crewmate links the
 | monolith | Ship-to-ship combat: fire control, space artillery and radar + NPC ship AI + Detection, thermal signature and cloaking + Armor plating and armor piercing + Ammo loader | 244 | `Content.Client/_Mono/FireControl` (+37) |
 | rmc14 | Mortars, custom ordnance and the orbital bombardment cannon | 154 | `Content.Client/_RMC14/Mortar` (+15) |
 | serbia-strong | Shuttle gun control console | 6 | `Content.Client/SS220/ShuttleGunControl` (+2) |
+| trauma-station | Fire control, radar, ship guns, space artillery | 29 | `Content.Trauma.Client/FireControl` (+10) |
 
-Also carried by 3: backmen (via `_Mono (Monolith), _Lua (LuaStation)`), far-horizons (via `_Starlight (partial)`), goobstation (via `_Mono`)
+Also carried by 4: backmen (via `_Mono (Monolith), _Lua (LuaStation)`), far-horizons (via `_Starlight (partial)`), goobstation (via `_Mono`), trauma-station (via `_Mono`)
 
 ### Gun attachments and upgrade kits
 
@@ -418,7 +423,7 @@ You can fit parts onto a gun instead of being stuck with the gun you were issued
 | ephemeral-space | Gun attachments | 14 | `Content.Client/_ES/Weapons/Ranged` (+2) |
 | far-horizons | Craftable weapon attachments | 1 | `Resources/Prototypes/_FarHorizons/Recipes/Crafting/attachments.yml` |
 
-Also carried by 2: harmony-station (via `_DV`), the-den (via `_Goobstation`)
+Also carried by 3: harmony-station (via `_DV`), the-den (via `_Goobstation`), trauma-station (via `_Goobstation`)
 
 ### Martial arts
 
@@ -445,8 +450,9 @@ A character who has learned a fighting style stops throwing plain punches and st
 | --- | --- | --- | --- |
 | goobstation | Martial arts | 49 | `Content.Goobstation.Client/MartialArts` (+5) |
 | serbia-strong | Martial arts styles and combat sequences | 38 | `Content.IntegrationTests/SS220/Tests/MartialArts` (+4) |
+| trauma-station | Martial arts | 39 | `Content.Trauma.Common/MartialArts` (+3) |
 
-Also carried by 4: estacao-pirata (via `Nyanotrasen`), einstein-engines (via `_Goobstation, Nyanotrasen`), white-dream (via `_Goobstation`), the-den (via `_Goobstation`)
+Also carried by 5: estacao-pirata (via `Nyanotrasen`), einstein-engines (via `_Goobstation, Nyanotrasen`), white-dream (via `_Goobstation`), the-den (via `_Goobstation`), trauma-station (via `_Goobstation`)
 
 ### Modular hardsuits (modsuits)
 
@@ -473,4 +479,4 @@ Instead of one sealed hardsuit, you get a suit that comes apart into pieces: a c
 | sunrise | MODsuits and hardsuit ampule injection | 80 | `Content.Server/_Sunrise/Modsuit` (+7) |
 | gaby-station-now-dumont-station | MOD suit modular armour | 5 | `Resources/Prototypes/_Gabystation/Entities/Clothing/Head/modsuit.yml` (+4) |
 
-Also carried by 4: goobstation (via `_EinsteinEngines`), einstein-engines (via `_TG, _Goobstation`), white-dream (via `_Goobstation, _EE`), the-den (via `_Goobstation, _EE`)
+Also carried by 5: goobstation (via `_EinsteinEngines`), einstein-engines (via `_TG, _Goobstation`), white-dream (via `_Goobstation, _EE`), the-den (via `_Goobstation, _EE`), trauma-station (via `_EinsteinEngines, _Goobstation`)
